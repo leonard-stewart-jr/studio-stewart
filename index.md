@@ -11,34 +11,34 @@
 
 ## <span class="custom-font">PROJECTS</span>
 
-### <span class="custom-font">RESEARCH STUDIO 3 // FALL 2024</span>
+### <span class="custom-font">Project 1</span>
 ![Project 1 Page 1](/public/images/project1pg1.png)
 ![Project 1 Page 2](/public/images/project1pg2.png)
 
-### <span class="custom-font">BUILDING STUDIO 3 // SPRING 2024</span>
+### <span class="custom-font">Project 2</span>
 ![Project 2 Page 1](/public/images/project2pg1.png)
 ![Project 2 Page 2](/public/images/project2pg2.png)
 
-### <span class="custom-font">PRELIMINARY STUDIO // SPRING 2021</span>
+### <span class="custom-font">Project 3</span>
 ![Project 3 Page 1](/public/images/project3pg1.png)
 
-### <span class="custom-font">STICKPLAY // FALL 2021</span>
+### <span class="custom-font">Project 4</span>
 ![Project 4 Page 1](/public/images/project4pg1.png)
 ![Project 4 Page 2](/public/images/project4pg2.png)
 
-### <span class="custom-font">RESEARCH STUDIO 1 // FALL 2022</span>
+### <span class="custom-font">Project 5</span>
 ![Project 5 Page 1](/public/images/project5pg1.png)
 
-### <span class="custom-font">BUILDING STUDIO 1 // SPRING 2022</span>
+### <span class="custom-font">Project 6</span>
 ![Project 6 Page 1](/public/images/project6pg1.png)
 ![Project 6 Page 2](/public/images/project6pg2.png)
 ![Project 6 Page 3](/public/images/project6pg3.png)
 
-### <span class="custom-font">BUILDING STUDIO 2 // SPRING 2023</span>
+### <span class="custom-font">Project 7</span>
 ![Project 7 Page 1](/public/images/project7pg1.png)
 ![Project 7 Page 2](/public/images/project7pg2.png)
 
-## <span class="custom-font">Resume/Index</span>
+## <span class="custom-font">Resume</span>
 ![Resume](/public/images/resume_index.png)
 
 ## <span class="custom-font">Covers</span>
