@@ -1,4 +1,4 @@
-# Welcome to My Portfolio
+# LEONARD STEWART GRADUATE PORTFOLIO
 
 <!-- Import the Open Sans font from Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
