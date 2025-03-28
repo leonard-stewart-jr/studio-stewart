@@ -3,4 +3,4 @@
 ## PROJECTS
 
 ### PROJECT 1
-![Project 1](/public/images/Architecture Portfolio_Spreads_Page_04.png)
+![Project 1](/public/images/Project1Pg1)
