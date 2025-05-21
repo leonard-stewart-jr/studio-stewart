@@ -94,7 +94,7 @@ export default function HeaderBar() {
               key={i}
               style={{
                 width: hamburgerSize * 0.7,
-                height: hamburgerSize * 0.12,
+                height: hamburgerSize * 0.09,
                 background: "#111",
                 margin: `${hamburgerSize * 0.08}px 0`,
                 borderRadius: hamburgerSize * 0.06,
