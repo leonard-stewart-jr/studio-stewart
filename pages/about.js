@@ -17,11 +17,7 @@ export default function About() {
         maxWidth: 600,
         boxShadow: "0 4px 24px #eee"
       }}>
-        <h1>About Me</h1>
-        <p style={{ fontSize: '1.1rem', textAlign: "center" }}>
-          Hi! I'm Leonard Stewart Jr., a passionate creator, developer, and designer.<br /><br />
-          I love building modern web experiences and experimenting with new technologies, including 3D printing!
-        </p>
+        <h1 style={{ color: "#bbb", fontSize: "2.5rem" }}>IN PROGRESS</h1>
       </main>
     </div>
   );
