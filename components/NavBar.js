@@ -20,20 +20,18 @@ export default function NavBar() {
           margin: 0,
           justifyContent: "center",
           alignItems: "center",
+          fontFamily: "'Futura', 'Open Sans', sans-serif", // Ensure font matches global
         }}
       >
         {navItems.map((item) => (
           <li key={item.href}>
             <Link href={item.href} passHref legacyBehavior>
               <a
+                className="nav-link"
                 style={{
-                  textTransform: "uppercase",
                   fontWeight: 600,
-                  letterSpacing: "0.08em",
                   fontSize: 16,
                   color: router.pathname === item.href ? "#111" : "#888",
-                  textDecoration: "none",
-                  padding: "4px 12px",
                   borderBottom: router.pathname === item.href ? "2px solid #111" : "none",
                   transition: "color 0.18s, border-bottom 0.18s",
                 }}
