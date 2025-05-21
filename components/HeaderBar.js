@@ -28,10 +28,10 @@ export default function HeaderBar() {
           height: "100%",
           display: "flex",
           alignItems: "center",
-          paddingLeft: 36,
+          paddingLeft: 20, // shifted right!
           zIndex: 100,
           cursor: "pointer",
-          width: 44,
+          width: 60, // increased for buffer
           userSelect: "none",
         }}
         onClick={() => setSidebarOpen(true)}
@@ -49,12 +49,17 @@ export default function HeaderBar() {
           src="/logo.png"
           alt="Logo"
           style={{
-            height: 32,
-            width: 32,
+            height: 40,
+            width: 40,
+            minWidth: 40,
+            minHeight: 40,
+            maxWidth: 44,
+            maxHeight: 44,
+            objectFit: "contain",
             opacity: hovered ? 0 : 1,
             transition: "opacity 0.18s",
             position: "absolute",
-            left: 0,
+            left: 8, // so not flush left
             top: "50%",
             transform: "translateY(-50%)",
           }}
@@ -64,14 +69,14 @@ export default function HeaderBar() {
           style={{
             opacity: hovered ? 1 : 0,
             transition: "opacity 0.18s",
-            width: 32,
-            height: 32,
+            width: 40,
+            height: 40,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "flex-start",
             position: "absolute",
-            left: 0,
+            left: 8,
             top: "50%",
             transform: "translateY(-50%)",
           }}
