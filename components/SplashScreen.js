@@ -4,13 +4,11 @@ export default function SplashScreen({ onFinish }) {
   const [slideOut, setSlideOut] = useState(false);
 
   useEffect(() => {
-    // Auto slide-out after 2 seconds if not already dismissed
-    const timer = setTimeout(() => setSlideOut(true), 2000);
+    const timer = setTimeout(() => setSlideOut(true), 4000); // 4 seconds
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    // Call onFinish after the slide animation completes (0.6s)
     if (slideOut) {
       const timer = setTimeout(onFinish, 600);
       return () => clearTimeout(timer);
@@ -37,12 +35,20 @@ export default function SplashScreen({ onFinish }) {
         transform: slideOut ? "translateY(-100vh)" : "translateY(0)",
         opacity: slideOut ? 0 : 1,
         pointerEvents: slideOut ? "none" : "auto",
-        cursor: "pointer"
+        cursor: "pointer",
+        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif"
       }}
       title="Click or tap to skip"
     >
-      <img src="/logo.png" alt="Logo" style={{ width: 180, marginBottom: 32 }} />
-      <span style={{ color: "#333", fontWeight: "bold", fontSize: 26 }}>
+      <img src="/logo.png" alt="Logo"
+        style={{ width: 240, height: "auto", marginBottom: 32 }}
+      />
+      <span style={{
+        color: "#333",
+        fontWeight: "bold",
+        fontSize: 26,
+        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif"
+      }}>
         Welcome to Studio Stewart
       </span>
       <span style={{ marginTop: 20, fontSize: 14, color: "#aaa" }}>
