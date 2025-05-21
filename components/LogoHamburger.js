@@ -6,6 +6,8 @@ export default function LogoHamburger({
   onOpenSidebar,
 }) {
   const [hovered, setHovered] = useState(false);
+
+  // Hamburger is 35% the size of the logo by default
   const hamburgerScale = 0.35;
   const hamburgerSize = logoSize * hamburgerScale;
   const hamburgerOffset = (logoSize - hamburgerSize) / 2;
@@ -39,7 +41,7 @@ export default function LogoHamburger({
       title="Open menu"
       aria-label="Open menu"
     >
-      {/* Logo SVG (always the same size/position, fades out on hover) */}
+      {/* Logo SVG (fades out on hover/focus) */}
       <img
         src="/assets/logo-mark-only.svg"
         alt="Logo"
@@ -56,7 +58,7 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* 4-Line Triangle Hamburger (fades in and scales to same bounding box as logo) */}
+      {/* Hamburger icon (fades in and expands to triangle bounds on hover/focus) */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
