@@ -10,6 +10,22 @@ export default function LogoHamburger({
   const hamburgerSize = logoSize * hamburgerScale;
   const hamburgerOffset = (logoSize - hamburgerSize) / 2;
 
+  // Proportional widths for 4 lines (smallest to largest, like a triangle)
+  const lineWidths = [
+    0.22, // top (shortest)
+    0.44, // second
+    0.66, // third
+    0.88, // bottom (widest)
+  ];
+
+  // Vertical positions (evenly spaced)
+  const lineY = [
+    0.15,
+    0.35,
+    0.55,
+    0.75,
+  ];
+
   return (
     <div
       style={{
@@ -53,7 +69,7 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* Triangle Hamburger icon */}
+      {/* 4-Line Triangle Hamburger icon */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
@@ -78,33 +94,17 @@ export default function LogoHamburger({
           xmlns="http://www.w3.org/2000/svg"
           style={{ display: "block" }}
         >
-          {/* Top line (shortest) */}
-          <rect
-            x={(hamburgerSize * 0.5) - (hamburgerSize * 0.18)}
-            y={hamburgerSize * 0.19}
-            width={hamburgerSize * 0.36}
-            height={hamburgerSize * 0.08}
-            rx={hamburgerSize * 0.04}
-            fill="#111"
-          />
-          {/* Middle line (medium) */}
-          <rect
-            x={(hamburgerSize * 0.5) - (hamburgerSize * 0.32)}
-            y={hamburgerSize * 0.45}
-            width={hamburgerSize * 0.64}
-            height={hamburgerSize * 0.08}
-            rx={hamburgerSize * 0.04}
-            fill="#111"
-          />
-          {/* Bottom line (widest) */}
-          <rect
-            x={(hamburgerSize * 0.5) - (hamburgerSize * 0.49)}
-            y={hamburgerSize * 0.71}
-            width={hamburgerSize * 0.98}
-            height={hamburgerSize * 0.08}
-            rx={hamburgerSize * 0.04}
-            fill="#111"
-          />
+          {lineWidths.map((widthFactor, i) => (
+            <rect
+              key={i}
+              x={(hamburgerSize * 0.5) - (hamburgerSize * widthFactor / 2)}
+              y={hamburgerSize * lineY[i]}
+              width={hamburgerSize * widthFactor}
+              height={hamburgerSize * 0.08}
+              rx={hamburgerSize * 0.04}
+              fill="#111"
+            />
+          ))}
         </svg>
       </div>
     </div>
