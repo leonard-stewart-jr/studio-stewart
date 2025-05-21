@@ -4,7 +4,7 @@ export default function SplashScreen({ onFinish }) {
   const [slideOut, setSlideOut] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setSlideOut(true), 4000); // 4 seconds
+    const timer = setTimeout(() => setSlideOut(true), 6000); // 6 seconds
     return () => clearTimeout(timer);
   }, []);
 
@@ -27,41 +27,81 @@ export default function SplashScreen({ onFinish }) {
         inset: 0,
         background: "#fff",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 1000,
-        flexDirection: "column",
         transition: "transform 0.6s cubic-bezier(.75,-0.01,.29,1.01), opacity 0.6s",
         transform: slideOut ? "translateY(-100vh)" : "translateY(0)",
         opacity: slideOut ? 0 : 1,
         pointerEvents: slideOut ? "none" : "auto",
         cursor: "pointer",
-        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif"
+        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+        overflow: "hidden",
       }}
       title="Click or tap to skip"
     >
-      <img
-        src="/logo.png"
-        alt="Logo"
+      {/* Logo centered and filling most of the screen */}
+      <div
         style={{
-          width: 320, // Enlarged logo
-          height: "auto",
-          marginBottom: 32,
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100vw",
+          height: "100vh",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 1,
+          pointerEvents: "none",
         }}
-      />
-      <span style={{
-        color: "#333",
-        fontWeight: "bold",
-        fontSize: 40,
-        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
-        textTransform: "uppercase", // All caps
-        letterSpacing: "0.10em"
-      }}>
-        Welcome to Studio Stewart
-      </span>
-      <span style={{ marginTop: 20, fontSize: 14, color: "#aaa" }}>
-        (Click or tap to skip)
-      </span>
+      >
+        <img
+          src="/logo.png"
+          alt="Logo"
+          style={{
+            display: "block",
+            margin: "0 auto",
+            maxWidth: "80vw",
+            maxHeight: "80vh",
+            width: "auto",
+            height: "auto",
+            filter: "grayscale(1)",
+            objectFit: "contain",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+          draggable={false}
+        />
+      </div>
+      {/* "WELCOME" at the bottom center */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 48,
+          left: 0,
+          width: "100vw",
+          textAlign: "center",
+          zIndex: 2,
+          pointerEvents: "none",
+          fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+        }}
+      >
+        <span
+          style={{
+            display: "block",
+            color: "#181818",
+            fontWeight: 800,
+            fontSize: 46,
+            textTransform: "uppercase", // ensures ALL CAPS
+            letterSpacing: "0.09em",
+            fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+          }}
+        >
+          WELCOME
+        </span>
+      </div>
     </div>
   );
 }

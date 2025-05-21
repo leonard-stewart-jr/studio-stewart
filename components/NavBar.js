@@ -1,73 +1,42 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const navItems = [
-  { label: "Portfolio", href: "/" },
-  { label: "About Me", href: "/about" },
-  { label: "3D Printing", href: "/3d-printing" },
+  { label: "PORTFOLIO", href: "/" },
+  { label: "ABOUT ME", href: "/about" },
+  { label: "3D PRINTING", href: "/3d-printing" },
 ];
 
-export default function NavBar() {
-  const router = useRouter();
-
+export default function NavBar({ headerHeight = 76 }) {
   return (
     <nav
       style={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "32px 0",
-        gap: 48,
+        gap: 46,
+        alignItems: "flex-end",
+        height: headerHeight - 16, // tuck closer to top
+        marginTop: 0,
       }}
     >
-      {/* Logo */}
-      <Link href="/" passHref legacyBehavior>
-        <a style={{ display: "flex", alignItems: "center", gap: 16, textDecoration: "none" }}>
-          <img
-            src="/logo.png"
-            alt="Studio Stewart Logo"
-            style={{ width: 200, height: 200, objectFit: "contain", marginRight: 8 }}
-          />
-          <span
+      {navItems.map((item) => (
+        <Link key={item.href} href={item.href} passHref legacyBehavior>
+          <a
             style={{
+              color: "#222C46",
               fontWeight: 700,
-              fontSize: 36,
-              letterSpacing: "0.03em",
-              color: "#151515",
-              textTransform: "uppercase",
-              fontFamily: "'Futura', 'Open Sans', Helvetica, Arial, sans-serif",
-              marginTop: 8,
+              fontSize: 22,
+              textDecoration: "none",
+              borderBottom: "2.5px solid transparent",
+              paddingBottom: 2,
+              letterSpacing: "1.7px",
+              transition: "border 0.16s, color 0.16s",
             }}
+            onMouseOver={e => (e.currentTarget.style.borderBottom = "2.5px solid #222C46")}
+            onMouseOut={e => (e.currentTarget.style.borderBottom = "2.5px solid transparent")}
           >
-            Studio Stewart
-          </span>
-        </a>
-      </Link>
-      {/* Navigation Items */}
-      <div style={{ display: "flex", gap: "32px", marginLeft: 36 }}>
-        {navItems.map((item) => (
-          <Link key={item.href} href={item.href} passHref legacyBehavior>
-            <a
-              style={{
-                padding: "8px 0",
-                textDecoration: "none",
-                color: "#181818",
-                fontWeight: 700,
-                fontSize: "1.05rem",
-                fontFamily: "'Futura', 'Open Sans', Helvetica, Arial, sans-serif",
-                border: "none",
-                background: "none",
-                transition: "color 0.2s",
-                opacity: router.pathname === item.href ? 1 : 0.7,
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              {item.label}
-            </a>
-          </Link>
-        ))}
-      </div>
+            {item.label}
+          </a>
+        </Link>
+      ))}
     </nav>
   );
 }

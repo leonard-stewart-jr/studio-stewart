@@ -1,0 +1,5 @@
+<svg width="60" height="60" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimal geometric A as roof/building -->
+  <polygon points="30,100 60,30 90,100" fill="#E5C19F" stroke="#222C46" stroke-width="6"/>
+  <rect x="54" y="70" width="12" height="30" fill="#222C46" />
+</svg>
