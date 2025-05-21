@@ -19,21 +19,6 @@ export default function NavBar() {
         background: "var(--bg)",
       }}
     >
-      {/* Logo section (replace src with your logo/hamburger if needed) */}
-      <div style={{ marginRight: 32 }}>
-        <img
-          src="/logo.png" // <-- Change to your logo or hamburger icon
-          alt="Logo"
-          className="logo"
-          style={{
-            width: 48,
-            height: 48,
-            objectFit: "contain",
-            display: "inline-block",
-            verticalAlign: "middle",
-          }}
-        />
-      </div>
       <ul
         style={{
           display: "flex",
