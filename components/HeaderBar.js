@@ -6,6 +6,10 @@ export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
 
+  // logo size and position constants (should match Sidebar.js)
+  const logoSize = 40;
+  const logoTopPadding = 24; // matches header's paddingTop
+
   return (
     <header
       style={{
@@ -14,24 +18,24 @@ export default function HeaderBar() {
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        padding: "24px 0",
+        padding: `${logoTopPadding}px 0`,
         background: "transparent",
         zIndex: 100,
       }}
     >
-      {/* Far left: Logo / Hamburger */}
+      {/* Far left: Logo/Hamburger */}
       <div
         style={{
           position: "absolute",
           left: 0,
           top: 0,
-          height: "100%",
+          height: logoSize,
           display: "flex",
           alignItems: "center",
-          paddingLeft: 20, // shifted right!
+          paddingLeft: 20,
           zIndex: 100,
           cursor: "pointer",
-          width: 60, // increased for buffer
+          width: logoSize + 16, // more hit area
           userSelect: "none",
         }}
         onClick={() => setSidebarOpen(true)}
@@ -49,19 +53,11 @@ export default function HeaderBar() {
           src="/logo.png"
           alt="Logo"
           style={{
-            height: 40,
-            width: 40,
-            minWidth: 40,
-            minHeight: 40,
-            maxWidth: 44,
-            maxHeight: 44,
+            height: logoSize,
+            width: logoSize,
             objectFit: "contain",
             opacity: hovered ? 0 : 1,
             transition: "opacity 0.18s",
-            position: "absolute",
-            left: 8, // so not flush left
-            top: "50%",
-            transform: "translateY(-50%)",
           }}
         />
         {/* Hamburger menu icon */}
@@ -69,16 +65,15 @@ export default function HeaderBar() {
           style={{
             opacity: hovered ? 1 : 0,
             transition: "opacity 0.18s",
-            width: 40,
-            height: 40,
+            width: logoSize,
+            height: logoSize,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "flex-start",
             position: "absolute",
-            left: 8,
-            top: "50%",
-            transform: "translateY(-50%)",
+            left: 0,
+            top: 0,
           }}
         >
           {[0, 1, 2].map(i => (
@@ -103,7 +98,11 @@ export default function HeaderBar() {
 
       {/* Sidebar */}
       {sidebarOpen && (
-        <Sidebar onClose={() => setSidebarOpen(false)} />
+        <Sidebar
+          onClose={() => setSidebarOpen(false)}
+          logoSize={logoSize}
+          logoTopPadding={logoTopPadding}
+        />
       )}
     </header>
   );
