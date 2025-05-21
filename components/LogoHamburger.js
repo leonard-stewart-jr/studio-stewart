@@ -7,14 +7,21 @@ export default function LogoHamburger({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Hamburger is 35% the size of the logo by default
-  const hamburgerScale = 0.35;
-  const hamburgerSize = logoSize * hamburgerScale;
-  const hamburgerOffset = (logoSize - hamburgerSize) / 2;
+  // Hamburger fills all available space
+  const hamburgerSize = logoSize;
+  const lineCount = 4;
 
-  // 4-line triangle hamburger (widths as fractions of full width)
-  const lineWidths = [0.22, 0.44, 0.66, 0.88];
-  const lineY = [0.13, 0.33, 0.53, 0.73];
+  // Each line increases in width to form a triangle
+  const minWidth = 0.3; // as a fraction of total width (change as you like)
+  const maxWidth = 1.0; // full width
+  // Calculate widths for each line from minWidth to maxWidth
+  const widths = Array.from({ length: lineCount }, (_, i) =>
+    minWidth + ((maxWidth - minWidth) * i) / (lineCount - 1)
+  );
+
+  // Space lines evenly from top to bottom
+  const lineSpacing = hamburgerSize / (lineCount + 1);
+  const lineHeight = hamburgerSize * 0.09; // thickness of lines
 
   return (
     <div
@@ -25,10 +32,8 @@ export default function LogoHamburger({
         transform: "translateY(-50%)",
         width: logoSize,
         height: logoSize,
-        display: "flex",
-        alignItems: "center",
-        zIndex: 1200,
         cursor: "pointer",
+        zIndex: 1200,
         userSelect: "none",
       }}
       onClick={onOpenSidebar}
@@ -58,20 +63,16 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* Hamburger icon (fades in and expands to triangle bounds on hover/focus) */}
+      {/* Hamburger icon (fades in and fills triangle area) */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
           transition: "opacity 0.18s",
           width: hamburgerSize,
           height: hamburgerSize,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           position: "absolute",
-          left: hamburgerOffset,
-          top: "50%",
-          transform: "translateY(-50%)",
+          left: 0,
+          top: 0,
           pointerEvents: "none", // let pointer events go to parent for hover/click
         }}
       >
@@ -82,17 +83,22 @@ export default function LogoHamburger({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {lineWidths.map((widthFactor, i) => (
-            <rect
-              key={i}
-              x={(hamburgerSize * 0.5) - (hamburgerSize * widthFactor / 2)}
-              y={hamburgerSize * lineY[i]}
-              width={hamburgerSize * widthFactor}
-              height={hamburgerSize * 0.08}
-              rx={hamburgerSize * 0.04}
-              fill="#111"
-            />
-          ))}
+          {widths.map((widthFactor, i) => {
+            const y = lineSpacing * (i + 1) - lineHeight / 2;
+            const lineWidth = hamburgerSize * widthFactor;
+            const x = (hamburgerSize - lineWidth) / 2;
+            return (
+              <rect
+                key={i}
+                x={x}
+                y={y}
+                width={lineWidth}
+                height={lineHeight}
+                rx={lineHeight / 2}
+                fill="#111"
+              />
+            );
+          })}
         </svg>
       </div>
     </div>
