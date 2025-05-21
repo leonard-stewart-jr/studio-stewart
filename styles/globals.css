@@ -73,6 +73,7 @@ aside[role="dialog"]::-webkit-scrollbar-track {
   background: #222;
 }
 
+/* Optional: Responsive sidebar for mobile */
 @media (max-width: 700px) {
   aside[role="dialog"] {
     width: 85vw !important;
