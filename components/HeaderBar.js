@@ -6,15 +6,10 @@ export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  // Match these with Sidebar.js
-  const sidebarWidth = 320;
-  const logoSize = 80; // Double original size
+  // These should match Sidebar.js
+  const sidebarPaddingLeft = 28; // Matches Sidebar's left padding
+  const logoSize = 80;
   const headerHeight = 110;
-
-  // Center logo horizontally to match sidebar logo (centered at 160px if sidebarWidth is 320)
-  const logoLeft = sidebarWidth / 2 - logoSize / 2;
-
-  // Hamburger icon should be 65% smaller than logo
   const hamburgerScale = 0.35;
   const hamburgerSize = logoSize * hamburgerScale;
 
@@ -29,21 +24,20 @@ export default function HeaderBar() {
         zIndex: 100,
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
       }}
     >
-      {/* Logo/Hamburger */}
+      {/* Logo/Hamburger - aligned with sidebar text/links */}
       <div
         style={{
           position: "absolute",
-          left: logoLeft,
+          left: sidebarPaddingLeft,
           top: "50%",
           transform: "translateY(-50%)",
           width: logoSize,
           height: logoSize,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           zIndex: 1200,
           cursor: "pointer",
           userSelect: "none",
@@ -86,9 +80,9 @@ export default function HeaderBar() {
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
-            left: "50%",
+            left: 0,
             top: "50%",
-            transform: `translate(-50%, -50%)`,
+            transform: `translateY(-50%)`,
             pointerEvents: "none",
           }}
         >
@@ -116,8 +110,6 @@ export default function HeaderBar() {
       {sidebarOpen && (
         <Sidebar
           onClose={() => setSidebarOpen(false)}
-          sidebarTopPad={headerHeight}
-          sidebarWidth={sidebarWidth}
           logoSize={logoSize}
         />
       )}
