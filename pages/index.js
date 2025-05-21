@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import SplashScreen from "../components/SplashScreen";
 import NavBar from "../components/NavBar";
-import Link from "next/link";
 
 const projects = [
   {
@@ -9,27 +8,27 @@ const projects = [
     title: "Urban Pavilion",
     type: "Cultural Center",
     slug: "urban-pavilion",
-    coverType: "video",
-    coverSrc: "/projects/urban-pavilion/cover.mp4",
-    description: "Description or more images go here."
+    coverType: "image", // using image for placeholder
+    coverSrc: "https://picsum.photos/800/450?random=1",
+    description: "Project description goes here."
   },
   {
     grade: "2nd Year",
     title: "Residential Loft",
     type: "Housing",
     slug: "residential-loft",
-    coverType: "gif",
-    coverSrc: "/projects/residential-loft/cover.gif",
-    description: "Description or more images go here."
+    coverType: "image",
+    coverSrc: "https://picsum.photos/800/450?random=2",
+    description: "Project description goes here."
   },
   {
     grade: "4th Year",
     title: "Riverfront Studio",
     type: "Commercial",
     slug: "riverfront-studio",
-    coverType: "video",
-    coverSrc: "/projects/riverfront-studio/cover.mp4",
-    description: "Description or more images go here."
+    coverType: "image",
+    coverSrc: "https://picsum.photos/800/450?random=3",
+    description: "Project description goes here."
   },
 ];
 
@@ -140,7 +139,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  {/* Right column: Project cover (video or gif) */}
+                  {/* Right column: Project cover (image placeholder) */}
                   <div
                     style={{
                       flex: 1,
@@ -157,32 +156,16 @@ export default function Home() {
                       position: "relative",
                     }}
                   >
-                    {project.coverType === "video" ? (
-                      <video
-                        src={project.coverSrc}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: 6,
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src={project.coverSrc}
-                        alt={`${project.title} cover`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: 6,
-                        }}
-                      />
-                    )}
+                    <img
+                      src={project.coverSrc}
+                      alt={`${project.title} cover`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: 6,
+                      }}
+                    />
                   </div>
                 </div>
               ))}
@@ -228,34 +211,17 @@ export default function Home() {
                 >
                   {/* Project media */}
                   <div style={{ width: "min(80vw,900px)", maxHeight: "70vh", margin: "0 auto" }}>
-                    {projects[activeIndex].coverType === "video" ? (
-                      <video
-                        src={projects[activeIndex].coverSrc}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "contain",
-                          borderRadius: 8,
-                          background: "#eee",
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src={projects[activeIndex].coverSrc}
-                        alt={`${projects[activeIndex].title} cover`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "contain",
-                          borderRadius: 8,
-                          background: "#eee",
-                        }}
-                      />
-                    )}
+                    <img
+                      src={projects[activeIndex].coverSrc}
+                      alt={`${projects[activeIndex].title} cover`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        borderRadius: 8,
+                        background: "#eee",
+                      }}
+                    />
                   </div>
                   {/* Project info and navigation arrows */}
                   <div
