@@ -12,9 +12,10 @@ export default function NavBar({ headerHeight = 76 }) {
       style={{
         display: "flex",
         gap: 46,
-        alignItems: "flex-end",
-        height: headerHeight - 16, // tuck closer to top
+        alignItems: "center",
+        height: headerHeight - 16,
         marginTop: 0,
+        fontFamily: "'Futura', 'Open Sans'",
       }}
     >
       {navItems.map((item) => (
