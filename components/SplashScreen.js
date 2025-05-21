@@ -4,7 +4,7 @@ export default function SplashScreen({ onFinish }) {
   const [slideOut, setSlideOut] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setSlideOut(true), 4000); // 4 seconds
+    const timer = setTimeout(() => setSlideOut(true), 6000); // 6 seconds
     return () => clearTimeout(timer);
   }, []);
 
