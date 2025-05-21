@@ -17,11 +17,7 @@ export default function ThreeDPrinting() {
         maxWidth: 600,
         boxShadow: "0 4px 24px #eee"
       }}>
-        <h1>3D PRINTING</h1>
-        <p style={{ fontSize: '1.1rem', textAlign: "center" }}>
-          Explore my 3D printing projects, innovations, and tips.<br /><br />
-          I enjoy pushing the boundaries of physical creation using technology.
-        </p>
+        <h1 style={{ color: "#bbb", fontSize: "2.5rem" }}>IN PROGRESS</h1>
       </main>
     </div>
   );
