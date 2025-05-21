@@ -1,0 +1,11 @@
+<svg width="320" height="80" viewBox="0 0 320 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimal geometric A as roof/building -->
+  <polygon points="60,65 80,15 100,65" fill="#E5C19F" stroke="#222C46" stroke-width="3" />
+  <rect x="75" y="45" width="10" height="20" fill="#222C46" />
+  <!-- stewart text, A in tan -->
+  <text x="110" y="65" font-family="Futura, Arial, sans-serif" font-size="40" font-weight="bold" fill="#222C46">STEW</text>
+  <text x="205" y="65" font-family="Futura, Arial, sans-serif" font-size="40" font-weight="bold" fill="#E5C19F">A</text>
+  <text x="230" y="65" font-family="Futura, Arial, sans-serif" font-size="40" font-weight="bold" fill="#222C46">RT</text>
+  <!-- studio above -->
+  <text x="110" y="32" font-family="Futura, Arial, sans-serif" font-size="20" fill="#222C46" letter-spacing="2">STUDIO</text>
+</svg>
