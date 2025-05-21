@@ -14,6 +14,10 @@ export default function HeaderBar() {
   // Center logo horizontally to match sidebar logo (centered at 160px if sidebarWidth is 320)
   const logoLeft = sidebarWidth / 2 - logoSize / 2;
 
+  // Hamburger icon should be 65% smaller than logo
+  const hamburgerScale = 0.35;
+  const hamburgerSize = logoSize * hamburgerScale;
+
   return (
     <header
       style={{
@@ -75,15 +79,16 @@ export default function HeaderBar() {
           style={{
             opacity: hovered ? 1 : 0,
             transition: "opacity 0.18s",
-            width: logoSize,
-            height: logoSize,
+            width: hamburgerSize,
+            height: hamburgerSize,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
-            left: 0,
-            top: 0,
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%, -50%)`,
             pointerEvents: "none",
           }}
         >
@@ -91,11 +96,11 @@ export default function HeaderBar() {
             <div
               key={i}
               style={{
-                width: 56,
-                height: 8,
+                width: hamburgerSize * 0.7,
+                height: hamburgerSize * 0.12,
                 background: "#111",
-                margin: "8px 0",
-                borderRadius: 3,
+                margin: `${hamburgerSize * 0.08}px 0`,
+                borderRadius: hamburgerSize * 0.06,
               }}
             />
           ))}
