@@ -40,7 +40,7 @@ export default function NavBar() {
             }}
           >
             <span style={{ position: "relative", display: "inline-block", marginRight: 12, width: 44, height: 44 }}>
-              {/* The logo image */}
+              {/* The logo image (color here, not grayscale) */}
               <img
                 src="/logo.png"
                 alt="Studio Stewart Logo"
@@ -56,6 +56,7 @@ export default function NavBar() {
                   zIndex: 2,
                   pointerEvents: "none"
                 }}
+                className="logo"
               />
               {/* The bold animated bar */}
               <span
