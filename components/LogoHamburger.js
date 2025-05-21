@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 export default function LogoHamburger({
-  logoSize = 80,
-  sidebarPaddingLeft = 28,
+  logoSize = 66,
+  sidebarPaddingLeft = 22,
   onOpenSidebar,
 }) {
   const [hovered, setHovered] = useState(false);
@@ -10,21 +10,9 @@ export default function LogoHamburger({
   const hamburgerSize = logoSize * hamburgerScale;
   const hamburgerOffset = (logoSize - hamburgerSize) / 2;
 
-  // Proportional widths for 4 lines (smallest to largest, like a triangle)
-  const lineWidths = [
-    0.22, // top (shortest)
-    0.44, // second
-    0.66, // third
-    0.88, // bottom (widest)
-  ];
-
-  // Vertical positions (evenly spaced)
-  const lineY = [
-    0.15,
-    0.35,
-    0.55,
-    0.75,
-  ];
+  // 4-line triangle hamburger
+  const lineWidths = [0.22, 0.44, 0.66, 0.88];
+  const lineY = [0.13, 0.33, 0.53, 0.73];
 
   return (
     <div
@@ -37,7 +25,6 @@ export default function LogoHamburger({
         height: logoSize,
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-start",
         zIndex: 1200,
         cursor: "pointer",
         userSelect: "none",
@@ -69,7 +56,7 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* 4-Line Triangle Hamburger icon */}
+      {/* 4-Line Triangle Hamburger */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
@@ -92,7 +79,6 @@ export default function LogoHamburger({
           viewBox={`0 0 ${hamburgerSize} ${hamburgerSize}`}
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          style={{ display: "block" }}
         >
           {lineWidths.map((widthFactor, i) => (
             <rect
