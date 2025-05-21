@@ -6,12 +6,12 @@ export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  // These constants should match your Sidebar width and desired logo size
+  // Match these with Sidebar.js
   const sidebarWidth = 320;
-  const logoSize = 80; // double the original 40px
-  const headerHeight = 110; // taller header for big logo
+  const logoSize = 80; // Double original size
+  const headerHeight = 110;
 
-  // Logo center should align with sidebar's horizontal center
+  // Center logo horizontally to match sidebar logo (centered at 160px if sidebarWidth is 320)
   const logoLeft = sidebarWidth / 2 - logoSize / 2;
 
   return (
@@ -28,7 +28,7 @@ export default function HeaderBar() {
         justifyContent: "center",
       }}
     >
-      {/* Logo/Hamburger - absolutely positioned, centered on sidebar */}
+      {/* Logo/Hamburger */}
       <div
         style={{
           position: "absolute",
@@ -54,7 +54,6 @@ export default function HeaderBar() {
         title="Open menu"
         aria-label="Open menu"
       >
-        {/* Logo fades out on hover, hamburger fades in */}
         <img
           src="/logo.png"
           alt="Logo"
@@ -114,6 +113,7 @@ export default function HeaderBar() {
           onClose={() => setSidebarOpen(false)}
           sidebarTopPad={headerHeight}
           sidebarWidth={sidebarWidth}
+          logoSize={logoSize}
         />
       )}
     </header>
