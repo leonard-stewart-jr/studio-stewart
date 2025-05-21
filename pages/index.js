@@ -6,8 +6,26 @@ import ProjectModal from "../components/ProjectModal";
 import projects from "../data/projects";
 
 export default function Home() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
+
+  // Only show splash if localStorage flag is not set
+  useEffect(() => {
+    // Prevent SSR/localStorage error
+    if (typeof window !== "undefined") {
+      if (!window.localStorage.getItem("hasSeenSplash")) {
+        setShowSplash(true);
+      }
+    }
+  }, []);
+
+  // When splash screen is finished, set the flag
+  const handleSplashFinish = () => {
+    setShowSplash(false);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("hasSeenSplash", "true");
+    }
+  };
 
   // Keyboard navigation for modal
   useEffect(() => {
@@ -34,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       {!showSplash && (
         <div>
           <HeaderBar />
