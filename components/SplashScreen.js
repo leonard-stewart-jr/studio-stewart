@@ -43,24 +43,38 @@ export default function SplashScreen({ onFinish }) {
       <img
         src="/logo.png"
         alt="Logo"
-        className="grayscale logo"
         style={{
-          width: 1200,
+          width: 280,            // smaller logo size
           height: "auto",
           marginBottom: 32,
+          filter: "grayscale(1)", // make logo grayscale
         }}
       />
       <span style={{
-        color: "#333",
-        fontWeight: "bold",
-        fontSize: 40,
+        color: "#181818",
+        fontWeight: 800,
+        fontSize: 32, // new size, change as you wish
         fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
         textTransform: "uppercase",
-        letterSpacing: "0.10em"
+        letterSpacing: "0.10em",
+        textAlign: "center",
+        lineHeight: 1.2,
+        marginBottom: 8,
       }}>
-        Welcome to Studio Stewart
+        {/* Change your greeting text here */}
+        Discover the Creative World<br />of Studio Stewart
       </span>
-      <span style={{ marginTop: 20, fontSize: 14, color: "#aaa" }}>
+      <span style={{
+        color: "#888",
+        fontWeight: 400,
+        fontSize: 20, // change secondary text size here
+        letterSpacing: "0.03em",
+        textAlign: "center",
+        marginTop: 8,
+      }}>
+        Portfolio &mdash; Architecture, Coding, Design, and Making
+      </span>
+      <span style={{ marginTop: 28, fontSize: 14, color: "#aaa" }}>
         (Click or tap to skip)
       </span>
     </div>
