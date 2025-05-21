@@ -13,7 +13,7 @@ export default function NavBar() {
   return (
     <nav style={{
       display: "flex",
-      gap: "16px",
+      gap: "24px",
       justifyContent: "center",
       alignItems: "center",
       margin: "32px 0",
@@ -22,16 +22,16 @@ export default function NavBar() {
         <Link key={item.href} href={item.href} passHref legacyBehavior>
           <a
             style={{
-              padding: "8px 20px",
-              border: "2px solid #181818",
-              borderRadius: "8px",
+              padding: "8px 0",
               textDecoration: "none",
               color: "#181818",
-              background: router.pathname === item.href ? "#ececec" : "transparent",
               fontWeight: 600,
               fontSize: "0.9rem",
               fontFamily: "'Futura', 'Open Sans', Helvetica, Arial, sans-serif",
-              transition: "background 0.2s",
+              border: "none",
+              background: "none",
+              transition: "color 0.2s",
+              opacity: router.pathname === item.href ? 1 : 0.7,
             }}
           >
             {item.label}
