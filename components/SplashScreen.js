@@ -43,8 +43,9 @@ export default function SplashScreen({ onFinish }) {
       <img
         src="/logo.png"
         alt="Logo"
+        className="grayscale logo"
         style={{
-          width: 1200, // Enlarged logo
+          width: 1200,
           height: "auto",
           marginBottom: 32,
         }}
@@ -54,7 +55,7 @@ export default function SplashScreen({ onFinish }) {
         fontWeight: "bold",
         fontSize: 40,
         fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
-        textTransform: "uppercase", // All caps
+        textTransform: "uppercase",
         letterSpacing: "0.10em"
       }}>
         Welcome to Studio Stewart
