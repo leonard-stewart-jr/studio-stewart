@@ -11,10 +11,10 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) {
+export default function Sidebar({ onClose, sidebarTopPad = 110, sidebarWidth = 320 }) {
   return (
     <div>
-      {/* Overlay - clicking closes sidebar */}
+      {/* Overlay */}
       <div
         style={{
           position: "fixed",
@@ -30,7 +30,7 @@ export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) 
           position: "fixed",
           top: 0,
           left: 0,
-          width: 320,
+          width: sidebarWidth,
           maxWidth: "80vw",
           height: "100vh",
           background: "#fff",
@@ -39,33 +39,12 @@ export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) 
           zIndex: 2100,
           display: "flex",
           flexDirection: "column",
-          padding: `28px 28px 28px 28px`, // top padding for logo visual space
+          padding: `${sidebarTopPad}px 28px 28px 28px`,
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        {/* Logo at top, centered */}
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginBottom: 36,
-        }}>
-          <img
-            src="/logo.png"
-            alt="Logo"
-            style={{
-              width: logoSize + 28,
-              height: logoSize + 28,
-              objectFit: "contain",
-              marginBottom: 8,
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-            draggable={false}
-          />
-        </div>
         {/* Close button */}
         <button
           onClick={onClose}
@@ -73,9 +52,9 @@ export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) 
             background: "none",
             border: "none",
             color: "#181818",
-            fontSize: 26,
+            fontSize: 32,
             position: "absolute",
-            top: 12,
+            top: 24,
             right: 24,
             cursor: "pointer",
           }}
@@ -83,16 +62,17 @@ export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) 
         >
           ×
         </button>
-        <nav style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Navigation */}
+        <nav style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
                 style={{
                   color: "#181818",
                   fontWeight: 700,
-                  fontSize: 20,
+                  fontSize: 24,
                   textDecoration: "none",
-                  padding: "6px 0",
+                  padding: "8px 0",
                   borderBottom: "1px solid #eee",
                   transition: "color 0.2s"
                 }}
@@ -103,22 +83,22 @@ export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) 
             </Link>
           ))}
         </nav>
-        <div style={{ margin: "30px 0 10px 0", fontSize: 16, color: "#555" }}>
+        <div style={{ margin: "30px 0 10px 0", fontSize: 18, color: "#555" }}>
           <p>
             <b>Studio Stewart</b> — Digital portfolio<br />
             Creative developer, designer, and maker. Explore my work and reach out to connect!
           </p>
         </div>
         <div style={{ marginTop: "auto" }}>
-          <h3 style={{ fontSize: 16, margin: "12px 0 8px 0", color: "#181818" }}>Contact & Social</h3>
+          <h3 style={{ fontSize: 18, margin: "12px 0 8px 0", color: "#181818" }}>Contact & Social</h3>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {socialLinks.map(link => (
-              <li key={link.href} style={{ marginBottom: 4 }}>
+              <li key={link.href} style={{ marginBottom: 6 }}>
                 <a
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "#181818", textDecoration: "underline", fontSize: 15 }}
+                  style={{ color: "#181818", textDecoration: "underline", fontSize: 16 }}
                 >
                   {link.label}
                 </a>
