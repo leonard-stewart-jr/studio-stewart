@@ -1,4 +1,4 @@
-/* Set Futura globally, with safe fallbacks */
+/* Apply Futura font globally with fallbacks */
 html, body {
   font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
   font-size: 18px;
@@ -11,8 +11,10 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Remove Open Sans from Google Fonts if you want only Futura.
-   If you want Open Sans for some elements, specify it explicitly. */
+/* Force Futura in navbar and all its children, even if other CSS tries to override it */
+nav, nav *, .navbar, .navbar * {
+  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif !important;
+}
 
 /* Links */
 a {
