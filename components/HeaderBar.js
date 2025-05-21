@@ -71,7 +71,7 @@ export default function HeaderBar() {
           }}
           draggable={false}
         />
-        {/* Hamburger menu icon */}
+        {/* Triangle Hamburger menu icon */}
         <div
           style={{
             opacity: hovered ? 1 : 0,
@@ -79,28 +79,51 @@ export default function HeaderBar() {
             width: hamburgerSize,
             height: hamburgerSize,
             display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
             left: hamburgerOffset,
             top: "50%",
-            transform: `translateY(-50%)`,
+            transform: "translateY(-50%)",
             pointerEvents: "none",
           }}
         >
-          {[0, 1, 2].map(i => (
-            <div
-              key={i}
-              style={{
-                width: hamburgerSize * 0.7,
-                height: hamburgerSize * 0.12,
-                background: "#111",
-                margin: `${hamburgerSize * 0.08}px 0`,
-                borderRadius: hamburgerSize * 0.06,
-              }}
+          <svg
+            width={hamburgerSize}
+            height={hamburgerSize}
+            viewBox={`0 0 ${hamburgerSize} ${hamburgerSize}`}
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ display: "block" }}
+          >
+            {/* Top line (shortest) */}
+            <rect
+              x={(hamburgerSize * 0.5) - (hamburgerSize * 0.18)}
+              y={hamburgerSize * 0.19}
+              width={hamburgerSize * 0.36}
+              height={hamburgerSize * 0.08}
+              rx={hamburgerSize * 0.04}
+              fill="#111"
             />
-          ))}
+            {/* Middle line (medium) */}
+            <rect
+              x={(hamburgerSize * 0.5) - (hamburgerSize * 0.32)}
+              y={hamburgerSize * 0.45}
+              width={hamburgerSize * 0.64}
+              height={hamburgerSize * 0.08}
+              rx={hamburgerSize * 0.04}
+              fill="#111"
+            />
+            {/* Bottom line (widest) */}
+            <rect
+              x={(hamburgerSize * 0.5) - (hamburgerSize * 0.49)}
+              y={hamburgerSize * 0.71}
+              width={hamburgerSize * 0.98}
+              height={hamburgerSize * 0.08}
+              rx={hamburgerSize * 0.04}
+              fill="#111"
+            />
+          </svg>
         </div>
       </div>
 
