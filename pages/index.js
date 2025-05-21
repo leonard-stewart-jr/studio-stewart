@@ -8,7 +8,7 @@ const projects = [
     title: "Urban Pavilion",
     type: "Cultural Center",
     slug: "urban-pavilion",
-    coverType: "image", // using image for placeholder
+    coverType: "image",
     coverSrc: "https://picsum.photos/800/450?random=1",
     description: "Project description goes here."
   },
@@ -64,7 +64,36 @@ export default function Home() {
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       {!showSplash && (
         <div>
-          <NavBar />
+          {/* Header Row: Left Title, Center NavBar */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            marginTop: 36,
+            marginBottom: 36,
+            paddingLeft: "5vw",
+            paddingRight: "5vw",
+          }}>
+            {/* Left: Title */}
+            <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+              <span style={{
+                fontSize: 44,
+                fontWeight: 900,
+                fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+                letterSpacing: "0.11em",
+                color: "#181818",
+                textTransform: "uppercase"
+              }}>
+                Studio Stewart
+              </span>
+            </div>
+            {/* Center: NavBar */}
+            <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+              <NavBar />
+            </div>
+            {/* Right: Spacer */}
+            <div style={{ flex: 1 }} />
+          </div>
           <main
             style={{
               minHeight: "100vh",
@@ -72,7 +101,7 @@ export default function Home() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "60px 0 40px 0",
+              padding: "0 0 40px 0",
               fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
             }}
           >
