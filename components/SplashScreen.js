@@ -27,56 +27,81 @@ export default function SplashScreen({ onFinish }) {
         inset: 0,
         background: "#fff",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 1000,
-        flexDirection: "column",
         transition: "transform 0.6s cubic-bezier(.75,-0.01,.29,1.01), opacity 0.6s",
         transform: slideOut ? "translateY(-100vh)" : "translateY(0)",
         opacity: slideOut ? 0 : 1,
         pointerEvents: slideOut ? "none" : "auto",
         cursor: "pointer",
-        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif"
+        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+        overflow: "hidden",
       }}
       title="Click or tap to skip"
     >
-      <img
-        src="/logo.png"
-        alt="Logo"
+      {/* Logo centered and filling most of the screen */}
+      <div
         style={{
-          width: 280,            // smaller logo size
-          height: "auto",
-          marginBottom: 32,
-          filter: "grayscale(1)", // make logo grayscale
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100vw",
+          height: "100vh",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 1,
+          pointerEvents: "none",
         }}
-      />
-      <span style={{
-        color: "#181818",
-        fontWeight: 800,
-        fontSize: 32, // new size, change as you wish
-        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
-        textTransform: "uppercase",
-        letterSpacing: "0.10em",
-        textAlign: "center",
-        lineHeight: 1.2,
-        marginBottom: 8,
-      }}>
-        {/* Change your greeting text here */}
-        Discover the Creative World<br />of Studio Stewart
-      </span>
-      <span style={{
-        color: "#888",
-        fontWeight: 400,
-        fontSize: 20, // change secondary text size here
-        letterSpacing: "0.03em",
-        textAlign: "center",
-        marginTop: 8,
-      }}>
-        Portfolio &mdash; Architecture, Coding, Design, and Making
-      </span>
-      <span style={{ marginTop: 28, fontSize: 14, color: "#aaa" }}>
-        (Click or tap to skip)
-      </span>
+      >
+        <img
+          src="/logo.png"
+          alt="Logo"
+          style={{
+            display: "block",
+            margin: "0 auto",
+            maxWidth: "80vw",
+            maxHeight: "80vh",
+            width: "auto",
+            height: "auto",
+            filter: "grayscale(1)",
+            objectFit: "contain",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+          draggable={false}
+        />
+      </div>
+      {/* "welcome" at the bottom center */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 48,
+          left: 0,
+          width: "100vw",
+          textAlign: "center",
+          zIndex: 2,
+          pointerEvents: "none",
+          fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+        }}
+      >
+        <span
+          style={{
+            display: "block",
+            color: "#181818",
+            fontWeight: 800,
+            fontSize: 46,
+            textTransform: "lowercase",
+            letterSpacing: "0.09em",
+            fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+          }}
+        >
+          welcome
+        </span>
+      </div>
     </div>
   );
 }
