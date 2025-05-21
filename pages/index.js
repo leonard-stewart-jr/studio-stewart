@@ -3,6 +3,7 @@ import SplashScreen from "../components/SplashScreen";
 import NavBar from "../components/NavBar";
 import Link from "next/link";
 
+// Update your projects array as needed
 const projects = [
   {
     grade: "3rd Year",
@@ -41,50 +42,96 @@ export default function Home() {
           <NavBar />
           <main
             style={{
-              minHeight: "80vh",
+              minHeight: "100vh",
+              background: "#fff",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "flex-start",
-              background: "#fafafa",
-              borderRadius: 12,
-              padding: "2rem",
-              margin: "0 auto",
-              maxWidth: 700,
-              boxShadow: "0 4px 24px #eee",
+              padding: "60px 0 40px 0",
+              fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
             }}
           >
-            <h1 style={{ marginBottom: 28, fontSize: 32 }}>Portfolio Projects</h1>
-            <div style={{ width: "100%" }}>
+            <section
+              style={{
+                width: "100%",
+                maxWidth: 1100,
+                display: "flex",
+                flexDirection: "column",
+                gap: "68px",
+              }}
+            >
               {projects.map((project) => (
                 <Link key={project.slug} href={`/projects/${project.slug}`} passHref legacyBehavior>
                   <a
                     style={{
                       display: "flex",
+                      flexDirection: "row",
                       alignItems: "center",
-                      gap: 24,
-                      borderRadius: 10,
-                      marginBottom: 28,
-                      padding: "18px 20px",
-                      background: "#fff",
-                      boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
+                      gap: "36px",
                       textDecoration: "none",
                       color: "#181818",
-                      transition: "box-shadow 0.18s",
-                      minHeight: 110,
+                      width: "100%",
+                      background: "none",
+                      boxShadow: "none",
+                      borderRadius: 0,
+                      padding: 0,
+                      transition: "background 0.15s",
                     }}
                   >
+                    {/* Left column: Project info */}
                     <div
                       style={{
-                        width: 150,
-                        minWidth: 120,
-                        height: 90,
-                        overflow: "hidden",
-                        borderRadius: 8,
+                        minWidth: 210,
+                        maxWidth: 210,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        flexShrink: 0,
+                        marginRight: 24,
+                        gap: 8,
+                      }}
+                    >
+                      {/* Optional: logo/icon could go here */}
+                      <div style={{
+                        textAlign: "right"
+                      }}>
+                        <div style={{
+                          fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+                          fontWeight: 700,
+                          fontSize: 19,
+                          marginBottom: 2,
+                          letterSpacing: 0.01,
+                          lineHeight: 1.2,
+                          textTransform: "uppercase",
+                        }}>
+                          {project.title}
+                        </div>
+                        <div style={{
+                          fontFamily: "'Open Sans', Arial, sans-serif",
+                          fontSize: 13,
+                          color: "#888",
+                          letterSpacing: "0.10em",
+                          textTransform: "uppercase"
+                        }}>
+                          {project.grade} — {project.type}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Right column: Project cover (video or gif) */}
+                    <div
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        width: "100%",
+                        maxWidth: 600,
+                        aspectRatio: "16/9",
                         background: "#eee",
+                        overflow: "hidden",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
+                        borderRadius: 6,
+                        boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+                        position: "relative"
                       }}
                     >
                       {project.coverType === "video" ? (
@@ -98,7 +145,7 @@ export default function Home() {
                             width: "100%",
                             height: "100%",
                             objectFit: "cover",
-                            borderRadius: 8,
+                            borderRadius: 6,
                           }}
                         />
                       ) : (
@@ -109,26 +156,38 @@ export default function Home() {
                             width: "100%",
                             height: "100%",
                             objectFit: "cover",
-                            borderRadius: 8,
+                            borderRadius: 6,
                           }}
                         />
                       )}
                     </div>
-                    <div>
-                      <div style={{ fontSize: 14, color: "#646464", fontWeight: 500, marginBottom: 3 }}>
-                        {project.grade}
-                      </div>
-                      <div style={{ fontSize: 22, fontWeight: 600, marginBottom: 2 }}>
-                        {project.title}
-                      </div>
-                      <div style={{ fontSize: 15, color: "#888" }}>
-                        {project.type}
-                      </div>
-                    </div>
                   </a>
                 </Link>
               ))}
-            </div>
+            </section>
+            {/* Responsive styles */}
+            <style jsx>{`
+              @media (max-width: 900px) {
+                section {
+                  max-width: 98vw;
+                }
+              }
+              @media (max-width: 700px) {
+                a {
+                  flex-direction: column !important;
+                  align-items: flex-start !important;
+                  gap: 18px !important;
+                }
+                a > div {
+                  align-items: flex-start !important;
+                  text-align: left !important;
+                  min-width: 0 !important;
+                  max-width: none !important;
+                  margin-right: 0 !important;
+                  margin-bottom: 10px;
+                }
+              }
+            `}</style>
           </main>
         </div>
       )}
