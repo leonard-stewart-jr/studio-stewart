@@ -13,6 +13,9 @@ export default function HeaderBar() {
   const hamburgerScale = 0.35;
   const hamburgerSize = logoSize * hamburgerScale;
 
+  // To align hamburger exactly over the logo, center hamburger in logo container
+  const hamburgerOffset = (logoSize - hamburgerSize) / 2;
+
   return (
     <header
       style={{
@@ -80,7 +83,7 @@ export default function HeaderBar() {
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
-            left: 0,
+            left: hamburgerOffset,
             top: "50%",
             transform: `translateY(-50%)`,
             pointerEvents: "none",
