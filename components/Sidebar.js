@@ -11,7 +11,9 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-export default function Sidebar({ onClose, sidebarTopPad = 110, sidebarWidth = 320, logoSize = 80 }) {
+export default function Sidebar({ onClose, logoSize = 80 }) {
+  const sidebarPaddingLeft = 28;
+
   return (
     <div>
       {/* Overlay */}
@@ -30,7 +32,7 @@ export default function Sidebar({ onClose, sidebarTopPad = 110, sidebarWidth = 3
           position: "fixed",
           top: 0,
           left: 0,
-          width: sidebarWidth,
+          width: 320,
           maxWidth: "80vw",
           height: "100vh",
           background: "#fff",
@@ -39,21 +41,21 @@ export default function Sidebar({ onClose, sidebarTopPad = 110, sidebarWidth = 3
           zIndex: 2100,
           display: "flex",
           flexDirection: "column",
-          padding: `0 28px 28px 28px`, // no top padding, use margin on logo
+          padding: `0 28px 28px 28px`,
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        {/* Logo at top and shifted up */}
+        {/* Logo aligned with nav links */}
         <div
           style={{
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            alignItems: "flex-start",
             justifyContent: "center",
-            marginTop: "15px", // adjust this value to match header vertical alignment
+            marginTop: "15px",
             marginBottom: "10px",
             minHeight: logoSize,
           }}
@@ -67,6 +69,7 @@ export default function Sidebar({ onClose, sidebarTopPad = 110, sidebarWidth = 3
               objectFit: "contain",
               userSelect: "none",
               pointerEvents: "none",
+              marginLeft: 0, // aligns to sidebar text
             }}
             draggable={false}
           />
