@@ -27,8 +27,8 @@ export default function SplashScreen({ onFinish }) {
         inset: 0,
         background: "#fff",
         display: "flex",
-        alignItems: "center", // centered vertically
-        justifyContent: "center", // centered horizontally
+        alignItems: "center",
+        justifyContent: "center",
         zIndex: 1000,
         flexDirection: "column",
         transition: "transform 0.6s cubic-bezier(.75,-0.01,.29,1.01), opacity 0.6s",
@@ -54,10 +54,10 @@ export default function SplashScreen({ onFinish }) {
         fontWeight: "bold",
         fontSize: 40,
         fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
-        textTransform: "uppercase", // Force all caps
+        textTransform: "uppercase", // All caps
         letterSpacing: "0.10em"
       }}>
-        Welcome to My Life
+        Welcome to Studio Stewart
       </span>
       <span style={{ marginTop: 20, fontSize: 14, color: "#aaa" }}>
         (Click or tap to skip)
