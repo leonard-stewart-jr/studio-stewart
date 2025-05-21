@@ -53,7 +53,7 @@ export default function NavBar() {
 
   // Theme-dependent colors
   const isDark = theme === "dark";
-  const navBg = isDark ? "#111" : "#fff";
+  // const navBg = isDark ? "#111" : "#fff"; // not used anymore
   const navText = isDark ? "#f3f3f3" : "#151515";
   const barBg = isDark ? "#f3f3f3" : "#151515";
   const sidebarBg = isDark ? "#191a21" : "#fff";
@@ -71,7 +71,7 @@ export default function NavBar() {
           padding: "24px 5vw 24px 5vw",
           width: "100%",
           boxSizing: "border-box",
-          background: navBg,
+          background: "transparent", // <-- always transparent
           color: navText,
           transition: "background 0.25s, color 0.25s",
         }}
