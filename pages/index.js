@@ -64,7 +64,7 @@ export default function Home() {
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       {!showSplash && (
         <div>
-          {/* Header Row: Left Title, Center NavBar */}
+          {/* Header Row: Left Title, Center NavBar, Right Spacer */}
           <div style={{
             display: "flex",
             alignItems: "center",
