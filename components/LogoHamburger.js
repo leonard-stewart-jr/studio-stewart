@@ -10,7 +10,7 @@ export default function LogoHamburger({
   const hamburgerSize = logoSize * hamburgerScale;
   const hamburgerOffset = (logoSize - hamburgerSize) / 2;
 
-  // 4-line triangle hamburger
+  // 4-line triangle hamburger (widths as fractions of full width)
   const lineWidths = [0.22, 0.44, 0.66, 0.88];
   const lineY = [0.13, 0.33, 0.53, 0.73];
 
@@ -39,7 +39,7 @@ export default function LogoHamburger({
       title="Open menu"
       aria-label="Open menu"
     >
-      {/* Logo Mark Only SVG from public/assets directory */}
+      {/* Logo SVG (always the same size/position, fades out on hover) */}
       <img
         src="/assets/logo-mark-only.svg"
         alt="Logo"
@@ -56,7 +56,7 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* 4-Line Triangle Hamburger */}
+      {/* 4-Line Triangle Hamburger (fades in and scales to same bounding box as logo) */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
@@ -70,7 +70,7 @@ export default function LogoHamburger({
           left: hamburgerOffset,
           top: "50%",
           transform: "translateY(-50%)",
-          pointerEvents: "none",
+          pointerEvents: "none", // let pointer events go to parent for hover/click
         }}
       >
         <svg
