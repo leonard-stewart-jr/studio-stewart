@@ -1,100 +1,115 @@
-import { useState } from "react";
+/* Apply Futura font globally with fallbacks */
+html, body {
+  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+  font-size: 18px;
+  color: #181818;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-export default function LogoHamburger({
-  logoSize = 66,
-  sidebarPaddingLeft = 22,
-  onOpenSidebar,
-}) {
-  const [hovered, setHovered] = useState(false);
+/* Force Futura in navbar and all its children, even if other CSS tries to override it */
+nav, nav *, .navbar, .navbar * {
+  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif !important;
+}
 
-  // Hamburger fills the entire SVG area (logoSize x logoSize)
-  const lineCount = 4;
-  const minWidth = 0.3;
-  const maxWidth = 1.0;
-  const widths = Array.from({ length: lineCount }, (_, i) =>
-    minWidth + ((maxWidth - minWidth) * i) / (lineCount - 1)
-  );
-  const lineHeight = logoSize * 0.09;
-  const lineSpacing = (logoSize - lineHeight) / (lineCount - 1);
+/* Links */
+a {
+  color: #181818;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+a:hover {
+  color: #555;
+  text-decoration: underline;
+}
 
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: sidebarPaddingLeft,
-        top: "50%",
-        transform: "translateY(-50%)",
-        width: logoSize,
-        height: logoSize,
-        cursor: "pointer",
-        zIndex: 1200,
-        userSelect: "none",
-      }}
-      onClick={onOpenSidebar}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") onOpenSidebar();
-      }}
-      title="Open menu"
-      aria-label="Open menu"
-    >
-      {/* Logo SVG (fades out on hover/focus) */}
-      <img
-        src="/assets/logo-mark-only.svg"
-        alt="Logo"
-        style={{
-          width: logoSize,
-          height: logoSize,
-          objectFit: "contain",
-          opacity: hovered ? 0 : 1,
-          transition: "opacity 0.18s",
-          pointerEvents: "none",
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-        draggable={false}
-      />
-      {/* Hamburger icon (fades in and fills triangle area, sharp lines) */}
-      <div
-        style={{
-          opacity: hovered ? 1 : 0,
-          transition: "opacity 0.18s",
-          width: logoSize,
-          height: logoSize,
-          position: "absolute",
-          left: 0,
-          top: 0,
-          pointerEvents: "none",
-        }}
-      >
-        <svg
-          width={logoSize}
-          height={logoSize}
-          viewBox={`0 0 ${logoSize} ${logoSize}`}
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {widths.map((widthFactor, i) => {
-            const y = i * lineSpacing;
-            const lineWidth = logoSize * widthFactor;
-            const x = (logoSize - lineWidth) / 2;
-            return (
-              <rect
-                key={i}
-                x={x}
-                y={y}
-                width={lineWidth}
-                height={lineHeight}
-                fill="#111"
-                rx={0}
-              />
-            );
-          })}
-        </svg>
-      </div>
-    </div>
-  );
+/* Sidebar styles */
+aside {
+  box-shadow: 2px 0 24px rgba(0,0,0,0.13);
+  background: #fff;
+  color: #181818;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+nav a {
+  font-weight: 700;
+  font-size: 11px;         /* 50% smaller than original 22px */
+  padding: 3.5px 0;        /* 50% smaller than original 7px 0 */
+  border-bottom: 1px solid #eee;
+  color: #181818;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: #4682ff;
+}
+
+/* Sidebar Logo */
+aside img {
+  user-select: none;
+  pointer-events: none;
+  object-fit: contain;
+  display: block;
+}
+
+/* Sidebar Contact/Social Section */
+aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+aside ul li {
+  margin-bottom: 5px;
+}
+aside ul li a {
+  color: #181818;
+  text-decoration: underline;
+  font-size: 7.75px;    /* 50% smaller than original 15.5px */
+}
+
+/* Sidebar Info/Caption */
+aside > div[style*="color: #555"] {
+  font-size: 8.5px !important;  /* 50% smaller than original 17px */
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+.bold {
+  font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 700px) {
+  nav a {
+    font-size: 9.5px;     /* 50% smaller than original 19px */
+    padding: 2.5px 0;
+  }
+}
+
+/* Custom selection color */
+::selection {
+  background: #4682ff22;
+}
+
+/* Remove default focus outline, add custom */
+:focus {
+  outline: 2px solid #4682ff;
+  outline-offset: 2px;
 }
