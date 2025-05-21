@@ -11,12 +11,10 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-// Set this value to match your header/logo height
-const SIDEBAR_TOP_PADDING = 60; // px
-
-export default function Sidebar({ onClose }) {
+export default function Sidebar({ onClose, sidebarTopPad = 72, logoSize = 40 }) {
   return (
     <div>
+      {/* Overlay - clicking closes sidebar */}
       <div
         style={{
           position: "fixed",
@@ -41,12 +39,34 @@ export default function Sidebar({ onClose }) {
           zIndex: 2100,
           display: "flex",
           flexDirection: "column",
-          padding: ` ${SIDEBAR_TOP_PADDING}px 28px 28px 28px`,
+          padding: `28px 28px 28px 28px`, // top padding for logo visual space
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
+        {/* Logo at top, centered */}
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginBottom: 36,
+        }}>
+          <img
+            src="/logo.png"
+            alt="Logo"
+            style={{
+              width: logoSize + 28,
+              height: logoSize + 28,
+              objectFit: "contain",
+              marginBottom: 8,
+              userSelect: "none",
+              pointerEvents: "none",
+            }}
+            draggable={false}
+          />
+        </div>
+        {/* Close button */}
         <button
           onClick={onClose}
           style={{
