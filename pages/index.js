@@ -64,7 +64,7 @@ export default function Home() {
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       {!showSplash && (
         <div>
-          {/* Header Row: Left Title, Center NavBar, Right Spacer */}
+          {/* Header Row: Left Logo, Center NavBar, Right Spacer */}
           <div style={{
             display: "flex",
             alignItems: "center",
@@ -74,18 +74,18 @@ export default function Home() {
             paddingLeft: "5vw",
             paddingRight: "5vw",
           }}>
-            {/* Left: Title */}
+            {/* Left: LOGO replaces old big text */}
             <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-              <span style={{
-                fontSize: 44,
-                fontWeight: 900,
-                fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
-                letterSpacing: "0.11em",
-                color: "#181818",
-                textTransform: "uppercase"
-              }}>
-                Studio Stewart
-              </span>
+              <img
+                src="/logo.png"
+                alt="Studio Stewart Logo"
+                style={{
+                  width: 68, // adjust as needed
+                  height: "auto",
+                  objectFit: "contain",
+                  verticalAlign: "middle"
+                }}
+              />
             </div>
             {/* Center: NavBar */}
             <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
