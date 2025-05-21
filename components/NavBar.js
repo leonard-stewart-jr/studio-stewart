@@ -9,33 +9,35 @@ const navItems = [
 
 export default function NavBar() {
   const router = useRouter();
+
   return (
     <nav style={{
       display: "flex",
-      gap: "1rem",
+      gap: "16px",
       justifyContent: "center",
-      margin: "2rem 0"
+      alignItems: "center",
+      margin: "32px 0",
     }}>
-      {navItems.map(item => {
-        const isActive = router.pathname === item.href;
-        return (
-          <Link key={item.href} href={item.href} legacyBehavior>
-            <a style={{
-              border: "2px solid #333",
-              borderRadius: 8,
-              padding: "0.5rem 1.5rem",
-              fontWeight: "bold",
-              background: isActive ? "#eee" : "#fff",
-              color: isActive ? "#111" : "#333",
+      {navItems.map(item => (
+        <Link key={item.href} href={item.href} passHref legacyBehavior>
+          <a
+            style={{
+              padding: "8px 20px",
+              border: "2px solid #181818",
+              borderRadius: "8px",
               textDecoration: "none",
-              boxShadow: isActive ? "0 2px 8px #ccc" : "none",
-              transition: "background 0.2s"
-            }}>
-              {item.label}
-            </a>
-          </Link>
-        );
-      })}
+              color: "#181818",
+              background: router.pathname === item.href ? "#ececec" : "transparent",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+              fontFamily: "'Futura', 'Open Sans', Helvetica, Arial, sans-serif",
+              transition: "background 0.2s",
+            }}
+          >
+            {item.label}
+          </a>
+        </Link>
+      ))}
     </nav>
   );
 }
