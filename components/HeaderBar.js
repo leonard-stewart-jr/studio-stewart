@@ -1,109 +1,112 @@
-import { useState } from "react";
-import Sidebar from "./Sidebar";
-import NavBar from "./NavBar";
+import Link from "next/link";
 
-export default function HeaderBar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [hovered, setHovered] = useState(false);
+const navItems = [
+  { label: "Portfolio", href: "/" },
+  { label: "About Me", href: "/about" },
+  { label: "3D Printing", href: "/3d-printing" },
+];
 
-  // logo size and position constants (should match Sidebar.js)
-  const logoSize = 40;
-  const logoTopPadding = 24; // matches header's paddingTop
+const socialLinks = [
+  { label: "Email", href: "mailto:your@email.com" },
+  { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
+];
 
+// Set this value to match your header/logo height
+const SIDEBAR_TOP_PADDING = 60; // px
+
+export default function Sidebar({ onClose }) {
   return (
-    <header
-      style={{
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        padding: `${logoTopPadding}px 0`,
-        background: "transparent",
-        zIndex: 100,
-      }}
-    >
-      {/* Far left: Logo/Hamburger */}
+    <div>
       <div
         style={{
-          position: "absolute",
-          left: 0,
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.25)",
+          zIndex: 2000,
+        }}
+        onClick={onClose}
+        aria-label="Close menu"
+      />
+      <aside
+        style={{
+          position: "fixed",
           top: 0,
-          height: logoSize,
+          left: 0,
+          width: 320,
+          maxWidth: "80vw",
+          height: "100vh",
+          background: "#fff",
+          color: "#181818",
+          boxShadow: "2px 0 24px rgba(0,0,0,0.17)",
+          zIndex: 2100,
           display: "flex",
-          alignItems: "center",
-          paddingLeft: 20,
-          zIndex: 100,
-          cursor: "pointer",
-          width: logoSize + 16, // more hit area
-          userSelect: "none",
+          flexDirection: "column",
+          padding: ` ${SIDEBAR_TOP_PADDING}px 28px 28px 28px`,
         }}
-        onClick={() => setSidebarOpen(true)}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        tabIndex={0}
-        onKeyDown={e => {
-          if (e.key === "Enter" || e.key === " ") setSidebarOpen(true);
-        }}
-        title="Open menu"
-        aria-label="Open menu"
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
       >
-        {/* Logo fades out on hover, hamburger fades in */}
-        <img
-          src="/logo.png"
-          alt="Logo"
+        <button
+          onClick={onClose}
           style={{
-            height: logoSize,
-            width: logoSize,
-            objectFit: "contain",
-            opacity: hovered ? 0 : 1,
-            transition: "opacity 0.18s",
-          }}
-        />
-        {/* Hamburger menu icon */}
-        <div
-          style={{
-            opacity: hovered ? 1 : 0,
-            transition: "opacity 0.18s",
-            width: logoSize,
-            height: logoSize,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "flex-start",
+            background: "none",
+            border: "none",
+            color: "#181818",
+            fontSize: 26,
             position: "absolute",
-            left: 0,
-            top: 0,
+            top: 12,
+            right: 24,
+            cursor: "pointer",
           }}
+          aria-label="Close menu"
         >
-          {[0, 1, 2].map(i => (
-            <div
-              key={i}
-              style={{
-                width: 28,
-                height: 4,
-                background: "#111",
-                margin: "3px 0",
-                borderRadius: 2,
-              }}
-            />
+          ×
+        </button>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} passHref legacyBehavior>
+              <a
+                style={{
+                  color: "#181818",
+                  fontWeight: 700,
+                  fontSize: 20,
+                  textDecoration: "none",
+                  padding: "6px 0",
+                  borderBottom: "1px solid #eee",
+                  transition: "color 0.2s"
+                }}
+                onClick={onClose}
+              >
+                {item.label}
+              </a>
+            </Link>
           ))}
+        </nav>
+        <div style={{ margin: "30px 0 10px 0", fontSize: 16, color: "#555" }}>
+          <p>
+            <b>Studio Stewart</b> — Digital portfolio<br />
+            Creative developer, designer, and maker. Explore my work and reach out to connect!
+          </p>
         </div>
-      </div>
-
-      {/* Centered NavBar */}
-      <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-        <NavBar />
-      </div>
-
-      {/* Sidebar */}
-      {sidebarOpen && (
-        <Sidebar
-          onClose={() => setSidebarOpen(false)}
-          logoSize={logoSize}
-          logoTopPadding={logoTopPadding}
-        />
-      )}
-    </header>
+        <div style={{ marginTop: "auto" }}>
+          <h3 style={{ fontSize: 16, margin: "12px 0 8px 0", color: "#181818" }}>Contact & Social</h3>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {socialLinks.map(link => (
+              <li key={link.href} style={{ marginBottom: 4 }}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#181818", textDecoration: "underline", fontSize: 15 }}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    </div>
   );
 }
