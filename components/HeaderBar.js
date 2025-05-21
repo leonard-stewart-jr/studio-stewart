@@ -6,10 +6,10 @@ import LogoHamburger from "./LogoHamburger";
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Consistent sizing for header/side bar
-  const logoSize = 80;
-  const headerHeight = 110;
-  const sidebarPaddingLeft = 28;
+  // Tighter, more compact header
+  const logoSize = 66; // slightly smaller
+  const headerHeight = 76; // tighter
+  const sidebarPaddingLeft = 22;
 
   return (
     <header
@@ -22,6 +22,8 @@ export default function HeaderBar() {
         zIndex: 100,
         display: "flex",
         alignItems: "center",
+        paddingTop: 0,
+        paddingBottom: 0,
       }}
     >
       {/* Logo/Hamburger */}
@@ -33,7 +35,7 @@ export default function HeaderBar() {
 
       {/* Centered NavBar */}
       <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-        <NavBar />
+        <NavBar headerHeight={headerHeight} />
       </div>
 
       {/* Sidebar */}
@@ -41,6 +43,7 @@ export default function HeaderBar() {
         <Sidebar
           onClose={() => setSidebarOpen(false)}
           logoSize={logoSize}
+          sidebarPaddingLeft={sidebarPaddingLeft}
         />
       )}
     </header>
