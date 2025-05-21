@@ -59,7 +59,7 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
           }}
         >
           <img
-            src="/logo.png"
+            src="/assets/logo-mark-only.svg"
             alt="Logo"
             style={{
               width: logoSize,
