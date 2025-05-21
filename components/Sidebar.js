@@ -11,6 +11,9 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
+// Set this value to match your header/logo height
+const SIDEBAR_TOP_PADDING = 60; // px
+
 export default function Sidebar({ onClose }) {
   return (
     <div>
@@ -38,7 +41,7 @@ export default function Sidebar({ onClose }) {
           zIndex: 2100,
           display: "flex",
           flexDirection: "column",
-          padding: "44px 28px 28px 28px",
+          padding: ` ${SIDEBAR_TOP_PADDING}px 28px 28px 28px`,
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
@@ -60,7 +63,7 @@ export default function Sidebar({ onClose }) {
         >
           ×
         </button>
-        <nav style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 32 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
