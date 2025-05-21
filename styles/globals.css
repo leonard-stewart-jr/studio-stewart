@@ -37,3 +37,8 @@ h1, h2, h3, h4, h5, h6, .title {
   display: inline-block;
   vertical-align: middle;
 }
+
+/* Grayscale utility class */
+.grayscale {
+  filter: grayscale(100%);
+}
