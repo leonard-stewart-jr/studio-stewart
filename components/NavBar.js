@@ -33,8 +33,9 @@ export default function NavBar() {
                   fontSize: 16,
                   color: router.pathname === item.href ? "#111" : "#888",
                   transition: "color 0.18s",
-                  textDecoration: "none", // ensures no underline
-                  borderBottom: "none",   // ensures no underline
+                  textDecoration: "none",
+                  borderBottom: "none",
+                  textTransform: "uppercase", // Ensures uppercase
                 }}
               >
                 {item.label}
