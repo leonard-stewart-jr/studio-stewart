@@ -17,6 +17,26 @@ body {
   transition: background 0.25s, color 0.25s;
 }
 
+/* Remove default whitespace from header/nav */
+header {
+  margin: 0;
+  padding: 0;
+  min-height: 64px !important;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Reduce margin above main content */
+main {
+  margin-top: 18px; /* Lower value = less whitespace above images */
+}
+
+@media (max-width: 700px) {
+  main {
+    margin-top: 8px;
+  }
+}
+
 /* Capitalize all headings and .title class */
 h1, h2, h3, h4, h5, h6, .title {
   text-transform: uppercase;
@@ -56,11 +76,15 @@ h1, h2, h3, h4, h5, h6, .title {
   filter: grayscale(100%);
 }
 
-/* Optional: Sidebar scroll and smooth transitions */
+/* Sidebar: minimal/compact styling and scroll */
 aside[role="dialog"] {
   scrollbar-width: thin;
   scrollbar-color: #888 #222;
   overflow-y: auto;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  background: #fff;
+  box-shadow: 2px 0 24px rgba(0,0,0,0.13);
 }
 aside[role="dialog"]::-webkit-scrollbar {
   width: 8px;
@@ -73,7 +97,7 @@ aside[role="dialog"]::-webkit-scrollbar-track {
   background: #222;
 }
 
-/* Optional: Responsive sidebar for mobile */
+/* Responsive sidebar for mobile */
 @media (max-width: 700px) {
   aside[role="dialog"] {
     width: 85vw !important;
