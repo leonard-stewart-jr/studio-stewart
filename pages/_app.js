@@ -1,3 +1,4 @@
+import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import SplashScreen from "../components/SplashScreen";
 
