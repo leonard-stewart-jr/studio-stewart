@@ -39,9 +39,9 @@ export default function LogoHamburger({
       title="Open menu"
       aria-label="Open menu"
     >
-      {/* Logo */}
+      {/* Logo Mark Only SVG from public/assets directory */}
       <img
-        src="/logo.png"
+        src="/assets/logo-mark-only.svg"
         alt="Logo"
         style={{
           width: logoSize,
