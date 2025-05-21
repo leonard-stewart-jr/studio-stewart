@@ -20,7 +20,7 @@ export default function NavBar() {
           margin: 0,
           justifyContent: "center",
           alignItems: "center",
-          fontFamily: "'Futura', 'Open Sans', sans-serif", // Ensure font matches global
+          fontFamily: "'Futura', 'Open Sans', sans-serif",
         }}
       >
         {navItems.map((item) => (
@@ -32,8 +32,8 @@ export default function NavBar() {
                   fontWeight: 600,
                   fontSize: 16,
                   color: router.pathname === item.href ? "#111" : "#888",
-                  borderBottom: router.pathname === item.href ? "2px solid #111" : "none",
-                  transition: "color 0.18s, border-bottom 0.18s",
+                  // borderBottom removed
+                  transition: "color 0.18s",
                 }}
               >
                 {item.label}
