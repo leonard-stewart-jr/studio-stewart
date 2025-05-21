@@ -27,8 +27,8 @@ export default function SplashScreen({ onFinish }) {
         inset: 0,
         background: "#fff",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: "center", // centered vertically
+        justifyContent: "center", // centered horizontally
         zIndex: 1000,
         flexDirection: "column",
         transition: "transform 0.6s cubic-bezier(.75,-0.01,.29,1.01), opacity 0.6s",
@@ -40,16 +40,24 @@ export default function SplashScreen({ onFinish }) {
       }}
       title="Click or tap to skip"
     >
-      <img src="/logo.png" alt="Logo"
-        style={{ width: 240, height: "auto", marginBottom: 32 }}
+      <img
+        src="/logo.png"
+        alt="Logo"
+        style={{
+          width: 320, // Enlarged logo
+          height: "auto",
+          marginBottom: 32,
+        }}
       />
       <span style={{
         color: "#333",
         fontWeight: "bold",
-        fontSize: 26,
-        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif"
+        fontSize: 40,
+        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
+        textTransform: "uppercase", // Force all caps
+        letterSpacing: "0.10em"
       }}>
-        Welcome to Studio Stewart
+        Welcome to My Life
       </span>
       <span style={{ marginTop: 20, fontSize: 14, color: "#aaa" }}>
         (Click or tap to skip)
