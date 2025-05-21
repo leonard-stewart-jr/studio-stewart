@@ -44,7 +44,7 @@ export default function SplashScreen({ onFinish }) {
         src="/logo.png"
         alt="Logo"
         style={{
-          width: 320, // Enlarged logo
+          width: 1200, // Enlarged logo
           height: "auto",
           marginBottom: 32,
         }}
