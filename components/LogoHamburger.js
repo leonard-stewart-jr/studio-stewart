@@ -7,21 +7,15 @@ export default function LogoHamburger({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Hamburger fills all available space
-  const hamburgerSize = logoSize;
+  // Hamburger fills the entire SVG area (logoSize x logoSize)
   const lineCount = 4;
-
-  // Each line increases in width to form a triangle
-  const minWidth = 0.3; // as a fraction of total width (change as you like)
-  const maxWidth = 1.0; // full width
-  // Calculate widths for each line from minWidth to maxWidth
+  const minWidth = 0.3;
+  const maxWidth = 1.0;
   const widths = Array.from({ length: lineCount }, (_, i) =>
     minWidth + ((maxWidth - minWidth) * i) / (lineCount - 1)
   );
-
-  // Space lines evenly from top to bottom
-  const lineSpacing = hamburgerSize / (lineCount + 1);
-  const lineHeight = hamburgerSize * 0.09; // thickness of lines
+  const lineHeight = logoSize * 0.09;
+  const lineSpacing = (logoSize - lineHeight) / (lineCount - 1);
 
   return (
     <div
@@ -63,30 +57,30 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* Hamburger icon (fades in and fills triangle area) */}
+      {/* Hamburger icon (fades in and fills triangle area, sharp lines) */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
           transition: "opacity 0.18s",
-          width: hamburgerSize,
-          height: hamburgerSize,
+          width: logoSize,
+          height: logoSize,
           position: "absolute",
           left: 0,
           top: 0,
-          pointerEvents: "none", // let pointer events go to parent for hover/click
+          pointerEvents: "none",
         }}
       >
         <svg
-          width={hamburgerSize}
-          height={hamburgerSize}
-          viewBox={`0 0 ${hamburgerSize} ${hamburgerSize}`}
+          width={logoSize}
+          height={logoSize}
+          viewBox={`0 0 ${logoSize} ${logoSize}`}
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           {widths.map((widthFactor, i) => {
-            const y = lineSpacing * (i + 1) - lineHeight / 2;
-            const lineWidth = hamburgerSize * widthFactor;
-            const x = (hamburgerSize - lineWidth) / 2;
+            const y = i * lineSpacing;
+            const lineWidth = logoSize * widthFactor;
+            const x = (logoSize - lineWidth) / 2;
             return (
               <rect
                 key={i}
@@ -94,8 +88,8 @@ export default function LogoHamburger({
                 y={y}
                 width={lineWidth}
                 height={lineHeight}
-                rx={lineHeight / 2}
                 fill="#111"
+                rx={0}
               />
             );
           })}
