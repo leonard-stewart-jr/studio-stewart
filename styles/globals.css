@@ -13,14 +13,23 @@ h1, h2, h3, h4, h5, h6, .title {
   font-family: inherit;
 }
 
-/* Optional: Capitalize nav links if they use .nav-link */
+/* Nav links: consistent look and interactive style */
 .nav-link {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-family: inherit;
+  color: #151515;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-link:hover, .nav-link:focus {
+  background: #f0f0f0;
+  color: #333;
 }
 
-/* Optional: Make logo 5x larger if it uses .logo class (40*5 = 200px) */
+/* Make logo 5x larger if it uses .logo class (40*5 = 200px) */
 .logo {
   width: 200px !important;
   height: 200px !important;
