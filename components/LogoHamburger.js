@@ -7,32 +7,34 @@ export default function LogoHamburger({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // For a triangle with points at (center,0), (0,height), (width,height)
-  const width = logoSize;
-  const height = logoSize;
+  // SVG triangle points from your logo
+  const triangle = [
+    { x: 30, y: 100 }, // left base
+    { x: 60, y: 30 },  // top
+    { x: 90, y: 100 }, // right base
+  ];
+  const viewBoxWidth = 120;
+  const viewBoxHeight = 120;
   const lineCount = 4;
 
-  // Triangle vertices (pointing up)
-  const Ax = width / 2, Ay = 0;
-  const Bx = 0, By = height;
-  const Cx = width, Cy = height;
-
-  // For each line, interpolate its Y position and compute X start/end to hug triangle sides
+  // Each line is horizontal, but left/right ends follow triangle edge
+  // Calculate y positions evenly spaced from top to base
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
-    // Evenly spaced Y positions from top (Ay) to bottom (By)
     const t = i / (lineCount - 1);
-    const y = Ay + t * (By - Ay);
+    // y from top (30) to base (100)
+    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
 
-    // Left edge: interpolate from A (top) to B (bottom)
-    // Right edge: interpolate from A (top) to C (bottom)
-    const x1 = Ax + (Bx - Ax) * t;
-    const x2 = Ax + (Cx - Ax) * t;
+    // Left x: interpolate from top to left base
+    const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
+    // Right x: interpolate from top to right base
+    const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
 
-    lines.push({ x1, x2, y });
+    lines.push({ x1: leftX, x2: rightX, y });
   }
 
-  const lineThickness = Math.max(1, height * 0.09);
+  // Thickness is proportional to SVG height
+  const lineThickness = Math.max(1, (triangle[0].y - triangle[1].y) * 0.09);
 
   return (
     <div
@@ -41,8 +43,8 @@ export default function LogoHamburger({
         left: sidebarPaddingLeft,
         top: "50%",
         transform: "translateY(-50%)",
-        width: width,
-        height: height,
+        width: logoSize,
+        height: logoSize,
         cursor: "pointer",
         zIndex: 1200,
         userSelect: "none",
@@ -52,18 +54,22 @@ export default function LogoHamburger({
       onMouseLeave={() => setHovered(false)}
       tabIndex={0}
       onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") onOpenSidebar();
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpenSidebar();
+        }
       }}
       title="Open menu"
       aria-label="Open menu"
+      role="button"
     >
-      {/* Logo SVG (fades out on hover/focus) */}
+      {/* Logo fades out on hover/focus */}
       <img
         src="/assets/logo-mark-only.svg"
         alt="Logo"
         style={{
-          width: width,
-          height: height,
+          width: logoSize,
+          height: logoSize,
           objectFit: "contain",
           opacity: hovered ? 0 : 1,
           transition: "opacity 0.18s",
@@ -74,13 +80,13 @@ export default function LogoHamburger({
         }}
         draggable={false}
       />
-      {/* Hamburger icon (fills triangle shape, sharp lines) */}
+      {/* Hamburger fades in, fills triangle, sharp lines */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
           transition: "opacity 0.18s",
-          width,
-          height,
+          width: logoSize,
+          height: logoSize,
           position: "absolute",
           left: 0,
           top: 0,
@@ -88,19 +94,12 @@ export default function LogoHamburger({
         }}
       >
         <svg
-          width={width}
-          height={height}
-          viewBox={`0 0 ${width} ${height}`}
+          width={logoSize}
+          height={logoSize}
+          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Optional: show triangle outline for debugging 
-          <polygon
-            points={`${Ax},${Ay} ${Bx},${By} ${Cx},${Cy}`}
-            fill="none"
-            stroke="#eee"
-            strokeWidth="1"
-          /> */}
           {lines.map((line, i) => (
             <rect
               key={i}
