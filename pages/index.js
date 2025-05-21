@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import SplashScreen from "../components/SplashScreen";
-import NavBar from "../components/NavBar";
+import HeaderBar from "../components/HeaderBar";
 
 const projects = [
   {
@@ -64,36 +64,7 @@ export default function Home() {
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       {!showSplash && (
         <div>
-          {/* Header Row: Left Logo, Center NavBar, Right Spacer */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            marginTop: 36,
-            marginBottom: 36,
-            paddingLeft: "5vw",
-            paddingRight: "5vw",
-          }}>
-            {/* Left: LOGO replaces old big text */}
-            <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-              <img
-                src="/logo.png"
-                alt="Studio Stewart Logo"
-                style={{
-                  width: 68, // adjust as needed
-                  height: "auto",
-                  objectFit: "contain",
-                  verticalAlign: "middle"
-                }}
-              />
-            </div>
-            {/* Center: NavBar */}
-            <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-              <NavBar />
-            </div>
-            {/* Right: Spacer */}
-            <div style={{ flex: 1 }} />
-          </div>
+          <HeaderBar />
           <main
             style={{
               minHeight: "100vh",
