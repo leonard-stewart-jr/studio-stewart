@@ -5,39 +5,43 @@ import NavBar from "./NavBar";
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const logoSize = 40;
-  const headerHeight = 72;
-  const logoLeftPad = 24;
+
+  // These constants should match your Sidebar width and desired logo size
+  const sidebarWidth = 320;
+  const logoSize = 80; // double the original 40px
+  const headerHeight = 110; // taller header for big logo
+
+  // Logo center should align with sidebar's horizontal center
+  const logoLeft = sidebarWidth / 2 - logoSize / 2;
 
   return (
     <header
       style={{
         width: "100%",
+        height: headerHeight,
+        minHeight: headerHeight,
+        position: "relative",
+        background: "transparent",
+        zIndex: 100,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        position: "relative",
-        padding: 0,
-        margin: 0,
-        background: "transparent",
-        minHeight: headerHeight,
-        height: headerHeight,
-        zIndex: 100,
       }}
     >
-      {/* Far left: Logo/Hamburger */}
+      {/* Logo/Hamburger - absolutely positioned, centered on sidebar */}
       <div
         style={{
           position: "absolute",
-          left: 0,
-          top: 0,
-          height: headerHeight,
+          left: logoLeft,
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: logoSize,
+          height: logoSize,
           display: "flex",
           alignItems: "center",
-          paddingLeft: logoLeftPad,
-          zIndex: 101,
+          justifyContent: "center",
+          zIndex: 1200,
           cursor: "pointer",
-          width: logoSize + logoLeftPad * 2,
           userSelect: "none",
         }}
         onClick={() => setSidebarOpen(true)}
@@ -55,16 +59,15 @@ export default function HeaderBar() {
           src="/logo.png"
           alt="Logo"
           style={{
-            height: logoSize,
             width: logoSize,
+            height: logoSize,
             objectFit: "contain",
             opacity: hovered ? 0 : 1,
             transition: "opacity 0.18s",
             pointerEvents: "none",
             position: "absolute",
-            left: logoLeftPad,
-            top: "50%",
-            transform: "translateY(-50%)",
+            left: 0,
+            top: 0,
           }}
           draggable={false}
         />
@@ -78,11 +81,10 @@ export default function HeaderBar() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "flex-start",
+            alignItems: "center",
             position: "absolute",
-            left: logoLeftPad,
-            top: "50%",
-            transform: "translateY(-50%)",
+            left: 0,
+            top: 0,
             pointerEvents: "none",
           }}
         >
@@ -90,11 +92,11 @@ export default function HeaderBar() {
             <div
               key={i}
               style={{
-                width: 28,
-                height: 4,
+                width: 56,
+                height: 8,
                 background: "#111",
-                margin: "3px 0",
-                borderRadius: 2,
+                margin: "8px 0",
+                borderRadius: 3,
               }}
             />
           ))}
@@ -106,12 +108,12 @@ export default function HeaderBar() {
         <NavBar />
       </div>
 
-      {/* Sidebar - only rendered when open */}
+      {/* Sidebar */}
       {sidebarOpen && (
         <Sidebar
           onClose={() => setSidebarOpen(false)}
           sidebarTopPad={headerHeight}
-          logoSize={logoSize}
+          sidebarWidth={sidebarWidth}
         />
       )}
     </header>
