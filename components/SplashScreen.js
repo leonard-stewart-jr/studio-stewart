@@ -75,7 +75,7 @@ export default function SplashScreen({ onFinish }) {
           draggable={false}
         />
       </div>
-      {/* "welcome" at the bottom center */}
+      {/* "WELCOME" at the bottom center */}
       <div
         style={{
           position: "absolute",
@@ -94,12 +94,12 @@ export default function SplashScreen({ onFinish }) {
             color: "#181818",
             fontWeight: 800,
             fontSize: 46,
-            textTransform: "lowercase",
+            textTransform: "uppercase", // ensures ALL CAPS
             letterSpacing: "0.09em",
             fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
           }}
         >
-          welcome
+          WELCOME
         </span>
       </div>
     </div>
