@@ -12,10 +12,7 @@ body {
 
 /* ====== HEADER BAR ====== */
 header {
-  background: #f9f9f7; /* Match page background for seamless look */
-  /* Removed box-shadow and border for no separation */
-  /* box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08); */
-  /* border-bottom: 1.5px solid #eee; */
+  background: #f9f9f7;
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
@@ -26,27 +23,27 @@ nav.main-nav {
   align-items: center;
   justify-content: center;
   gap: 32px;
-  height: 76px; /* match header height */
-  font-family: 'Orbitron', 'Rajdhani', Arial, 'Trebuchet MS', sans-serif; /* geometric sans-serif */
+  height: 76px;
+  font-family: 'Orbitron', 'Rajdhani', Arial, 'Trebuchet MS', sans-serif;
 }
 
 nav.main-nav a {
-  color: #b1b1ae; /* light gray for unselected */
+  color: #b1b1ae;
   font-weight: 700;
-  font-size: 11px;      /* Reduced from 22px to 11px */
+  font-size: 11px;
   text-decoration: none;
-  padding: 4px 0;       /* Adjusted for smaller font */
+  padding: 4px 0;
   border-bottom: 1px solid #eee;
   transition: color 0.2s;
   display: inline-block;
   white-space: nowrap;
   font-family: inherit;
-  letter-spacing: 0.5px; /* subtle for geometric look */
+  letter-spacing: 0.5px;
 }
 
 nav.main-nav a.active,
 nav.main-nav a[aria-current="page"] {
-  color: #e6dbb9; /* tan for selected tab */
+  color: #e6dbb9;
   text-decoration: underline;
 }
 
@@ -55,17 +52,20 @@ nav.sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
+  font-family: 'Orbitron', 'Rajdhani', Arial, 'Trebuchet MS', sans-serif;
 }
 
 nav.sidebar-nav a {
-  color: #181818;
+  color: #b1b1ae;
   font-weight: 700;
-  font-size: 11px;      /* Reduced from 22px to 11px */
+  font-size: 11px;
   text-decoration: none;
-  padding: 4px 0;       /* Adjusted for smaller font */
+  padding: 4px 0;
   border-bottom: 1px solid #eee;
   transition: color 0.2s;
   display: block;
+  font-family: inherit;
+  letter-spacing: 0.5px;
 }
 
 nav.sidebar-nav a.active,
@@ -222,10 +222,9 @@ nav.sidebar-nav a[aria-current="page"] {
 }
 
 /* ====== RESPONSIVE: HEADER & NAVIGATION ====== */
-/* HYBRID: Show nav bar on tablet and up, sidebar only on small mobile */
 @media (max-width: 700px) {
   nav.main-nav {
-    display: none !important; /* Hide main nav on small mobile */
+    display: none !important;
   }
 }
 
