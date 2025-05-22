@@ -3,10 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
 
-// Keep these values in sync with HeaderBar.js
-const headerHeight = 76;
-const logoSizeDefault = 66;
-
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
   { label: "ABOUT ME", href: "/about" },
@@ -21,8 +17,9 @@ const socialLinks = [
 export default function Sidebar({
   open,
   onClose,
-  logoSize = logoSizeDefault,
-  sidebarPaddingLeft = 22, // default preserved
+  logoSize = 66,
+  sidebarPaddingLeft = 22,
+  headerHeight = 76, // get from HeaderBar for perfect alignment
 }) {
   const router = useRouter();
   const verticalOffset = (headerHeight - logoSize) / 2;
@@ -76,8 +73,8 @@ export default function Sidebar({
             layoutId="logo-hamburger"
             style={{
               position: "absolute",
-              top: verticalOffset, // vertical alignment only
-              left: sidebarPaddingLeft, // original left preserved
+              top: verticalOffset, // aligns with HeaderBar
+              right: 16,           // place on top right!
               zIndex: 2200,
               cursor: "pointer",
             }}
