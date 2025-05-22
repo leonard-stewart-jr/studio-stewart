@@ -12,7 +12,7 @@ export default function HeaderBar() {
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
 
-  // Add this line for consistent hamburger animation speed:
+  // Consistent hamburger animation speed
   const hamburgerTransition = { duration: 0.12, ease: "linear" };
 
   return (
@@ -46,31 +46,22 @@ export default function HeaderBar() {
             justifyContent: "flex-start",
           }}
         >
-          {!sidebarOpen ? (
-            <motion.div
-              layoutId="logo-hamburger"
-              transition={hamburgerTransition} // <-- ADD THIS LINE
-              style={{
-                marginLeft: sidebarPaddingLeft,
-                cursor: "pointer",
-              }}
-            >
-              <LogoHamburger
-                logoSize={logoSize}
-                sidebarPaddingLeft={sidebarPaddingLeft}
-                onOpenSidebar={() => setSidebarOpen(true)}
-              />
-            </motion.div>
-          ) : (
-            // Reserve empty space (prevents header/nav shifting)
-            <div
-              style={{
-                width: logoSize,
-                height: logoSize,
-                marginLeft: sidebarPaddingLeft,
-              }}
+          <motion.div
+            layoutId="logo-hamburger"
+            transition={hamburgerTransition}
+            style={{
+              marginLeft: sidebarPaddingLeft,
+              cursor: "pointer",
+              opacity: sidebarOpen ? 0 : 1,
+              pointerEvents: sidebarOpen ? "none" : "auto",
+            }}
+          >
+            <LogoHamburger
+              logoSize={logoSize}
+              sidebarPaddingLeft={sidebarPaddingLeft}
+              onOpenSidebar={() => setSidebarOpen(true)}
             />
-          )}
+          </motion.div>
         </div>
         {/* Center: NavBar */}
         <div
