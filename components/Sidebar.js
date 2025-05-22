@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
+import LogoHamburger from "../components/LogoHamburger";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
@@ -58,27 +59,24 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
         aria-modal="true"
         tabIndex={-1}
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
+        {/* Close button replaced with LogoHamburger */}
+        <div
           style={{
-            background: "none",
-            border: "none",
-            color: "#181818",
-            fontSize: 32,
             position: "absolute",
-            top: 16,
-            right: 18,
-            cursor: "pointer",
+            top: 12,
+            right: 16,
             zIndex: 2200,
           }}
-          aria-label="Close menu"
         >
-          ×
-        </button>
+          <LogoHamburger
+            logoSize={48}
+            sidebarPaddingLeft={0}
+            onOpenSidebar={onClose}
+          />
+        </div>
         {/* Navigation */}
         <nav
-          className="sidebar-nav" // <-- THIS IS THE ONLY CHANGE
+          className="sidebar-nav"
           style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: logoSize }}
         >
           {navItems.map((item) => (
