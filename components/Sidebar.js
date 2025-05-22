@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
-import "../styles/sidebar.css";
+import "../styles/sidebar.module.css";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
