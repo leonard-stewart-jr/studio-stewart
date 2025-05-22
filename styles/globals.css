@@ -33,14 +33,13 @@ nav.main-nav {
 nav.main-nav a {
   color: #b1b1ae; /* light gray for unselected */
   font-weight: 700;
-  font-size: 22px;
+  font-size: 11px;      /* Reduced from 22px to 11px */
   text-decoration: none;
-  padding: 7px 0;
+  padding: 4px 0;       /* Adjusted for smaller font */
   border-bottom: 1px solid #eee;
   transition: color 0.2s;
   display: inline-block;
   white-space: nowrap;
-
   font-family: inherit;
   letter-spacing: 0.5px; /* subtle for geometric look */
 }
@@ -61,9 +60,9 @@ nav.sidebar-nav {
 nav.sidebar-nav a {
   color: #181818;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 11px;      /* Reduced from 22px to 11px */
   text-decoration: none;
-  padding: 7px 0;
+  padding: 4px 0;       /* Adjusted for smaller font */
   border-bottom: 1px solid #eee;
   transition: color 0.2s;
   display: block;
@@ -233,12 +232,12 @@ nav.sidebar-nav a[aria-current="page"] {
 @media (min-width: 701px) and (max-width: 1024px) {
   nav.main-nav {
     gap: 18px;
-    font-size: 18px;
+    font-size: 11px;
     height: 60px;
   }
   nav.main-nav a {
-    font-size: 18px;
-    padding: 5px 0;
+    font-size: 11px;
+    padding: 4px 0;
   }
 }
 
