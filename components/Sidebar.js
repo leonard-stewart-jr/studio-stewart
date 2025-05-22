@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
@@ -30,30 +30,38 @@ export default function Sidebar({
     return router.pathname === href || router.pathname.startsWith(href + "/");
   }
 
+  // You can adjust the duration here to control the speed!
   const sidebarVariants = {
-    closed: { x: "-100%", transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } },
-    open:   { x: 0,      transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } }
+    closed: { x: "-100%", transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } },
+    open:   { x: 0,      transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
   };
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   return (
     <>
-      <div
-        className={`sidebar-overlay${open ? " open" : ""}`}
-        onClick={onClose}
-        aria-label="Close menu"
-        style={{
-          display: open ? "block" : "none",
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,0.32)",
-          zIndex: 1300,
-          transition: "background 0.2s",
-        }}
-      />
+      {/* Overlay uses AnimatePresence for smooth fade in/out */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="sidebar-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.26, ease: "easeOut" }}
+            onClick={onClose}
+            aria-label="Close menu"
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(0,0,0,0.32)",
+              zIndex: 1300,
+            }}
+          />
+        )}
+      </AnimatePresence>
       <motion.aside
-        className={`sidebar${open ? " open" : ""}`}
-        initial="closed"
+        className="sidebar"
+        initial={false}
         animate={open ? "open" : "closed"}
         variants={sidebarVariants}
         style={{
