@@ -20,7 +20,7 @@ export default function LogoHamburger({
   const lineCount = 4;
   const minT = 0.04;
   const maxT = 0.96;
-  const yNudge = 2; // nudge all lines down by 2px
+  const yNudge = 4; // move hamburger down 4px
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = minT + (i / (lineCount - 1)) * (maxT - minT);
