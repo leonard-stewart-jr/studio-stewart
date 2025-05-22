@@ -2,8 +2,7 @@ import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import SplashScreen from "../components/SplashScreen";
 import Layout from "../components/Layout";
-import { AnimateSharedLayout } from "framer-motion"; // For Framer Motion v6/v5
-// If using Framer Motion v7+, import { LayoutGroup } from "framer-motion" instead
+import { LayoutGroup } from "framer-motion"; // Use LayoutGroup for Framer Motion v7+
 
 export default function MyApp({ Component, pageProps }) {
   const [showSplash, setShowSplash] = useState(false);
@@ -31,12 +30,12 @@ export default function MyApp({ Component, pageProps }) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
-  // Wrap all pages with AnimateSharedLayout and Layout
+  // Wrap all pages with LayoutGroup and Layout
   return (
-    <AnimateSharedLayout>
+    <LayoutGroup>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </AnimateSharedLayout>
+    </LayoutGroup>
   );
 }
