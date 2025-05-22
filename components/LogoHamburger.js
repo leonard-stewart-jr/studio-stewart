@@ -7,7 +7,7 @@ export default function LogoHamburger({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // SVG triangle points from your logo
+  // Points from your SVG logo: <polygon points="30,100 60,30 90,100"/>
   const triangle = [
     { x: 30, y: 100 }, // left base
     { x: 60, y: 30 },  // top
@@ -18,7 +18,6 @@ export default function LogoHamburger({
   const lineCount = 4;
 
   // Each line is horizontal, but left/right ends follow triangle edge
-  // Calculate y positions evenly spaced from top to base
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = i / (lineCount - 1);
@@ -39,10 +38,8 @@ export default function LogoHamburger({
   return (
     <div
       style={{
-        position: "absolute",
+        position: "relative",
         left: sidebarPaddingLeft,
-        top: "50%",
-        transform: "translateY(-50%)",
         width: logoSize,
         height: logoSize,
         cursor: "pointer",
