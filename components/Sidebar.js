@@ -35,7 +35,7 @@ export default function Sidebar({
     closed: { x: "-100%", transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } },
     open:   { x: 0,      transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } }
   };
-  const hamburgerTransition = { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] };
+  const hamburgerTransition = { duration: 0.28, ease: [0.4, 0, 0.2, 1] };
 
   return (
     <>
