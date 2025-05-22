@@ -47,6 +47,11 @@ nav.main-nav a[aria-current="page"] {
   cursor: default;
 }
 
+nav.main-nav a.active:hover,
+nav.main-nav a[aria-current="page"]:hover {
+  text-decoration: none;
+}
+
 /* ====== UTILITY CLASSES ====== */
 .hidden {
   display: none !important;
