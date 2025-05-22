@@ -90,6 +90,7 @@ export default function ProjectList({ projects, onProjectClick }) {
                 borderRadius: 6,
               }}
             />
+            {/* If there was a logo overlay here, it is now removed */}
           </div>
         </div>
       ))}
