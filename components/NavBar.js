@@ -17,6 +17,7 @@ export default function NavBar({ headerHeight = 76 }) {
 
   return (
     <nav
+      className="main-nav"
       style={{
         display: "flex",
         alignItems: "center",
