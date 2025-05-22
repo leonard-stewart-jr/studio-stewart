@@ -9,6 +9,7 @@ export default function LogoHamburger({
 
   // Triangle points from SVG: (30,100), (60,30), (90,100)
   // Account for stroke width on the triangle (6px): avoid extremes.
+  // We'll nudge all lines down by 2px for better centering.
   const triangle = [
     { x: 30, y: 96 }, // 100 - 4, nudged up for stroke
     { x: 60, y: 34 }, // 30 + 4, nudged down for stroke
@@ -17,13 +18,13 @@ export default function LogoHamburger({
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
   const lineCount = 4;
-  // Use a range that keeps the lines visually inside the triangle
   const minT = 0.04;
   const maxT = 0.96;
+  const yNudge = 2; // nudge all lines down by 2px
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = minT + (i / (lineCount - 1)) * (maxT - minT);
-    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
+    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y) + yNudge;
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
     lines.push({ x1: leftX, x2: rightX, y });
