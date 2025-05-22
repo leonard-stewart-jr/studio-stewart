@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
-import styles from '../styles/sidebar.module.css';
+import styles from "../styles/Sidebar.module.css";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
@@ -64,12 +64,12 @@ export default function Sidebar({
             transition={{ duration: 0.26, ease: "easeOut" }}
             onClick={onClose}
             aria-label="Close menu"
-            className="sidebar-overlay"
+            className={styles.sidebarOverlay}
           />
         )}
       </AnimatePresence>
       <motion.aside
-        className={`sidebar${open ? " open" : ""}`}
+        className={`${styles.sidebar} ${open ? styles.open : ""}`}
         initial={false}
         animate={open ? "open" : "closed"}
         variants={sidebarVariants}
@@ -100,7 +100,7 @@ export default function Sidebar({
           </motion.div>
         )}
         <nav
-          className="sidebar-nav"
+          className={styles.sidebarNav}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -113,7 +113,7 @@ export default function Sidebar({
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
-                className={isActive(item.href) ? "active" : ""}
+                className={isActive(item.href) ? styles.active : ""}
                 onClick={onClose}
               >
                 {item.label}
@@ -121,14 +121,14 @@ export default function Sidebar({
             </Link>
           ))}
         </nav>
-        <div className="sidebar-info" style={{ padding: "24px" }}>
+        <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
           <p>
             <b>Studio Stewart</b> — Digital portfolio<br />
             Student, designer, and maker.<br />
             Explore my work and reach out to connect!
           </p>
         </div>
-        <div className="sidebar-footer" style={{ padding: "0 24px 24px" }}>
+        <div className={styles.sidebarFooter} style={{ padding: "0 24px 24px" }}>
           <h3>Contact & Social</h3>
           <ul>
             {socialLinks.map((link) => (
