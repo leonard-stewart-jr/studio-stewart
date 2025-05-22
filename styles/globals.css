@@ -86,13 +86,15 @@ nav.sidebar-nav a[aria-current="page"] {
   display: flex;
   flex-direction: column;
   padding: 0 22px 22px 22px;
-  transform: translateX(-100%);
-  transition: transform 0.22s cubic-bezier(.71,.3,.48,.92);
+  /* REMOVE transform & transition, let Framer Motion handle this! */
+  /* transform: translateX(-100%);
+  transition: transform 0.22s cubic-bezier(.71,.3,.48,.92); */
   pointer-events: none;
 }
 
 .sidebar.open {
-  transform: translateX(0);
+  /* REMOVE transform, let Framer Motion handle this! */
+  /* transform: translateX(0); */
   pointer-events: auto;
 }
 
@@ -107,7 +109,8 @@ nav.sidebar-nav a[aria-current="page"] {
     top: 0 !important;
     z-index: 1200 !important;
     height: 100vh !important;
-    transition: transform 0.22s cubic-bezier(.71,.3,.48,.92);
+    /* REMOVE transition, let Framer Motion handle this! */
+    /* transition: transform 0.22s cubic-bezier(.71,.3,.48,.92); */
   }
 }
 
