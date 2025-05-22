@@ -2,33 +2,32 @@ import { useState } from "react";
 
 export default function LogoHamburger({
   logoSize = 66,
-  sidebarPaddingLeft = 22,
   onOpenSidebar,
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Triangle coordinates (same as before)
+  // Triangle points from SVG: (30,100), (60,30), (90,100)
+  // Account for stroke width on the triangle (6px): avoid extremes.
   const triangle = [
-    { x: 30, y: 100 },
-    { x: 60, y: 30 },
-    { x: 90, y: 100 },
+    { x: 30, y: 100 - 4 }, // left base, nudged up for stroke
+    { x: 60, y: 30 + 4 },  // top, nudged down for stroke
+    { x: 90, y: 100 - 4 }, // right base, nudged up for stroke
   ];
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
   const lineCount = 4;
-
-  // To keep the bottom line inside the triangle visually, squash the range
-  const maxT = 0.85; // Tune this value (e.g. 0.80-0.90) for best alignment with your triangle SVG
-
   const lines = [];
+  // Instead of t=0..1, start a bit above the base and below the top for aesthetics
+  const minT = 0.04; // 0 = very top, 1 = very bottom
+  const maxT = 0.96;
   for (let i = 0; i < lineCount; ++i) {
-    const t = (i / (lineCount - 1)) * maxT;
+    const t = minT + (i / (lineCount - 1)) * (maxT - minT);
     const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
     lines.push({ x1: leftX, x2: rightX, y });
   }
-  const lineThickness = Math.max(1, (triangle[0].y - triangle[1].y) * 0.09);
+  const lineThickness = 6; // matches triangle stroke
 
   return (
     <div
@@ -104,8 +103,8 @@ export default function LogoHamburger({
               y={line.y - lineThickness / 2}
               width={line.x2 - line.x1}
               height={lineThickness}
-              fill="#111"
-              rx={0}
+              fill="#222C46"
+              rx={2}
             />
           ))}
         </svg>
