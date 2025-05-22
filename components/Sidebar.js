@@ -27,12 +27,31 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
         className={`sidebar-overlay${open ? " open" : ""}`}
         onClick={onClose}
         aria-label="Close menu"
+        style={{
+          display: open ? "block" : "none",
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.32)",
+          zIndex: 1300,
+          transition: "background 0.2s",
+        }}
       />
       <aside
         className={`sidebar${open ? " open" : ""}`}
         style={{
-          left: 0,
+          position: "fixed",
           top: 0,
+          left: 0,
+          height: "100vh",
+          width: 300,
+          maxWidth: "80vw",
+          background: "#fff",
+          boxShadow: "2px 0 16px 0 rgba(0,0,0,0.15)",
+          zIndex: 1400,
+          transform: open ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.32s cubic-bezier(.7,.2,.3,1)",
+          display: "flex",
+          flexDirection: "column",
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
@@ -79,14 +98,14 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
             </Link>
           ))}
         </nav>
-        <div className="sidebar-info">
+        <div className="sidebar-info" style={{ padding: "24px" }}>
           <p>
             <b>Studio Stewart</b> — Digital portfolio<br />
             Creative developer, designer, and maker.<br />
             Explore my work and reach out to connect!
           </p>
         </div>
-        <div className="sidebar-footer">
+        <div className="sidebar-footer" style={{ padding: "0 24px 24px" }}>
           <h3>Contact & Social</h3>
           <ul>
             {socialLinks.map((link) => (
