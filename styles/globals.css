@@ -221,3 +221,45 @@ nav.sidebar-nav a[aria-current="page"] {
 .hidden {
   display: none !important;
 }
+
+/* ====== RESPONSIVE: HEADER & NAVIGATION ====== */
+/* HYBRID: Show nav bar on tablet and up, sidebar only on small mobile */
+@media (max-width: 700px) {
+  nav.main-nav {
+    display: none !important; /* Hide main nav on small mobile */
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1024px) {
+  nav.main-nav {
+    gap: 18px;
+    font-size: 18px;
+    height: 60px;
+  }
+  nav.main-nav a {
+    font-size: 18px;
+    padding: 5px 0;
+  }
+}
+
+/* ====== RESPONSIVE: GENERAL ====== */
+@media (max-width: 700px) {
+  html, body {
+    font-size: 15px;
+  }
+  .sidebar {
+    width: 90vw !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    padding: 0 12px 22px 12px !important;
+  }
+  .logo-hamburger-wrap {
+    width: 48px;
+    height: 48px;
+  }
+  .logo-hamburger-wrap img,
+  .logo-hamburger-wrap .hamburger-svg {
+    width: 48px;
+    height: 48px;
+  }
+}
