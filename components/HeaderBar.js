@@ -10,7 +10,7 @@ export default function HeaderBar() {
   // These should match Sidebar for pixel-perfect shared element animation
   const logoSize = 66;
   const headerHeight = 76;
-  const sidebarPaddingLeft = 22;
+  const sidebarPaddingLeft = 22; // ← original left placement
   const verticalOffset = (headerHeight - logoSize) / 2; // for alignment
 
   return (
@@ -39,10 +39,8 @@ export default function HeaderBar() {
             <motion.div
               layoutId="logo-hamburger"
               style={{
-                position: "absolute",
-                top: verticalOffset,
-                left: sidebarPaddingLeft,
-                zIndex: 2200,
+                // Keep only verticalOffset here, don't add left!
+                marginTop: verticalOffset,
                 cursor: "pointer",
               }}
             >
