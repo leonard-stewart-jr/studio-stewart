@@ -143,7 +143,7 @@ nav.sidebar-nav {
 .active {
   color: #e6dbb9;
   background: none;
-  text-decoration: none;
+  text-decoration: underline;
   cursor: default;
 }
 
