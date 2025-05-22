@@ -34,7 +34,7 @@ export default function Sidebar({
     closed: { x: "-100%", transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } },
     open:   { x: 0,      transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } }
   };
-  const hamburgerTransition = { duration: 0.12, ease: "linear" };
+  const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   return (
     <>
@@ -76,14 +76,16 @@ export default function Sidebar({
       >
         {open && (
           <motion.div
-            layoutId="logo-hamburger"
             transition={hamburgerTransition}
             style={{
               position: "absolute",
               top: verticalOffset,
-              left: sidebarPaddingLeft, // CHANGED: match HeaderBar's hamburger X position for smooth horizontal morph
+              right: 28, // Place close button where you want it on the sidebar
               zIndex: 2200,
               cursor: "pointer",
+              opacity: open ? 1 : 0,
+              pointerEvents: open ? "auto" : "none",
+              transition: "opacity 0.18s",
             }}
           >
             <LogoHamburger
