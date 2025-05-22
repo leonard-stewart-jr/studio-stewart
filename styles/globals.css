@@ -117,10 +117,9 @@ nav.sidebar-nav a[aria-current="page"] {
   position: relative;
   width: 66px;
   height: 66px;
-  margin-top: 12px;
-  margin-bottom: 8px;
   display: flex;
   align-items: center;
+  /* Removed margin-top and margin-bottom for perfect vertical centering */
 }
 
 .logo-hamburger-wrap img,
@@ -229,11 +228,11 @@ nav.sidebar-nav a[aria-current="page"] {
 @media (min-width: 701px) and (max-width: 1024px) {
   nav.main-nav {
     gap: 18px;
-    font-size: 11px;
+    font-size: 17px;
     height: 60px;
   }
   nav.main-nav a {
-    font-size: 11px;
+    font-size: 17px;
     padding: 4px 0;
   }
 }
