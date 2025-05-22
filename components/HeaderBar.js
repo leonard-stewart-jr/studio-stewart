@@ -13,7 +13,7 @@ export default function HeaderBar() {
   const sidebarPaddingLeft = 22;
 
   // Add this line for consistent hamburger animation speed:
-  const hamburgerTransition = { duration: 0.24, ease: "linear" };
+  const hamburgerTransition = { duration: 0.12, ease: "linear" };
 
   return (
     <>
