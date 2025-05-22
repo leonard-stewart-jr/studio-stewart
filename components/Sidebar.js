@@ -24,7 +24,6 @@ export default function Sidebar({
 }) {
   const router = useRouter();
   const verticalOffset = (headerHeight - logoSize) / 2 - 2;
-  const rightOffset = 28;
 
   function isActive(href) {
     if (href === "/") return router.pathname === "/";
@@ -82,7 +81,7 @@ export default function Sidebar({
             style={{
               position: "absolute",
               top: verticalOffset,
-              right: rightOffset,
+              left: sidebarPaddingLeft, // CHANGED: match HeaderBar's hamburger X position for smooth horizontal morph
               zIndex: 2200,
               cursor: "pointer",
             }}
