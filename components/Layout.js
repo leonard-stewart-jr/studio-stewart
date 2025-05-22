@@ -1,12 +1,25 @@
+import { useState } from "react";
 import HeaderBar from "./HeaderBar";
+import Sidebar from "./Sidebar";
+
+// Optionally, add your own layout styles here
 
 export default function Layout({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div style={{ minHeight: "100vh", width: "100vw", background: "#fff" }}>
-      <HeaderBar />
-      <main style={{ width: "100%", margin: "0 auto" }}>
-        {children}
-      </main>
-    </div>
+    <>
+      <HeaderBar
+        onOpenSidebar={() => setSidebarOpen(true)}
+        sidebarOpen={sidebarOpen}
+        logoSize={66}
+      />
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        logoSize={66}
+      />
+      <main>{children}</main>
+    </>
   );
 }
