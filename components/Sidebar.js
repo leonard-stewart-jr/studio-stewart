@@ -32,6 +32,27 @@ export default function Sidebar({
     return router.pathname === href || router.pathname.startsWith(href + "/");
   }
 
+  // Framer Motion sidebar slide animation
+  const sidebarVariants = {
+    closed: {
+      x: "-100%",
+      transition: {
+        duration: 0.48, // slower, tweak as needed
+        ease: [0.7, 0.2, 0.3, 1],
+      },
+    },
+    open: {
+      x: 0,
+      transition: {
+        duration: 0.48,
+        ease: [0.7, 0.2, 0.3, 1],
+      },
+    },
+  };
+
+  // Add this transition object for the hamburger layout animation:
+  const hamburgerTransition = { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] };
+
   return (
     <>
       {/* Overlay */}
@@ -48,8 +69,11 @@ export default function Sidebar({
           transition: "background 0.2s",
         }}
       />
-      <aside
+      <motion.aside
         className={`sidebar${open ? " open" : ""}`}
+        initial="closed"
+        animate={open ? "open" : "closed"}
+        variants={sidebarVariants}
         style={{
           position: "fixed",
           top: 0,
@@ -60,8 +84,6 @@ export default function Sidebar({
           background: "#fff",
           boxShadow: "2px 0 16px 0 rgba(0,0,0,0.15)",
           zIndex: 1400,
-          transform: open ? "translateX(0)" : "translateX(-100%)",
-          transition: "transform 0.32s cubic-bezier(.7,.2,.3,1)",
           display: "flex",
           flexDirection: "column",
         }}
@@ -74,6 +96,7 @@ export default function Sidebar({
         {open && (
           <motion.div
             layoutId="logo-hamburger"
+            transition={hamburgerTransition} // <-- this line ensures speed matches sidebar
             style={{
               position: "absolute",
               top: verticalOffset,
@@ -135,7 +158,7 @@ export default function Sidebar({
             ))}
           </ul>
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }
