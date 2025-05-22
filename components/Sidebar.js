@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
+import "./sidebar.css"; // <-- Import the sidebar-specific styles
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
@@ -30,7 +32,19 @@ export default function Sidebar({
     return router.pathname === href || router.pathname.startsWith(href + "/");
   }
 
-  // You can adjust the duration here to control the speed!
+  // Prevent background scroll when sidebar is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Sidebar animation variants for framer-motion
   const sidebarVariants = {
     closed: { x: "-100%", transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } },
     open:   { x: 0,      transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
@@ -50,12 +64,7 @@ export default function Sidebar({
             transition={{ duration: 0.26, ease: "easeOut" }}
             onClick={onClose}
             aria-label="Close menu"
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.32)",
-              zIndex: 1300,
-            }}
+            className="sidebar-overlay"
           />
         )}
       </AnimatePresence>
@@ -64,19 +73,6 @@ export default function Sidebar({
         initial={false}
         animate={open ? "open" : "closed"}
         variants={sidebarVariants}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          height: "100vh",
-          width: 300,
-          maxWidth: "80vw",
-          background: "#fff",
-          boxShadow: "2px 0 16px 0 rgba(0,0,0,0.15)",
-          zIndex: 1400,
-          display: "flex",
-          flexDirection: "column",
-        }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
