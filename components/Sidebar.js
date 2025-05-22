@@ -5,8 +5,9 @@ import LogoHamburger from "./LogoHamburger";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
-  { label: "ABOUT ME", href: "/about" },
+  { label: "INDEPENDENT STUDIO", href: "/independent-studio" },
   { label: "3D PRINTING", href: "/3d-printing" },
+  { label: "ABOUT ME", href: "/about" },
 ];
 
 const socialLinks = [
@@ -105,11 +106,10 @@ export default function Sidebar({
               <a
                 className={isActive(item.href) ? "active" : ""}
                 style={{
-                  color: isActive(item.href) ? "#e6dbb9" : "#181818",
                   fontWeight: 700,
-                  fontSize: 22,
+                  fontSize: 11, // Reduced font size for consistency with NavBar
                   textDecoration: isActive(item.href) ? "underline" : "none",
-                  padding: "7px 0",
+                  padding: "4px 0",
                   borderBottom: "1px solid #eee",
                   transition: "color 0.2s",
                 }}
