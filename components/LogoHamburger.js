@@ -7,32 +7,23 @@ export default function LogoHamburger({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Points from your SVG logo: <polygon points="30,100 60,30 90,100"/>
+  // Hamburger SVG logic (unchanged)
   const triangle = [
-    { x: 30, y: 100 }, // left base
-    { x: 60, y: 30 },  // top
-    { x: 90, y: 100 }, // right base
+    { x: 30, y: 100 },
+    { x: 60, y: 30 },
+    { x: 90, y: 100 },
   ];
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
   const lineCount = 4;
-
-  // Each line is horizontal, but left/right ends follow triangle edge
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = i / (lineCount - 1);
-    // y from top (30) to base (100)
     const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
-
-    // Left x: interpolate from top to left base
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
-    // Right x: interpolate from top to right base
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
-
     lines.push({ x1: leftX, x2: rightX, y });
   }
-
-  // Thickness is proportional to SVG height
   const lineThickness = Math.max(1, (triangle[0].y - triangle[1].y) * 0.09);
 
   return (
@@ -61,7 +52,25 @@ export default function LogoHamburger({
       aria-label="Open menu"
       role="button"
     >
-      {/* Hamburger SVG */}
+      {/* Logo mark (visible when not hovered or not active) */}
+      <img
+        src="/assets/logo-mark-only.svg"
+        alt="Studio Stewart Logo"
+        draggable={false}
+        style={{
+          width: logoSize,
+          height: logoSize,
+          position: "absolute",
+          left: 0,
+          top: 0,
+          opacity: hovered ? 0 : 1,
+          transition: "opacity 0.18s",
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
+      />
+
+      {/* Hamburger SVG (visible only when hovered/active) */}
       <div
         className="hamburger-svg"
         style={{
