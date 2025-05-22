@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Keep these consistent everywhere
   const logoSize = 66;
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
@@ -32,9 +33,18 @@ export default function HeaderBar() {
           transition: "box-shadow 0.2s",
         }}
       >
-        {/* Left: Hamburger/Logo (only visible when sidebar is closed, for animation) */}
-        <div style={{ flex: "0 0 auto", display: "flex", alignItems: "center" }}>
-          {!sidebarOpen && (
+        {/* Left: Hamburger/Logo (always reserve the space to prevent header shift) */}
+        <div
+          style={{
+            flex: "0 0 auto",
+            display: "flex",
+            alignItems: "center",
+            width: logoSize + sidebarPaddingLeft,
+            minWidth: logoSize + sidebarPaddingLeft,
+            justifyContent: "flex-start",
+          }}
+        >
+          {!sidebarOpen ? (
             <motion.div
               layoutId="logo-hamburger"
               style={{
@@ -49,6 +59,16 @@ export default function HeaderBar() {
                 onOpenSidebar={() => setSidebarOpen(true)}
               />
             </motion.div>
+          ) : (
+            // Reserve empty space (prevents header/nav shifting)
+            <div
+              style={{
+                width: logoSize,
+                height: logoSize,
+                marginLeft: sidebarPaddingLeft,
+                marginTop: verticalOffset,
+              }}
+            />
           )}
         </div>
         {/* Center: NavBar */}
