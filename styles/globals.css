@@ -1,115 +1,186 @@
-/* Apply Futura font globally with fallbacks */
-html, body {
-  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
-  font-size: 18px;
-  color: #181818;
-  background: #fff;
-  margin: 0;
+/* ====== GLOBAL RESETS ====== */
+html,
+body {
   padding: 0;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Force Futura in navbar and all its children, even if other CSS tries to override it */
-nav, nav *, .navbar, .navbar * {
-  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif !important;
-}
-
-/* Links */
-a {
+  margin: 0;
+  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+  background: #f9f9f7;
   color: #181818;
-  text-decoration: none;
-  transition: color 0.18s;
-}
-a:hover {
-  color: #555;
-  text-decoration: underline;
 }
 
-/* Sidebar styles */
-aside {
-  box-shadow: 2px 0 24px rgba(0,0,0,0.13);
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ====== SIDEBAR STYLES ====== */
+.sidebar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 300px;
+  max-width: 80vw;
+  height: 100vh;
   background: #fff;
   color: #181818;
+  box-shadow: 2px 0 24px rgba(0,0,0,0.13);
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 22px 22px;
+  transition: left 0.22s cubic-bezier(.71,.3,.48,.92);
 }
 
-/* Navigation */
+@media (max-width: 700px) {
+  .sidebar {
+    left: 0 !important;
+    width: 260px !important;
+    min-width: 160px !important;
+    max-width: 320px !important;
+    padding: 0 22px 22px 22px !important;
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 1200 !important;
+    transition: left 0.22s cubic-bezier(.71,.3,.48,.92);
+    height: 100vh !important;
+  }
+}
+
+/* ====== NAVIGATION (LINKS) ====== */
 nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
 }
-nav a {
-  font-weight: 700;
-  font-size: 11px;         /* 50% smaller than original 22px */
-  padding: 3.5px 0;        /* 50% smaller than original 7px 0 */
-  border-bottom: 1px solid #eee;
-  color: #181818;
-  transition: color 0.2s;
-}
-nav a:hover {
-  color: #4682ff;
-}
 
-/* Sidebar Logo */
-aside img {
-  user-select: none;
-  pointer-events: none;
-  object-fit: contain;
+nav a {
+  color: #181818;
+  font-weight: 700;
+  font-size: 22px;
+  text-decoration: none;
+  padding: 7px 0;
+  border-bottom: 1px solid #eee;
+  transition: color 0.2s;
   display: block;
 }
 
-/* Sidebar Contact/Social Section */
-aside ul {
+nav a.active,
+nav a[aria-current="page"] {
+  color: #e6dbb9; /* Tan highlight from logo */
+  text-decoration: underline;
+}
+
+/* Optionally use blue highlight instead:
+nav a.active,
+nav a[aria-current="page"] {
+  color: #4682ff;
+  text-decoration: underline;
+}
+*/
+
+/* ====== LOGO-HAMBURGER TRANSITION ====== */
+.logo-hamburger-wrap {
+  position: relative;
+  width: 66px;
+  height: 66px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-hamburger-wrap img,
+.logo-hamburger-wrap .hamburger-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 66px;
+  height: 66px;
+  transition: opacity 0.18s;
+  pointer-events: none;
+}
+
+.logo-hamburger-wrap .hamburger-svg {
+  opacity: 0;
+}
+
+.logo-hamburger-wrap:hover img,
+.logo-hamburger-wrap:focus img {
+  opacity: 0;
+}
+
+.logo-hamburger-wrap:hover .hamburger-svg,
+.logo-hamburger-wrap:focus .hamburger-svg {
+  opacity: 1;
+}
+
+/* ====== CLOSE BUTTON ====== */
+.sidebar button[aria-label="Close menu"] {
+  background: none;
+  border: none;
+  color: #181818;
+  font-size: 32px;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  cursor: pointer;
+  z-index: 2200;
+}
+
+/* ====== CONTENT/FOOTER/SOCIAL ====== */
+.sidebar .sidebar-footer {
+  margin-top: auto;
+  font-size: 14px;
+  color: #888;
+}
+
+.sidebar .sidebar-footer h3 {
+  font-size: 17px;
+  margin: 10px 0 6px 0;
+  color: #181818;
+}
+
+.sidebar .sidebar-footer ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-aside ul li {
+
+.sidebar .sidebar-footer li {
   margin-bottom: 5px;
 }
-aside ul li a {
+
+.sidebar .sidebar-footer a {
   color: #181818;
   text-decoration: underline;
-  font-size: 7.75px;    /* 50% smaller than original 15.5px */
+  font-size: 15.5px;
 }
 
-/* Sidebar Info/Caption */
-aside > div[style*="color: #555"] {
-  font-size: 8.5px !important;  /* 50% smaller than original 17px */
+/* ====== INFO BOX ====== */
+.sidebar .sidebar-info {
+  margin: 18px 0 8px 0;
+  font-size: 17px;
+  color: #555;
 }
 
-/* Buttons */
-button {
-  font-family: inherit;
-  font-size: 1rem;
-  cursor: pointer;
+.sidebar .sidebar-info b {
+  font-weight: bold;
 }
 
-/* Utility classes */
-.text-center {
-  text-align: center;
-}
-.bold {
-  font-weight: 700;
-}
-
-/* Responsive adjustments */
-@media (max-width: 700px) {
-  nav a {
-    font-size: 9.5px;     /* 50% smaller than original 19px */
-    padding: 2.5px 0;
-  }
+/* ====== OVERLAY ====== */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  z-index: 2000;
 }
 
-/* Custom selection color */
-::selection {
-  background: #4682ff22;
-}
-
-/* Remove default focus outline, add custom */
-:focus {
-  outline: 2px solid #4682ff;
-  outline-offset: 2px;
+/* ====== UTILITY CLASSES ====== */
+.hidden {
+  display: none !important;
 }
