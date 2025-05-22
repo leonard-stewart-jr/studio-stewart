@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
@@ -46,12 +45,14 @@ export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLe
           position: "fixed",
           transform: open ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.22s cubic-bezier(.71,.3,.48,.92)",
+          pointerEvents: open ? "auto" : "none",
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
+        tabIndex={-1}
       >
-        {/* Logo/Hamburger at the top */}
+        {/* Logo/Hamburger at the top, clicking it closes sidebar */}
         <div
           style={{
             width: "100%",
@@ -67,7 +68,7 @@ export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLe
           <LogoHamburger
             logoSize={logoSize}
             sidebarPaddingLeft={0}
-            onOpenSidebar={onClose} // clicking logo closes sidebar
+            onOpenSidebar={onClose} // clicking closes sidebar
           />
         </div>
         {/* Close button */}
@@ -166,6 +167,7 @@ export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLe
         }
         .sidebar.open {
           transform: translateX(0);
+          pointer-events: auto;
         }
         .sidebar-overlay {
           position: fixed;
