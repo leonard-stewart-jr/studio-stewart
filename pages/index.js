@@ -37,7 +37,7 @@ export default function Home() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "80px 0 40px 0",
+        padding: "40px 0 40px 0",
         fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
       }}
     >
