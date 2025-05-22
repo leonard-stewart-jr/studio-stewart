@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const navItems = [
-  { label: "PORTFOLIO", href: "/" },
+  { label: "PROJECTS", href: "/" },
   { label: "INDEPENDENT STUDIO", href: "/independent-studio" },
   { label: "3D PRINTING", href: "/3d-printing" },
   { label: "ABOUT ME", href: "/about" },
