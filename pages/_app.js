@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import SplashScreen from "../components/SplashScreen";
+import Layout from "../components/Layout";
 
 export default function MyApp({ Component, pageProps }) {
   const [showSplash, setShowSplash] = useState(false);
@@ -28,5 +29,10 @@ export default function MyApp({ Component, pageProps }) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
-  return <Component {...pageProps} />;
+  // Wrap all pages with Layout (LogoHamburger, etc.)
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
 }
