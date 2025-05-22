@@ -12,6 +12,9 @@ export default function HeaderBar() {
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
 
+  // Add this line for consistent hamburger animation speed:
+  const hamburgerTransition = { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] };
+
   return (
     <>
       <header
@@ -46,6 +49,7 @@ export default function HeaderBar() {
           {!sidebarOpen ? (
             <motion.div
               layoutId="logo-hamburger"
+              transition={hamburgerTransition} // <-- ADD THIS LINE
               style={{
                 marginLeft: sidebarPaddingLeft,
                 cursor: "pointer",
