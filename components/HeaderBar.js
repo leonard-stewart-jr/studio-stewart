@@ -6,7 +6,6 @@ import Sidebar from "./Sidebar";
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // These props are preserved from your old code for consistent sizing
   const logoSize = 66;
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
@@ -38,7 +37,7 @@ export default function HeaderBar() {
         <NavBar headerHeight={headerHeight} />
       </div>
 
-      {/* Sidebar and overlay (always mounted for accessibility/animation) */}
+      {/* Sidebar & Overlay */}
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
