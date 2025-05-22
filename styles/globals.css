@@ -36,6 +36,7 @@ nav.main-nav a {
   white-space: nowrap;
   font-family: inherit;
   letter-spacing: 0.5px;
+  margin: 0 24px; /* horizontal spacing */
 }
 
 nav.main-nav a.active,
@@ -58,7 +59,7 @@ nav.sidebar-nav a {
   font-size: 14px;
   text-decoration: none;
   padding: 4px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: none;
   transition: color 0.2s;
   display: block;
   font-family: inherit;
