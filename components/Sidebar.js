@@ -104,7 +104,7 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
         <div className="sidebar-info" style={{ padding: "24px" }}>
           <p>
             <b>Studio Stewart</b> — Digital portfolio<br />
-            Creative developer, designer, and maker.<br />
+            Student, designer, and maker.<br />
             Explore my work and reach out to connect!
           </p>
         </div>
