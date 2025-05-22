@@ -37,6 +37,7 @@ export default function LogoHamburger({
 
   return (
     <div
+      className="logo-hamburger-wrap"
       style={{
         position: "relative",
         left: sidebarPaddingLeft,
@@ -51,7 +52,7 @@ export default function LogoHamburger({
       onMouseLeave={() => setHovered(false)}
       tabIndex={0}
       onKeyDown={e => {
-        if (e.key === "Enter" || e.key === " ") {
+        if (onOpenSidebar && (e.key === "Enter" || e.key === " ")) {
           e.preventDefault();
           onOpenSidebar();
         }
@@ -60,8 +61,9 @@ export default function LogoHamburger({
       aria-label="Open menu"
       role="button"
     >
-      {/* The logo image has been removed! Only the hamburger SVG remains */}
+      {/* Hamburger SVG */}
       <div
+        className="hamburger-svg"
         style={{
           opacity: hovered ? 1 : 0,
           transition: "opacity 0.18s",
