@@ -7,7 +7,7 @@ export default function LogoHamburger({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Hamburger SVG logic (unchanged)
+  // Triangle coordinates (same as before)
   const triangle = [
     { x: 30, y: 100 },
     { x: 60, y: 30 },
@@ -16,9 +16,13 @@ export default function LogoHamburger({
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
   const lineCount = 4;
+
+  // To keep the bottom line inside the triangle visually, squash the range
+  const maxT = 0.85; // Tune this value (e.g. 0.80-0.90) for best alignment with your triangle SVG
+
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
-    const t = i / (lineCount - 1);
+    const t = (i / (lineCount - 1)) * maxT;
     const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
@@ -31,7 +35,6 @@ export default function LogoHamburger({
       className="logo-hamburger-wrap"
       style={{
         position: "relative",
-        // REMOVE left: sidebarPaddingLeft (let parent handle all offset)
         width: logoSize,
         height: logoSize,
         cursor: "pointer",
@@ -40,7 +43,6 @@ export default function LogoHamburger({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        // No padding or margin here to ensure perfect morphing
       }}
       onClick={onOpenSidebar}
       onMouseEnter={() => setHovered(true)}
