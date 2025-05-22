@@ -105,14 +105,6 @@ export default function Sidebar({
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
                 className={isActive(item.href) ? "active" : ""}
-                style={{
-                  fontWeight: 700,
-                  fontSize: 11, // Reduced font size for consistency with NavBar
-                  textDecoration: isActive(item.href) ? "underline" : "none",
-                  padding: "4px 0",
-                  borderBottom: "1px solid #eee",
-                  transition: "color 0.2s",
-                }}
                 onClick={onClose}
               >
                 {item.label}
