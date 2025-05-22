@@ -1,11 +1,9 @@
 /* ====== GLOBAL RESETS ====== */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;700&display=swap');
-
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #f9f9f7;
   color: #181818;
 }
@@ -24,7 +22,7 @@ nav.main-nav {
   justify-content: center;
   gap: 32px;
   height: 76px;
-  font-family: 'Orbitron', 'Rajdhani', Arial, 'Trebuchet MS', sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 nav.main-nav a {
@@ -52,7 +50,7 @@ nav.sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  font-family: 'Orbitron', 'Rajdhani', Arial, 'Trebuchet MS', sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 nav.sidebar-nav a {
