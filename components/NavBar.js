@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
-  { label: "ABOUT ME", href: "/about" },
+  { label: "INDEPENDENT STUDIO", href: "/independent-studio" },
   { label: "3D PRINTING", href: "/3d-printing" },
+  { label: "ABOUT ME", href: "/about" },
 ];
 
 export default function NavBar({ headerHeight = 76 }) {
@@ -32,9 +33,9 @@ export default function NavBar({ headerHeight = 76 }) {
             className={isActive(item.href) ? "active" : ""}
             style={{
               fontWeight: 700,
-              fontSize: 22,
+              fontSize: 11, // Reduced font size to half of previous (was 22)
               textDecoration: isActive(item.href) ? "underline" : "none",
-              padding: "7px 0",
+              padding: "4px 0", // Adjusted for smaller text
               borderBottom: "1px solid #eee",
               transition: "color 0.2s",
             }}
