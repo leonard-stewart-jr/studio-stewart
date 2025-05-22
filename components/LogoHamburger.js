@@ -31,12 +31,16 @@ export default function LogoHamburger({
       className="logo-hamburger-wrap"
       style={{
         position: "relative",
-        left: sidebarPaddingLeft,
+        // REMOVE left: sidebarPaddingLeft (let parent handle all offset)
         width: logoSize,
         height: logoSize,
         cursor: "pointer",
         zIndex: 1200,
         userSelect: "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        // No padding or margin here to ensure perfect morphing
       }}
       onClick={onOpenSidebar}
       onMouseEnter={() => setHovered(true)}
