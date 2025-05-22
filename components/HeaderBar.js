@@ -1,14 +1,14 @@
 import { useState } from "react";
-import Sidebar from "./Sidebar";
-import NavBar from "./NavBar";
 import LogoHamburger from "./LogoHamburger";
+import NavBar from "./NavBar";
+import Sidebar from "./Sidebar";
 
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Tighter, more compact header
-  const logoSize = 66; // slightly smaller
-  const headerHeight = 76; // tighter
+  // These props are preserved from your old code for consistent sizing
+  const logoSize = 66;
+  const headerHeight = 76;
   const sidebarPaddingLeft = 22;
 
   return (
@@ -26,7 +26,7 @@ export default function HeaderBar() {
         paddingBottom: 0,
       }}
     >
-      {/* Logo/Hamburger */}
+      {/* Hamburger/Logo top-left */}
       <LogoHamburger
         logoSize={logoSize}
         sidebarPaddingLeft={sidebarPaddingLeft}
@@ -38,14 +38,13 @@ export default function HeaderBar() {
         <NavBar headerHeight={headerHeight} />
       </div>
 
-      {/* Sidebar */}
-      {sidebarOpen && (
-        <Sidebar
-          onClose={() => setSidebarOpen(false)}
-          logoSize={logoSize}
-          sidebarPaddingLeft={sidebarPaddingLeft}
-        />
-      )}
+      {/* Sidebar and overlay (always mounted for accessibility/animation) */}
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        logoSize={logoSize}
+        sidebarPaddingLeft={sidebarPaddingLeft}
+      />
     </header>
   );
 }
