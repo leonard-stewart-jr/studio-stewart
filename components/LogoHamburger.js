@@ -60,23 +60,6 @@ export default function LogoHamburger({
       aria-label="Open menu"
       role="button"
     >
-      {/* Logo fades out on hover/focus */}
-      <img
-        src="/assets/logo-mark-only.svg"
-        alt="Logo"
-        style={{
-          width: logoSize,
-          height: logoSize,
-          objectFit: "contain",
-          opacity: hovered ? 0 : 1,
-          transition: "opacity 0.18s",
-          pointerEvents: "none",
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-        draggable={false}
-      />
       {/* Hamburger fades in, fills triangle, sharp lines */}
       <div
         style={{
