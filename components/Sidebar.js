@@ -77,7 +77,10 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
           ×
         </button>
         {/* Navigation */}
-        <nav style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: logoSize }}>
+        <nav
+          className="sidebar-nav" // <-- THIS IS THE ONLY CHANGE
+          style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: logoSize }}
+        >
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
