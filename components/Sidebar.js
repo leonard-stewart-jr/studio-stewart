@@ -1,6 +1,7 @@
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import LogoHamburger from "../components/LogoHamburger";
+import LogoHamburger from "./LogoHamburger";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
@@ -13,7 +14,12 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-export default function Sidebar({ open, onClose, logoSize = 66 }) {
+export default function Sidebar({
+  open,
+  onClose,
+  logoSize = 66,
+  sidebarPaddingLeft = 22, // default preserved
+}) {
   const router = useRouter();
 
   function isActive(href) {
@@ -59,25 +65,36 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
         aria-modal="true"
         tabIndex={-1}
       >
-        {/* Close button replaced with LogoHamburger */}
-        <div
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 16,
-            zIndex: 2200,
-          }}
-        >
-          <LogoHamburger
-            logoSize={48}
-            sidebarPaddingLeft={0}
-            onOpenSidebar={onClose}
-          />
-        </div>
+        {/* Hamburger logo as close button, animated */}
+        {open && (
+          <motion.div
+            layoutId="logo-hamburger"
+            style={{
+              position: "absolute",
+              top: 12,
+              right: 16,
+              zIndex: 2200,
+              cursor: "pointer",
+            }}
+          >
+            <LogoHamburger
+              logoSize={logoSize}
+              sidebarPaddingLeft={sidebarPaddingLeft}
+              onOpenSidebar={onClose}
+            />
+          </motion.div>
+        )}
         {/* Navigation */}
         <nav
           className="sidebar-nav"
-          style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: logoSize }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 22,
+            marginTop: logoSize,
+            paddingLeft: sidebarPaddingLeft,
+            paddingRight: sidebarPaddingLeft,
+          }}
         >
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
