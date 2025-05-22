@@ -3,23 +3,24 @@ import { useState } from "react";
 export default function LogoHamburger({
   logoSize = 66,
   onOpenSidebar,
+  color = "#181818", // Default matches sidebar/nav text color
 }) {
   const [hovered, setHovered] = useState(false);
 
   // Triangle points from SVG: (30,100), (60,30), (90,100)
   // Account for stroke width on the triangle (6px): avoid extremes.
   const triangle = [
-    { x: 30, y: 100 - 4 }, // left base, nudged up for stroke
-    { x: 60, y: 30 + 4 },  // top, nudged down for stroke
-    { x: 90, y: 100 - 4 }, // right base, nudged up for stroke
+    { x: 30, y: 96 }, // 100 - 4, nudged up for stroke
+    { x: 60, y: 34 }, // 30 + 4, nudged down for stroke
+    { x: 90, y: 96 }, // 100 - 4, nudged up for stroke
   ];
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
   const lineCount = 4;
-  const lines = [];
-  // Instead of t=0..1, start a bit above the base and below the top for aesthetics
-  const minT = 0.04; // 0 = very top, 1 = very bottom
+  // Use a range that keeps the lines visually inside the triangle
+  const minT = 0.04;
   const maxT = 0.96;
+  const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = minT + (i / (lineCount - 1)) * (maxT - minT);
     const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
@@ -103,7 +104,7 @@ export default function LogoHamburger({
               y={line.y - lineThickness / 2}
               width={line.x2 - line.x1}
               height={lineThickness}
-              fill="#222C46"
+              fill={color}
               rx={2}
             />
           ))}
