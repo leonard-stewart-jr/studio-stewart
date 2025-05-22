@@ -1,4 +1,6 @@
 /* ====== GLOBAL RESETS ====== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;700&display=swap');
+
 html,
 body {
   padding: 0;
@@ -8,14 +10,69 @@ body {
   color: #181818;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.2s;
+/* ====== HEADER BAR ====== */
+header {
+  background: #f9f9f7; /* Match page background for seamless look */
+  /* Removed box-shadow and border for no separation */
+  /* box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08); */
+  /* border-bottom: 1.5px solid #eee; */
 }
 
-* {
-  box-sizing: border-box;
+/* ====== NAVIGATION (LINKS) ====== */
+/* Main header nav: horizontal, BIG.dk style */
+nav.main-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  height: 76px; /* match header height */
+  font-family: 'Orbitron', 'Rajdhani', Arial, 'Trebuchet MS', sans-serif; /* geometric sans-serif */
+}
+
+nav.main-nav a {
+  color: #b1b1ae; /* light gray for unselected */
+  font-weight: 700;
+  font-size: 22px;
+  text-decoration: none;
+  padding: 7px 0;
+  border-bottom: 1px solid #eee;
+  transition: color 0.2s;
+  display: inline-block;
+  white-space: nowrap;
+
+  font-family: inherit;
+  letter-spacing: 0.5px; /* subtle for geometric look */
+}
+
+nav.main-nav a.active,
+nav.main-nav a[aria-current="page"] {
+  color: #e6dbb9; /* tan for selected tab */
+  text-decoration: underline;
+}
+
+/* Sidebar nav: vertical on sidebar */
+nav.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+nav.sidebar-nav a {
+  color: #181818;
+  font-weight: 700;
+  font-size: 22px;
+  text-decoration: none;
+  padding: 7px 0;
+  border-bottom: 1px solid #eee;
+  transition: color 0.2s;
+  display: block;
+}
+
+nav.sidebar-nav a.active,
+nav.sidebar-nav a[aria-current="page"] {
+  color: #e6dbb9;
+  text-decoration: underline;
 }
 
 /* ====== SIDEBAR STYLES ====== */
@@ -56,59 +113,6 @@ a {
     height: 100vh !important;
     transition: transform 0.22s cubic-bezier(.71,.3,.48,.92);
   }
-}
-
-/* ====== NAVIGATION (LINKS) ====== */
-/* Main header nav: horizontal, BIG.dk style */
-nav.main-nav {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  height: 76px; /* match header height */
-}
-
-nav.main-nav a {
-  color: #181818;
-  font-weight: 700;
-  font-size: 22px;
-  text-decoration: none;
-  padding: 7px 0;
-  border-bottom: 1px solid #eee;
-  transition: color 0.2s;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-nav.main-nav a.active,
-nav.main-nav a[aria-current="page"] {
-  color: #e6dbb9;
-  text-decoration: underline;
-}
-
-/* Sidebar nav: vertical on sidebar */
-nav.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-nav.sidebar-nav a {
-  color: #181818;
-  font-weight: 700;
-  font-size: 22px;
-  text-decoration: none;
-  padding: 7px 0;
-  border-bottom: 1px solid #eee;
-  transition: color 0.2s;
-  display: block;
-}
-
-nav.sidebar-nav a.active,
-nav.sidebar-nav a[aria-current="page"] {
-  color: #e6dbb9;
-  text-decoration: underline;
 }
 
 /* ====== LOGO-HAMBURGER ====== */
