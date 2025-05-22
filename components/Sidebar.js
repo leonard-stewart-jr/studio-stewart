@@ -51,11 +51,6 @@ export default function Sidebar({
   };
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
-  // STEP 1: Make sidebar content long for scrolling demonstration
-  // STEP 2: Ensure overflow-y: auto on sidebar (handled in Sidebar.module.css)
-  // STEP 3: Overlay is full screen and closes sidebar on click
-  // STEP 4: All other codes intact
-
   return (
     <>
       {/* Overlay uses AnimatePresence for smooth fade in/out */}
@@ -89,7 +84,7 @@ export default function Sidebar({
             style={{
               position: "absolute",
               top: verticalOffset,
-              right: 28, // Place close button where you want it on the sidebar
+              right: 28,
               zIndex: 2200,
               cursor: "pointer",
               opacity: open ? 1 : 0,
@@ -118,7 +113,7 @@ export default function Sidebar({
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
-                className={isActive(item.href) ? styles.active : ""}
+                className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
                 onClick={onClose}
               >
                 {item.label}
