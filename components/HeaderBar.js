@@ -7,11 +7,10 @@ import Sidebar from "./Sidebar";
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Keep these consistent everywhere
+  // Consistent sizing
   const logoSize = 66;
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
-  const verticalOffset = (headerHeight - logoSize) / 2;
 
   return (
     <>
@@ -49,7 +48,6 @@ export default function HeaderBar() {
               layoutId="logo-hamburger"
               style={{
                 marginLeft: sidebarPaddingLeft,
-                marginTop: verticalOffset,
                 cursor: "pointer",
               }}
             >
@@ -66,7 +64,6 @@ export default function HeaderBar() {
                 width: logoSize,
                 height: logoSize,
                 marginLeft: sidebarPaddingLeft,
-                marginTop: verticalOffset,
               }}
             />
           )}
