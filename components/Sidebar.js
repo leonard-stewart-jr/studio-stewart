@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
-import styles from "../styles/sidebar.module.css";
+import styles from "../styles/Sidebar.module.css";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
@@ -50,6 +50,11 @@ export default function Sidebar({
     open:   { x: 0,      transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
   };
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
+
+  // STEP 1: Make sidebar content long for scrolling demonstration
+  // STEP 2: Ensure overflow-y: auto on sidebar (handled in Sidebar.module.css)
+  // STEP 3: Overlay is full screen and closes sidebar on click
+  // STEP 4: All other codes intact
 
   return (
     <>
@@ -120,6 +125,35 @@ export default function Sidebar({
               </a>
             </Link>
           ))}
+
+          {/* Extra content for scrolling demonstration */}
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 1: Extra Links</div>
+          {[...Array(15)].map((_, i) => (
+            <a href="#" key={`extra-${i}`} style={{ color: "#888", fontSize: 13 }}>
+              Example Link {i + 1}
+            </a>
+          ))}
+
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 2: Even more content</div>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+            {[...Array(10)].map((_, i) => (
+              <li key={`more-${i}`}>
+                <a href="#" style={{ color: "#b1b1ae", fontSize: 13 }}>
+                  Item {i + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 3: Placeholder Section</div>
+          <p style={{ fontSize: 13, color: "#888" }}>
+            This section exists to make the sidebar content long enough to require scrolling on mobile and desktop. You can add or remove items as needed.
+          </p>
+
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 4: Final Section</div>
+          <p style={{ fontSize: 13, color: "#888" }}>
+            If you can scroll this sidebar, the overflow-y: auto is working as intended.
+          </p>
         </nav>
         <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
           <p>
