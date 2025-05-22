@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import SplashScreen from "../components/SplashScreen";
-import HeaderBar from "../components/HeaderBar";
 import ProjectList from "../components/ProjectList";
 import ProjectModal from "../components/ProjectModal";
 import projects from "../data/projects";
