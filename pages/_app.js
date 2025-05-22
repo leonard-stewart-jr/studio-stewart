@@ -29,7 +29,7 @@ export default function MyApp({ Component, pageProps }) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
-  // Wrap all pages with Layout (LogoHamburger, etc.)
+  // Wrap all pages with Layout (HeaderBar, NavBar, Sidebar, etc.)
   return (
     <Layout>
       <Component {...pageProps} />
