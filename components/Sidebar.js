@@ -60,7 +60,7 @@ export default function Sidebar({
         )}
       </AnimatePresence>
       <motion.aside
-        className="sidebar"
+        className={`sidebar${open ? " open" : ""}`}
         initial={false}
         animate={open ? "open" : "closed"}
         variants={sidebarVariants}
