@@ -46,9 +46,6 @@ export default function LogoHamburger({
         cursor: "pointer",
         zIndex: 1200,
         userSelect: "none",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
       }}
       onClick={onOpenSidebar}
       onMouseEnter={() => setHovered(true)}
@@ -64,33 +61,12 @@ export default function LogoHamburger({
       aria-label="Open menu"
       role="button"
     >
-      {/* SVG Logo (shows when not hovered) */}
-      <img
-        src="/assets/logo-mark-only.svg"
-        alt="Logo"
-        width={logoSize}
-        height={logoSize}
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: logoSize,
-          height: logoSize,
-          objectFit: "contain",
-          opacity: hovered ? 0 : 1,
-          transition: "opacity 0.3s",
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-        draggable={false}
-      />
-
-      {/* Hamburger SVG (shows when hovered) */}
+      {/* Hamburger SVG */}
       <div
         className="hamburger-svg"
         style={{
           opacity: hovered ? 1 : 0,
-          transition: "opacity 0.3s",
+          transition: "opacity 0.18s",
           width: logoSize,
           height: logoSize,
           position: "absolute",
