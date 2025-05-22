@@ -123,7 +123,8 @@ nav.sidebar-nav {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-nav.sidebar-nav a {
+/* Use this class for sidebar nav links to match navbar style */
+.sidebarNavLink {
   color: #b1b1ae;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 700;
@@ -139,16 +140,15 @@ nav.sidebar-nav a {
   display: block;
 }
 
-nav.sidebar-nav a.active,
-nav.sidebar-nav a[aria-current="page"] {
+.active {
   color: #e6dbb9;
   background: none;
   text-decoration: none;
   cursor: default;
 }
 
-nav.sidebar-nav a:hover,
-nav.sidebar-nav a:focus {
+.sidebarNavLink:hover,
+.sidebarNavLink:focus {
   color: #e6dbb9;
   text-decoration: none;
 }
