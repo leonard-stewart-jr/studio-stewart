@@ -37,12 +37,14 @@ nav.main-nav a {
   font-family: inherit;
   letter-spacing: 0.5px;
   margin: 0 24px; /* horizontal spacing */
+  cursor: pointer;
 }
 
 nav.main-nav a.active,
 nav.main-nav a[aria-current="page"] {
   color: #e6dbb9;
   text-decoration: underline;
+  cursor: default;
 }
 
 /* ====== UTILITY CLASSES ====== */
