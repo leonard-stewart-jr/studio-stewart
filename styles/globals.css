@@ -59,13 +59,42 @@ a {
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
-nav {
+/* Main header nav: horizontal, BIG.dk style */
+nav.main-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  height: 76px; /* match header height */
+}
+
+nav.main-nav a {
+  color: #181818;
+  font-weight: 700;
+  font-size: 22px;
+  text-decoration: none;
+  padding: 7px 0;
+  border-bottom: 1px solid #eee;
+  transition: color 0.2s;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+nav.main-nav a.active,
+nav.main-nav a[aria-current="page"] {
+  color: #e6dbb9;
+  text-decoration: underline;
+}
+
+/* Sidebar nav: vertical on sidebar */
+nav.sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
 }
 
-nav a {
+nav.sidebar-nav a {
   color: #181818;
   font-weight: 700;
   font-size: 22px;
@@ -76,8 +105,8 @@ nav a {
   display: block;
 }
 
-nav a.active,
-nav a[aria-current="page"] {
+nav.sidebar-nav a.active,
+nav.sidebar-nav a[aria-current="page"] {
   color: #e6dbb9;
   text-decoration: underline;
 }
