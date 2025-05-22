@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import LogoHamburger from "./LogoHamburger";
 
 const navItems = [
   { label: "PORTFOLIO", href: "/" },
@@ -13,7 +12,7 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLeft = 22 }) {
+export default function Sidebar({ open, onClose, logoSize = 66 }) {
   const router = useRouter();
 
   function isActive(href) {
@@ -40,25 +39,6 @@ export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLe
         aria-modal="true"
         tabIndex={-1}
       >
-        {/* Logo/Hamburger at the top, clicking closes sidebar */}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            marginTop: "12px",
-            marginBottom: "8px",
-            minHeight: logoSize,
-          }}
-        >
-          <LogoHamburger
-            logoSize={logoSize}
-            sidebarPaddingLeft={0}
-            onOpenSidebar={onClose}
-          />
-        </div>
         {/* Close button */}
         <button
           onClick={onClose}
@@ -78,7 +58,7 @@ export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLe
           ×
         </button>
         {/* Navigation */}
-        <nav style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: logoSize }}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
