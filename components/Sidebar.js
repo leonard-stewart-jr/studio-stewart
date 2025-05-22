@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
+import LogoHamburger from "./LogoHamburger";
 
 const navItems = [
   { label: "Portfolio", href: "/" },
@@ -11,7 +14,15 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 22 }) {
+export default function Sidebar({
+  onClose,
+  logoSize = 66,
+  sidebarPaddingLeft = 22,
+}) {
+  const router = useRouter();
+  const [sidebarHovered, setSidebarHovered] = useState(false);
+
+  // Sidebar sticky for desktop
   return (
     <div>
       {/* Overlay */}
@@ -27,7 +38,7 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
       />
       <aside
         style={{
-          position: "fixed",
+          position: "sticky",
           top: 0,
           left: 0,
           width: 300,
@@ -39,13 +50,15 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
           zIndex: 2100,
           display: "flex",
           flexDirection: "column",
-          padding: `0 ${sidebarPaddingLeft}px 22px ${sidebarPaddingLeft}px`,
+          padding: `0 ${sidebarPaddingLeft}px 22px`,
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
+        onMouseEnter={() => setSidebarHovered(true)}
+        onMouseLeave={() => setSidebarHovered(false)}
       >
-        {/* Logo aligned with nav links */}
+        {/* Logo/Hamburger at the top */}
         <div
           style={{
             width: "100%",
@@ -58,18 +71,10 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
             minHeight: logoSize,
           }}
         >
-          <img
-            src="/assets/logo-mark-only.svg"
-            alt="Logo"
-            style={{
-              width: logoSize,
-              height: logoSize,
-              objectFit: "contain",
-              userSelect: "none",
-              pointerEvents: "none",
-              marginLeft: 0, // aligns to sidebar text
-            }}
-            draggable={false}
+          <LogoHamburger
+            logoSize={logoSize}
+            sidebarPaddingLeft={0}
+            onOpenSidebar={onClose}
           />
         </div>
         {/* Close button */}
@@ -87,28 +92,35 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
           }}
           aria-label="Close menu"
         >
-          ×
+          ✗
         </button>
         {/* Navigation */}
         <nav style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} passHref legacyBehavior>
-              <a
-                style={{
-                  color: "#181818",
-                  fontWeight: 700,
-                  fontSize: 22,
-                  textDecoration: "none",
-                  padding: "7px 0",
-                  borderBottom: "1px solid #eee",
-                  transition: "color 0.2s"
-                }}
-                onClick={onClose}
-              >
-                {item.label}
-              </a>
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? router.pathname === "/"
+                : router.pathname.startsWith(item.href);
+            return (
+              <Link key={item.href} href={item.href} passHref legacyBehavior>
+                <a
+                  className={isActive ? "active" : ""}
+                  style={{
+                    color: isActive ? "#e6dbb9" : "#181818",
+                    fontWeight: 700,
+                    fontSize: 22,
+                    textDecoration: isActive ? "underline" : "none",
+                    padding: "7px 0",
+                    borderBottom: "1px solid #eee",
+                    transition: "color 0.2s",
+                  }}
+                  onClick={onClose}
+                >
+                  {item.label}
+                </a>
+              </Link>
+            );
+          })}
         </nav>
         <div style={{ margin: "18px 0 8px 0", fontSize: 17, color: "#555" }}>
           <p>
@@ -118,15 +130,21 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
           </p>
         </div>
         <div style={{ marginTop: "auto" }}>
-          <h3 style={{ fontSize: 17, margin: "10px 0 6px 0", color: "#181818" }}>Contact & Social</h3>
+          <h3 style={{ fontSize: 17, margin: "10px 0 6px 0", color: "#181818" }}>
+            Contact & Social
+          </h3>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {socialLinks.map(link => (
+            {socialLinks.map((link) => (
               <li key={link.href} style={{ marginBottom: 5 }}>
                 <a
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "#181818", textDecoration: "underline", fontSize: 15.5 }}
+                  style={{
+                    color: "#181818",
+                    textDecoration: "underline",
+                    fontSize: 15.5,
+                  }}
                 >
                   {link.label}
                 </a>
@@ -135,6 +153,26 @@ export default function Sidebar({ onClose, logoSize = 66, sidebarPaddingLeft = 2
           </ul>
         </div>
       </aside>
+      <style jsx global>{`
+        nav a.active {
+          color: #e6dbb9;
+          text-decoration: underline;
+        }
+        @media (max-width: 700px) {
+          aside[role="dialog"] {
+            left: 0 !important;
+            width: 260px !important;
+            min-width: 160px !important;
+            max-width: 320px !important;
+            padding: 0 ${sidebarPaddingLeft}px 22px !important;
+            position: fixed !important;
+            top: 0 !important;
+            z-index: 1200 !important;
+            transition: left 0.22s cubic-bezier(.71,.3,.48,.92);
+            height: 100vh !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
