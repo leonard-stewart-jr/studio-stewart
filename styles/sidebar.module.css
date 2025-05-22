@@ -125,23 +125,32 @@ nav.sidebar-nav {
 
 nav.sidebar-nav a {
   color: #b1b1ae;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   text-decoration: none;
+  background: none;
+  border: none;
   padding: 4px 0;
-  border-bottom: none;
+  margin: 0;
   transition: color 0.2s;
   display: block;
-  white-space: nowrap;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  letter-spacing: 0.5px;
-  margin: 0 0 0 0;
 }
 
 nav.sidebar-nav a.active,
 nav.sidebar-nav a[aria-current="page"] {
   color: #e6dbb9;
-  text-decoration: underline;
+  background: none;
+  text-decoration: none;
+  cursor: default;
+}
+
+nav.sidebar-nav a:hover,
+nav.sidebar-nav a:focus {
+  color: #e6dbb9;
+  text-decoration: none;
 }
 
 /* ====== CONTENT/FOOTER/SOCIAL ====== */
