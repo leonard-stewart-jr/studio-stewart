@@ -23,39 +23,22 @@ export default function Sidebar({
   headerHeight = 76,
 }) {
   const router = useRouter();
-  // Fine-tune these values for perfect alignment
-  const verticalOffset = (headerHeight - logoSize) / 2 - 2; // -2px tweak up
-  const rightOffset = 28; // shift more left from the edge (was 16)
+  const verticalOffset = (headerHeight - logoSize) / 2 - 2;
+  const rightOffset = 28;
 
   function isActive(href) {
     if (href === "/") return router.pathname === "/";
     return router.pathname === href || router.pathname.startsWith(href + "/");
   }
 
-  // Framer Motion sidebar slide animation
   const sidebarVariants = {
-    closed: {
-      x: "-100%",
-      transition: {
-        duration: 0.48, // slower, tweak as needed
-        ease: [0.7, 0.2, 0.3, 1],
-      },
-    },
-    open: {
-      x: 0,
-      transition: {
-        duration: 0.48,
-        ease: [0.7, 0.2, 0.3, 1],
-      },
-    },
+    closed: { x: "-100%", transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } },
+    open:   { x: 0,      transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } }
   };
-
-  // Add this transition object for the hamburger layout animation:
   const hamburgerTransition = { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] };
 
   return (
     <>
-      {/* Overlay */}
       <div
         className={`sidebar-overlay${open ? " open" : ""}`}
         onClick={onClose}
@@ -92,11 +75,10 @@ export default function Sidebar({
         aria-modal="true"
         tabIndex={-1}
       >
-        {/* Hamburger logo as close button, animated */}
         {open && (
           <motion.div
             layoutId="logo-hamburger"
-            transition={hamburgerTransition} // <-- this line ensures speed matches sidebar
+            transition={hamburgerTransition}
             style={{
               position: "absolute",
               top: verticalOffset,
@@ -112,7 +94,6 @@ export default function Sidebar({
             />
           </motion.div>
         )}
-        {/* Navigation */}
         <nav
           className="sidebar-nav"
           style={{
