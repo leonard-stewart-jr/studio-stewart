@@ -30,7 +30,7 @@ nav.main-nav a {
   font-size: 14px;
   text-decoration: none;
   padding: 4px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: none;
   transition: color 0.2s;
   display: inline-block;
   white-space: nowrap;
