@@ -19,10 +19,12 @@ export default function Sidebar({
   onClose,
   logoSize = 66,
   sidebarPaddingLeft = 22,
-  headerHeight = 76, // get from HeaderBar for perfect alignment
+  headerHeight = 76,
 }) {
   const router = useRouter();
-  const verticalOffset = (headerHeight - logoSize) / 2;
+  // Fine-tune these values for perfect alignment
+  const verticalOffset = (headerHeight - logoSize) / 2 - 2; // -2px tweak up
+  const rightOffset = 28; // shift more left from the edge (was 16)
 
   function isActive(href) {
     if (href === "/") return router.pathname === "/";
@@ -73,8 +75,8 @@ export default function Sidebar({
             layoutId="logo-hamburger"
             style={{
               position: "absolute",
-              top: verticalOffset, // aligns with HeaderBar
-              right: 16,           // place on top right!
+              top: verticalOffset,
+              right: rightOffset,
               zIndex: 2200,
               cursor: "pointer",
             }}
