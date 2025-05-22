@@ -31,7 +31,6 @@ export default function NavBar({ headerHeight = 76 }) {
           <a
             className={isActive(item.href) ? "active" : ""}
             style={{
-              color: isActive(item.href) ? "#e6dbb9" : "#181818",
               fontWeight: 700,
               fontSize: 22,
               textDecoration: isActive(item.href) ? "underline" : "none",
