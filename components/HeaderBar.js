@@ -12,8 +12,8 @@ export default function HeaderBar() {
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
 
-  // Consistent hamburger animation speed
-  const hamburgerTransition = { duration: 0.12, ease: "linear" };
+  // Animation speed for hamburger fade
+  const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   return (
     <>
@@ -47,13 +47,13 @@ export default function HeaderBar() {
           }}
         >
           <motion.div
-            layoutId="logo-hamburger"
             transition={hamburgerTransition}
             style={{
               marginLeft: sidebarPaddingLeft,
               cursor: "pointer",
               opacity: sidebarOpen ? 0 : 1,
               pointerEvents: sidebarOpen ? "none" : "auto",
+              transition: "opacity 0.18s",
             }}
           >
             <LogoHamburger
@@ -77,7 +77,7 @@ export default function HeaderBar() {
         {/* Right: Reserved for future use, maintains space for symmetry */}
         <div style={{ flex: "0 0 auto", width: logoSize, minWidth: logoSize }} />
       </header>
-      {/* Sidebar with animated Hamburger as close button */}
+      {/* Sidebar with separate close button */}
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
