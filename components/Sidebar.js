@@ -14,33 +14,25 @@ const socialLinks = [
   { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
 ];
 
-export default function Sidebar({
-  onClose,
-  logoSize = 66,
-  sidebarPaddingLeft = 22,
-}) {
+export default function Sidebar({ open, onClose, logoSize = 66, sidebarPaddingLeft = 22 }) {
   const router = useRouter();
-  const [sidebarHovered, setSidebarHovered] = useState(false);
 
-  // Sidebar sticky for desktop
   return (
-    <div>
+    <>
       {/* Overlay */}
       <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,0.22)",
-          zIndex: 2000,
-        }}
+        className={`sidebar-overlay${open ? " open" : ""}`}
         onClick={onClose}
         aria-label="Close menu"
+        style={{
+          display: open ? "block" : "none",
+        }}
       />
       <aside
+        className={`sidebar${open ? " open" : ""}`}
         style={{
-          position: "sticky",
-          top: 0,
           left: 0,
+          top: 0,
           width: 300,
           maxWidth: "80vw",
           height: "100vh",
@@ -51,12 +43,13 @@ export default function Sidebar({
           display: "flex",
           flexDirection: "column",
           padding: `0 ${sidebarPaddingLeft}px 22px`,
+          position: "fixed",
+          transform: open ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.22s cubic-bezier(.71,.3,.48,.92)",
         }}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        onMouseEnter={() => setSidebarHovered(true)}
-        onMouseLeave={() => setSidebarHovered(false)}
       >
         {/* Logo/Hamburger at the top */}
         <div
@@ -74,7 +67,7 @@ export default function Sidebar({
           <LogoHamburger
             logoSize={logoSize}
             sidebarPaddingLeft={0}
-            onOpenSidebar={onClose}
+            onOpenSidebar={onClose} // clicking logo closes sidebar
           />
         </div>
         {/* Close button */}
@@ -89,10 +82,11 @@ export default function Sidebar({
             top: 16,
             right: 18,
             cursor: "pointer",
+            zIndex: 2200,
           }}
           aria-label="Close menu"
         >
-          ✗
+          ×
         </button>
         {/* Navigation */}
         <nav style={{ display: "flex", flexDirection: "column", gap: 22 }}>
@@ -154,25 +148,54 @@ export default function Sidebar({
         </div>
       </aside>
       <style jsx global>{`
-        nav a.active {
-          color: #e6dbb9;
-          text-decoration: underline;
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 300px;
+          height: 100vh;
+          max-width: 80vw;
+          background: #fff;
+          box-shadow: 2px 0 24px rgba(0,0,0,0.13);
+          z-index: 2100;
+          display: flex;
+          flex-direction: column;
+          padding: 0 22px 22px 22px;
+          transform: translateX(-100%);
+          transition: transform 0.22s cubic-bezier(.71,.3,.48,.92);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .sidebar-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.22);
+          z-index: 2000;
+          display: none;
+        }
+        .sidebar-overlay.open {
+          display: block;
         }
         @media (max-width: 700px) {
-          aside[role="dialog"] {
+          .sidebar {
             left: 0 !important;
             width: 260px !important;
             min-width: 160px !important;
             max-width: 320px !important;
-            padding: 0 ${sidebarPaddingLeft}px 22px !important;
+            padding: 0 22px 22px 22px !important;
             position: fixed !important;
             top: 0 !important;
             z-index: 1200 !important;
-            transition: left 0.22s cubic-bezier(.71,.3,.48,.92);
             height: 100vh !important;
+            transition: transform 0.22s cubic-bezier(.71,.3,.48,.92);
           }
         }
+        nav a.active {
+          color: #e6dbb9;
+          text-decoration: underline;
+        }
       `}</style>
-    </div>
+    </>
   );
 }
