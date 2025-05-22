@@ -60,7 +60,7 @@ export default function LogoHamburger({
       aria-label="Open menu"
       role="button"
     >
-      {/* Hamburger fades in, fills triangle, sharp lines */}
+      {/* The logo image has been removed! Only the hamburger SVG remains */}
       <div
         style={{
           opacity: hovered ? 1 : 0,
