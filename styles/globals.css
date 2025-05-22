@@ -14,7 +14,6 @@ header {
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
-/* Main header nav: horizontal, BIG.dk style */
 nav.main-nav {
   display: flex;
   flex-direction: row;
@@ -119,7 +118,7 @@ nav.sidebar-nav a[aria-current="page"] {
   height: 66px;
   display: flex;
   align-items: center;
-  /* Removed margin-top and margin-bottom for perfect vertical centering */
+  /* margin-top and margin-bottom removed for perfect vertical centering */
 }
 
 .logo-hamburger-wrap img,
@@ -228,11 +227,11 @@ nav.sidebar-nav a[aria-current="page"] {
 @media (min-width: 701px) and (max-width: 1024px) {
   nav.main-nav {
     gap: 18px;
-    font-size: 17px;
+    font-size: 14px;
     height: 60px;
   }
   nav.main-nav a {
-    font-size: 17px;
+    font-size: 14px;
     padding: 4px 0;
   }
 }
