@@ -7,9 +7,11 @@ import Sidebar from "./Sidebar";
 export default function HeaderBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // These should match Sidebar for pixel-perfect shared element animation
   const logoSize = 66;
   const headerHeight = 76;
   const sidebarPaddingLeft = 22;
+  const verticalOffset = (headerHeight - logoSize) / 2; // for alignment
 
   return (
     <>
@@ -34,7 +36,16 @@ export default function HeaderBar() {
         {/* Left: Hamburger/Logo (only visible when sidebar is closed, for animation) */}
         <div style={{ flex: "0 0 auto", display: "flex", alignItems: "center" }}>
           {!sidebarOpen && (
-            <motion.div layoutId="logo-hamburger">
+            <motion.div
+              layoutId="logo-hamburger"
+              style={{
+                position: "absolute",
+                top: verticalOffset,
+                left: sidebarPaddingLeft,
+                zIndex: 2200,
+                cursor: "pointer",
+              }}
+            >
               <LogoHamburger
                 logoSize={logoSize}
                 sidebarPaddingLeft={sidebarPaddingLeft}
