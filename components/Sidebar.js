@@ -25,7 +25,6 @@ export default function Sidebar({
   sidebarPaddingLeft = 22, // default preserved
 }) {
   const router = useRouter();
-  // This keeps the logo/hamburger perfectly aligned vertically with the header
   const verticalOffset = (headerHeight - logoSize) / 2;
 
   function isActive(href) {
@@ -77,8 +76,8 @@ export default function Sidebar({
             layoutId="logo-hamburger"
             style={{
               position: "absolute",
-              top: verticalOffset, // aligns perfectly with the HeaderBar logo/hamburger
-              left: sidebarPaddingLeft,
+              top: verticalOffset, // vertical alignment only
+              left: sidebarPaddingLeft, // original left preserved
               zIndex: 2200,
               cursor: "pointer",
             }}
