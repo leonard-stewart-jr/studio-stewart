@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import '../styles/sidebar.css';
+import '../styles/sidebar.module.css';
 import { useEffect, useState } from "react";
 import SplashScreen from "../components/SplashScreen";
 import Layout from "../components/Layout";
