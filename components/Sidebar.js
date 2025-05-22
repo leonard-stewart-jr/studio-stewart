@@ -11,8 +11,8 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { label: "Email", href: "mailto:your@email.com" },
-  { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
+  { label: "Email", href: "mailto:leonardwaynejr@icloud.com" },
+  { label: "My Code Here", href: "https://github.com/leonard-stewart-jr" },
 ];
 
 export default function Sidebar({
