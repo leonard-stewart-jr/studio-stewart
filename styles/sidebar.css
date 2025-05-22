@@ -1,0 +1,162 @@
+/* ====== SIDEBAR STYLES ====== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  max-width: 80vw;
+  height: 100vh;
+  background: #fff;
+  color: #181818;
+  box-shadow: 2px 0 24px rgba(0,0,0,0.13);
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 22px 22px;
+  pointer-events: none;
+}
+
+.sidebar.open {
+  pointer-events: auto;
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    left: 0 !important;
+    width: 260px !important;
+    min-width: 160px !important;
+    max-width: 320px !important;
+    padding: 0 22px 22px 22px !important;
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 1200 !important;
+    height: 100vh !important;
+  }
+}
+
+/* ====== LOGO-HAMBURGER ====== */
+.logo-hamburger-wrap {
+  position: relative;
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-hamburger-wrap img,
+.logo-hamburger-wrap .hamburger-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 66px;
+  height: 66px;
+  transition: opacity 0.18s;
+  pointer-events: none;
+}
+
+.logo-hamburger-wrap .hamburger-svg {
+  opacity: 0;
+}
+
+.logo-hamburger-wrap:hover img,
+.logo-hamburger-wrap:focus img {
+  opacity: 0;
+}
+
+.logo-hamburger-wrap:hover .hamburger-svg,
+.logo-hamburger-wrap:focus .hamburger-svg {
+  opacity: 1;
+}
+
+/* ====== CLOSE BUTTON ====== */
+.sidebar button[aria-label="Close menu"] {
+  background: none;
+  border: none;
+  color: #181818;
+  font-size: 32px;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  cursor: pointer;
+  z-index: 2200;
+}
+
+/* ====== SIDEBAR NAVIGATION ====== */
+nav.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+nav.sidebar-nav a {
+  color: #b1b1ae;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: none;
+  transition: color 0.2s;
+  display: block;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+
+nav.sidebar-nav a.active,
+nav.sidebar-nav a[aria-current="page"] {
+  color: #e6dbb9;
+  text-decoration: underline;
+}
+
+/* ====== CONTENT/FOOTER/SOCIAL ====== */
+.sidebar .sidebar-footer {
+  margin-top: auto;
+  font-size: 14px;
+  color: #888;
+}
+
+.sidebar .sidebar-footer h3 {
+  font-size: 17px;
+  margin: 10px 0 6px 0;
+  color: #181818;
+}
+
+.sidebar .sidebar-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .sidebar-footer li {
+  margin-bottom: 5px;
+}
+
+.sidebar .sidebar-footer a {
+  color: #181818;
+  text-decoration: underline;
+  font-size: 15.5px;
+}
+
+/* ====== INFO BOX ====== */
+.sidebar .sidebar-info {
+  margin: 18px 0 8px 0;
+  font-size: 17px;
+  color: #555;
+}
+
+.sidebar .sidebar-info b {
+  font-weight: bold;
+}
+
+/* ====== OVERLAY ====== */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  z-index: 2000;
+  display: none;
+}
+
+.sidebar-overlay.open {
+  display: block;
+}
