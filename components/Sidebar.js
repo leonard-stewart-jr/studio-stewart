@@ -59,7 +59,7 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
         aria-modal="true"
         tabIndex={-1}
       >
-        {/* Close button replaced with LogoHamburger */}
+        {/* Hamburger logo as close button, matches header size */}
         <div
           style={{
             position: "absolute",
@@ -69,7 +69,7 @@ export default function Sidebar({ open, onClose, logoSize = 66 }) {
           }}
         >
           <LogoHamburger
-            logoSize={48}
+            logoSize={logoSize}
             sidebarPaddingLeft={0}
             onOpenSidebar={onClose}
           />
