@@ -13,7 +13,7 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { label: "Email", href: "mailto:leonardwaynejr@icloud.com" },
+  { label: "Email", href: "mailto:leonard.stewart@studio-stewart.com" },
   { label: "My Code Here", href: "https://github.com/leonard-stewart-jr" },
 ];
 
