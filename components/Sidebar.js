@@ -157,7 +157,13 @@ export default function Sidebar({
             Explore my work and reach out to connect!
           </p>
         </div>
-        <div className={styles.sidebarFooter} style={{ padding: "0 24px 24px" }}>
+        <div
+          className={styles.sidebarFooter}
+          style={{
+            padding: "0 24px 24px",
+            marginBottom: "100px", // Added to ensure visibility on smaller screens
+          }}
+        >
           <h3>Contact & Social</h3>
           <ul>
             {socialLinks.map((link) => (
