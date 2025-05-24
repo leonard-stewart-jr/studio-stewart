@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import ProjectList from "../components/ProjectList";
 import ProjectModal from "../components/ProjectModal";
 import projects from "../data/projects";
@@ -7,51 +7,27 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(null);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "40px 0 40px 0",
-        fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
-      }}
-    >
-      <ProjectList
-        projects={projects}
-        onProjectClick={setActiveIndex}
-      />
-      {/* BIG.dk-style modal: horizontal scroll gallery */}
+    <main style={{ minHeight: "100vh", background: "#f9f9f7" }}>
+      <header>
+        <h1 style={{
+          fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+          fontWeight: 700,
+          fontSize: 36,
+          margin: "32px 0 0 0",
+          textAlign: "center",
+          letterSpacing: 1,
+          color: "#222"
+        }}>
+          My Projects
+        </h1>
+      </header>
+      <ProjectList projects={projects} onProjectClick={setActiveIndex} />
       {activeIndex !== null && (
         <ProjectModal
           project={projects[activeIndex]}
           onClose={() => setActiveIndex(null)}
         />
       )}
-      {/* Responsive styles */}
-      <style jsx>{`
-        @media (max-width: 900px) {
-          section {
-            max-width: 98vw;
-          }
-        }
-        @media (max-width: 700px) {
-          section > div {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 18px !important;
-          }
-          section > div > div {
-            align-items: flex-start !important;
-            text-align: left !important;
-            min-width: 0 !important;
-            max-width: none !important;
-            margin-right: 0 !important;
-            margin-bottom: 10px;
-          }
-        }
-      `}</style>
     </main>
   );
 }
