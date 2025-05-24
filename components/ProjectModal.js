@@ -22,7 +22,7 @@ export default function ProjectModal({ project, onClose }) {
   const startScroll = useCallback((dir) => {
     scrollDirectionRef.current = dir;
     if (!scrollAnimationRef.current) {
-      scrollStep();
+      scrollAnimationRef.current = requestAnimationFrame(scrollStep);
     }
   }, []);
 
@@ -34,7 +34,8 @@ export default function ProjectModal({ project, onClose }) {
     }
   }, []);
 
-  const scrollStep = () => {
+  // Needs to be outside useCallback to be hoisted for requestAnimationFrame
+  function scrollStep() {
     if (!scrollRef.current || scrollDirectionRef.current === 0) {
       scrollAnimationRef.current = null;
       return;
@@ -42,7 +43,7 @@ export default function ProjectModal({ project, onClose }) {
     const speed = 18; // pixels/frame
     scrollRef.current.scrollLeft += scrollDirectionRef.current * speed;
     scrollAnimationRef.current = requestAnimationFrame(scrollStep);
-  };
+  }
 
   // Clean up on unmount
   useEffect(() => stopScroll, [stopScroll]);
