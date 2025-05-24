@@ -213,6 +213,7 @@ export default function ProjectModal({ project, onClose }) {
                     maxHeight: "70vh",
                     borderRadius: 10,
                     background: "#eee",
+                    pointerEvents: "none", // <-- This enables hover-to-scroll to work!
                   }}
                 />
               ) : (
@@ -225,6 +226,7 @@ export default function ProjectModal({ project, onClose }) {
                     maxHeight: "70vh",
                     borderRadius: 10,
                     background: "#eee",
+                    pointerEvents: "none", // <-- This enables hover-to-scroll to work!
                   }}
                 />
               )}
