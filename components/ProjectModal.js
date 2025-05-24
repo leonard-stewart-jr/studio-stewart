@@ -1,7 +1,13 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 export default function ProjectModal({ project, onClose }) {
   const scrollRef = useRef(null);
+  const scrollAnimationRef = useRef(null);
+  const scrollDirectionRef = useRef(0); // -1 for left, 1 for right, 0 for stop
+
+  // For gradient visibility
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   // Allow closing with Escape key
   useEffect(() => {
@@ -11,6 +17,71 @@ export default function ProjectModal({ project, onClose }) {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
+
+  // Hover-to-scroll for desktop
+  const startScroll = useCallback((dir) => {
+    scrollDirectionRef.current = dir;
+    if (!scrollAnimationRef.current) {
+      scrollStep();
+    }
+  }, []);
+
+  const stopScroll = useCallback(() => {
+    scrollDirectionRef.current = 0;
+    if (scrollAnimationRef.current) {
+      cancelAnimationFrame(scrollAnimationRef.current);
+      scrollAnimationRef.current = null;
+    }
+  }, []);
+
+  const scrollStep = () => {
+    if (!scrollRef.current || scrollDirectionRef.current === 0) {
+      scrollAnimationRef.current = null;
+      return;
+    }
+    const speed = 18; // pixels/frame
+    scrollRef.current.scrollLeft += scrollDirectionRef.current * speed;
+    scrollAnimationRef.current = requestAnimationFrame(scrollStep);
+  };
+
+  // Clean up on unmount
+  useEffect(() => stopScroll, [stopScroll]);
+
+  // Mouse move detection for edge zones (desktop only)
+  const handleMouseMove = (e) => {
+    if (!scrollRef.current) return;
+    const { left, width } = scrollRef.current.getBoundingClientRect();
+    const x = e.clientX - left;
+    const edgeZone = Math.max(80, width * 0.14);
+
+    if (x < edgeZone) {
+      startScroll(-1); // Scroll left
+    } else if (x > width - edgeZone) {
+      startScroll(1); // Scroll right
+    } else {
+      stopScroll();
+    }
+  };
+
+  // Determine gradient visibility based on scroll position
+  const updateCanScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    updateCanScroll();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateCanScroll, { passive: true });
+    window.addEventListener("resize", updateCanScroll);
+    return () => {
+      el.removeEventListener("scroll", updateCanScroll);
+      window.removeEventListener("resize", updateCanScroll);
+    };
+  }, [updateCanScroll]);
 
   if (!project) return null;
 
@@ -36,9 +107,8 @@ export default function ProjectModal({ project, onClose }) {
           display: "flex",
           flexDirection: "column",
         }}
-        onClick={e => e.stopPropagation()} // Prevent closing when clicking content
+        onClick={e => e.stopPropagation()}
       >
-        {/* Horizontal scroll area */}
         <div
           ref={scrollRef}
           style={{
@@ -51,8 +121,43 @@ export default function ProjectModal({ project, onClose }) {
             scrollbarWidth: "thin",
             msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
+            cursor: "pointer",
+            position: "relative",
           }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={stopScroll}
         >
+          {/* Gradients */}
+          {canScrollLeft && (
+            <div
+              style={{
+                pointerEvents: "none",
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: "60px",
+                height: "100%",
+                zIndex: 5,
+                background: "linear-gradient(to right, rgba(255,255,255,0.97) 80%, rgba(255,255,255,0) 100%)",
+                transition: "opacity 0.2s"
+              }}
+            />
+          )}
+          {canScrollRight && (
+            <div
+              style={{
+                pointerEvents: "none",
+                position: "absolute",
+                right: 0,
+                top: 0,
+                width: "60px",
+                height: "100%",
+                zIndex: 5,
+                background: "linear-gradient(to left, rgba(255,255,255,0.97) 80%, rgba(255,255,255,0) 100%)",
+                transition: "opacity 0.2s"
+              }}
+            />
+          )}
           {/* First block: Project description and metadata */}
           <div
             style={{
