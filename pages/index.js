@@ -7,7 +7,14 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(null);
 
   return (
-    <main style={{ minHeight: "100vh", background: "#f9f9f7" }}>
+    <main style={{
+      minHeight: "100vh",
+      background: "#f9f9f7",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    }}>
+      {/* You can remove this header if you wish */}
       <header>
         <h1 style={{
           fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
