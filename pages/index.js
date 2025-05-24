@@ -9,25 +9,11 @@ export default function Home() {
   return (
     <main style={{
       minHeight: "100vh",
-      background: "#f9f9f7",
+      background: "#fff",
       display: "flex",
       flexDirection: "column",
       alignItems: "center"
     }}>
-      {/* You can remove this header if you wish */}
-      <header>
-        <h1 style={{
-          fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-          fontWeight: 700,
-          fontSize: 36,
-          margin: "32px 0 0 0",
-          textAlign: "center",
-          letterSpacing: 1,
-          color: "#222"
-        }}>
-          My Projects
-        </h1>
-      </header>
       <ProjectList projects={projects} onProjectClick={setActiveIndex} />
       {activeIndex !== null && (
         <ProjectModal
