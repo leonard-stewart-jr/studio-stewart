@@ -9,6 +9,9 @@ export default function ProjectModal({ project, onClose }) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
+  // Track which panel is in view: 0 = description, 1+ = media
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   // Main scrollStep function (as a ref, always up-to-date)
   const scrollStepRef = useRef();
   scrollStepRef.current = () => {
@@ -21,14 +24,75 @@ export default function ProjectModal({ project, onClose }) {
     scrollAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
   };
 
-  // Allow closing with Escape key
+  // Scroll to the given panel index (0 = description, 1+ = media)
+  const scrollToIndex = useCallback(
+    (idx) => {
+      if (!scrollRef.current) return;
+      const children = Array.from(scrollRef.current.children);
+      if (!children[idx]) return;
+      children[idx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      setCurrentIndex(idx);
+    },
+    [setCurrentIndex]
+  );
+
+  // Sync scroll position to update currentIndex, gradients, etc.
+  const updateCanScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+
+    // Find which panel is mostly in view
+    const children = Array.from(el.children);
+    let foundIdx = 0;
+    if (children.length > 1) {
+      const elRect = el.getBoundingClientRect();
+      let minDist = Infinity;
+      for (let i = 0; i < children.length; i++) {
+        const rect = children[i].getBoundingClientRect();
+        // Distance to left edge of scroll area
+        const dist = Math.abs(rect.left - elRect.left);
+        if (dist < minDist) {
+          minDist = dist;
+          foundIdx = i;
+        }
+      }
+    }
+    setCurrentIndex(foundIdx);
+  }, []);
+
+  useEffect(() => {
+    updateCanScroll();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateCanScroll, { passive: true });
+    window.addEventListener("resize", updateCanScroll);
+    return () => {
+      el.removeEventListener("scroll", updateCanScroll);
+      window.removeEventListener("resize", updateCanScroll);
+    };
+  }, [updateCanScroll]);
+
+  // Allow closing with Escape key and gallery left/right with arrows
   useEffect(() => {
     const handleKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (!project) return;
+      if (e.key === "Escape") {
+        onClose();
+      } else if (e.key === "ArrowLeft") {
+        if (currentIndex > 0) {
+          scrollToIndex(currentIndex - 1);
+        }
+      } else if (e.key === "ArrowRight") {
+        if (currentIndex < project.media.length) {
+          scrollToIndex(currentIndex + 1);
+        }
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose]);
+  }, [onClose, project, currentIndex, scrollToIndex]);
 
   // Hover-to-scroll for desktop
   const startScroll = useCallback((dir) => {
@@ -62,27 +126,14 @@ export default function ProjectModal({ project, onClose }) {
     }
   };
 
-  // Determine gradient visibility based on scroll position
-  const updateCanScroll = useCallback(() => {
-    if (!scrollRef.current) return;
-    const el = scrollRef.current;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    updateCanScroll();
-    const el = scrollRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateCanScroll, { passive: true });
-    window.addEventListener("resize", updateCanScroll);
-    return () => {
-      el.removeEventListener("scroll", updateCanScroll);
-      window.removeEventListener("resize", updateCanScroll);
-    };
-  }, [updateCanScroll]);
-
   useEffect(() => stopScroll, [stopScroll]);
+
+  // When modal opens, reset to first panel
+  useEffect(() => {
+    setCurrentIndex(0);
+    setTimeout(() => scrollToIndex(0), 0);
+    // eslint-disable-next-line
+  }, [project]);
 
   if (!project) return null;
 
