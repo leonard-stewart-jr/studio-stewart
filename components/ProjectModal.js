@@ -1,38 +1,18 @@
-import { useState, useRef } from "react";
+import { useRef, useEffect } from "react";
 
-export default function ProjectModal({
-  project,
-  onClose,
-}) {
-  const [mediaIndex, setMediaIndex] = useState(0);
-  const galleryLength = project.media.length;
+export default function ProjectModal({ project, onClose }) {
+  const scrollRef = useRef(null);
 
-  // Handle left/right click areas for media navigation
-  const handleMediaAreaClick = (e) => {
-    const bounds = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - bounds.left;
-    if (x < bounds.width / 2) {
-      // Left half: go previous
-      setMediaIndex((i) => Math.max(0, i - 1));
-    } else {
-      // Right half: go next
-      setMediaIndex((i) => Math.min(galleryLength - 1, i + 1));
-    }
-  };
-
-  // Optional: swipe support for touch devices
-  const touchStart = useRef();
-  const onTouchStart = (e) => (touchStart.current = e.touches[0].clientX);
-  const onTouchEnd = (e) => {
-    if (touchStart.current == null) return;
-    const delta = e.changedTouches[0].clientX - touchStart.current;
-    if (delta > 50 && mediaIndex > 0) setMediaIndex(mediaIndex - 1);
-    else if (delta < -50 && mediaIndex < galleryLength - 1) setMediaIndex(mediaIndex + 1);
-    touchStart.current = null;
-  };
+  // Allow closing with Escape key
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
 
   if (!project) return null;
-  const currentMedia = project.media[mediaIndex];
 
   return (
     <div
@@ -42,149 +22,134 @@ export default function ProjectModal({
         zIndex: 2000,
         inset: 0,
         background: "rgba(255,255,255,0.97)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        transition: "background 0.2s",
-        cursor: "zoom-out",
+        overflow: "hidden",
+        width: "100vw",
+        height: "100vh",
       }}
-      tabIndex={0}
       aria-modal="true"
       role="dialog"
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
     >
       <div
         style={{
-          maxWidth: "90vw",
-          maxHeight: "90vh",
-          background: "#fff",
-          borderRadius: 10,
-          boxShadow: "0 8px 48px rgba(0,0,0,0.17)",
-          overflow: "hidden",
-          position: "relative",
-          cursor: "auto",
+          width: "100vw",
+          height: "100vh",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()} // Prevent closing when clicking content
       >
-        {/* Media gallery area */}
+        {/* Horizontal scroll area */}
         <div
+          ref={scrollRef}
           style={{
-            width: "min(80vw,900px)",
-            maxHeight: "70vh",
-            margin: "0 auto",
-            position: "relative",
-            cursor: galleryLength > 1 ? "pointer" : "auto",
-            userSelect: "none"
-          }}
-          onClick={galleryLength > 1 ? handleMediaAreaClick : undefined}
-        >
-          {currentMedia.type === "video" ? (
-            <video
-              src={currentMedia.src}
-              autoPlay
-              loop
-              muted
-              playsInline
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                borderRadius: 8,
-                background: "#eee",
-                display: "block",
-              }}
-            />
-          ) : (
-            <img
-              src={currentMedia.src}
-              alt={currentMedia.caption || project.title}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                borderRadius: 8,
-                background: "#eee",
-                display: "block",
-              }}
-            />
-          )}
-          {/* Optional: Show caption */}
-          {currentMedia.caption && (
-            <div style={{
-              position: "absolute",
-              bottom: 10,
-              left: 0,
-              width: "100%",
-              textAlign: "center",
-              color: "#444",
-              fontSize: 15,
-              background: "rgba(255,255,255,0.75)",
-              padding: "3px 0"
-            }}>
-              {currentMedia.caption}
-            </div>
-          )}
-        </div>
-        {/* Project info */}
-        <div
-          style={{
-            width: "min(80vw,900px)",
-            padding: "24px 12px 16px 12px",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
+            flexDirection: "row",
+            height: "100%",
+            overflowX: "auto",
+            overflowY: "hidden",
+            scrollSnapType: "x mandatory",
+            scrollbarWidth: "thin",
+            msOverflowStyle: "none",
+            WebkitOverflowScrolling: "touch",
           }}
         >
-          <div style={{ fontWeight: 700, fontSize: 22, textTransform: "uppercase" }}>
-            {project.title}
+          {/* First block: Project description and metadata */}
+          <div
+            style={{
+              minWidth: "32vw",
+              maxWidth: "36vw",
+              padding: "64px 42px",
+              display: "flex",
+              alignItems: "center",
+              background: "#fff",
+              color: "#222",
+              fontSize: "19px",
+              lineHeight: 1.6,
+              scrollSnapAlign: "start",
+              boxSizing: "border-box",
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 26, marginBottom: 22, letterSpacing: 0.01, textTransform: "uppercase" }}>
+                {project.title}
+              </div>
+              <div style={{ fontSize: 15, color: "#888", marginBottom: 16, textTransform: "uppercase", letterSpacing: ".1em" }}>
+                {project.grade} — {project.type}
+              </div>
+              <div>{project.description}</div>
+            </div>
           </div>
-          <div style={{ fontSize: 14, color: "#888", margin: "7px 0", textTransform: "uppercase", letterSpacing: ".1em" }}>
-            {project.grade} — {project.type}
-          </div>
-          <div style={{ fontSize: 16, color: "#444", marginTop: 8 }}>
-            {project.description}
-          </div>
+          {/* Media blocks */}
+          {project.media.map((media, idx) => (
+            <div
+              key={idx}
+              style={{
+                minWidth: "60vw",
+                maxWidth: "70vw",
+                padding: "40px 32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                scrollSnapAlign: "start",
+                boxSizing: "border-box",
+              }}
+            >
+              {media.type === "video" ? (
+                <video
+                  src={media.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    maxHeight: "70vh",
+                    borderRadius: 10,
+                    background: "#eee",
+                  }}
+                />
+              ) : (
+                <img
+                  src={media.src}
+                  alt={media.caption || project.title}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    maxHeight: "70vh",
+                    borderRadius: 10,
+                    background: "#eee",
+                  }}
+                />
+              )}
+            </div>
+          ))}
         </div>
         {/* Close button */}
         <button
-          aria-label="Close"
           onClick={onClose}
           style={{
             position: "absolute",
-            top: 10,
-            right: 20,
-            fontSize: 32,
+            top: 24,
+            right: 48,
+            fontSize: 36,
             background: "none",
             border: "none",
             color: "#888",
             cursor: "pointer",
+            zIndex: 10,
+            filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.07))",
           }}
         >
           &times;
         </button>
-        {/* Optional: Show media index if there are multiple */}
-        {galleryLength > 1 && (
-          <div style={{
-            position: "absolute",
-            bottom: 10,
-            right: 18,
-            fontSize: 15,
-            color: "#888",
-            background: "rgba(255,255,255,0.7)",
-            padding: "2px 8px",
-            borderRadius: 6
-          }}>
-            {mediaIndex + 1} / {galleryLength}
-          </div>
-        )}
       </div>
+      {/* Hide scrollbars (optional) */}
+      <style jsx global>{`
+        div[role="dialog"]::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }
