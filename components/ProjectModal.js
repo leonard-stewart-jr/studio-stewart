@@ -111,9 +111,6 @@ export default function ProjectModal({ project, onClose }) {
     }
   };
 
-  // Prevent clicks inside the scroll area (panel) from bubbling to overlay,
-  // but we use overlay click for navigation so this is intentionally not used.
-
   return (
     <div
       onClick={handleOverlayClick}
@@ -148,10 +145,12 @@ export default function ProjectModal({ project, onClose }) {
             overflowY: "hidden",
             scrollSnapType: "x mandatory",
             scrollbarWidth: "thin",
+            scrollbarColor: "#e6dbb9 #f0f0ed",
             msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
             position: "relative",
           }}
+          className="project-modal-scroll"
         >
           {/* First block: Project description and metadata */}
           <div
@@ -261,10 +260,22 @@ export default function ProjectModal({ project, onClose }) {
           &times;
         </button>
       </div>
-      {/* Hide scrollbars (optional) */}
+      {/* Custom scrollbar styles for modal scroll area */}
       <style jsx global>{`
-        div[role="dialog"]::-webkit-scrollbar {
-          display: none;
+        .project-modal-scroll::-webkit-scrollbar {
+          height: 8px;
+          background: #f0f0ed;
+        }
+        .project-modal-scroll::-webkit-scrollbar-thumb {
+          background: #e6dbb9;
+          border-radius: 6px;
+        }
+        .project-modal-scroll::-webkit-scrollbar-thumb:hover {
+          background: #d6c08e;
+        }
+        .project-modal-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: #e6dbb9 #f0f0ed;
         }
       `}</style>
     </div>
