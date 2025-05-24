@@ -1,26 +1,21 @@
 import { useRouter } from "next/router";
 import NavBar from "../../components/NavBar";
-
-// TODO: Replace with your actual data source or fetch dynamically.
-const projects = [
-  {
-    grade: "SOPHOMORE",
-    title: "Urban Pavilion",
-    type: "HEALTHCARE",
-    slug: "urban-pavilion",
-    coverType: "video",
-    coverSrc: "/projects/urban-pavilion/cover.mp4",
-    description: "A full project description goes here.",
-  },
-  // ...other projects
-];
+import projects from "../../data/projects"; // Adjust the path as needed
 
 export default function ProjectDetail() {
   const router = useRouter();
   const { slug } = router.query;
 
   const project = projects.find(p => p.slug === slug);
-  if (!project) return <div><NavBar /><div style={{padding:32}}>Project not found.</div></div>;
+  if (!project) return (
+    <div>
+      <NavBar />
+      <div style={{ padding: 32 }}>Project not found.</div>
+    </div>
+  );
+
+  // The first media item is always the "main" preview (video or image)
+  const mainMedia = project.media?.[0];
 
   return (
     <div>
@@ -35,22 +30,22 @@ export default function ProjectDetail() {
           {project.grade} &middot; {project.type}
         </div>
         <div style={{ margin: "32px 0", maxWidth: 500 }}>
-          {project.coverType === "video" ? (
+          {mainMedia?.type === "video" ? (
             <video
-              src={project.coverSrc}
+              src={mainMedia.src}
               autoPlay
               loop
               muted
               playsInline
               style={{ width: "100%", borderRadius: 8 }}
             />
-          ) : (
+          ) : mainMedia?.type === "image" ? (
             <img
-              src={project.coverSrc}
+              src={mainMedia.src}
               alt={`${project.title} cover`}
               style={{ width: "100%", borderRadius: 8 }}
             />
-          )}
+          ) : null}
         </div>
         <div style={{ fontSize: 18 }}>{project.description}</div>
       </main>
