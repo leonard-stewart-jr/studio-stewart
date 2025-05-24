@@ -1,33 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import ProjectList from "../components/ProjectList";
 import ProjectModal from "../components/ProjectModal";
 import projects from "../data/projects";
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(null);
-
-  // Keyboard navigation for modal
-  useEffect(() => {
-    if (activeIndex === null) return;
-    const handler = (e) => {
-      if (e.key === "Escape") setActiveIndex(null);
-      if (e.key === "ArrowLeft") setActiveIndex((i) => (i > 0 ? i - 1 : i));
-      if (e.key === "ArrowRight") setActiveIndex((i) => (i < projects.length - 1 ? i + 1 : i));
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [activeIndex]);
-
-  // Touch swipe navigation for modal
-  const touchStart = useRef();
-  const onTouchStart = (e) => (touchStart.current = e.touches[0].clientX);
-  const onTouchEnd = (e) => {
-    if (touchStart.current == null) return;
-    const delta = e.changedTouches[0].clientX - touchStart.current;
-    if (delta > 50 && activeIndex > 0) setActiveIndex(activeIndex - 1);
-    else if (delta < -50 && activeIndex < projects.length - 1) setActiveIndex(activeIndex + 1);
-    touchStart.current = null;
-  };
 
   return (
     <main
@@ -41,19 +18,21 @@ export default function Home() {
         fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
       }}
     >
-      <ProjectList projects={projects} onProjectClick={setActiveIndex} />
+      {/* Project list with click handler */}
+      <ProjectList
+        projects={projects}
+        onProjectClick={setActiveIndex}
+      />
+
+      {/* Project modal, only rendered when a project is active */}
       {activeIndex !== null && (
         <ProjectModal
           project={projects[activeIndex]}
-          activeIndex={activeIndex}
-          setActiveIndex={setActiveIndex}
-          projectsLength={projects.length}
           onClose={() => setActiveIndex(null)}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
         />
       )}
-      {/* Responsive styles */}
+
+      {/* Responsive styles (keep or move to CSS file as needed) */}
       <style jsx>{`
         @media (max-width: 900px) {
           section {
