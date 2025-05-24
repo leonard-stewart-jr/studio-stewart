@@ -1,8 +1,8 @@
 const projects = [
   {
-    grade: "3rd Year",
-    title: "Urban Pavilion",
-    type: "Cultural Center",
+    grade: "SPRING 2024",
+    title: "BROOKINGS PUBLIC LIBRARY",
+    type: "CULTURE",
     slug: "urban-pavilion",
     coverType: "image",
     coverSrc: "https://picsum.photos/800/450?random=1",
