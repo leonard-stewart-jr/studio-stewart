@@ -1,17 +1,20 @@
-import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoHamburger from "./LogoHamburger";
+import styles from "../styles/sidebar.module.css";
 
 const navItems = [
-  { label: "PORTFOLIO", href: "/" },
-  { label: "ABOUT ME", href: "/about" },
+  { label: "PROJECTS", href: "/" },
+  { label: "INDEPENDENT STUDIO", href: "/independent-studio" },
   { label: "3D PRINTING", href: "/3d-printing" },
+  { label: "ABOUT ME", href: "/about" },
 ];
 
 const socialLinks = [
-  { label: "Email", href: "mailto:your@email.com" },
-  { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
+  { label: "Email", href: "mailto:leonard.stewart@studio-stewart.com" },
+  { label: "My Code Here", href: "https://github.com/leonard-stewart-jr" },
 ];
 
 export default function Sidebar({
@@ -22,63 +25,71 @@ export default function Sidebar({
   headerHeight = 76,
 }) {
   const router = useRouter();
-  // Fine-tune these values for perfect alignment
-  const verticalOffset = (headerHeight - logoSize) / 2 - 2; // -2px tweak up
-  const rightOffset = 28; // shift more left from the edge (was 16)
+  const verticalOffset = (headerHeight - logoSize) / 2 - 2;
 
   function isActive(href) {
     if (href === "/") return router.pathname === "/";
     return router.pathname === href || router.pathname.startsWith(href + "/");
   }
 
+  // Prevent background scroll when sidebar is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Sidebar animation variants for framer-motion
+  const sidebarVariants = {
+    closed: { x: "-100%", transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } },
+    open:   { x: 0,      transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
+  };
+  const hamburgerTransition = { duration: 0.18, ease: "linear" };
+
   return (
     <>
-      {/* Overlay */}
-      <div
-        className={`sidebar-overlay${open ? " open" : ""}`}
-        onClick={onClose}
-        aria-label="Close menu"
-        style={{
-          display: open ? "block" : "none",
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,0.32)",
-          zIndex: 1300,
-          transition: "background 0.2s",
-        }}
-      />
-      <aside
-        className={`sidebar${open ? " open" : ""}`}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          height: "100vh",
-          width: 300,
-          maxWidth: "80vw",
-          background: "#fff",
-          boxShadow: "2px 0 16px 0 rgba(0,0,0,0.15)",
-          zIndex: 1400,
-          transform: open ? "translateX(0)" : "translateX(-100%)",
-          transition: "transform 0.32s cubic-bezier(.7,.2,.3,1)",
-          display: "flex",
-          flexDirection: "column",
-        }}
+      {/* Overlay uses AnimatePresence for smooth fade in/out */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="sidebar-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.26, ease: "easeOut" }}
+            onClick={onClose}
+            aria-label="Close menu"
+            className={styles.sidebarOverlay}
+          />
+        )}
+      </AnimatePresence>
+      <motion.aside
+        className={`${styles.sidebar} ${open ? styles.open : ""}`}
+        initial={false}
+        animate={open ? "open" : "closed"}
+        variants={sidebarVariants}
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
       >
-        {/* Hamburger logo as close button, animated */}
         {open && (
           <motion.div
-            layoutId="logo-hamburger"
+            transition={hamburgerTransition}
             style={{
               position: "absolute",
               top: verticalOffset,
-              right: rightOffset,
+              right: 28,
               zIndex: 2200,
               cursor: "pointer",
+              opacity: open ? 1 : 0,
+              pointerEvents: open ? "auto" : "none",
+              transition: "opacity 0.18s",
             }}
           >
             <LogoHamburger
@@ -88,9 +99,8 @@ export default function Sidebar({
             />
           </motion.div>
         )}
-        {/* Navigation */}
         <nav
-          className="sidebar-nav"
+          className={styles.sidebarNav}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -103,31 +113,57 @@ export default function Sidebar({
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} passHref legacyBehavior>
               <a
-                className={isActive(item.href) ? "active" : ""}
-                style={{
-                  color: isActive(item.href) ? "#e6dbb9" : "#181818",
-                  fontWeight: 700,
-                  fontSize: 22,
-                  textDecoration: isActive(item.href) ? "underline" : "none",
-                  padding: "7px 0",
-                  borderBottom: "1px solid #eee",
-                  transition: "color 0.2s",
-                }}
+                className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
                 onClick={onClose}
               >
                 {item.label}
               </a>
             </Link>
           ))}
+
+          {/* Extra content for scrolling demonstration */}
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 1: Extra Links</div>
+          {[...Array(15)].map((_, i) => (
+            <a href="#" key={`extra-${i}`} style={{ color: "#888", fontSize: 13 }}>
+              Example Link {i + 1}
+            </a>
+          ))}
+
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 2: Even more content</div>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+            {[...Array(10)].map((_, i) => (
+              <li key={`more-${i}`}>
+                <a href="#" style={{ color: "#b1b1ae", fontSize: 13 }}>
+                  Item {i + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 3: Placeholder Section</div>
+          <p style={{ fontSize: 13, color: "#888" }}>
+            This section exists to make the sidebar content long enough to require scrolling on mobile and desktop. You can add or remove items as needed.
+          </p>
+
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 4: Final Section</div>
+          <p style={{ fontSize: 13, color: "#888" }}>
+            If you can scroll this sidebar, the overflow-y: auto is working as intended.
+          </p>
         </nav>
-        <div className="sidebar-info" style={{ padding: "24px" }}>
+        <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
           <p>
             <b>Studio Stewart</b> — Digital portfolio<br />
             Student, designer, and maker.<br />
             Explore my work and reach out to connect!
           </p>
         </div>
-        <div className="sidebar-footer" style={{ padding: "0 24px 24px" }}>
+        <div
+          className={styles.sidebarFooter}
+          style={{
+            padding: "0 24px 24px",
+            marginBottom: "100px", // Added to ensure visibility on smaller screens
+          }}
+        >
           <h3>Contact & Social</h3>
           <ul>
             {socialLinks.map((link) => (
@@ -143,7 +179,7 @@ export default function Sidebar({
             ))}
           </ul>
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }

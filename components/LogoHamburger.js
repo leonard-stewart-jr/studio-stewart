@@ -2,41 +2,48 @@ import { useState } from "react";
 
 export default function LogoHamburger({
   logoSize = 66,
-  sidebarPaddingLeft = 22,
   onOpenSidebar,
+  color = "#181818", // Default matches sidebar/nav text color
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Hamburger SVG logic (unchanged)
+  // Triangle points from SVG: (30,100), (60,30), (90,100)
+  // Account for stroke width on the triangle (6px): avoid extremes.
+  // We'll nudge all lines down by 2px for better centering.
   const triangle = [
-    { x: 30, y: 100 },
-    { x: 60, y: 30 },
-    { x: 90, y: 100 },
+    { x: 30, y: 96 }, // 100 - 4, nudged up for stroke
+    { x: 60, y: 34 }, // 30 + 4, nudged down for stroke
+    { x: 90, y: 96 }, // 100 - 4, nudged up for stroke
   ];
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
   const lineCount = 4;
+  const minT = 0.04;
+  const maxT = 0.96;
+  const yNudge = 4; // move hamburger down 4px
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
-    const t = i / (lineCount - 1);
-    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
+    const t = minT + (i / (lineCount - 1)) * (maxT - minT);
+    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y) + yNudge;
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
     lines.push({ x1: leftX, x2: rightX, y });
   }
-  const lineThickness = Math.max(1, (triangle[0].y - triangle[1].y) * 0.09);
+  const lineThickness = 6; // matches triangle stroke
 
   return (
     <div
       className="logo-hamburger-wrap"
       style={{
         position: "relative",
-        left: sidebarPaddingLeft,
         width: logoSize,
         height: logoSize,
         cursor: "pointer",
         zIndex: 1200,
         userSelect: "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
       onClick={onOpenSidebar}
       onMouseEnter={() => setHovered(true)}
@@ -98,8 +105,8 @@ export default function LogoHamburger({
               y={line.y - lineThickness / 2}
               width={line.x2 - line.x1}
               height={lineThickness}
-              fill="#111"
-              rx={0}
+              fill={color}
+              rx={2}
             />
           ))}
         </svg>
