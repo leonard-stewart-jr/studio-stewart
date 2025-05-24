@@ -18,21 +18,18 @@ export default function Home() {
         fontFamily: "'Futura', 'Open Sans', Arial, sans-serif",
       }}
     >
-      {/* Project list with click handler */}
       <ProjectList
         projects={projects}
         onProjectClick={setActiveIndex}
       />
-
-      {/* Project modal, only rendered when a project is active */}
+      {/* BIG.dk-style modal: horizontal scroll gallery */}
       {activeIndex !== null && (
         <ProjectModal
           project={projects[activeIndex]}
           onClose={() => setActiveIndex(null)}
         />
       )}
-
-      {/* Responsive styles (keep or move to CSS file as needed) */}
+      {/* Responsive styles */}
       <style jsx>{`
         @media (max-width: 900px) {
           section {
