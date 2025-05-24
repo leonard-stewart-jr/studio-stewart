@@ -1,12 +1,12 @@
 const projects = [
   {
-    grade: "3rd Year",
-    title: "Urban Pavilion",
-    type: "Cultural Center",
+    grade: "SPRING 24'",
+    title: "BROOKINGS PUBLIC LIBRARY",
+    type: "Culture",
     slug: "urban-pavilion",
     description: "Project description goes here.",
     media: [
-      { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4", caption: "Main Preview Video" },
+      { type: "video", src: "/videos/enscapeentry.mp4", caption: "Main Preview Video" },
       { type: "image", src: "https://picsum.photos/800/450?random=10", caption: "Gallery Image 1" },
       { type: "image", src: "https://picsum.photos/800/450?random=11", caption: "Gallery Image 2" }
     ]
