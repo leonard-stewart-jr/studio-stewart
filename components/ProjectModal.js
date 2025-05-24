@@ -2,12 +2,10 @@ import { useRef, useEffect, useState, useCallback } from "react";
 
 export default function ProjectModal({ project, onClose }) {
   const scrollRef = useRef(null);
-
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [panelRects, setPanelRects] = useState([]);
 
-  // Scroll to the given panel index (0 = description, 1+ = media)
+  // Scroll to a specific panel by index
   const scrollToIndex = useCallback(
     (idx) => {
       if (!scrollRef.current) return;
@@ -16,18 +14,15 @@ export default function ProjectModal({ project, onClose }) {
       children[idx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
       setCurrentIndex(idx);
     },
-    [setCurrentIndex]
+    []
   );
 
-  // Sync scroll position to update currentIndex, gradients, etc.
-  const updateCanScroll = useCallback(() => {
+  // Track which panel is in view and get bounding rects for click logic
+  const updateRectsAndIndex = useCallback(() => {
     if (!scrollRef.current) return;
     const el = scrollRef.current;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-
-    // Find which panel is mostly in view
     const children = Array.from(el.children);
+    // Find which panel is mostly in view
     let foundIdx = 0;
     if (children.length > 1) {
       const elRect = el.getBoundingClientRect();
@@ -43,21 +38,24 @@ export default function ProjectModal({ project, onClose }) {
       }
     }
     setCurrentIndex(foundIdx);
+
+    // Save panel rects for click logic
+    setPanelRects(children.map(child => child.getBoundingClientRect()));
   }, []);
 
   useEffect(() => {
-    updateCanScroll();
+    updateRectsAndIndex();
     const el = scrollRef.current;
     if (!el) return;
-    el.addEventListener("scroll", updateCanScroll, { passive: true });
-    window.addEventListener("resize", updateCanScroll);
+    el.addEventListener("scroll", updateRectsAndIndex, { passive: true });
+    window.addEventListener("resize", updateRectsAndIndex);
     return () => {
-      el.removeEventListener("scroll", updateCanScroll);
-      window.removeEventListener("resize", updateCanScroll);
+      el.removeEventListener("scroll", updateRectsAndIndex);
+      window.removeEventListener("resize", updateRectsAndIndex);
     };
-  }, [updateCanScroll]);
+  }, [updateRectsAndIndex]);
 
-  // Allow closing with Escape key and gallery left/right with arrows
+  // Keyboard navigation
   useEffect(() => {
     const handleKey = (e) => {
       if (!project) return;
@@ -81,24 +79,44 @@ export default function ProjectModal({ project, onClose }) {
   useEffect(() => {
     setCurrentIndex(0);
     setTimeout(() => scrollToIndex(0), 0);
-    // eslint-disable-next-line
-  }, [project]);
+  }, [project, scrollToIndex]);
 
   if (!project) return null;
 
-  // Click zone handlers
-  const handleLeftClick = (e) => {
-    e.stopPropagation();
-    if (currentIndex > 0) scrollToIndex(currentIndex - 1);
+  // Click handler for the modal overlay
+  const handleOverlayClick = (e) => {
+    if (!scrollRef.current) return;
+    // Get bounds of the current panel (media/text)
+    const panelRect = panelRects[currentIndex];
+    if (!panelRect) {
+      onClose();
+      return;
+    }
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    // If click is within the vertical bounds of the media/text panel
+    if (clickY >= panelRect.top && clickY <= panelRect.bottom) {
+      // Left or right half of viewport
+      const vw = window.innerWidth;
+      if (clickX < vw / 2) {
+        // Left half: go left if possible
+        if (currentIndex > 0) scrollToIndex(currentIndex - 1);
+      } else {
+        // Right half: go right if possible
+        if (currentIndex < project.media.length) scrollToIndex(currentIndex + 1);
+      }
+    } else {
+      // Outside media/text: close modal
+      onClose();
+    }
   };
-  const handleRightClick = (e) => {
-    e.stopPropagation();
-    if (currentIndex < project.media.length) scrollToIndex(currentIndex + 1);
-  };
+
+  // Prevent clicks inside the scroll area (panel) from bubbling to overlay,
+  // but we use overlay click for navigation so this is intentionally not used.
 
   return (
     <div
-      onClick={onClose}
+      onClick={handleOverlayClick}
       style={{
         position: "fixed",
         zIndex: 2000,
@@ -107,6 +125,7 @@ export default function ProjectModal({ project, onClose }) {
         overflow: "hidden",
         width: "100vw",
         height: "100vh",
+        cursor: "pointer"
       }}
       aria-modal="true"
       role="dialog"
@@ -118,7 +137,6 @@ export default function ProjectModal({ project, onClose }) {
           display: "flex",
           flexDirection: "column",
         }}
-        onClick={e => e.stopPropagation()}
       >
         <div
           ref={scrollRef}
@@ -132,79 +150,9 @@ export default function ProjectModal({ project, onClose }) {
             scrollbarWidth: "thin",
             msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
-            cursor: "pointer",
             position: "relative",
           }}
         >
-          {/* Gradients */}
-          {canScrollLeft && (
-            <div
-              style={{
-                pointerEvents: "none",
-                position: "absolute",
-                left: 0,
-                top: 0,
-                width: "60px",
-                height: "100%",
-                zIndex: 5,
-                background: "linear-gradient(to right, rgba(255,255,255,0.97) 80%, rgba(255,255,255,0) 100%)",
-                transition: "opacity 0.2s"
-              }}
-            />
-          )}
-          {canScrollRight && (
-            <div
-              style={{
-                pointerEvents: "none",
-                position: "absolute",
-                right: 0,
-                top: 0,
-                width: "60px",
-                height: "100%",
-                zIndex: 5,
-                background: "linear-gradient(to left, rgba(255,255,255,0.97) 80%, rgba(255,255,255,0) 100%)",
-                transition: "opacity 0.2s"
-              }}
-            />
-          )}
-
-          {/* LEFT CLICK ZONE */}
-          {currentIndex > 0 && (
-            <div
-              onClick={handleLeftClick}
-              style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                width: "18vw",
-                height: "100%",
-                zIndex: 10,
-                cursor: "pointer",
-                background: "rgba(0,0,0,0)",
-              }}
-              aria-label="Previous"
-              tabIndex={-1}
-            />
-          )}
-          {/* RIGHT CLICK ZONE */}
-          {currentIndex < project.media.length && (
-            <div
-              onClick={handleRightClick}
-              style={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                width: "18vw",
-                height: "100%",
-                zIndex: 10,
-                cursor: "pointer",
-                background: "rgba(0,0,0,0)",
-              }}
-              aria-label="Next"
-              tabIndex={-1}
-            />
-          )}
-
           {/* First block: Project description and metadata */}
           <div
             style={{
@@ -219,13 +167,26 @@ export default function ProjectModal({ project, onClose }) {
               lineHeight: 1.6,
               scrollSnapAlign: "start",
               boxSizing: "border-box",
+              justifyContent: "center",
             }}
           >
             <div>
-              <div style={{ fontWeight: 700, fontSize: 26, marginBottom: 22, letterSpacing: 0.01, textTransform: "uppercase" }}>
+              <div style={{
+                fontWeight: 700,
+                fontSize: 26,
+                marginBottom: 22,
+                letterSpacing: 0.01,
+                textTransform: "uppercase"
+              }}>
                 {project.title}
               </div>
-              <div style={{ fontSize: 15, color: "#888", marginBottom: 16, textTransform: "uppercase", letterSpacing: ".1em" }}>
+              <div style={{
+                fontSize: 15,
+                color: "#888",
+                marginBottom: 16,
+                textTransform: "uppercase",
+                letterSpacing: ".1em"
+              }}>
                 {project.grade} — {project.type}
               </div>
               <div>{project.description}</div>
@@ -244,6 +205,7 @@ export default function ProjectModal({ project, onClose }) {
                 justifyContent: "center",
                 scrollSnapAlign: "start",
                 boxSizing: "border-box",
+                justifyContent: "center"
               }}
             >
               {media.type === "video" ? (
