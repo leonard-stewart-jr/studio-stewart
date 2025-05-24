@@ -9,6 +9,18 @@ export default function ProjectModal({ project, onClose }) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
+  // Main scrollStep function (as a ref, always up-to-date)
+  const scrollStepRef = useRef();
+  scrollStepRef.current = () => {
+    if (!scrollRef.current || scrollDirectionRef.current === 0) {
+      scrollAnimationRef.current = null;
+      return;
+    }
+    const speed = 18;
+    scrollRef.current.scrollLeft += scrollDirectionRef.current * speed;
+    scrollAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
+  };
+
   // Allow closing with Escape key
   useEffect(() => {
     const handleKey = (e) => {
@@ -22,7 +34,7 @@ export default function ProjectModal({ project, onClose }) {
   const startScroll = useCallback((dir) => {
     scrollDirectionRef.current = dir;
     if (!scrollAnimationRef.current) {
-      scrollAnimationRef.current = requestAnimationFrame(scrollStep);
+      scrollAnimationRef.current = requestAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
     }
   }, []);
 
@@ -34,20 +46,6 @@ export default function ProjectModal({ project, onClose }) {
     }
   }, []);
 
-  // Needs to be outside useCallback to be hoisted for requestAnimationFrame
-  function scrollStep() {
-    if (!scrollRef.current || scrollDirectionRef.current === 0) {
-      scrollAnimationRef.current = null;
-      return;
-    }
-    const speed = 18; // pixels/frame
-    scrollRef.current.scrollLeft += scrollDirectionRef.current * speed;
-    scrollAnimationRef.current = requestAnimationFrame(scrollStep);
-  }
-
-  // Clean up on unmount
-  useEffect(() => stopScroll, [stopScroll]);
-
   // Mouse move detection for edge zones (desktop only)
   const handleMouseMove = (e) => {
     if (!scrollRef.current) return;
@@ -56,9 +54,9 @@ export default function ProjectModal({ project, onClose }) {
     const edgeZone = Math.max(80, width * 0.14);
 
     if (x < edgeZone) {
-      startScroll(-1); // Scroll left
+      startScroll(-1);
     } else if (x > width - edgeZone) {
-      startScroll(1); // Scroll right
+      startScroll(1);
     } else {
       stopScroll();
     }
@@ -83,6 +81,8 @@ export default function ProjectModal({ project, onClose }) {
       window.removeEventListener("resize", updateCanScroll);
     };
   }, [updateCanScroll]);
+
+  useEffect(() => stopScroll, [stopScroll]);
 
   if (!project) return null;
 
@@ -213,7 +213,7 @@ export default function ProjectModal({ project, onClose }) {
                     maxHeight: "70vh",
                     borderRadius: 10,
                     background: "#eee",
-                    pointerEvents: "none", // <-- This enables hover-to-scroll to work!
+                    pointerEvents: "none",
                   }}
                 />
               ) : (
@@ -226,7 +226,7 @@ export default function ProjectModal({ project, onClose }) {
                     maxHeight: "70vh",
                     borderRadius: 10,
                     background: "#eee",
-                    pointerEvents: "none", // <-- This enables hover-to-scroll to work!
+                    pointerEvents: "none",
                   }}
                 />
               )}
