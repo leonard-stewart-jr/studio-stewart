@@ -34,7 +34,7 @@ export default function ProjectModal({ project, onClose }) {
   const startScroll = useCallback((dir) => {
     scrollDirectionRef.current = dir;
     if (!scrollAnimationRef.current) {
-      scrollAnimationRef.current = requestAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
+      scrollAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
     }
   }, []);
 
@@ -248,6 +248,7 @@ export default function ProjectModal({ project, onClose }) {
             zIndex: 10,
             filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.07))",
           }}
+          aria-label="Close"
         >
           &times;
         </button>
