@@ -2,27 +2,10 @@ import { useRef, useEffect, useState, useCallback } from "react";
 
 export default function ProjectModal({ project, onClose }) {
   const scrollRef = useRef(null);
-  const scrollAnimationRef = useRef(null);
-  const scrollDirectionRef = useRef(0); // -1 for left, 1 for right, 0 for stop
 
-  // For gradient visibility
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-
-  // Track which panel is in view: 0 = description, 1+ = media
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Main scrollStep function (as a ref, always up-to-date)
-  const scrollStepRef = useRef();
-  scrollStepRef.current = () => {
-    if (!scrollRef.current || scrollDirectionRef.current === 0) {
-      scrollAnimationRef.current = null;
-      return;
-    }
-    const speed = 18;
-    scrollRef.current.scrollLeft += scrollDirectionRef.current * speed;
-    scrollAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
-  };
 
   // Scroll to the given panel index (0 = description, 1+ = media)
   const scrollToIndex = useCallback(
@@ -94,40 +77,6 @@ export default function ProjectModal({ project, onClose }) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [onClose, project, currentIndex, scrollToIndex]);
 
-  // Hover-to-scroll for desktop
-  const startScroll = useCallback((dir) => {
-    scrollDirectionRef.current = dir;
-    if (!scrollAnimationRef.current) {
-      scrollAnimationRef.current = requestAnimationFrame(scrollStepRef.current);
-    }
-  }, []);
-
-  const stopScroll = useCallback(() => {
-    scrollDirectionRef.current = 0;
-    if (scrollAnimationRef.current) {
-      cancelAnimationFrame(scrollAnimationRef.current);
-      scrollAnimationRef.current = null;
-    }
-  }, []);
-
-  // Mouse move detection for edge zones (desktop only)
-  const handleMouseMove = (e) => {
-    if (!scrollRef.current) return;
-    const { left, width } = scrollRef.current.getBoundingClientRect();
-    const x = e.clientX - left;
-    const edgeZone = Math.max(80, width * 0.14);
-
-    if (x < edgeZone) {
-      startScroll(-1);
-    } else if (x > width - edgeZone) {
-      startScroll(1);
-    } else {
-      stopScroll();
-    }
-  };
-
-  useEffect(() => stopScroll, [stopScroll]);
-
   // When modal opens, reset to first panel
   useEffect(() => {
     setCurrentIndex(0);
@@ -136,6 +85,16 @@ export default function ProjectModal({ project, onClose }) {
   }, [project]);
 
   if (!project) return null;
+
+  // Click zone handlers
+  const handleLeftClick = (e) => {
+    e.stopPropagation();
+    if (currentIndex > 0) scrollToIndex(currentIndex - 1);
+  };
+  const handleRightClick = (e) => {
+    e.stopPropagation();
+    if (currentIndex < project.media.length) scrollToIndex(currentIndex + 1);
+  };
 
   return (
     <div
@@ -176,8 +135,6 @@ export default function ProjectModal({ project, onClose }) {
             cursor: "pointer",
             position: "relative",
           }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={stopScroll}
         >
           {/* Gradients */}
           {canScrollLeft && (
@@ -210,6 +167,44 @@ export default function ProjectModal({ project, onClose }) {
               }}
             />
           )}
+
+          {/* LEFT CLICK ZONE */}
+          {currentIndex > 0 && (
+            <div
+              onClick={handleLeftClick}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: "18vw",
+                height: "100%",
+                zIndex: 10,
+                cursor: "pointer",
+                background: "rgba(0,0,0,0)",
+              }}
+              aria-label="Previous"
+              tabIndex={-1}
+            />
+          )}
+          {/* RIGHT CLICK ZONE */}
+          {currentIndex < project.media.length && (
+            <div
+              onClick={handleRightClick}
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 0,
+                width: "18vw",
+                height: "100%",
+                zIndex: 10,
+                cursor: "pointer",
+                background: "rgba(0,0,0,0)",
+              }}
+              aria-label="Next"
+              tabIndex={-1}
+            />
+          )}
+
           {/* First block: Project description and metadata */}
           <div
             style={{
