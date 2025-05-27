@@ -45,6 +45,7 @@ export default function ImageSlider({ images }) {
         max={images.length - 1}
         value={currentIdx}
         onChange={e => setCurrentIdx(Number(e.target.value))}
+        onClick={e => e.stopPropagation()}
         style={{
           position: "absolute",
           left: 0,
