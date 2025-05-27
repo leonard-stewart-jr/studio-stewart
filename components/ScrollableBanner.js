@@ -2,11 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 
 export default function ScrollableBanner({ src, alt = "", height = 600 }) {
   const containerRef = useRef(null);
-  const imgRef = useRef(null);
   const [zoom, setZoom] = useState(1);
 
-  // Zoom in/out with Ctrl/Cmd + scroll or pinch
+  // Handle zoom with ctrl/cmd+scroll or pinch
   useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
     const onWheel = e => {
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault();
@@ -15,17 +16,14 @@ export default function ScrollableBanner({ src, alt = "", height = 600 }) {
         );
       }
     };
-    const node = containerRef.current;
-    if (node) node.addEventListener("wheel", onWheel, { passive: false });
-    return () => node && node.removeEventListener("wheel", onWheel);
+    node.addEventListener("wheel", onWheel, { passive: false });
+    return () => node.removeEventListener("wheel", onWheel);
   }, []);
 
-  // Double-click to toggle zoom
-  const handleDoubleClick = () => {
-    setZoom(zoom === 1 ? 2 : 1);
-  };
+  // Allow double-click to toggle 2x/1x zoom
+  const handleDoubleClick = () => setZoom(zoom === 1 ? 2 : 1);
 
-  // Keyboard left/right arrow scroll
+  // Keyboard left/right scroll (when banner in focus)
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
@@ -40,32 +38,36 @@ export default function ScrollableBanner({ src, alt = "", height = 600 }) {
     return () => node.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Allow horizontal scroll by drag (mouse)
-  let isDragging = false, startX = 0, scrollLeft = 0;
-  const onMouseDown = e => {
-    if (e.button !== 0) return;
-    isDragging = true;
-    startX = e.pageX - containerRef.current.offsetLeft;
-    scrollLeft = containerRef.current.scrollLeft;
-    document.body.style.cursor = "grabbing";
-  };
-  const onMouseMove = e => {
-    if (!isDragging) return;
-    const x = e.pageX - containerRef.current.offsetLeft;
-    containerRef.current.scrollLeft = scrollLeft - (x - startX);
-  };
-  const onMouseUp = () => {
-    isDragging = false;
-    document.body.style.cursor = "";
-  };
+  // Click-and-drag to scroll horizontally
   useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    let isDown = false;
+    let startX, scrollLeft;
+    const onMouseDown = e => {
+      if (e.button !== 0) return;
+      isDown = true;
+      startX = e.pageX - node.offsetLeft;
+      scrollLeft = node.scrollLeft;
+      document.body.style.cursor = "grabbing";
+    };
+    const onMouseMove = e => {
+      if (!isDown) return;
+      const x = e.pageX - node.offsetLeft;
+      node.scrollLeft = scrollLeft - (x - startX);
+    };
+    const onMouseUp = () => {
+      isDown = false;
+      document.body.style.cursor = "";
+    };
+    node.addEventListener("mousedown", onMouseDown);
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
     return () => {
+      node.removeEventListener("mousedown", onMouseDown);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
-    // eslint-disable-next-line
   }, []);
 
   return (
@@ -82,29 +84,35 @@ export default function ScrollableBanner({ src, alt = "", height = 600 }) {
         background: "#222",
         borderRadius: 6,
         position: "relative",
-        cursor: "grab"
+        cursor: "grab",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
       }}
       onDoubleClick={handleDoubleClick}
-      onMouseDown={onMouseDown}
     >
       <img
-        ref={imgRef}
         src={src}
         alt={alt}
         style={{
           height: height * zoom,
           width: "auto",
-          transition: "height 0.2s, transform 0.15s",
+          transition: "height 0.25s, transform 0.15s",
           userSelect: "none",
           pointerEvents: "none",
           display: "block"
         }}
         draggable={false}
       />
-      {/* Optional: show zoom level */}
       <div style={{
-        position: "absolute", right: 12, top: 12, color: "#fff",
-        background: "rgba(0,0,0,0.5)", borderRadius: 4, fontSize: 14, padding: "2px 8px"
+        position: "absolute",
+        right: 12,
+        top: 12,
+        color: "#fff",
+        background: "rgba(0,0,0,0.5)",
+        borderRadius: 4,
+        fontSize: 14,
+        padding: "2px 8px",
+        zIndex: 2,
+        pointerEvents: "none"
       }}>
         {zoom.toFixed(1)}x
       </div>
