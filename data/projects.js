@@ -3,9 +3,9 @@ const projects = [
     grade: "SPRING 24'",
     title: "BROOKINGS PUBLIC LIBRARY",
     type: "Culture",
-    slug: "urban-pavilion",
+    slug: "BPL-24",
     description: "Project description goes here.",
-    bannerSrc: "/images/urban-pavilion-banner.jpg",
+    bannerSrc: "/images/BPL-24-banner.jpg",
     sliderImages: [
       { src: "/images/urban-pavilion-6am-summer.jpg", label: "6AM, Summer Solstice" },
       { src: "/images/urban-pavilion-noon-summer.jpg", label: "Noon, Summer Solstice" },
@@ -22,9 +22,9 @@ const projects = [
     ]
   },
   {
-    grade: "2nd Year",
-    title: "Residential Loft",
-    type: "Housing",
+    grade: "SPRING 25'",
+    title: "DES MOINES ACADAMY",
+    type: "SCHOOL + RESIDENTIAL",
     slug: "residential-loft",
     description: "Project description goes here.",
     bannerSrc: "/images/residential-loft-banner.jpg",
@@ -44,7 +44,7 @@ const projects = [
     ]
   },
   {
-    grade: "4th Year",
+    grade: "FALL 24",
     title: "Riverfront Studio",
     type: "Commercial",
     slug: "riverfront-studio-4th",
