@@ -9,8 +9,8 @@ After that, I will need a job and I have already started looking with very littl
 GOALS
 I had 3 major goals for the entire site, be easily accessible, showcase my portfolio, and showcase my 3d print files and eventual 3D print shop. 
 
-My overall inspiration for the site is BIG.dk - one of my favorite firms, but I took lots of inspiration. 
-All projects within portfolio are completed by myself and sometimes others, depending on the project. Each project goes into depth on this.
+My overall inspiration for the site is BIG.dk - one of my favorite firms, but I took lots of inspiration from lots of different websites.
+All projects within portfolio are completed by myself and on occasion, another student or 2, depending on the project. Each project goes into depth on this.
 All 3D prints are designed 100% by me, using Illustrator, Photoshop, Rhino3D, and more. 
 
 I have built a website before, but never through coding, only through a website builder, however I feel somewhat this is more meaningful and I am starting to understand how everything works together. Thanks everyone!
