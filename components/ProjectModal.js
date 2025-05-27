@@ -56,22 +56,7 @@ export default function ProjectModal({ project, onClose }) {
           &times;
         </button>
         <div style={{ width: 300, minWidth: 240 }}>
-          <ImageSlider
-            images={[
-              { src: "/images/6am-summer.jpg", label: "6AM, Summer Solstice" },
-              { src: "/images/noon-summer.jpg", label: "Noon, Summer Solstice" },
-              { src: "/images/6pm-summer.jpg", label: "6PM, Summer Solstice" },
-              { src: "/images/midnight-summer.jpg", label: "Midnight, Summer Solstice" },
-              { src: "/images/6am-winter.jpg", label: "6AM, Winter Solstice" },
-              { src: "/images/noon-winter.jpg", label: "Noon, Winter Solstice" },
-              { src: "/images/6pm-winter.jpg", label: "6PM, Winter Solstice" },
-              { src: "/images/midnight-winter.jpg", label: "Midnight, Winter Solstice" },
-              { src: "/images/6am-equinox.jpg", label: "6AM, Spring/Fall Equinox" },
-              { src: "/images/noon-equinox.jpg", label: "Noon, Spring/Fall Equinox" },
-              { src: "/images/6pm-equinox.jpg", label: "6PM, Spring/Fall Equinox" },
-              { src: "/images/midnight-equinox.jpg", label: "Midnight, Spring/Fall Equinox" },
-            ]}
-          />
+          <ImageSlider images={project.sliderImages} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ marginBottom: 16, fontWeight: 600, fontSize: 22 }}>
