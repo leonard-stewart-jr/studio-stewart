@@ -1,4 +1,4 @@
-import ImageSlider from "./ImageSlider";
+import ImageSlider from "/components/ImageSlider";
 
 export default function ProjectList({ projects, onProjectClick }) {
   return (
