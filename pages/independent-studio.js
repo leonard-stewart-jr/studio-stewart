@@ -2,7 +2,6 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import SlidingBanner from "../components/isp/sliding-banner";
 import InfoModal from "../components/isp/info-modal";
-import ISPSubNav from "../components/isp/isp-subnav";
 
 // DYNAMICALLY import these so they only render on the client!
 const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false }); 
@@ -23,9 +22,6 @@ export default function IndependentStudio() {
         flexDirection: "column",
         alignItems: "center"
       }}>
-        {/* Subheader Navigation */}
-        <ISPSubNav active={activeSection} onChange={setActiveSection} />
-
         {/* Only show the selected section */}
         {activeSection === "world" && (
           <GlobeSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
