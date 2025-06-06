@@ -8,7 +8,11 @@ export default function GlobeSection({ onMarkerClick }) {
 
   // Disable zoom (scroll wheel / pinch) on the globe
   useEffect(() => {
-    if (globeEl.current) {
+    if (
+      globeEl.current &&
+      typeof globeEl.current.controls === "function" &&
+      globeEl.current.controls()
+    ) {
       globeEl.current.controls().enableZoom = false;
     }
   }, []);
