@@ -47,7 +47,7 @@ export default function GlobeSection({ onMarkerClick }) {
       >
         <Globe
           ref={globeEl}
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"}
           pointsData={globeLocations}
           pointLat={d => d.lat}
           pointLng={d => d.lon}
