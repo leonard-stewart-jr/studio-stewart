@@ -3,6 +3,7 @@ import { useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import usaLocations from "../../data/usa-locations";
 import L from "leaflet";
+import React from "react";
 
 const MAPBOX_TOKEN = "pk.eyJ1IjoibGVvbmFyZHN0ZXdhcnQiLCJhIjoiY21ibDkyZjhhMGtxdDJ3b2tjbXIxc3Y0NyJ9.4k_QUb2n_fZIOB3-anEs_Q";
 
