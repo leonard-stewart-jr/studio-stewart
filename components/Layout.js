@@ -31,7 +31,7 @@ export default function Layout({ children }) {
         sidebarPaddingLeft={sidebarPaddingLeft}
       />
       {/* ISPSubNav REMOVED from here */}
-      <main style={{ paddingTop: HEADER_HEIGHT }}>
+      <main style={{ paddingTop: 0 }}>
         {children}
       </main>
     </>
