@@ -6,6 +6,8 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #f9f9f7;
   color: #181818;
+  /* HIDE SCROLLBAR by default except when .show-scrollbar is added to body */
+  overflow-y: hidden;
 }
 
 /* ====== HEADER BAR ====== */
@@ -50,6 +52,11 @@ nav.main-nav a[aria-current="page"] {
 nav.main-nav a.active:hover,
 nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
+}
+
+/* ====== SUBNAV BANNER (ISP) SCROLLBAR HACK ====== */
+body.show-scrollbar {
+  overflow-y: auto !important;
 }
 
 /* ====== UTILITY CLASSES ====== */
