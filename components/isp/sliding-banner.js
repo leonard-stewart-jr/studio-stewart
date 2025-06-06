@@ -34,6 +34,12 @@ export default function SlidingBanner({ children }) {
   const rightOpen = openBanner === "breaking";
   const sheetWidth = `calc(100vw - ${BANNER_WIDTH}px)`;
 
+  // Compute active color for opposite banner (for the open sheet)
+  const leftColor = BANNERS[0].color;
+  const rightColor = BANNERS[1].color;
+  const rightBannerColor = leftOpen ? leftColor : rightColor;
+  const leftBannerColor = rightOpen ? rightColor : leftColor;
+
   return (
     <div style={{
       display: "flex",
@@ -58,7 +64,7 @@ export default function SlidingBanner({ children }) {
         aria-label="Open Origins of Confinement"
       >
         <BannerVisual
-          color={BANNERS[0].color}
+          color={leftBannerColor}
           text={BANNERS[0].label}
           side="left"
           active={leftOpen}
@@ -96,7 +102,7 @@ export default function SlidingBanner({ children }) {
         aria-label="Open Breaking the Cycle"
       >
         <BannerVisual
-          color={BANNERS[1].color}
+          color={rightBannerColor}
           text={BANNERS[1].label}
           side="right"
           active={rightOpen}
@@ -147,14 +153,15 @@ export default function SlidingBanner({ children }) {
                   style={{
                     background: "none",
                     border: "none",
-                    color: "#b32c2c",
+                    color: leftColor,
                     fontWeight: 700,
-                    fontSize: 38,
+                    fontSize: 48,
                     cursor: "pointer",
+                    lineHeight: 1,
                   }}
                   aria-label="Close sheet"
                 >
-                  &times;
+                  &minus;
                 </button>
               </div>
               <div style={{
@@ -232,14 +239,15 @@ export default function SlidingBanner({ children }) {
                   style={{
                     background: "none",
                     border: "none",
-                    color: "#35396e",
+                    color: rightColor,
                     fontWeight: 700,
-                    fontSize: 38,
+                    fontSize: 48,
                     cursor: "pointer",
+                    lineHeight: 1,
                   }}
                   aria-label="Close sheet"
                 >
-                  &times;
+                  &minus;
                 </button>
               </div>
               <div style={{
