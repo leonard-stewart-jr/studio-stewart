@@ -372,7 +372,7 @@ function BannerVisual({ color, text, side, active, faded }) {
         justifyContent: "center",
         zIndex: 10,
         position: "sticky",
-        top: 0,
+        top: 76,
         height: "100vh",
         left: side === "left" ? 0 : "unset",
         right: side === "right" ? 0 : "unset",
