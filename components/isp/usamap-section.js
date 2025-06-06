@@ -32,19 +32,9 @@ export default function USAMapSection({ onMarkerClick }) {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      paddingTop: 32,
+      paddingTop: 0,
       paddingBottom: 0,
     }}>
-      <h2 style={{
-        color: "#222",
-        fontSize: 28,
-        marginBottom: 16,
-        marginTop: 0,
-        fontWeight: 600,
-        letterSpacing: "0.03em",
-      }}>
-        United States: Major Prison Events
-      </h2>
       <div style={{
         width: "90vw",
         maxWidth: 600,
@@ -53,7 +43,8 @@ export default function USAMapSection({ onMarkerClick }) {
         height: "auto",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        margin: "18px auto 0 auto", // shift map up
       }}>
         <MapContainer
           center={[39.8283, -98.5795]}
