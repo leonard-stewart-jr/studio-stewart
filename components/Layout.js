@@ -17,6 +17,11 @@ export default function Layout({ children }) {
   // Only show ISPSubNav on /independent-studio
   const isIndependentStudio = router.pathname === "/independent-studio";
 
+  // Calculate total header + subnav height
+  const HEADER_HEIGHT = 76;
+  const SUBNAV_HEIGHT = 38;
+  const totalHeaderHeight = isIndependentStudio ? HEADER_HEIGHT + SUBNAV_HEIGHT : HEADER_HEIGHT;
+
   return (
     <>
       <HeaderBar
@@ -33,7 +38,9 @@ export default function Layout({ children }) {
       />
       {/* Subnav directly below header ONLY on independent-studio */}
       {isIndependentStudio && <ISPSubNav />}
-      <main>{children}</main>
+      <main style={{ paddingTop: totalHeaderHeight }}>
+        {children}
+      </main>
     </>
   );
 }
