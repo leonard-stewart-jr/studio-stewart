@@ -21,7 +21,7 @@ const Banner = styled.div`
   justify-content: center;
   z-index: 10;
   position: sticky;
-  top: 0;
+  top: 76px; /* <-- CHANGED FROM 0 to 76px */
   height: 100vh;
   left: ${props => props.side === "left" ? 0 : "unset"};
   right: ${props => props.side === "right" ? 0 : "unset"};
