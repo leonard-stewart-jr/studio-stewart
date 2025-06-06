@@ -1,6 +1,6 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import SideBanner from "../components/isp/sidebanner";
+import SlidingBanner from "../components/isp/sliding-banner";
 import InfoModal from "../components/isp/info-modal";
 import ISPSubNav from "../components/isp/isp-subnav";
 
@@ -14,14 +14,14 @@ export default function IndependentStudio() {
   const [activeSection, setActiveSection] = useState("world"); // "world", "usa", "sd"
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#fafafa" }}>
-      {/* Left Banner */}
-      <SideBanner text="ORIGINS OF CONFINEMENT" color="#b32c2c" side="left" />
-
-      {/* Main Content */}
+    <SlidingBanner>
       <div style={{
-        flex: 1, overflowY: "auto", maxWidth: "100vw", position: "relative",
-        display: "flex", flexDirection: "column", alignItems: "center"
+        width: "100%",
+        minHeight: "100vh",
+        background: "#fafafa",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
       }}>
         {/* Subheader Navigation */}
         <ISPSubNav active={activeSection} onChange={setActiveSection} />
@@ -36,18 +36,14 @@ export default function IndependentStudio() {
         {activeSection === "sd" && (
           <SDMapSection onMarkerClick={ev => setModalData({ title: `${ev.year}, ${ev.name}`, content: ev.content })} />
         )}
+        {/* Info Modal */}
+        <InfoModal
+          open={!!modalData}
+          onClose={() => setModalData(null)}
+          title={modalData?.title}
+          content={modalData?.content}
+        />
       </div>
-
-      {/* Right Banner */}
-      <SideBanner text="BREAKING THE CYCLE" color="#35396e" side="right" />
-
-      {/* Info Modal */}
-      <InfoModal
-        open={!!modalData}
-        onClose={() => setModalData(null)}
-        title={modalData?.title}
-        content={modalData?.content}
-      />
-    </div>
+    </SlidingBanner>
   );
 }
