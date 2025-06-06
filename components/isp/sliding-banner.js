@@ -157,25 +157,33 @@ export default function SlidingBanner({ children }) {
             }}
           >
             <style>{`
-              /* Custom scrollbar for sliding sheet */
+              .sliding-sheet[data-color="red"]::-webkit-scrollbar-thumb {
+                background: #b32c2c;
+              }
+              .sliding-sheet[data-color="blue"]::-webkit-scrollbar-thumb {
+                background: #35396e;
+              }
               .sliding-sheet::-webkit-scrollbar {
                 width: 10px;
                 background: #f0f0ed;
               }
               .sliding-sheet::-webkit-scrollbar-thumb {
-                background: ${sheetScrollbarThumb};
                 border-radius: 6px;
               }
             `}</style>
-            <div className="sliding-sheet" style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              overflow: "auto",
-              padding: 0,
-            }}>
+            <div
+              className="sliding-sheet"
+              data-color="red"
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                overflow: "auto",
+                padding: 0,
+              }}
+            >
               <div style={{
                 width: "100%",
                 display: "flex",
@@ -257,24 +265,33 @@ export default function SlidingBanner({ children }) {
             }}
           >
             <style>{`
+              .sliding-sheet[data-color="red"]::-webkit-scrollbar-thumb {
+                background: #b32c2c;
+              }
+              .sliding-sheet[data-color="blue"]::-webkit-scrollbar-thumb {
+                background: #35396e;
+              }
               .sliding-sheet::-webkit-scrollbar {
                 width: 10px;
                 background: #f0f0ed;
               }
               .sliding-sheet::-webkit-scrollbar-thumb {
-                background: ${sheetScrollbarThumb};
                 border-radius: 6px;
               }
             `}</style>
-            <div className="sliding-sheet" style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              overflow: "auto",
-              padding: 0,
-            }}>
+            <div
+              className="sliding-sheet"
+              data-color="blue"
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                overflow: "auto",
+                padding: 0,
+              }}
+            >
               <div style={{
                 width: "100%",
                 display: "flex",
