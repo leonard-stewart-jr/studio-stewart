@@ -38,7 +38,7 @@ export default function GlobeSection({ onMarkerClick }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          margin: "-40px auto 0 auto", // sits just below subnav
+          margin: "0 auto", // <-- CHANGED: removed negative margin
           padding: 0,
           background: "transparent",
           overflow: "visible",
