@@ -1,10 +1,10 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import SideBanner from "../components/SideBanner";
-import GlobeSection from "../components/GlobeSection";
-import USAMapSection from "../components/USAMapSection";
-import SDMapSection from "../components/SDMapSection";
-import InfoModal from "../components/InfoModal";
+import SideBanner from "../components/isp/sidebanner";
+import GlobeSection from "../components/isp/globe-section";
+import USAMapSection from "../components/isp/usamap-section";
+import SDMapSection from "../components/isp/sdmap-section";
+import InfoModal from "../components/isp/info-modal";
 
 export default function IndependentStudio() {
   const [modalData, setModalData] = useState(null);
