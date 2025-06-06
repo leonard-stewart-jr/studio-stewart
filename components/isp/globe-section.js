@@ -38,7 +38,7 @@ export default function GlobeSection({ onMarkerClick }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          margin: "-10px auto 0 auto", // subtle gap below subnav, no top margin above globe
+          margin: "-40px auto 0 auto", // subtle gap below subnav, no top margin above globe
           padding: 0,
           background: "transparent",
           overflow: "visible", // key: let the globe overflow!
