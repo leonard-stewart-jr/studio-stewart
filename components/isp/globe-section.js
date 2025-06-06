@@ -9,8 +9,7 @@ export default function GlobeSection({ onMarkerClick }) {
     <section
       style={{
         width: "100%",
-        minHeight: "480px",
-        background: "#fff",
+        background: "transparent", // CHANGED from "#fff" to transparent
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -32,8 +31,11 @@ export default function GlobeSection({ onMarkerClick }) {
       </h2>
       <div
         style={{
-          width: 400,
-          height: 400,
+          width: "90vw",           // CHANGED from fixed 400px to responsive
+          maxWidth: 600,           // new - caps size at 600px
+          minWidth: 300,           // new - minimum visual size
+          aspectRatio: "1 / 1",    // new - always square
+          height: "auto",          // new - let height be set by width and aspect
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
@@ -50,6 +52,8 @@ export default function GlobeSection({ onMarkerClick }) {
           pointRadius={0.35}
           onPointClick={onMarkerClick}
           pointAltitude={0.01}
+          width={undefined} // use container size
+          height={undefined}
         />
       </div>
     </section>
