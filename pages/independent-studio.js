@@ -6,6 +6,9 @@ import USAMapSection from "../components/isp/usamap-section";
 import SDMapSection from "../components/isp/sdmap-section";
 import InfoModal from "../components/isp/info-modal";
 
+const USAMapSection = dynamic(() => import("../components/isp/usamap-section") { ssr: false });
+const SDMapSection = dynamic(() => import("../components/isp/sdmap-section"), { ssr: false });
+
 export default function IndependentStudio() {
   const [modalData, setModalData] = useState(null);
 
