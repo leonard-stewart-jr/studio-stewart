@@ -2,6 +2,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import SideBanner from "../components/isp/sidebanner";
 import InfoModal from "../components/isp/info-modal";
+import ISPSubNav from "../components/isp/isp-subnav";
 
 // DYNAMICALLY import these so they only render on the client!
 const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false }); 
@@ -10,6 +11,7 @@ const SDMapSection = dynamic(() => import("../components/isp/sdmap-section"), { 
 
 export default function IndependentStudio() {
   const [modalData, setModalData] = useState(null);
+  const [activeSection, setActiveSection] = useState("world"); // "world", "usa", "sd"
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#fafafa" }}>
@@ -21,9 +23,19 @@ export default function IndependentStudio() {
         flex: 1, overflowY: "auto", maxWidth: "100vw", position: "relative",
         display: "flex", flexDirection: "column", alignItems: "center"
       }}>
-        <GlobeSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
-        <USAMapSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
-        <SDMapSection onMarkerClick={ev => setModalData({ title: `${ev.year}, ${ev.name}`, content: ev.content })} />
+        {/* Subheader Navigation */}
+        <ISPSubNav active={activeSection} onChange={setActiveSection} />
+
+        {/* Only show the selected section */}
+        {activeSection === "world" && (
+          <GlobeSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
+        )}
+        {activeSection === "usa" && (
+          <USAMapSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
+        )}
+        {activeSection === "sd" && (
+          <SDMapSection onMarkerClick={ev => setModalData({ title: `${ev.year}, ${ev.name}`, content: ev.content })} />
+        )}
       </div>
 
       {/* Right Banner */}
