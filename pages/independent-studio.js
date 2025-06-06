@@ -22,7 +22,7 @@ export default function IndependentStudio() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        marginTop: 38, // <-- Only this page needs this!
+        marginTop: 0, // <-- Only this page needs this!
       }}>
         {/* Only show the selected section */}
         {activeSection === "world" && (
