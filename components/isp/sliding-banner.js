@@ -28,11 +28,8 @@ export default function SlidingBanner({ children }) {
     setOpenBanner(prev => (prev === key ? null : key));
   };
 
-  // For visual: only opposite banner is visible when open
   const leftOpen = openBanner === "origins";
   const rightOpen = openBanner === "breaking";
-
-  // Sheet slide parameters
   const sheetWidth = `calc(100vw - ${BANNER_WIDTH}px)`;
 
   return (
@@ -53,7 +50,6 @@ export default function SlidingBanner({ children }) {
           minWidth: BANNER_WIDTH,
           cursor: "pointer",
           flexShrink: 0,
-          pointerEvents: rightOpen ? "auto" : "auto", // always clickable
         }}
         onClick={() => handleBannerClick("origins")}
         tabIndex={0}
@@ -92,7 +88,6 @@ export default function SlidingBanner({ children }) {
           minWidth: BANNER_WIDTH,
           cursor: "pointer",
           flexShrink: 0,
-          pointerEvents: leftOpen ? "auto" : "auto", // always clickable
         }}
         onClick={() => handleBannerClick("breaking")}
         tabIndex={0}
@@ -107,7 +102,7 @@ export default function SlidingBanner({ children }) {
         />
       </div>
 
-      {/* Sliding SHEET overlays */}
+      {/* Sliding Sheet overlays */}
       <AnimatePresence>
         {leftOpen && (
           <motion.div
@@ -137,13 +132,13 @@ export default function SlidingBanner({ children }) {
               flexDirection: "column",
               alignItems: "center",
               overflow: "auto",
-              padding: "0 0 0 0",
+              padding: 0,
             }}>
               <div style={{
                 width: "100%",
                 display: "flex",
                 justifyContent: "flex-end",
-                padding: "16px 30px 0 0",
+                padding: "12px 20px 0 0",
               }}>
                 <button
                   onClick={() => handleBannerClick("origins")}
@@ -152,7 +147,7 @@ export default function SlidingBanner({ children }) {
                     border: "none",
                     color: "#b32c2c",
                     fontWeight: 700,
-                    fontSize: 28,
+                    fontSize: 38,
                     cursor: "pointer",
                   }}
                   aria-label="Close sheet"
@@ -169,20 +164,20 @@ export default function SlidingBanner({ children }) {
                 alignItems: "center",
                 justifyContent: "flex-start",
                 paddingTop: 0,
-                overflowY: "auto",
+                overflow: "auto",
               }}>
                 {/* SHEET CONTENT */}
                 <img
                   src={BANNERS[0].img}
                   alt={BANNERS[0].label}
                   style={{
-                    width: "90%",
-                    maxWidth: 1100,
-                    minWidth: 300,
-                    margin: "24px auto 24px auto",
+                    width: "99%",
+                    maxWidth: "none",
+                    minWidth: 0,
+                    margin: "0",
                     display: "block",
                     boxShadow: "0 8px 40px #2222",
-                    borderRadius: 12,
+                    borderRadius: 8,
                     background: "#fff",
                     objectFit: "contain",
                   }}
@@ -222,13 +217,13 @@ export default function SlidingBanner({ children }) {
               flexDirection: "column",
               alignItems: "center",
               overflow: "auto",
-              padding: "0 0 0 0",
+              padding: 0,
             }}>
               <div style={{
                 width: "100%",
                 display: "flex",
                 justifyContent: "flex-start",
-                padding: "16px 0 0 30px",
+                padding: "12px 0 0 20px",
               }}>
                 <button
                   onClick={() => handleBannerClick("breaking")}
@@ -237,7 +232,7 @@ export default function SlidingBanner({ children }) {
                     border: "none",
                     color: "#35396e",
                     fontWeight: 700,
-                    fontSize: 28,
+                    fontSize: 38,
                     cursor: "pointer",
                   }}
                   aria-label="Close sheet"
@@ -254,20 +249,20 @@ export default function SlidingBanner({ children }) {
                 alignItems: "center",
                 justifyContent: "flex-start",
                 paddingTop: 0,
-                overflowY: "auto",
+                overflow: "auto",
               }}>
                 {/* SHEET CONTENT */}
                 <img
                   src={BANNERS[1].img}
                   alt={BANNERS[1].label}
                   style={{
-                    width: "90%",
-                    maxWidth: 1100,
-                    minWidth: 300,
-                    margin: "24px auto 24px auto",
+                    width: "99%",
+                    maxWidth: "none",
+                    minWidth: 0,
+                    margin: "0",
                     display: "block",
                     boxShadow: "0 8px 40px #2222",
-                    borderRadius: 12,
+                    borderRadius: 8,
                     background: "#fff",
                     objectFit: "contain",
                   }}
