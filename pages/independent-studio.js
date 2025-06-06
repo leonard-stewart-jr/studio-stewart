@@ -1,11 +1,9 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import SideBanner from "../components/isp/sidebanner";
-import GlobeSection from "../components/isp/globe-section";
-import USAMapSection from "../components/isp/usamap-section";
-import SDMapSection from "../components/isp/sdmap-section";
 import InfoModal from "../components/isp/info-modal";
 
+// DYNAMICALLY import these so they only render on the client!
 const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false }); 
 const USAMapSection = dynamic(() => import("../components/isp/usamap-section"), { ssr: false });
 const SDMapSection = dynamic(() => import("../components/isp/sdmap-section"), { ssr: false });
