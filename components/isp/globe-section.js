@@ -34,13 +34,15 @@ export default function GlobeSection({ onMarkerClick }) {
           width: "80vw",
           maxWidth: 900,
           minWidth: 300,
-          aspectRatio: "1 / 1",
           height: "auto",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
-          margin: "18px auto 0 auto", // reduced top margin to shift globe up
+          alignItems: "flex-start",
+          margin: "16px auto 0 auto", // subtle gap below subnav, no top margin above globe
           padding: 0,
+          background: "transparent",
+          overflow: "visible", // key: let the globe overflow!
+          position: "relative",
         }}
       >
         <Globe
