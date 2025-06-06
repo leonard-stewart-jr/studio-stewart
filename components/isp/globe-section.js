@@ -1,10 +1,18 @@
 import dynamic from "next/dynamic";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import globeLocations from "../../data/globe-locations";
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
+
+  // Disable zoom (scroll wheel / pinch) on the globe
+  useEffect(() => {
+    if (globeEl.current) {
+      globeEl.current.controls().enableZoom = false;
+    }
+  }, []);
+
   return (
     <section
       style={{
@@ -17,18 +25,6 @@ export default function GlobeSection({ onMarkerClick }) {
         paddingBottom: 0,
       }}
     >
-      <h2
-        style={{
-          marginTop: 0,
-          marginBottom: 20,
-          fontSize: 28,
-          fontWeight: 600,
-          color: "#222",
-          letterSpacing: "0.03em",
-        }}
-      >
-        World Timeline
-      </h2>
       <div
         style={{
           width: "80vw",
@@ -39,7 +35,7 @@ export default function GlobeSection({ onMarkerClick }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: "40px auto",
+          margin: "18px auto 0 auto", // reduced top margin to shift globe up
           padding: 0,
         }}
       >
