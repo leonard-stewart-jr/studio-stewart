@@ -9,18 +9,18 @@ export default function GlobeSection({ onMarkerClick }) {
     <section
       style={{
         width: "100%",
-        background: "transparent", // CHANGED from "#fff" to transparent
+        background: "transparent",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: "32px",
-        paddingBottom: "0",
+        paddingTop: 0,
+        paddingBottom: 0,
       }}
     >
       <h2
         style={{
           marginTop: 0,
-          marginBottom: 16,
+          marginBottom: 20,
           fontSize: 28,
           fontWeight: 600,
           color: "#222",
@@ -31,28 +31,30 @@ export default function GlobeSection({ onMarkerClick }) {
       </h2>
       <div
         style={{
-          width: "90vw",           // CHANGED from fixed 400px to responsive
-          maxWidth: 600,           // new - caps size at 600px
-          minWidth: 300,           // new - minimum visual size
-          aspectRatio: "1 / 1",    // new - always square
-          height: "auto",          // new - let height be set by width and aspect
+          width: "80vw",
+          maxWidth: 900,
+          minWidth: 300,
+          aspectRatio: "1 / 1",
+          height: "auto",
           display: "flex",
           justifyContent: "center",
-          alignItems: "flex-start",
-          marginTop: "-24px", // Pull globe up
+          alignItems: "center",
+          margin: "40px auto",
+          padding: 0,
         }}
       >
         <Globe
           ref={globeEl}
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           pointsData={globeLocations}
           pointLat={d => d.lat}
           pointLng={d => d.lon}
           pointColor={() => "#b32c2c"}
-          pointRadius={0.35}
+          pointRadius={0.65}
           onPointClick={onMarkerClick}
           pointAltitude={0.01}
-          width={undefined} // use container size
+          backgroundColor="rgba(0,0,0,0)"
+          width={undefined}
           height={undefined}
         />
       </div>
