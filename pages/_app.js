@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import SplashScreen from "../components/SplashScreen";
 import Layout from "../components/Layout";
+import "leaflet/dist/leaflet.css";
 import { LayoutGroup } from "framer-motion"; // Use LayoutGroup for Framer Motion v7+
 
 export default function MyApp({ Component, pageProps }) {
