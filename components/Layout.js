@@ -8,12 +8,13 @@ export default function Layout({ children }) {
   // Keep sidebar state here so both HeaderBar and Sidebar can access it.
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // You can customize these as you did before
   const logoSize = 66;
   const sidebarPaddingLeft = 22;
 
-  // Determine current route
+  // Use Next.js router to determine current route
   const router = useRouter();
+
+  // Only show ISPSubNav on /independent-studio
   const isIndependentStudio = router.pathname === "/independent-studio";
 
   return (
@@ -30,6 +31,7 @@ export default function Layout({ children }) {
         logoSize={logoSize}
         sidebarPaddingLeft={sidebarPaddingLeft}
       />
+      {/* Subnav directly below header ONLY on independent-studio */}
       {isIndependentStudio && <ISPSubNav />}
       <main>{children}</main>
     </>
