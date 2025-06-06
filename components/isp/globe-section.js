@@ -38,10 +38,10 @@ export default function GlobeSection({ onMarkerClick }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          margin: "-40px auto 0 auto", // subtle gap below subnav, no top margin above globe
+          margin: "14px auto 0 auto", // sits just below subnav
           padding: 0,
           background: "transparent",
-          overflow: "visible", // key: let the globe overflow!
+          overflow: "visible",
           position: "relative",
         }}
       >
