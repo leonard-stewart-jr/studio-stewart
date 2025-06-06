@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Adjust this if your subnav height changes
-const SUBNAV_HEIGHT = 64; // px
+// Header and subnav heights to keep sliding sheets below both
+const HEADER_HEIGHT = 76; // px
+const SUBNAV_BANNER_HEIGHT = 38; // px
+const SHEET_TOP = HEADER_HEIGHT + SUBNAV_BANNER_HEIGHT; // 114
 
 const BANNERS = [
   {
@@ -26,6 +28,16 @@ const BANNER_WIDTH = 80; // px
 export default function SlidingBanner({ children }) {
   const [openBanner, setOpenBanner] = useState(null);
 
+  // Body scrollbar control: only allow vertical scroll when sheet is open
+  useEffect(() => {
+    if (openBanner) {
+      document.body.classList.add("show-scrollbar");
+    } else {
+      document.body.classList.remove("show-scrollbar");
+    }
+    return () => document.body.classList.remove("show-scrollbar");
+  }, [openBanner]);
+
   const handleBannerClick = (key) => {
     setOpenBanner(prev => (prev === key ? null : key));
   };
@@ -34,11 +46,19 @@ export default function SlidingBanner({ children }) {
   const rightOpen = openBanner === "breaking";
   const sheetWidth = `calc(100vw - ${BANNER_WIDTH}px)`;
 
-  // Compute active color for opposite banner (for the open sheet)
+  // Opposite sidebar color for scrollbar
   const leftColor = BANNERS[0].color;
   const rightColor = BANNERS[1].color;
   const rightBannerColor = leftOpen ? leftColor : rightColor;
   const leftBannerColor = rightOpen ? rightColor : leftColor;
+
+  // Custom scrollbar color for sheet
+  const sheetScrollbarThumb =
+    openBanner === "origins"
+      ? leftColor
+      : openBanner === "breaking"
+      ? rightColor
+      : "#e6dbb9";
 
   return (
     <div style={{
@@ -121,9 +141,9 @@ export default function SlidingBanner({ children }) {
             transition={{ duration: 0.55, ease: [0.83, 0, 0.17, 1] }}
             style={{
               position: "fixed",
-              top: SUBNAV_HEIGHT,
+              top: SHEET_TOP,
               left: 0,
-              height: `calc(100vh - ${SUBNAV_HEIGHT}px)`,
+              height: `calc(100vh - ${SHEET_TOP}px)`,
               width: sheetWidth,
               zIndex: 200,
               background: "#fff",
@@ -131,9 +151,23 @@ export default function SlidingBanner({ children }) {
               flexDirection: "column",
               boxShadow: "2px 0 16px rgba(0,0,0,0.13)",
               overflow: "auto",
+              // Custom scrollbar for the sliding sheet
+              scrollbarColor: `${sheetScrollbarThumb} #f0f0ed`,
+              scrollbarWidth: "thin",
             }}
           >
-            <div style={{
+            <style>{`
+              /* Custom scrollbar for sliding sheet */
+              .sliding-sheet::-webkit-scrollbar {
+                width: 10px;
+                background: #f0f0ed;
+              }
+              .sliding-sheet::-webkit-scrollbar-thumb {
+                background: ${sheetScrollbarThumb};
+                border-radius: 6px;
+              }
+            `}</style>
+            <div className="sliding-sheet" style={{
               width: "100%",
               height: "100%",
               display: "flex",
@@ -207,9 +241,9 @@ export default function SlidingBanner({ children }) {
             transition={{ duration: 0.55, ease: [0.83, 0, 0.17, 1] }}
             style={{
               position: "fixed",
-              top: SUBNAV_HEIGHT,
+              top: SHEET_TOP,
               right: 0,
-              height: `calc(100vh - ${SUBNAV_HEIGHT}px)`,
+              height: `calc(100vh - ${SHEET_TOP}px)`,
               width: sheetWidth,
               zIndex: 200,
               background: "#fff",
@@ -217,9 +251,22 @@ export default function SlidingBanner({ children }) {
               flexDirection: "column",
               boxShadow: "-2px 0 16px rgba(0,0,0,0.13)",
               overflow: "auto",
+              // Custom scrollbar for the sliding sheet
+              scrollbarColor: `${sheetScrollbarThumb} #f0f0ed`,
+              scrollbarWidth: "thin",
             }}
           >
-            <div style={{
+            <style>{`
+              .sliding-sheet::-webkit-scrollbar {
+                width: 10px;
+                background: #f0f0ed;
+              }
+              .sliding-sheet::-webkit-scrollbar-thumb {
+                background: ${sheetScrollbarThumb};
+                border-radius: 6px;
+              }
+            `}</style>
+            <div className="sliding-sheet" style={{
               width: "100%",
               height: "100%",
               display: "flex",
