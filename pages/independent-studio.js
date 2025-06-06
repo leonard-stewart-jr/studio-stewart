@@ -12,6 +12,7 @@ export default function IndependentStudio() {
   const [modalData, setModalData] = useState(null);
   const [activeSection, setActiveSection] = useState("world"); // "world", "usa", "sd"
 
+  // Add marginTop: 38 to push content below subnav (subnav is 38px tall)
   return (
     <SlidingBanner>
       <div style={{
@@ -20,7 +21,8 @@ export default function IndependentStudio() {
         background: "#fafafa",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: 38, // <-- Only this page needs this!
       }}>
         {/* Only show the selected section */}
         {activeSection === "world" && (
