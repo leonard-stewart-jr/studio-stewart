@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Banner definitions
+// Adjust this if your subnav height changes
+const SUBNAV_HEIGHT = 64; // px
+
 const BANNERS = [
   {
     key: "origins",
@@ -113,9 +115,9 @@ export default function SlidingBanner({ children }) {
             transition={{ duration: 0.55, ease: [0.83, 0, 0.17, 1] }}
             style={{
               position: "fixed",
-              top: 0,
+              top: SUBNAV_HEIGHT,
               left: 0,
-              height: "100vh",
+              height: `calc(100vh - ${SUBNAV_HEIGHT}px)`,
               width: sheetWidth,
               zIndex: 200,
               background: "#fff",
@@ -198,9 +200,9 @@ export default function SlidingBanner({ children }) {
             transition={{ duration: 0.55, ease: [0.83, 0, 0.17, 1] }}
             style={{
               position: "fixed",
-              top: 0,
+              top: SUBNAV_HEIGHT,
               right: 0,
-              height: "100vh",
+              height: `calc(100vh - ${SUBNAV_HEIGHT}px)`,
               width: sheetWidth,
               zIndex: 200,
               background: "#fff",
