@@ -56,11 +56,14 @@ export default function GlobeSection({ onMarkerClick }) {
   }, []);
 
   // Center the globe on the US
-  useEffect(() => {
-    if (globeEl.current) {
-      globeEl.current.pointOfView({ lat: 39.6, lng: -98.5, altitude: 2 });
-    }
-  }, [airports]);
+useEffect(() => {
+  if (
+    globeEl.current &&
+    typeof globeEl.current.pointOfView === "function"
+  ) {
+    globeEl.current.pointOfView({ lat: 39.6, lng: -98.5, altitude: 2 });
+  }
+}, [airports]);
 
   // Disable zoom (scroll wheel / pinch) on the globe
   useEffect(() => {
