@@ -1,30 +1,22 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { useRef } from "react";
-import "leaflet/dist/leaflet.css";
-import usaLocations from "../../data/usa-locations";
-import L from "leaflet";
 import React from "react";
+import usaLocations from "../../data/usa-locations";
 
-const MAPBOX_TOKEN = "pk.eyJ1IjoibGVvbmFyZHN0ZXdhcnQiLCJhIjoiY21ibDkyZjhhMGtxdDJ3b2tjbXIxc3Y0NyJ9.4k_QUb2n_fZIOB3-anEs_Q";
-
-// Custom hollow circle icon
-const markerIcon = new L.DivIcon({
-  className: 'custom-marker',
-  html: `<div style="width:18px;height:18px;border:3px solid #b32c2c;border-radius:50%;background:transparent;"></div>`
-});
-
-// Helper component for programmatic zoom
-function ZoomToMarker({ position, zoom }) {
-  const map = useMap();
-  if (position && zoom) {
-    map.setView(position, zoom, { animate: true });
-  }
-  return null;
-}
+// Map each prison to a plausible position on a US map SVG using percent coordinates
+// These will likely need fine-tuning after visual inspection!
+const markerPositions = [
+  // Alcatraz Island
+  { left: "14%", top: "54%" },
+  // San Quentin State Prison (very near Alcatraz visually)
+  { left: "15%", top: "51%" },
+  // Eastern State Penitentiary (Philadelphia)
+  { left: "87%", top: "51%" },
+  // Sing Sing (New York)
+  { left: "84%", top: "36%" },
+  // Attica Correctional Facility (Western NY)
+  { left: "73%", top: "34%" }
+];
 
 export default function USAMapSection({ onMarkerClick }) {
-  const [zoomMarker, setZoomMarker] = React.useState(null);
-
   return (
     <section style={{
       width: "100%",
@@ -44,42 +36,66 @@ export default function USAMapSection({ onMarkerClick }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        margin: "18px auto 0 auto", // shift map up
+        margin: "18px auto 0 auto",
+        position: "relative"
       }}>
-        <MapContainer
-          center={[39.8283, -98.5795]}
-          zoom={4}
-          style={{ height: "100%", width: "100%", minHeight: 300, minWidth: 300 }}
-          zoomControl={false}
-          scrollWheelZoom={false}
-          doubleClickZoom={false}
-          dragging={true}
-          attributionControl={true}
-          whenCreated={map => { map._allowZoom = false; }}
-        >
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token=${MAPBOX_TOKEN}`}
-            attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            tileSize={512}
-            zoomOffset={-1}
-          />
-          {usaLocations.map((loc, idx) => (
-            <Marker
-              key={idx}
-              position={[loc.lat, loc.lon]}
-              icon={markerIcon}
-              eventHandlers={{
-                click: () => {
-                  setZoomMarker({ position: [loc.lat, loc.lon], zoom: 10 });
-                  onMarkerClick(loc);
-                },
+        {/* Responsive USA map SVG */}
+        <img
+          src="/images/isp/usa_map.svg"
+          alt="Map of the United States"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            borderRadius: 8,
+            boxShadow: "0 2px 12px rgba(32,32,32,0.12)"
+          }}
+        />
+        {/* Markers for each location, positioned using the percent coordinates above */}
+        {usaLocations.map((marker, idx) => {
+          const pos = markerPositions[idx] || { left: "50%", top: "50%" };
+          return (
+            <button
+              key={marker.name}
+              type="button"
+              title={marker.name}
+              aria-label={marker.name}
+              style={{
+                position: "absolute",
+                left: pos.left,
+                top: pos.top,
+                transform: "translate(-50%, -50%)",
+                width: 26,
+                height: 26,
+                background: "rgba(255,255,255,0.88)",
+                border: "3px solid #b32c2c",
+                borderRadius: "50%",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 8px #2222",
+                zIndex: 2,
+                transition: "box-shadow 0.12s",
               }}
+              onClick={() =>
+                onMarkerClick({
+                  name: marker.name,
+                  content: marker.content,
+                })
+              }
             >
-              <Popup>{loc.name}</Popup>
-            </Marker>
-          ))}
-          {zoomMarker && <ZoomToMarker position={zoomMarker.position} zoom={zoomMarker.zoom} />}
-        </MapContainer>
+              <div style={{
+                width: 14,
+                height: 14,
+                background: "#b32c2c",
+                borderRadius: "50%",
+                opacity: 0.85,
+                border: "2px solid #fff",
+              }} />
+            </button>
+          );
+        })}
       </div>
     </section>
   );
