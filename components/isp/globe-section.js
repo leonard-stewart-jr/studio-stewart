@@ -87,7 +87,7 @@ export default function GlobeSection({ onMarkerClick }) {
       >
         <Globe
           ref={globeEl}
-          globeImageUrl="/images/isp/globe.png"
+          globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
           pointsData={globeLocations}
           pointLat={d => d.lat}
           pointLng={d => d.lon}
