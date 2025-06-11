@@ -31,10 +31,10 @@ export default function IndependentStudio() {
             <GlobeSection onMarkerClick={setModalData} />
           )}
           {activeSection === "usa" && (
-            <USAMapSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
+            <USAMapSection onMarkerClick={setModalData} />
           )}
           {activeSection === "sd" && (
-            <SDMapSection onMarkerClick={ev => setModalData({ title: `${ev.year}, ${ev.name}`, content: ev.content })} />
+            <SDMapSection onMarkerClick={setModalData} />
           )}
           {/* Info Modal */}
           <InfoModal
