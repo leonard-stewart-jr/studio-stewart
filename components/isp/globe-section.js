@@ -81,8 +81,10 @@ export default function GlobeSection({ onMarkerClick }) {
           margin: "-40px auto 0 auto",
           padding: 0,
           background: "transparent",
-          overflow: "visible",
+          overflow: "unset",
           position: "relative",
+          borderRadius: 0,
+          boxShadow: "none",
         }}
       >
         <Globe
