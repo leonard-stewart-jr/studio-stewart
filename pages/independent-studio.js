@@ -28,7 +28,7 @@ export default function IndependentStudio() {
         }}>
           {/* Only show the selected section */}
           {activeSection === "world" && (
-            <GlobeSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
+            <GlobeSection onMarkerClick={setModalData} />
           )}
           {activeSection === "usa" && (
             <USAMapSection onMarkerClick={loc => setModalData({ title: loc.name, content: loc.content })} />
@@ -40,8 +40,7 @@ export default function IndependentStudio() {
           <InfoModal
             open={!!modalData}
             onClose={() => setModalData(null)}
-            title={modalData?.title}
-            content={modalData?.content}
+            marker={modalData}
           />
         </div>
       </SlidingBanner>
