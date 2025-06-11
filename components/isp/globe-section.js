@@ -52,6 +52,11 @@ export default function GlobeSection({ onMarkerClick }) {
     return null;
   }
 
+  // Responsive width/height
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const globeWidth = Math.max(350, Math.min(900, vw * 0.97));
+  const globeHeight = Math.max(340, Math.min(660, vw * 0.60));
+
   return (
     <section
       style={{
@@ -66,14 +71,14 @@ export default function GlobeSection({ onMarkerClick }) {
     >
       <div
         style={{
-          width: "80vw",
+          width: "97vw",
           maxWidth: 900,
-          minWidth: 300,
-          height: "auto",
+          minWidth: 320,
+          height: globeHeight,
           display: "flex",
           justifyContent: "center",
-          alignItems: "flex-start",
-          margin: "-40px auto 0 auto", // move globe UP by 40px
+          alignItems: "center",
+          margin: "-40px auto 0 auto",
           padding: 0,
           background: "transparent",
           overflow: "visible",
@@ -91,8 +96,8 @@ export default function GlobeSection({ onMarkerClick }) {
           onPointClick={onMarkerClick}
           pointAltitude={0.01}
           backgroundColor="rgba(0,0,0,0)"
-          width={undefined}
-          height={undefined}
+          width={globeWidth}
+          height={globeHeight}
           onPointHover={setHovered}
         />
         {/* Tooltip for marker hover */}
