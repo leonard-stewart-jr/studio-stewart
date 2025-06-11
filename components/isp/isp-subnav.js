@@ -9,7 +9,8 @@ const TABS = [
 // Banner height: matches previous, text SMALLER than header nav
 const SUBNAV_BANNER_HEIGHT = 38;
 
-export default function ISPSubNav({ active, onChange }) {
+export default function ISPSubNav({ active, onChange, hidden }) {
+  if (hidden) return null;
   return (
     <div
       style={{
