@@ -52,10 +52,10 @@ export default function GlobeSection({ onMarkerClick }) {
     return null;
   }
 
-  // Responsive width/height
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
-  const globeWidth = Math.max(350, Math.min(900, vw * 0.97));
-  const globeHeight = Math.max(340, Math.min(660, vw * 0.60));
+  // Responsive width/height - SCALED UP
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
+  const globeWidth = Math.max(420, Math.min(1100, vw * 0.995));
+  const globeHeight = Math.max(400, Math.min(850, vw * 0.75));
 
   return (
     <section
@@ -71,10 +71,10 @@ export default function GlobeSection({ onMarkerClick }) {
     >
       <div
         style={{
-          width: "97vw",
-          maxWidth: 900,
-          minWidth: 320,
+          width: globeWidth,
           height: globeHeight,
+          maxWidth: 1100,
+          minWidth: 320,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -94,7 +94,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pointLat={d => d.lat}
           pointLng={d => d.lon}
           pointColor={() => "#b32c2c"}
-          pointRadius={0.65}
+          pointRadius={1.1} // bigger markers
           onPointClick={onMarkerClick}
           pointAltitude={0.01}
           backgroundColor="rgba(0,0,0,0)"
