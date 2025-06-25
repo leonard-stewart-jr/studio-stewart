@@ -56,11 +56,12 @@ nav.main-nav {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 nav.main-nav a {
-  color: #232323;
-  font-weight: 400;
+  color: #949494;
+  font-weight: 600;
   font-size: 17px;
+  text-transform: uppercase;
   text-decoration: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   padding: 3px 0;
   border-bottom: none;
   transition: color 0.2s;
@@ -102,10 +103,11 @@ nav.main-nav a[aria-current="page"]:hover {
   background: none;
   border: none;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 15px;
-  letter-spacing: 0.02em;
-  color: #888;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #b1b1ae;
   padding: 8px 20px 4px 20px;
   margin: 0 10px;
   height: auto;
@@ -162,10 +164,11 @@ nav.main-nav a[aria-current="page"]:hover {
   background: none;
   border: none;
   font-family: inherit;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 13px;
-  color: #bbb;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #d4d4ce;
   padding: 7px 14px 4px 14px;
   margin: 0 4px;
   height: auto;
@@ -200,7 +203,7 @@ nav.main-nav a[aria-current="page"]:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
-  color: #d4d4ce;
+  color: #e6dbb9;
 }
 
 /* ====== REMOVE OLD NAV DIVIDER ====== */
