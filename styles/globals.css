@@ -254,4 +254,9 @@ body.show-scrollbar {
     padding: 7px 8px 4px 8px;
     min-width: 32px;
   }
+  .isp-subnav-btn {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    z-index: 1000 !important;
+    position: relative !important;
 }
