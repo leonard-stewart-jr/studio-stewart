@@ -32,8 +32,7 @@ export default function IndependentStudio() {
       {mainSection === "history" && (
         <>
           <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-          {/* Divider between subnav and content */}
-          <div className="nav-divider"></div>
+          {/* (Divider after subnav removed as requested) */}
         </>
       )}
 
