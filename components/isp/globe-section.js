@@ -52,33 +52,38 @@ export default function GlobeSection({ onMarkerClick }) {
     return null;
   }
 
-  // Responsive width/height - SCALED UP
+  // Responsive width/height - SCALED DOWN for static view
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
-  const globeWidth = Math.max(420, Math.min(1100, vw * 0.995));
-  const globeHeight = Math.max(400, Math.min(850, vw * 0.75));
+  const globeWidth = Math.max(380, Math.min(950, vw * 0.88));
+  const globeHeight = Math.max(340, Math.min(520, vw * 0.42));
 
   return (
     <section
+      className="isp-globe-section"
       style={{
-        width: "100%",
+        width: "100vw",
+        minHeight: 0,
         background: "transparent",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         paddingTop: 0,
         paddingBottom: 0,
+        marginTop: "-10px",
+        marginBottom: 0,
+        overflow: "hidden",
       }}
     >
       <div
         style={{
           width: globeWidth,
           height: globeHeight,
-          maxWidth: 1100,
+          maxWidth: 950,
           minWidth: 320,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: "-40px auto 0 auto",
+          margin: "0 auto",
           padding: 0,
           background: "transparent",
           overflow: "unset",
@@ -94,7 +99,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pointLat={d => d.lat}
           pointLng={d => d.lon}
           pointColor={() => "#b32c2c"}
-          pointRadius={1.1} // bigger markers
+          pointRadius={1.1}
           onPointClick={onMarkerClick}
           pointAltitude={0.01}
           backgroundColor="rgba(0,0,0,0)"
