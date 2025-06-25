@@ -109,30 +109,33 @@ body.show-scrollbar {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.5px;
-  color: #b1b1ae;
-  padding: 4px 0;
-  margin: 0 24px;
-  border-bottom: none;
-  transition: color 0.2s, text-decoration 0.18s;
+  color: #d2cfc5; /* lighter than top nav */
+  padding: 8px 18px;
+  margin: 0 18px;
+  border-bottom: 3px solid transparent;
   cursor: pointer;
   text-decoration: none;
   outline: none;
   position: relative;
+  transition: border-bottom 0.18s;
 }
 
 .isp-tab-btn.active,
 .isp-tab-btn[aria-current="page"] {
   color: #e6dbb9;
-  text-decoration: underline;
+  border-bottom: 3px solid #e6dbb9;
   cursor: default;
 }
 
-.isp-tab-btn:not(.active):hover,
-.isp-tab-btn:not([aria-current="page"]):hover,
-.isp-tab-btn:not(.active):focus,
-.isp-tab-btn:not([aria-current="page"]):focus {
-  color: #181818;
-  text-decoration: underline;
+.isp-tab-btn:focus-visible {
+  outline: 2px solid #e6dbb9;
+}
+
+/* No color or underline change on hover or focus for non-active */
+.isp-tab-btn:hover,
+.isp-tab-btn:focus {
+  color: #d2cfc5;
+  border-bottom: 3px solid transparent;
 }
 
 /* --- Subnav: WORLD / USA / SOUTH DAKOTA --- */
@@ -140,8 +143,8 @@ body.show-scrollbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 22px;
+  gap: 22px;
+  margin-bottom: 30px;
 }
 
 .isp-subnav-btn {
@@ -150,16 +153,21 @@ body.show-scrollbar {
   font-family: inherit;
   font-weight: 600;
   font-size: 13px;
-  color: #d2cfc5;
+  color: #eceae3; /* even lighter gray */
   letter-spacing: 0.04em;
-  padding: 0 10px 4px 10px;
+  padding: 8px 15px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
-  transition: color 0.18s, border 0.18s;
   outline: none;
   text-decoration: none;
+  border-radius: 4px;
+  min-width: 44px;
+  min-height: 32px;
+  transition: border-bottom 0.18s;
+  display: inline-block;
 }
 
+/* Active subnav: yellow and underline */
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
@@ -167,32 +175,33 @@ body.show-scrollbar {
   cursor: default;
 }
 
-.isp-subnav-btn:not(.active):hover,
-.isp-subnav-btn:not([aria-current="page"]):hover,
-.isp-subnav-btn:not(.active):focus,
-.isp-subnav-btn:not([aria-current="page"]):focus {
-  color: #b1b1ae;
-  border-bottom: 2px solid #b1b1ae;
+/* No color or underline change on hover or focus for non-active */
+.isp-subnav-btn:hover,
+.isp-subnav-btn:focus {
+  color: #eceae3;
+  border-bottom: 2px solid transparent;
 }
 
 /* Responsive tweaks */
 @media (max-width: 700px) {
   .isp-section-tabs {
-    gap: 14px;
-    margin-top: 14px;
+    gap: 11px;
+    margin-top: 11px;
     margin-bottom: 8px;
   }
   .isp-tab-btn {
     font-size: 13px;
-    margin: 0 10px;
-    padding: 4px 0;
+    margin: 0 7px;
+    padding: 7px 10px;
   }
   .isp-subnav-row {
     gap: 7px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
   .isp-subnav-btn {
     font-size: 12px;
-    padding: 0 6px 3px 6px;
+    padding: 6px 8px;
+    min-width: 32px;
+    min-height: 24px;
   }
 }
