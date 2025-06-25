@@ -110,7 +110,7 @@ body.show-scrollbar {
   justify-content: center;
   align-items: center;
   gap: 32px;
-  background: #fff;
+  /* background: #fff;  <-- REMOVE THIS LINE */
   padding: 0;
   min-height: 60px;
   height: auto;
@@ -180,6 +180,7 @@ body.show-scrollbar {
   border-bottom: none;
   position: relative !important;
   z-index: 100 !important;
+  /* background: #fff !important;   <-- REMOVE THIS LINE */
 }
 
 .isp-subnav-btn {
