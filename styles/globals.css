@@ -72,7 +72,8 @@ body.show-scrollbar {
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
   margin: 0;
   pointer-events: none; /* Do not block clicks below */
-  z-index: 0;
+  /* z-index REMOVED to fix pointer event bug */
+  /* position: static; ENSURE NO position PROPERTY IS SET */
 }
 
 /* ====== RESPONSIVE: HEADER & NAVIGATION ====== */
