@@ -99,9 +99,8 @@ body.show-scrollbar {
   gap: 32px;
   background: #fff;
   padding: 0;
-  height: 60px; /* makes this bar taller */
+  height: 60px;
   margin: 0;
-  border: none;
 }
 
 .isp-tab-btn {
@@ -115,7 +114,7 @@ body.show-scrollbar {
   padding: 0 20px;
   height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   margin: 0 12px;
   border-bottom: 3px solid transparent;
   cursor: pointer;
@@ -132,14 +131,16 @@ body.show-scrollbar {
   cursor: default;
 }
 
-.isp-tab-btn:focus-visible {
-  outline: 2px solid #e6dbb9;
+.isp-tab-btn.active:hover,
+.isp-tab-btn[aria-current="page"]:hover,
+.isp-tab-btn.active:focus,
+.isp-tab-btn[aria-current="page"]:focus {
+  border-bottom: 3px solid transparent;
 }
 
-.isp-tab-btn:hover,
-.isp-tab-btn:focus {
-  color: #bcbcb6;
-  border-bottom: 3px solid transparent;
+.isp-tab-btn:not(.active):not([aria-current="page"]):hover,
+.isp-tab-btn:not(.active):not([aria-current="page"]):focus {
+  border-bottom: 3px solid #bcbcb6;
 }
 
 /* --- Subnav: WORLD / USA / SOUTH DAKOTA --- */
@@ -150,9 +151,8 @@ body.show-scrollbar {
   gap: 22px;
   background: #fff;
   padding: 0;
-  height: 40px; /* shorter than section-tabs, so 1.5x ratio */
+  height: 40px;
   margin: 0;
-  border: none;
 }
 
 .isp-subnav-btn {
@@ -166,7 +166,7 @@ body.show-scrollbar {
   padding: 0 18px;
   height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   outline: none;
@@ -183,17 +183,23 @@ body.show-scrollbar {
   cursor: default;
 }
 
+.isp-subnav-btn.active:hover,
+.isp-subnav-btn[aria-current="page"]:hover,
+.isp-subnav-btn.active:focus,
+.isp-subnav-btn[aria-current="page"]:focus {
+  border-bottom: 2px solid transparent;
+}
+
+.isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
+.isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
+  border-bottom: 2px solid #d4d4ce;
+}
+
+.isp-tab-btn:focus-visible,
 .isp-subnav-btn:focus-visible {
   outline: 2px solid #e6dbb9;
 }
 
-.isp-subnav-btn:hover,
-.isp-subnav-btn:focus {
-  color: #d4d4ce;
-  border-bottom: 2px solid transparent;
-}
-
-/* Responsive tweaks */
 @media (max-width: 700px) {
   .isp-section-tabs {
     gap: 11px;
