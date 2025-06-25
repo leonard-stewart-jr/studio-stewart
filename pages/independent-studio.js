@@ -32,7 +32,8 @@ export default function IndependentStudio() {
 
       <div style={{
         width: "100%",
-        minHeight: "100vh",
+        minHeight: 0,
+        height: "auto",
         background: "#fafafa",
         display: "flex",
         flexDirection: "column",
