@@ -97,10 +97,11 @@ body.show-scrollbar {
   justify-content: center;
   align-items: center;
   gap: 32px;
-  margin-top: 32px;
-  margin-bottom: 14px;
   background: #fff;
-  padding: 0 0 0 0;
+  padding: 0;
+  height: 60px; /* makes this bar taller */
+  margin: 0;
+  border: none;
 }
 
 .isp-tab-btn {
@@ -110,8 +111,11 @@ body.show-scrollbar {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.5px;
-  color: #bcbcb6; /* medium gray */
-  padding: 10px 20px;
+  color: #bcbcb6;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
   margin: 0 12px;
   border-bottom: 3px solid transparent;
   cursor: pointer;
@@ -144,9 +148,11 @@ body.show-scrollbar {
   justify-content: center;
   align-items: center;
   gap: 22px;
-  margin-bottom: 34px;
   background: #fff;
-  padding: 0 0 0 0;
+  padding: 0;
+  height: 40px; /* shorter than section-tabs, so 1.5x ratio */
+  margin: 0;
+  border: none;
 }
 
 .isp-subnav-btn {
@@ -155,18 +161,19 @@ body.show-scrollbar {
   font-family: inherit;
   font-weight: 600;
   font-size: 13px;
-  color: #d4d4ce; /* lighter gray, but now darker than before */
+  color: #d4d4ce;
   letter-spacing: 0.04em;
-  padding: 8px 18px;
+  padding: 0 18px;
+  height: 100%;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   outline: none;
   text-decoration: none;
   border-radius: 4px;
   min-width: 44px;
-  min-height: 32px;
   transition: border-bottom 0.18s;
-  display: inline-block;
 }
 
 .isp-subnav-btn.active,
@@ -190,22 +197,20 @@ body.show-scrollbar {
 @media (max-width: 700px) {
   .isp-section-tabs {
     gap: 11px;
-    margin-top: 11px;
-    margin-bottom: 8px;
+    height: 36px;
   }
   .isp-tab-btn {
     font-size: 13px;
     margin: 0 7px;
-    padding: 7px 10px;
+    padding: 0 10px;
   }
   .isp-subnav-row {
     gap: 7px;
-    margin-bottom: 16px;
+    height: 24px;
   }
   .isp-subnav-btn {
     font-size: 12px;
-    padding: 6px 8px;
+    padding: 0 8px;
     min-width: 32px;
-    min-height: 24px;
   }
 }
