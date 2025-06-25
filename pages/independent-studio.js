@@ -20,26 +20,23 @@ export default function IndependentStudio() {
   return (
     <>
 
-      {/* --- NAVIGATION LAYERS (NO WHITE BG) --- */}
-      {/* HISTORY / FUTURE Tabs */}
-      <SectionTabs
-        activeSection={mainSection}
-        setActiveSection={setMainSection}
-      />
-      {/* Divider below section tabs */}
-      <div className="nav-divider"></div>
-      {/* Show subnav only if HISTORY tab is active */}
+      {/* NAVIGATION LAYERS IN "CARD" STYLE */}
+      {/* Main nav: handled by layout/header, so only render cards from tabs down */}
+      <div className="nav-card nav-card-mid">
+        <SectionTabs
+          activeSection={mainSection}
+          setActiveSection={setMainSection}
+        />
+      </div>
       {mainSection === "history" && (
-        <>
+        <div className="nav-card nav-card-bot">
           <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-          {/* Divider below WORLD/USA/SD subnav */}
-          <div className="nav-divider"></div>
-        </>
+        </div>
       )}
 
-      {/* --- CONTENT: Globe/Map, sits on background color --- */}
+      {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
       {mainSection === "history" && (
-        <>
+        <section className="isp-globe-section">
           {activeHistory === "world" && (
             <GlobeSection onMarkerClick={setModalData} />
           )}
@@ -49,7 +46,7 @@ export default function IndependentStudio() {
           {activeHistory === "sd" && (
             <SDMapSection onMarkerClick={setModalData} />
           )}
-        </>
+        </section>
       )}
       {mainSection === "future" && (
         <div style={{
