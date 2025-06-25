@@ -91,96 +91,108 @@ body.show-scrollbar {
 }
 
 /* ====== ISP PAGE NAV HIERARCHY ====== */
-.isp-title {
-  font-size: 2.2rem;
-  font-weight: 900;
-  letter-spacing: 0.07em;
-  color: #181818;
-  text-align: center;
-  margin: 0 0 18px 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
 
+/* --- Section Tabs: HISTORY / FUTURE --- */
 .isp-section-tabs {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 38px;
-  margin-bottom: 6px;
+  gap: 32px;
+  margin-top: 22px;
+  margin-bottom: 12px;
 }
+
 .isp-tab-btn {
   background: none;
   border: none;
-  font-family: inherit;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 700;
-  font-size: 1.27rem;
+  font-size: 14px;
+  letter-spacing: 0.5px;
   color: #b1b1ae;
-  letter-spacing: 0.03em;
-  padding: 6px 32px 12px 32px;
+  padding: 4px 0;
+  margin: 0 24px;
+  border-bottom: none;
+  transition: color 0.2s, text-decoration 0.18s;
   cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: color 0.18s, border 0.18s;
-}
-.isp-tab-btn.active {
-  color: #b32c2c;
-  border-bottom: 3px solid #b32c2c;
-  cursor: default;
-}
-.isp-tab-btn.future.active {
-  color: #192d4b;
-  border-bottom: 3px solid #192d4b;
+  text-decoration: none;
+  outline: none;
+  position: relative;
 }
 
-/* Subnav (world/usa/sd) */
+.isp-tab-btn.active,
+.isp-tab-btn[aria-current="page"] {
+  color: #e6dbb9;
+  text-decoration: underline;
+  cursor: default;
+}
+
+.isp-tab-btn:not(.active):hover,
+.isp-tab-btn:not([aria-current="page"]):hover,
+.isp-tab-btn:not(.active):focus,
+.isp-tab-btn:not([aria-current="page"]):focus {
+  color: #181818;
+  text-decoration: underline;
+}
+
+/* --- Subnav: WORLD / USA / SOUTH DAKOTA --- */
 .isp-subnav-row {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 22px;
-  margin-bottom: 26px;
+  gap: 18px;
+  margin-bottom: 22px;
 }
+
 .isp-subnav-btn {
   background: none;
   border: none;
   font-family: inherit;
   font-weight: 600;
-  font-size: 1.03rem;
+  font-size: 13px;
   color: #d2cfc5;
   letter-spacing: 0.04em;
-  padding: 0 12px 6px 12px;
+  padding: 0 10px 4px 10px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: color 0.18s, border 0.18s;
+  outline: none;
+  text-decoration: none;
 }
-.isp-subnav-btn.active {
-  color: #b32c2c;
-  border-bottom: 2px solid #b32c2c;
-  cursor: default;
-}
-.isp-subnav-btn:last-child.active {
+
+.isp-subnav-btn.active,
+.isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
   border-bottom: 2px solid #e6dbb9;
+  cursor: default;
+}
+
+.isp-subnav-btn:not(.active):hover,
+.isp-subnav-btn:not([aria-current="page"]):hover,
+.isp-subnav-btn:not(.active):focus,
+.isp-subnav-btn:not([aria-current="page"]):focus {
+  color: #b1b1ae;
+  border-bottom: 2px solid #b1b1ae;
 }
 
 /* Responsive tweaks */
 @media (max-width: 700px) {
-  .isp-title {
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-  }
   .isp-section-tabs {
-    gap: 18px;
+    gap: 14px;
+    margin-top: 14px;
+    margin-bottom: 8px;
   }
   .isp-tab-btn {
-    font-size: 1.01rem;
-    padding: 6px 16px 8px 16px;
+    font-size: 13px;
+    margin: 0 10px;
+    padding: 4px 0;
   }
   .isp-subnav-row {
-    gap: 11px;
+    gap: 7px;
     margin-bottom: 14px;
   }
   .isp-subnav-btn {
-    font-size: 0.92rem;
-    padding: 0 7px 4px 7px;
+    font-size: 12px;
+    padding: 0 6px 3px 6px;
   }
 }
