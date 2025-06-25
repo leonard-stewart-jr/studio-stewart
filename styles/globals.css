@@ -6,7 +6,6 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #f9f9f7;
   color: #181818;
-  /* SCROLLING ENABLED BY DEFAULT */
   overflow-y: auto;
 }
 
@@ -98,8 +97,10 @@ body.show-scrollbar {
   justify-content: center;
   align-items: center;
   gap: 32px;
-  margin-top: 22px;
-  margin-bottom: 12px;
+  margin-top: 32px;
+  margin-bottom: 14px;
+  background: #fff;
+  padding: 0 0 0 0;
 }
 
 .isp-tab-btn {
@@ -109,9 +110,9 @@ body.show-scrollbar {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.5px;
-  color: #d2cfc5; /* lighter than top nav */
-  padding: 8px 18px;
-  margin: 0 18px;
+  color: #bcbcb6; /* medium gray */
+  padding: 10px 20px;
+  margin: 0 12px;
   border-bottom: 3px solid transparent;
   cursor: pointer;
   text-decoration: none;
@@ -131,10 +132,9 @@ body.show-scrollbar {
   outline: 2px solid #e6dbb9;
 }
 
-/* No color or underline change on hover or focus for non-active */
 .isp-tab-btn:hover,
 .isp-tab-btn:focus {
-  color: #d2cfc5;
+  color: #bcbcb6;
   border-bottom: 3px solid transparent;
 }
 
@@ -144,7 +144,9 @@ body.show-scrollbar {
   justify-content: center;
   align-items: center;
   gap: 22px;
-  margin-bottom: 30px;
+  margin-bottom: 34px;
+  background: #fff;
+  padding: 0 0 0 0;
 }
 
 .isp-subnav-btn {
@@ -153,9 +155,9 @@ body.show-scrollbar {
   font-family: inherit;
   font-weight: 600;
   font-size: 13px;
-  color: #eceae3; /* even lighter gray */
+  color: #d4d4ce; /* lighter gray, but now darker than before */
   letter-spacing: 0.04em;
-  padding: 8px 15px;
+  padding: 8px 18px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   outline: none;
@@ -167,7 +169,6 @@ body.show-scrollbar {
   display: inline-block;
 }
 
-/* Active subnav: yellow and underline */
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
@@ -175,10 +176,13 @@ body.show-scrollbar {
   cursor: default;
 }
 
-/* No color or underline change on hover or focus for non-active */
+.isp-subnav-btn:focus-visible {
+  outline: 2px solid #e6dbb9;
+}
+
 .isp-subnav-btn:hover,
 .isp-subnav-btn:focus {
-  color: #eceae3;
+  color: #d4d4ce;
   border-bottom: 2px solid transparent;
 }
 
