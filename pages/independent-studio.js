@@ -18,69 +18,72 @@ export default function IndependentStudio() {
   const [modalData, setModalData] = useState(null);
 
   return (
-    <>
+    <div style={{
+      width: "100vw",
+      minHeight: 0,
+      height: "auto",
+      background: "#fff",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      margin: 0,
+      padding: 0,
+    }}>
       {/* HISTORY / FUTURE Tabs */}
       <SectionTabs
         activeSection={mainSection}
         setActiveSection={setMainSection}
       />
 
-      {/* Divider between section tabs and content area */}
+      {/* Divider below section tabs */}
       <div className="nav-divider"></div>
 
-      <div style={{
-        width: "100%",
-        minHeight: 0,
-        height: "auto",
-        background: "#fafafa",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        marginTop: 0,
-      }}>
-        {/* Show subnav only if HISTORY tab is active */}
-        {mainSection === "history" && (
+      {/* Show subnav only if HISTORY tab is active */}
+      {mainSection === "history" && (
+        <>
           <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-        )}
+          {/* Divider below WORLD/USA/SD subnav */}
+          <div className="nav-divider"></div>
+        </>
+      )}
 
-        {/* HISTORY: Show selected map/section */}
-        {mainSection === "history" && (
-          <>
-            {activeHistory === "world" && (
-              <GlobeSection onMarkerClick={setModalData} />
-            )}
-            {activeHistory === "usa" && (
-              <USAMapSection onMarkerClick={setModalData} />
-            )}
-            {activeHistory === "sd" && (
-              <SDMapSection onMarkerClick={setModalData} />
-            )}
-          </>
-        )}
-        {/* FUTURE: Placeholder for now */}
-        {mainSection === "future" && (
-          <div style={{
-            minHeight: 500,
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 32,
-            color: "#192d4b",
-            fontWeight: 700,
-            letterSpacing: ".02em",
-            opacity: 0.7,
-          }}>
-            FUTURE CONTENT COMING SOON
-          </div>
-        )}
-        {/* Info Modal */}
-        <InfoModal
-          open={!!modalData}
-          onClose={() => setModalData(null)}
-          marker={modalData}
-        />
-      </div>
-    </>
+      {/* HISTORY: Show selected map/section */}
+      {mainSection === "history" && (
+        <>
+          {activeHistory === "world" && (
+            <GlobeSection onMarkerClick={setModalData} />
+          )}
+          {activeHistory === "usa" && (
+            <USAMapSection onMarkerClick={setModalData} />
+          )}
+          {activeHistory === "sd" && (
+            <SDMapSection onMarkerClick={setModalData} />
+          )}
+        </>
+      )}
+      {/* FUTURE: Placeholder for now */}
+      {mainSection === "future" && (
+        <div style={{
+          minHeight: 500,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 32,
+          color: "#192d4b",
+          fontWeight: 700,
+          letterSpacing: ".02em",
+          opacity: 0.7,
+        }}>
+          FUTURE CONTENT COMING SOON
+        </div>
+      )}
+      {/* Info Modal */}
+      <InfoModal
+        open={!!modalData}
+        onClose={() => setModalData(null)}
+        marker={modalData}
+      />
+    </div>
   );
 }
