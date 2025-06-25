@@ -15,7 +15,7 @@ body {
 /* ====== CARD NAV STYLES ====== */
 .nav-card {
   width: 100%;
-  background: #fff;
+  /* background: #fff;  <-- Only top nav card keeps background */
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -29,24 +29,27 @@ body {
   min-height: 76px;
   height: 76px;
   padding: 0;
+  background: #fff; /* Only top nav card has white background */
 }
 .nav-card-mid {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
-  min-height: 56px;
-  height: 56px;
+  min-height: 44px;        /* CHANGED from 56px */
+  height: 44px;            /* CHANGED from 56px */
   margin-top: -8px;
-  margin-bottom: 8px; /* ADDED for shadow visibility */
+  margin-bottom: 8px;
   padding: 0;
-  z-index: 20; /* bring forward */
+  z-index: 20;
+  background: transparent; /* Remove white background */
 }
 .nav-card-bot {
   box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
-  min-height: 30px;     /* CHANGED from 44px */
-  height: 30px;         /* CHANGED from 44px */
+  min-height: 26px;        /* CHANGED from 30px */
+  height: 26px;            /* CHANGED from 30px */
   margin-top: -6px;
-  margin-bottom: 8px; /* ADDED for shadow visibility */
+  margin-bottom: 8px;
   padding: 0;
   z-index: 15;
+  background: transparent; /* Remove white background */
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
@@ -96,7 +99,7 @@ nav.main-nav a[aria-current="page"]:hover {
   justify-content: center;
   align-items: center;
   gap: 32px;
-  background: #fff;
+  background: transparent; /* Remove white background */
   padding: 0;
   min-height: 60px;
   height: auto;
@@ -159,7 +162,7 @@ nav.main-nav a[aria-current="page"]:hover {
   justify-content: center;
   align-items: center;
   gap: 22px;
-  background: #fff;
+  background: transparent; /* Remove white background */
   padding: 0;
   min-height: 40px;
   height: auto;
@@ -281,7 +284,7 @@ nav.main-nav a[aria-current="page"]:hover {
 
 /* ====== GLOBE SECTION PADDING ====== */
 .isp-globe-section {
-  margin-top: -30px !important; /* Move globe even higher up */
+  margin-top: -60px !important; /* Move globe even higher up */
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   /* Ensures globe is as close as possible to above nav */
