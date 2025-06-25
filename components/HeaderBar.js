@@ -17,25 +17,22 @@ export default function HeaderBar() {
 
   return (
     <>
-      <header
-        style={{
-          width: "100%",
-          height: headerHeight,
-          minHeight: headerHeight,
-          position: "sticky",
-          top: 0,
-          background: "transparent", // <<-- CHANGED FROM "#fff" to "transparent"
-          zIndex: 1200,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingLeft: 0,
-          paddingRight: 0,
-          boxShadow: "none", // <<-- REMOVED SHADOW FROM HEADER
-          transition: "box-shadow 0.2s",
-        }}
-      >
-        {/* Left: Hamburger/Logo (always reserve the space to prevent header shift) */}
+      {/* Card nav for header */}
+      <div className="nav-card nav-card-top" style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1200,
+        width: "100%",
+        paddingLeft: 0,
+        paddingRight: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        minHeight: headerHeight,
+        height: headerHeight,
+        background: "#fff",
+      }}>
+        {/* Left: Hamburger/Logo */}
         <div
           style={{
             flex: "0 0 auto",
@@ -76,9 +73,7 @@ export default function HeaderBar() {
         </div>
         {/* Right: Reserved for future use, maintains space for symmetry */}
         <div style={{ flex: "0 0 auto", width: logoSize, minWidth: logoSize }} />
-      </header>
-      {/* Shadow divider directly below main nav */}
-      <div className="nav-divider"></div>
+      </div>
       {/* Sidebar with separate close button */}
       <Sidebar
         open={sidebarOpen}
