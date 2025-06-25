@@ -77,6 +77,8 @@ export default function HeaderBar() {
         {/* Right: Reserved for future use, maintains space for symmetry */}
         <div style={{ flex: "0 0 auto", width: logoSize, minWidth: logoSize }} />
       </header>
+      {/* Shadow divider directly below main nav */}
+      <div className="nav-divider"></div>
       {/* Sidebar with separate close button */}
       <Sidebar
         open={sidebarOpen}
