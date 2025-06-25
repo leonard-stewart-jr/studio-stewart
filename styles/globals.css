@@ -101,6 +101,7 @@ body.show-scrollbar {
   padding: 0;
   height: 60px;
   margin: 0;
+  border-bottom: 1px solid #ececec; /* subtle shadow/border below this bar */
 }
 
 .isp-tab-btn {
@@ -114,9 +115,9 @@ body.show-scrollbar {
   padding: 0 20px;
   height: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: center; /* vertically center text */
   margin: 0 12px;
-  border-bottom: 3px solid transparent;
+  border-bottom: 1px solid transparent; /* THIN underline, 1px */
   cursor: pointer;
   text-decoration: none;
   outline: none;
@@ -127,7 +128,7 @@ body.show-scrollbar {
 .isp-tab-btn.active,
 .isp-tab-btn[aria-current="page"] {
   color: #e6dbb9;
-  border-bottom: 3px solid #e6dbb9;
+  border-bottom: 1px solid #e6dbb9; /* THIN underline, goldish */
   cursor: default;
 }
 
@@ -135,12 +136,12 @@ body.show-scrollbar {
 .isp-tab-btn[aria-current="page"]:hover,
 .isp-tab-btn.active:focus,
 .isp-tab-btn[aria-current="page"]:focus {
-  border-bottom: 3px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
-  border-bottom: 3px solid #bcbcb6;
+  border-bottom: 1px solid #bcbcb6; /* underline same as text color */
 }
 
 /* --- Subnav: WORLD / USA / SOUTH DAKOTA --- */
@@ -153,6 +154,7 @@ body.show-scrollbar {
   padding: 0;
   height: 40px;
   margin: 0;
+  border-bottom: 1px solid #ececec; /* subtle shadow/border below this bar */
 }
 
 .isp-subnav-btn {
@@ -166,9 +168,9 @@ body.show-scrollbar {
   padding: 0 18px;
   height: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: center; /* vertically center text */
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  border-bottom: 1px solid transparent; /* THIN underline, 1px */
   outline: none;
   text-decoration: none;
   border-radius: 4px;
@@ -179,7 +181,7 @@ body.show-scrollbar {
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
-  border-bottom: 2px solid #e6dbb9;
+  border-bottom: 1px solid #e6dbb9; /* THIN underline, goldish */
   cursor: default;
 }
 
@@ -187,12 +189,12 @@ body.show-scrollbar {
 .isp-subnav-btn[aria-current="page"]:hover,
 .isp-subnav-btn.active:focus,
 .isp-subnav-btn[aria-current="page"]:focus {
-  border-bottom: 2px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
-  border-bottom: 2px solid #d4d4ce;
+  border-bottom: 1px solid #d4d4ce; /* underline same as text color */
 }
 
 .isp-tab-btn:focus-visible,
