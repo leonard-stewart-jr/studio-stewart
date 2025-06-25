@@ -3,7 +3,6 @@ import React from "react";
 export default function SectionTabs({ activeSection, setActiveSection }) {
   return (
     <div style={{ marginTop: 36, marginBottom: 0 }}>
-      <div className="isp-title">INDEPENDENT STUDIO</div>
       <div className="isp-section-tabs">
         <button
           className={
