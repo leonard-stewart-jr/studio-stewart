@@ -19,8 +19,6 @@ export default function IndependentStudio() {
 
   return (
     <>
-      {/* --- Shadow divider BELOW main nav (header) --- */}
-      <div className="nav-divider"></div>
 
       {/* --- NAVIGATION LAYERS (NO WHITE BG) --- */}
       {/* HISTORY / FUTURE Tabs */}
