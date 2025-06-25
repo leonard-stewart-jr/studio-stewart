@@ -257,4 +257,5 @@ body.show-scrollbar {
     opacity: 1 !important;
     z-index: 1000 !important;
     position: relative !important;
+  }
 }
