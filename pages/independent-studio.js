@@ -18,36 +18,36 @@ export default function IndependentStudio() {
   const [modalData, setModalData] = useState(null);
 
   return (
-    <div style={{
-      width: "100vw",
-      minHeight: 0,
-      height: "auto",
-      background: "#fff",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      margin: 0,
-      padding: 0,
-    }}>
-      {/* HISTORY / FUTURE Tabs */}
-      <SectionTabs
-        activeSection={mainSection}
-        setActiveSection={setMainSection}
-      />
+    <>
+      {/* --- WHITE NAV WRAPPER --- */}
+      <div style={{
+        width: "100%",
+        background: "#fff",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        margin: 0,
+        padding: 0,
+      }}>
+        {/* HISTORY / FUTURE Tabs */}
+        <SectionTabs
+          activeSection={mainSection}
+          setActiveSection={setMainSection}
+        />
+        {/* Divider below section tabs */}
+        <div className="nav-divider"></div>
+        {/* Show subnav only if HISTORY tab is active */}
+        {mainSection === "history" && (
+          <>
+            <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+            {/* Divider below WORLD/USA/SD subnav */}
+            <div className="nav-divider"></div>
+          </>
+        )}
+      </div>
+      {/* --- END WHITE NAV WRAPPER --- */}
 
-      {/* Divider below section tabs */}
-      <div className="nav-divider"></div>
-
-      {/* Show subnav only if HISTORY tab is active */}
-      {mainSection === "history" && (
-        <>
-          <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-          {/* Divider below WORLD/USA/SD subnav */}
-          <div className="nav-divider"></div>
-        </>
-      )}
-
-      {/* HISTORY: Show selected map/section */}
+      {/* --- CONTENT: Globe/Map, sits on background color --- */}
       {mainSection === "history" && (
         <>
           {activeHistory === "world" && (
@@ -61,7 +61,6 @@ export default function IndependentStudio() {
           )}
         </>
       )}
-      {/* FUTURE: Placeholder for now */}
       {mainSection === "future" && (
         <div style={{
           minHeight: 500,
@@ -78,12 +77,13 @@ export default function IndependentStudio() {
           FUTURE CONTENT COMING SOON
         </div>
       )}
+
       {/* Info Modal */}
       <InfoModal
         open={!!modalData}
         onClose={() => setModalData(null)}
         marker={modalData}
       />
-    </div>
+    </>
   );
 }
