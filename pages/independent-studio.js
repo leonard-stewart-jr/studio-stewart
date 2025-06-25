@@ -19,7 +19,10 @@ export default function IndependentStudio() {
 
   return (
     <>
-      {/* --- WHITE NAV WRAPPER --- */}
+      {/* --- Shadow divider BELOW main nav (header) --- */}
+      <div className="nav-divider"></div>
+
+      {/* --- WHITE NAV WRAPPER (tabs + subnav only) --- */}
       <div style={{
         width: "100%",
         background: "#fff",
