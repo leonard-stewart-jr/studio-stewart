@@ -24,14 +24,14 @@ export default function HeaderBar() {
           minHeight: headerHeight,
           position: "sticky",
           top: 0,
-          background: "#fff",
+          background: "transparent", // <<-- CHANGED FROM "#fff" to "transparent"
           zIndex: 1200,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           paddingLeft: 0,
           paddingRight: 0,
-          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.04)",
+          boxShadow: "none", // <<-- REMOVED SHADOW FROM HEADER
           transition: "box-shadow 0.2s",
         }}
       >
