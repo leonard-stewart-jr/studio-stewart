@@ -51,34 +51,35 @@ nav.main-nav {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 38px;
+  gap: 32px;
   height: 76px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 nav.main-nav a {
-  color: #949494;
-  font-weight: 600;
-  font-size: 17px;
+  color: #b1b1ae;
+  font-weight: 700;
+  font-size: 14px;
   text-transform: uppercase;
   text-decoration: none;
-  letter-spacing: 0.07em;
-  padding: 3px 0;
+  padding: 4px 0;
   border-bottom: none;
   transition: color 0.2s;
   display: inline-block;
   white-space: nowrap;
   font-family: inherit;
-  margin: 0 28px;
+  letter-spacing: 0.5px;
+  margin: 0 24px;
   cursor: pointer;
 }
+
 nav.main-nav a.active,
 nav.main-nav a[aria-current="page"] {
   color: #e6dbb9;
   text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 2px;
   cursor: default;
 }
+
 nav.main-nav a.active:hover,
 nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
@@ -90,26 +91,27 @@ nav.main-nav a[aria-current="page"]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 28px;
-  background: transparent;
-  min-height: 56px;
-  height: 56px;
+  gap: 32px;
+  background: #fff;
   padding: 0;
+  min-height: 60px;
+  height: auto;
   margin: 0;
   box-shadow: none;
   border-bottom: none;
 }
+
 .isp-tab-btn {
   background: none;
   border: none;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  font-size: 15px;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #bcbcb6;
   text-transform: uppercase;
-  color: #b1b1ae;
-  padding: 8px 20px 4px 20px;
-  margin: 0 10px;
+  padding: 9px 20px 6px 20px;
+  margin: 0 12px;
   height: auto;
   display: inline-block;
   vertical-align: middle;
@@ -122,6 +124,7 @@ nav.main-nav a[aria-current="page"]:hover {
   box-shadow: none;
   position: relative;
 }
+
 .isp-tab-btn.active,
 .isp-tab-btn[aria-current="page"] {
   color: #e6dbb9;
@@ -130,12 +133,14 @@ nav.main-nav a[aria-current="page"]:hover {
   text-decoration-thickness: 1.5px;
   cursor: default;
 }
+
 .isp-tab-btn.active:hover,
 .isp-tab-btn[aria-current="page"]:hover,
 .isp-tab-btn.active:focus,
 .isp-tab-btn[aria-current="page"]:focus {
   text-decoration: none;
 }
+
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
   text-decoration: underline;
@@ -149,27 +154,26 @@ nav.main-nav a[aria-current="page"]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  min-height: 44px;
-  height: 44px;
-  background: transparent;
-  margin: 0;
+  gap: 22px;
+  background: #fff;
   padding: 0;
+  min-height: 40px;
+  height: auto;
+  margin: 0;
   box-shadow: none;
   border-bottom: none;
-  position: relative !important;
-  z-index: 100 !important;
 }
+
 .isp-subnav-btn {
   background: none;
   border: none;
   font-family: inherit;
   font-weight: 500;
-  font-size: 13px;
+  font-size: 10px;
+  color: #d4d4ce;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #d4d4ce;
-  padding: 7px 14px 4px 14px;
+  padding: 9px 18px 6px 18px;
   margin: 0 4px;
   height: auto;
   display: inline-block;
@@ -184,6 +188,7 @@ nav.main-nav a[aria-current="page"]:hover {
   transition: color 0.18s, text-decoration 0.18s;
   position: relative;
 }
+
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
@@ -192,18 +197,25 @@ nav.main-nav a[aria-current="page"]:hover {
   text-decoration-thickness: 1.5px;
   cursor: default;
 }
+
 .isp-subnav-btn.active:hover,
 .isp-subnav-btn[aria-current="page"]:hover,
 .isp-subnav-btn.active:focus,
 .isp-subnav-btn[aria-current="page"]:focus {
   text-decoration: none;
 }
+
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
-  color: #e6dbb9;
+  color: #d4d4ce;
+}
+
+.isp-tab-btn:focus-visible,
+.isp-subnav-btn:focus-visible {
+  outline: 2px solid #e6dbb9;
 }
 
 /* ====== REMOVE OLD NAV DIVIDER ====== */
@@ -218,36 +230,43 @@ nav.main-nav a[aria-current="page"]:hover {
   }
 }
 
+@media (min-width: 701px) and (max-width: 1024px) {
+  nav.main-nav {
+    gap: 18px;
+    font-size: 14px;
+    height: 60px;
+  }
+  nav.main-nav a {
+    font-size: 14px;
+    padding: 4px 0;
+  }
+}
+
 /* ====== RESPONSIVE: GENERAL ====== */
 @media (max-width: 700px) {
   html, body {
     font-size: 15px;
   }
-  .nav-card-top { min-height: 56px; height: 56px; }
-  .nav-card-mid { min-height: 40px; height: 40px; }
-  .nav-card-bot { min-height: 32px; height: 32px; }
 }
 
 /* ====== ISP NAVS ====== */
 @media (max-width: 700px) {
   .isp-section-tabs {
-    gap: 7px;
-    min-height: 34px;
-    height: 34px;
+    gap: 11px;
+    min-height: 36px;
   }
   .isp-tab-btn {
-    font-size: 13px;
+    font-size: 11px;
     margin: 0 7px;
-    padding: 6px 10px 3px 10px;
+    padding: 7px 10px 4px 10px;
   }
   .isp-subnav-row {
-    gap: 4px;
-    min-height: 22px;
-    height: 22px;
+    gap: 7px;
+    min-height: 24px;
   }
   .isp-subnav-btn {
-    font-size: 11px;
-    padding: 5px 7px 3px 7px;
+    font-size: 9px;
+    padding: 7px 8px 4px 8px;
     min-width: 32px;
     pointer-events: auto !important;
     opacity: 1 !important;
