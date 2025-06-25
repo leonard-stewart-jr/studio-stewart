@@ -63,6 +63,16 @@ body.show-scrollbar {
   display: none !important;
 }
 
+/* ====== NAV DIVIDER (CONSISTENT BETWEEN NAV LEVELS) ====== */
+.nav-divider {
+  width: 100%;
+  height: 0;
+  border: none;
+  border-bottom: 1.5px solid #ececec;
+  margin: 0;
+  box-shadow: none;
+}
+
 /* ====== RESPONSIVE: HEADER & NAVIGATION ====== */
 @media (max-width: 700px) {
   nav.main-nav {
@@ -99,9 +109,10 @@ body.show-scrollbar {
   gap: 32px;
   background: #fff;
   padding: 0;
-  height: 60px;
+  min-height: 60px;
+  height: auto;
   margin: 0;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  box-shadow: none;
   border-bottom: none;
 }
 
@@ -113,23 +124,27 @@ body.show-scrollbar {
   font-size: 14px;
   letter-spacing: 0.5px;
   color: #bcbcb6;
-  padding: 0 20px;
-  height: 100%;
-  display: flex;
-  align-items: center; /* vertically center text */
+  padding: 9px 20px 6px 20px; /* 9px above, 6px below for visual balance */
   margin: 0 12px;
-  border-bottom: 1px solid transparent; /* THIN underline, 1px */
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
   cursor: pointer;
   text-decoration: none;
   outline: none;
+  border-radius: 0;
+  border-bottom: none;
+  transition: color 0.18s, text-decoration 0.18s;
+  box-shadow: none;
   position: relative;
-  transition: border-bottom 0.18s;
 }
 
 .isp-tab-btn.active,
 .isp-tab-btn[aria-current="page"] {
   color: #e6dbb9;
-  border-bottom: 1px solid #e6dbb9; /* THIN underline, goldish */
+  text-decoration: underline;
+  text-underline-offset: 3px; /* make underline close to text */
+  text-decoration-thickness: 1.5px;
   cursor: default;
 }
 
@@ -137,12 +152,15 @@ body.show-scrollbar {
 .isp-tab-btn[aria-current="page"]:hover,
 .isp-tab-btn.active:focus,
 .isp-tab-btn[aria-current="page"]:focus {
-  border-bottom: 1px solid transparent;
+  text-decoration: none;
 }
 
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
-  border-bottom: 1px solid #bcbcb6; /* underline same as text color */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  color: #bcbcb6;
 }
 
 /* --- Subnav: WORLD / USA / SOUTH DAKOTA --- */
@@ -153,9 +171,10 @@ body.show-scrollbar {
   gap: 22px;
   background: #fff;
   padding: 0;
-  height: 40px;
+  min-height: 40px;
+  height: auto;
   margin: 0;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  box-shadow: none;
   border-bottom: none;
 }
 
@@ -167,23 +186,28 @@ body.show-scrollbar {
   font-size: 13px;
   color: #d4d4ce;
   letter-spacing: 0.04em;
-  padding: 0 18px;
-  height: 100%;
-  display: flex;
-  align-items: center; /* vertically center text */
+  padding: 9px 18px 6px 18px; /* match section tab spacing */
+  margin: 0 4px;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
   cursor: pointer;
-  border-bottom: 1px solid transparent; /* THIN underline, 1px */
-  outline: none;
   text-decoration: none;
+  outline: none;
   border-radius: 4px;
   min-width: 44px;
-  transition: border-bottom 0.18s;
+  border-bottom: none;
+  box-shadow: none;
+  transition: color 0.18s, text-decoration 0.18s;
+  position: relative;
 }
 
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
-  border-bottom: 1px solid #e6dbb9; /* THIN underline, goldish */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
   cursor: default;
 }
 
@@ -191,12 +215,15 @@ body.show-scrollbar {
 .isp-subnav-btn[aria-current="page"]:hover,
 .isp-subnav-btn.active:focus,
 .isp-subnav-btn[aria-current="page"]:focus {
-  border-bottom: 1px solid transparent;
+  text-decoration: none;
 }
 
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
-  border-bottom: 1px solid #d4d4ce; /* underline same as text color */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  color: #d4d4ce;
 }
 
 .isp-tab-btn:focus-visible,
@@ -204,23 +231,24 @@ body.show-scrollbar {
   outline: 2px solid #e6dbb9;
 }
 
+/* ====== RESPONSIVE: ISP NAVS ====== */
 @media (max-width: 700px) {
   .isp-section-tabs {
     gap: 11px;
-    height: 36px;
+    min-height: 36px;
   }
   .isp-tab-btn {
     font-size: 13px;
     margin: 0 7px;
-    padding: 0 10px;
+    padding: 7px 10px 4px 10px;
   }
   .isp-subnav-row {
     gap: 7px;
-    height: 24px;
+    min-height: 24px;
   }
   .isp-subnav-btn {
     font-size: 12px;
-    padding: 0 8px;
+    padding: 7px 8px 4px 8px;
     min-width: 32px;
   }
 }
