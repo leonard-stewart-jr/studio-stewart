@@ -57,9 +57,10 @@ nav.main-nav {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 32px; /* Top nav: keep as is */
   height: 76px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  width: 100vw; /* Ensure full width for perfect center alignment */
 }
 
 nav.main-nav a {
@@ -97,7 +98,7 @@ nav.main-nav a[aria-current="page"]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 32px;
+  gap: 22px; /* Middle nav: reduced from 32px */
   background: transparent;
   padding: 0;
   min-height: 60px;
@@ -105,6 +106,7 @@ nav.main-nav a[aria-current="page"]:hover {
   margin: 0;
   box-shadow: none;
   border-bottom: none;
+  width: 100vw; /* Match top nav width for center alignment */
 }
 
 .isp-tab-btn {
@@ -160,7 +162,7 @@ nav.main-nav a[aria-current="page"]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 22px;
+  gap: 12px; /* Bottom nav: reduced from 22px */
   background: transparent;
   padding: 0;
   min-height: 40px;
@@ -168,6 +170,7 @@ nav.main-nav a[aria-current="page"]:hover {
   margin: 0;
   box-shadow: none;
   border-bottom: none;
+  width: 100vw; /* Match top nav width for center alignment */
 }
 
 .isp-subnav-btn {
