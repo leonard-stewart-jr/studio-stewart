@@ -180,7 +180,6 @@ body.show-scrollbar {
   border-bottom: none;
   position: relative !important;
   z-index: 100 !important;
-  background: #fff !important;
 }
 
 .isp-subnav-btn {
