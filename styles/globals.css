@@ -101,7 +101,8 @@ body.show-scrollbar {
   padding: 0;
   height: 60px;
   margin: 0;
-  border-bottom: 1px solid #ececec; /* subtle shadow/border below this bar */
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  border-bottom: none;
 }
 
 .isp-tab-btn {
@@ -154,7 +155,8 @@ body.show-scrollbar {
   padding: 0;
   height: 40px;
   margin: 0;
-  border-bottom: 1px solid #ececec; /* subtle shadow/border below this bar */
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  border-bottom: none;
 }
 
 .isp-subnav-btn {
