@@ -25,16 +25,8 @@ export default function IndependentStudio() {
         setActiveSection={setMainSection}
       />
 
-      {/* Divider between section tabs and subnav */}
+      {/* Divider between section tabs and content area */}
       <div className="nav-divider"></div>
-
-      {/* Show subnav only if HISTORY tab is active */}
-      {mainSection === "history" && (
-        <>
-          <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-          {/* (Divider after subnav removed as requested) */}
-        </>
-      )}
 
       <div style={{
         width: "100%",
@@ -46,6 +38,11 @@ export default function IndependentStudio() {
         alignItems: "center",
         marginTop: 0,
       }}>
+        {/* Show subnav only if HISTORY tab is active */}
+        {mainSection === "history" && (
+          <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+        )}
+
         {/* HISTORY: Show selected map/section */}
         {mainSection === "history" && (
           <>
