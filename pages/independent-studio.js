@@ -22,33 +22,22 @@ export default function IndependentStudio() {
       {/* --- Shadow divider BELOW main nav (header) --- */}
       <div className="nav-divider"></div>
 
-      {/* --- WHITE NAV WRAPPER (tabs + subnav only) --- */}
-      <div style={{
-        width: "100%",
-        background: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        margin: 0,
-        padding: 0,
-      }}>
-        {/* HISTORY / FUTURE Tabs */}
-        <SectionTabs
-          activeSection={mainSection}
-          setActiveSection={setMainSection}
-        />
-        {/* Divider below section tabs */}
-        <div className="nav-divider"></div>
-        {/* Show subnav only if HISTORY tab is active */}
-        {mainSection === "history" && (
-          <>
-            <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-            {/* Divider below WORLD/USA/SD subnav */}
-            <div className="nav-divider"></div>
-          </>
-        )}
-      </div>
-      {/* --- END WHITE NAV WRAPPER --- */}
+      {/* --- NAVIGATION LAYERS (NO WHITE BG) --- */}
+      {/* HISTORY / FUTURE Tabs */}
+      <SectionTabs
+        activeSection={mainSection}
+        setActiveSection={setMainSection}
+      />
+      {/* Divider below section tabs */}
+      <div className="nav-divider"></div>
+      {/* Show subnav only if HISTORY tab is active */}
+      {mainSection === "history" && (
+        <>
+          <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+          {/* Divider below WORLD/USA/SD subnav */}
+          <div className="nav-divider"></div>
+        </>
+      )}
 
       {/* --- CONTENT: Globe/Map, sits on background color --- */}
       {mainSection === "history" && (
