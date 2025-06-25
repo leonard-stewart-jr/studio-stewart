@@ -25,9 +25,16 @@ export default function IndependentStudio() {
         setActiveSection={setMainSection}
       />
 
+      {/* Divider between section tabs and subnav */}
+      <div className="nav-divider"></div>
+
       {/* Show subnav only if HISTORY tab is active */}
       {mainSection === "history" && (
-        <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+        <>
+          <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+          {/* Divider between subnav and content */}
+          <div className="nav-divider"></div>
+        </>
       )}
 
       <div style={{
