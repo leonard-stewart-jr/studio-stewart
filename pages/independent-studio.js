@@ -19,28 +19,59 @@ export default function IndependentStudio() {
 
   return (
     <>
-
-{/* NAVIGATION LAYERS IN "CARD" STYLE */}
-{/* Main nav: handled by layout/header, so only render cards from tabs down */}
-<div className="nav-card nav-card-mid" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-  <div style={{ width: 88, minWidth: 88 }} />
-  <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-    <SectionTabs
-      activeSection={mainSection}
-      setActiveSection={setMainSection}
-    />
-  </div>
-  <div style={{ width: 66, minWidth: 66 }} />
-</div>
-{mainSection === "history" && (
-  <div className="nav-card nav-card-bot" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-    <div style={{ width: 88, minWidth: 88 }} />
-    <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-      <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-    </div>
-    <div style={{ width: 66, minWidth: 66 }} />
-  </div>
-)}
+      {/* NAVIGATION LAYERS IN "CARD" STYLE" */}
+      {/* Main nav: handled by layout/header, so only render cards from tabs down */}
+      <div
+        className="nav-card nav-card-mid"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          boxSizing: "border-box"
+        }}
+      >
+        <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <SectionTabs
+            activeSection={mainSection}
+            setActiveSection={setMainSection}
+          />
+        </div>
+        <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+      </div>
+      {mainSection === "history" && (
+        <div
+          className="nav-card nav-card-bot"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            boxSizing: "border-box"
+          }}
+        >
+          <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+          </div>
+          <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+        </div>
+      )}
 
       {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
       {mainSection === "history" && (
@@ -57,18 +88,20 @@ export default function IndependentStudio() {
         </section>
       )}
       {mainSection === "future" && (
-        <div style={{
-          minHeight: 500,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 32,
-          color: "#192d4b",
-          fontWeight: 700,
-          letterSpacing: ".02em",
-          opacity: 0.7,
-        }}>
+        <div
+          style={{
+            minHeight: 500,
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 32,
+            color: "#192d4b",
+            fontWeight: 700,
+            letterSpacing: ".02em",
+            opacity: 0.7,
+          }}
+        >
           FUTURE CONTENT COMING SOON
         </div>
       )}
