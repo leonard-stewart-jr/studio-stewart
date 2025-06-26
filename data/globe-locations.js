@@ -467,3 +467,56 @@ Though later criticized for moral cruelty and harsh discipline, these colonies r
     }
   ]
 },
+{
+  name: "THE RISE OF THE NAZI CAMP SYSTEM (1933–1945)",
+  lat: 50.0359,
+  lon: 19.1783, // Auschwitz as central marker for Nazi camp network
+  timeline: [
+    {
+      year: "1933–1945",
+      title: "THE RISE OF THE NAZI CAMP SYSTEM",
+      content: `
+Following Adolf Hitler’s rise to power in 1933, Nazi Germany established a vast system of concentration camps across Germany and occupied Europe; these were not conventional prisons, but instruments of terror, labor, and extermination, operated outside the legal system and intended to silence political enemies, marginalize targeted groups, and later, implement the Final Solution.
+
+The first camp, Dachau, opened near Munich just weeks after Hitler became chancellor; initially created for political dissidents, it quickly became a model for hundreds more. The SS developed a tiered hierarchy of camps—transit, labor, and death—each designed to extract labor, inflict punishment, or conduct mass killings. Auschwitz, the largest and most infamous, functioned as all three; its design included electrified fencing, crematoria, gas chambers, forced barracks, and guard towers, making it an architecture of systemic annihilation.
+
+These camps operated beyond the framework of justice; no trials were held, and prisoners included Jews, Roma, homosexuals, Jehovah’s Witnesses, disabled people, Poles, Soviets, and others deemed enemies by the Nazi regime. Some camps emphasized psychological control through humiliation and overcrowding; others, like Buchenwald and Sachsenhausen, operated factories and quarries using slave labor.
+
+By 1945, an estimated 18 million people had passed through the Nazi camp system; over six million were murdered, many within these institutions. The legacy of this carceral structure fundamentally altered global human rights law, postwar justice systems, and prison ethics—serving as a permanent warning of how incarceration can become genocide under state ideology.
+      `,
+      images: [
+        {
+          src: "/images/isp/auschwitz-drone.jpg",
+          caption: "Auschwitz-Imagery — Drone image showing 12 buildings within Auschwitz."
+        },
+        {
+          src: "/images/isp/buchenwald-barracks-1945.png",
+          caption: "Buchenwald concentration camp barracks, post-liberation (1945) — Wooden housing blocks photographed after U.S. forces liberated the site, revealing overcrowded conditions."
+        },
+        {
+          src: "/images/isp/buchenwald-inmate-photo.jpg",
+          caption: "Buchenwald Inmate Photo — Image taken of prisoners by the US Army 6th armored division on April 11th, 1945."
+        },
+        {
+          src: "/images/isp/dachau-watchtower.jpg",
+          caption: "Dachau Watchtower — Dachau was created in 1933 and was one of the first Nazi concentration camps."
+        },
+        {
+          src: "/images/isp/dachau-liberation.jpg",
+          caption: "Dachau Liberation — Image taken of prisoners by the US Army’s 42nd Infantry Division, on April 29th, 1945."
+        }
+      ],
+      sources: [
+        "United States Holocaust Memorial Museum",
+        "Auschwitz-Birkenau State Museum Archives",
+        "Megargee J., Concentration Camps: A Historical Encyclopedia of the Nazi System",
+        "International Tracing Service Archives",
+        "Yad Vashem – The World Holocaust Remembrance Center",
+        "Concentration camps – The Holocaust Explained: Designed for schools",
+        "Four weeks in the hands of Hitler's hell-hounds : the Nazi murder camp of Dachau - The Wiener Holocaust Library",
+        "Pics: US troops liberated Dachau concentration camp 76 years ago | American Military News",
+        "US Forces Enter Buchenwald | Holocaust Encyclopedia"
+      ]
+    }
+  ]
+},
