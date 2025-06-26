@@ -564,4 +564,5 @@ This Scandinavian model—later adopted by Denmark and Finland—demonstrated si
       ]
     }
   ]
+}
 ];
