@@ -37,7 +37,7 @@ body {
   padding: 0;
   z-index: 20;
   background: #fff;
-  /* --- REMOVE THE PADDING LEFT/RIGHT --- */
+  /* No side padding - alignment handled by flex spacers in JSX */
 }
 .nav-card-bot {
   box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
@@ -48,7 +48,7 @@ body {
   padding: 0;
   z-index: 15;
   background: #fff;
-  /* --- REMOVE THE PADDING LEFT/RIGHT --- */
+  /* No side padding - alignment handled by flex spacers in JSX */
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
