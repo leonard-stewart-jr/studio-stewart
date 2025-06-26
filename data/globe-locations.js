@@ -20,7 +20,7 @@ These were the first known spaces built to contain people through state power. T
             caption: "Flaying of Rebels Relief (c. 661–631 BCE, Nineveh): Neo-Assyrian wall carving showing prisoners tortured as public warning under imperial justice."
           },
           {
-            src: "/images/isp/stele-of-hammurabi.jpg",
+            src: "/images/isp/stele-of-hammurabi.png",
             caption: "Stele of Hammurabi (c. 1754 BCE, Babylon): Stone pillar inscribed with Babylon’s legal code, including rules on imprisonment and physical retribution."
           },
           {
