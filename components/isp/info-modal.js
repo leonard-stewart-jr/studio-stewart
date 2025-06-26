@@ -1,8 +1,20 @@
 import styled from "styled-components";
 
-// Accepts marker object with { name, timeline: [{ year, title, content, images }] }
+// Accepts marker object with { name, timeline: [{ year, title, content, images, sources }] }
 export default function InfoModal({ open, onClose, marker }) {
   if (!open || !marker) return null;
+
+  // Find first event with sources, if any exist
+  let sources = null;
+  if (marker.timeline && marker.timeline.length > 0) {
+    for (const event of marker.timeline) {
+      if (event.sources && event.sources.length > 0) {
+        sources = event.sources;
+        break;
+      }
+    }
+  }
+
   return (
     <Overlay onClick={onClose}>
       <ModalContainer onClick={e => e.stopPropagation()}>
@@ -35,6 +47,18 @@ export default function InfoModal({ open, onClose, marker }) {
           <div>No timeline data available.</div>
         )}
         <CloseButton onClick={onClose}>Close</CloseButton>
+        {sources && (
+          <SourcesCorner>
+            <span>Sources:</span>
+            <ul>
+              {sources.map((src, i) => (
+                <li key={i}>
+                  {src}
+                </li>
+              ))}
+            </ul>
+          </SourcesCorner>
+        )}
       </ModalContainer>
     </Overlay>
   );
@@ -55,6 +79,7 @@ const ModalContainer = styled.div`
   max-height: 86vh;
   overflow-y: auto;
   box-shadow: 0 8px 40px #2228;
+  position: relative;
   > h2 {
     margin-top: 0;
     font-size: 1.6rem;
@@ -199,5 +224,32 @@ const CloseButton = styled.button`
     width: 100%;
     font-size: 1.11em;
     padding: 0.95rem 0;
+  }
+`;
+
+const SourcesCorner = styled.div`
+  position: absolute;
+  bottom: 16px;
+  right: 22px;
+  background: rgba(255,255,255,0.94);
+  color: #7c7c7c;
+  font-size: 11px;
+  border-radius: 8px;
+  padding: 8px 14px 8px 10px;
+  max-width: 220px;
+  box-shadow: 0 2px 8px #b1b1ae33;
+  opacity: 0.9;
+  z-index: 20;
+  pointer-events: auto;
+  ul {
+    margin: 0.3em 0 0 0;
+    padding-left: 13px;
+    list-style: disc;
+  }
+  span {
+    font-weight: bold;
+    color: #b32c2c;
+    font-size: 12px;
+    margin-right: 5px;
   }
 `;
