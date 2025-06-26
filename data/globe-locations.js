@@ -358,3 +358,65 @@ In each case, the floorplan became the primary instrument of control; space itse
     }
   ]
 },
+  {
+    name: "EASTERN STATE PENITENTIARY OPENS (c. 1829)",
+    lat: 39.9721,
+    lon: -75.1720, // Philadelphia, Pennsylvania, USA
+    timeline: [
+      {
+        year: "c. 1829",
+        title: "EASTERN STATE PENITENTIARY OPENS",
+        content: `
+Building on the shift toward surveillance-based and radial layouts, Eastern State Penitentiary brought the logic of spatial discipline into the American context; conceived by reformers including Benjamin Franklin and designed by architect John Haviland, it introduced the Pennsylvania System where solitary confinement was meant to lead to moral clarity through isolation and silence.
+
+Constructed across eleven acres and enclosed by thirty-foot granite walls, the prison used modern technologies like central heating, indoor plumbing, and skylights in each cell—called “Windows of God”—to encourage spiritual reflection and personal transformation.
+
+Its spoke-shaped design radiated seven long corridors from a central hub, allowing a small number of guards to silently watch over hundreds of inmates; the building itself became the method of discipline, replacing punishment with stillness and unseen control.
+
+Eastern State became one of the most influential prisons in global history; authors like Charles Dickens documented their visits, and over three hundred institutions copied its model before the rise of overcrowding led to the breakdown of solitary systems; it closed in 1971 but remains a preserved ruin that continues to tell the story of how architecture once shaped the soul.
+        `,
+        images: [
+          {
+            src: "/images/isp/eastern-capone-cell.jpg",
+            caption: "Al Capone’s Cell — Furnished with rugs, lamps, and a writing desk, this recreated room highlights the privileges granted to high profile inmates and the contrast between solitary ideals and actual conditions."
+          },
+          {
+            src: "/images/isp/eastern-standard-cell.jpg",
+            caption: "Standard Cell — A narrow stone room with vaulted ceiling, single skylight, and heavy wooden door illustrates the isolation and austerity at the core of the Pennsylvania System."
+          },
+          {
+            src: "/images/isp/eastern-exterior-facade.jpg",
+            caption: "Exterior front façade view — View of the fortress-like limestone walls and arched entryway from ground level, showing the imposing mass and defensive design that signaled authority to both inmates and public."
+          },
+          {
+            src: "/images/isp/eastern-aerial-1855.jpg",
+            caption: "Aerial lithograph, c. 1855 — Bird’s eye drawing by inmate 2954, showing complete compound from above."
+          },
+          {
+            src: "/images/isp/eastern-mugshot-c2559.jpg",
+            caption: "Mugshot, Inmate C-2559 — Falsely accused of the murder of a cat, he was pardoned in 1929."
+          },
+          {
+            src: "/images/isp/eastern-floorplan-1836.jpg",
+            caption: "Floorplan — Annotated floor plan of Eastern State Penitentiary in 1836 showing access, cells, and yards."
+          },
+          {
+            src: "/images/isp/eastern-aerial-modern.jpg",
+            caption: "Aerial View — Image of the complex in recent times."
+          },
+          {
+            src: "/images/isp/eastern-floorplan-bw.jpg",
+            caption: "Floorplan (black and white) — High-contrast architectural floorplan showing the radial organization and central hub of Eastern State Penitentiary."
+          }
+        ],
+        sources: [
+          "Eastern State Penitentiary Historic Structures Report, Library of Congress, and Pew Charitable Trusts",
+          "Zhang M., “Architecture of Redemption? Contradictions of Solitary Confinement at Eastern State Penitentiary”, ResearchGate",
+          "Patel S., “Prisoners of Solitude: Eastern State and Mental Health Outcomes”, NCIB PMC",
+          "Autopsy of Architecture – Architectural Analysis",
+          "JSTOR – Revisiting the History of American Solitary Confinement"
+        ]
+      }
+    ]
+  }
+];
