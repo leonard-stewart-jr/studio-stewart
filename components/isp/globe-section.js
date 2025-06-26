@@ -9,11 +9,13 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 0.6; // degrees, distance from cluster center
 const LONDON_WHEEL_ALTITUDE = 0.018;
-const DOT_SIZE = 1.2;
+const DOT_SIZE = 0.8;
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
+const CLUSTER_RING_RATIO = 0.7; // Ratio of ring diameter to main dot
+const WHEEL_DOT_SIZE = DOT_SIZE / 2; // Cluster dots are half size
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -30,6 +32,19 @@ function getLondonClusterCenter() {
   const lng =
     londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
   return { lat, lng };
+}
+
+// Utility: convert lat/lng/altitude to 3D xyz for Three.js globe radius 1
+function latLngAltToVec3(lat, lng, altitude = 0) {
+  // Globe radius is 1, altitude is fraction above surface
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  const r = 1 + altitude;
+  return new THREE.Vector3(
+    r * Math.sin(phi) * Math.cos(theta),
+    r * Math.cos(phi),
+    r * Math.sin(phi) * Math.sin(theta)
+  );
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -71,8 +86,14 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("mousedown", collapse);
   }, [londonExpanded]);
 
-  // Prepare pointsData
-  const { pointsData, objectsData, customPointObject } = useMemo(() => {
+  // Prepare pointsData, objectsData, linesData, customPointObject, customLineObject
+  const {
+    pointsData,
+    objectsData,
+    linesData,
+    customPointObject,
+    customLineObject,
+  } = useMemo(() => {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
@@ -89,7 +110,9 @@ export default function GlobeSection({ onMarkerClick }) {
     }));
 
     let objectsData = [];
+    let linesData = [];
     let customPointObject = undefined;
+    let customLineObject = undefined;
 
     if (!londonExpanded) {
       // Show one cluster dot for London as a custom object
@@ -103,22 +126,32 @@ export default function GlobeSection({ onMarkerClick }) {
       // Custom renderer for the cluster dot: white dot with red ring
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
-          // Outer red ring
+          // White dot (main)
           const group = new THREE.Group();
-          const ringGeom = new THREE.RingGeometry(0.38, 0.52, 48);
+          const dotRadius = DOT_SIZE * 0.5;
+          const ringOuter = dotRadius * CLUSTER_RING_RATIO;
+          const ringInner = ringOuter * 0.68;
+
+          // Outer red ring (centered on white dot)
+          const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
           const ringMat = new THREE.MeshBasicMaterial({
             color: CLUSTER_RING_COLOR,
             side: THREE.DoubleSide,
+            transparent: false,
           });
           const ring = new THREE.Mesh(ringGeom, ringMat);
           ring.renderOrder = 1;
           group.add(ring);
-          // Inner white dot
-          const dotGeom = new THREE.CircleGeometry(0.36, 36);
-          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+
+          // Main white dot
+          const dotGeom = new THREE.CircleGeometry(dotRadius, 36);
+          const dotMat = new THREE.MeshBasicMaterial({
+            color: CLUSTER_CENTER_COLOR,
+          });
           const dot = new THREE.Mesh(dotGeom, dotMat);
           dot.renderOrder = 2;
           group.add(dot);
+
           group.userData = { markerId: "london-cluster" };
           return group;
         }
@@ -133,26 +166,44 @@ export default function GlobeSection({ onMarkerClick }) {
         const angle = (2 * Math.PI * idx) / N;
         // Offset by radius in degrees
         const lat =
-          getLondonClusterCenter().lat +
+          londonCenter.lat +
           wheelRadius * Math.cos(angle);
         const lng =
-          getLondonClusterCenter().lng +
+          londonCenter.lng +
           wheelRadius * Math.sin(angle);
         return {
           ...marker,
           lat,
           lng,
           color: DOT_COLOR,
-          size: DOT_SIZE,
+          size: WHEEL_DOT_SIZE,
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
+          actualLat: marker.lat,
+          actualLng: marker.lon,
         };
       });
-      // For wheel, all dots are red, same size
+
+      // Dotted, semi-transparent lines from cluster center to real locations
+      linesData = objectsData.map((obj) => ({
+        start: {
+          lat: londonCenter.lat,
+          lng: londonCenter.lng,
+          alt: LONDON_WHEEL_ALTITUDE,
+        },
+        end: {
+          lat: obj.actualLat,
+          lng: obj.actualLng,
+          alt: DOT_ALTITUDE,
+        },
+        markerId: obj.markerId,
+      }));
+
+      // Custom renderer for the cluster wheel dots (smaller red)
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
-          const geom = new THREE.CircleGeometry(0.32, 32);
+          const geom = new THREE.CircleGeometry(WHEEL_DOT_SIZE * 0.5, 32);
           const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
@@ -160,8 +211,40 @@ export default function GlobeSection({ onMarkerClick }) {
         }
         return null;
       };
+
+      // Custom renderer for the lines (dotted, semi-transparent red)
+      customLineObject = (lineObj) => {
+        const start = latLngAltToVec3(
+          lineObj.start.lat,
+          lineObj.start.lng,
+          lineObj.start.alt
+        );
+        const end = latLngAltToVec3(
+          lineObj.end.lat,
+          lineObj.end.lng,
+          lineObj.end.alt
+        );
+        // Make a dotted line
+        const points = [start, end];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        // Dotted: use LineDashedMaterial
+        const material = new THREE.LineDashedMaterial({
+          color: DOT_COLOR,
+          opacity: 0.53,
+          linewidth: 1,
+          transparent: true,
+          dashSize: 0.08,
+          gapSize: 0.065,
+        });
+
+        const line = new THREE.Line(geometry, material);
+        line.computeLineDistances(); // Needed for dashed lines!
+        line.renderOrder = 0;
+        return line;
+      };
     }
-    return { pointsData, objectsData, customPointObject };
+    return { pointsData, objectsData, linesData, customPointObject, customLineObject };
   }, [londonExpanded]);
 
   // Handle clicking on London cluster or wheel dots
@@ -261,6 +344,15 @@ export default function GlobeSection({ onMarkerClick }) {
           objectThreeObject={customPointObject}
           onObjectClick={handleObjectClick}
           onObjectHover={handleObjectHover}
+          //
+          linesData={londonExpanded ? linesData : []}
+          lineStartLat={(l) => l.start.lat}
+          lineStartLng={(l) => l.start.lng}
+          lineStartAltitude={(l) => l.start.alt}
+          lineEndLat={(l) => l.end.lat}
+          lineEndLng={(l) => l.end.lng}
+          lineEndAltitude={(l) => l.end.alt}
+          lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
         {/* Tooltip for marker hover */}
         {hovered && (
