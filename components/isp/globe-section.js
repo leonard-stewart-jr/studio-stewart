@@ -9,13 +9,14 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 0.6; // degrees, distance from cluster center
 const LONDON_WHEEL_ALTITUDE = 0.018;
-const DOT_SIZE = 0.6;
+const CLUSTER_DOT_SIZE = 1.2; // White cluster dot (largest)
+const DOT_SIZE = 0.8;          // Normal red dots
+const CLUSTER_WHEEL_DOT_SIZE = 0.6; // Red dots in cluster wheel
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
 const CLUSTER_RING_RATIO = 0.7; // Ratio of ring diameter to main dot
-const WHEEL_DOT_SIZE = DOT_SIZE / 2; // Cluster dots are half size
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -45,6 +46,23 @@ function latLngAltToVec3(lat, lng, altitude = 0) {
     r * Math.cos(phi),
     r * Math.sin(phi) * Math.sin(theta)
   );
+}
+
+// ---- Roman numeral utility ----
+function toRoman(num) {
+  const map = [
+    [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
+    [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
+    [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]
+  ];
+  let result = "";
+  for (let [n, sym] of map) {
+    while (num >= n) {
+      result += sym;
+      num -= n;
+    }
+  }
+  return result;
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -93,10 +111,19 @@ export default function GlobeSection({ onMarkerClick }) {
     linesData,
     customPointObject,
     customLineObject,
+    tocList
   } = useMemo(() => {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
+
+    // Table of Contents: Use ALL locations, in order as in globeLocations
+    const tocList = globeLocations.map((marker, idx) => ({
+      idx,
+      roman: toRoman(idx + 1),
+      name: marker.name,
+      marker
+    }));
 
     // Default: non-London dots
     let pointsData = nonLondonMarkers.map((m) => ({
@@ -123,12 +150,12 @@ export default function GlobeSection({ onMarkerClick }) {
           isLondonCluster: true,
         },
       ];
-      // Custom renderer for the cluster dot: white dot with red ring
+      // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (1.2)
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           // White dot (main)
           const group = new THREE.Group();
-          const dotRadius = DOT_SIZE * 0.9;
+          const dotRadius = CLUSTER_DOT_SIZE * 0.5;
           const ringOuter = dotRadius * CLUSTER_RING_RATIO;
           const ringInner = ringOuter * 0.75;
 
@@ -176,7 +203,7 @@ export default function GlobeSection({ onMarkerClick }) {
           lat,
           lng,
           color: DOT_COLOR,
-          size: WHEEL_DOT_SIZE,
+          size: CLUSTER_WHEEL_DOT_SIZE,
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
@@ -203,7 +230,7 @@ export default function GlobeSection({ onMarkerClick }) {
       // Custom renderer for the cluster wheel dots (smaller red)
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
-          const geom = new THREE.CircleGeometry(WHEEL_DOT_SIZE * 0.5, 32);
+          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5, 32);
           const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
@@ -244,7 +271,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return line;
       };
     }
-    return { pointsData, objectsData, linesData, customPointObject, customLineObject };
+    return { pointsData, objectsData, linesData, customPointObject, customLineObject, tocList };
   }, [londonExpanded]);
 
   // Handle clicking on London cluster or wheel dots
@@ -287,6 +314,16 @@ export default function GlobeSection({ onMarkerClick }) {
   const globeWidth = Math.max(380, Math.min(950, vw * 0.88));
   const globeHeight = Math.max(340, Math.min(520, vw * 0.42));
 
+  // TOC click handler
+  function handleTOCClick(marker) {
+    onMarkerClick(marker);
+    setLondonExpanded(false);
+    setHovered(null);
+  }
+
+  // Responsive: stack on mobile, row on desktop
+  const isMobile = vw < 800;
+
   return (
     <section
       className="isp-globe-section"
@@ -295,8 +332,9 @@ export default function GlobeSection({ onMarkerClick }) {
         minHeight: 0,
         background: "transparent",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: isMobile ? "column" : "row",
         alignItems: "center",
+        justifyContent: "center",
         paddingTop: 0,
         paddingBottom: 0,
         marginTop: "-10px",
@@ -304,6 +342,7 @@ export default function GlobeSection({ onMarkerClick }) {
         overflow: "hidden",
       }}
     >
+      {/* Globe on the left */}
       <div
         style={{
           width: globeWidth,
@@ -313,7 +352,7 @@ export default function GlobeSection({ onMarkerClick }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: "0 auto",
+          margin: isMobile ? "0 auto 24px auto" : "0 0 0 0",
           padding: 0,
           background: "transparent",
           overflow: "unset",
@@ -397,6 +436,100 @@ export default function GlobeSection({ onMarkerClick }) {
           </div>
         )}
       </div>
+      {/* Table of Contents on the right */}
+      <nav
+        aria-label="Table of Contents"
+        style={{
+          marginLeft: isMobile ? 0 : 44,
+          marginRight: isMobile ? 0 : 0,
+          marginTop: isMobile ? 12 : 0,
+          minWidth: isMobile ? "100%" : 270,
+          maxWidth: isMobile ? "100%" : 320,
+          width: isMobile ? "100%" : 288,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: isMobile ? "flex-start" : "center",
+        }}
+      >
+        <div style={{
+          width: "100%",
+          background: "rgba(255,255,255,0.99)",
+          borderRadius: 16,
+          boxShadow: "0 2.5px 16px rgba(32,32,32,0.14)",
+          padding: isMobile ? "18px 10px 18px 16px" : "24px 22px 26px 22px",
+          border: "1px solid #f2eae2",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+        }}>
+          <div style={{
+            fontWeight: 700,
+            fontSize: 18,
+            marginBottom: 14,
+            color: "#b32c2c",
+            letterSpacing: ".06em",
+            textAlign: "left",
+            textTransform: "uppercase",
+            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+          }}>
+            TABLE OF CONTENTS
+          </div>
+          <ol style={{
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: isMobile ? 10 : 14,
+          }}>
+            {tocList.map((item, idx) => (
+              <li key={item.name}>
+                <button
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#b32c2c",
+                    fontWeight: 700,
+                    fontSize: 16.5,
+                    cursor: "pointer",
+                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "2.5px 0 2.5px 0",
+                    transition: "color 0.14s",
+                    borderRadius: 6,
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                  onClick={() => handleTOCClick(item.marker)}
+                  onMouseEnter={e => setHovered({ name: item.name, year: item.marker.timeline?.[0]?.year || "" })}
+                  onMouseLeave={e => setHovered(null)}
+                  tabIndex={0}
+                  aria-label={`Jump to ${item.name}`}
+                >
+                  <span style={{
+                    fontFamily: "serif",
+                    fontWeight: 400,
+                    fontSize: 17.5,
+                    minWidth: 28,
+                    letterSpacing: ".03em",
+                    marginRight: 5,
+                  }}>{item.roman}.</span>
+                  <span style={{
+                    flex: 1,
+                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    fontWeight: 700,
+                    fontSize: 15.6,
+                    letterSpacing: ".00em",
+                  }}>{item.name}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </nav>
     </section>
   );
 }
