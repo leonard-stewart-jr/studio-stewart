@@ -30,6 +30,9 @@ export default function GlobeSection({ onMarkerClick }) {
     []
   );
 
+  // Log the pointsData for debugging
+  console.log("GlobeSection pointsData:", pointsData);
+
   // Responsive width/height
   const vw =
     typeof window !== "undefined" ? window.innerWidth : 1400;
@@ -86,7 +89,7 @@ export default function GlobeSection({ onMarkerClick }) {
           globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
           pointsData={pointsData}
           pointLat="lat"
-          pointLng="lng" // <-- CRITICAL: lng, not lon
+          pointLng="lng"
           pointColor="color"
           pointRadius="size"
           pointAltitude={0.012}
