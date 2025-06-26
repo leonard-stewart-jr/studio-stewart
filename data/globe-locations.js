@@ -147,112 +147,68 @@ The Tower was used into the modern era, even during both World Wars; the last pr
     }
   ]
 },
-  {
-    name: "Panopticon Theory",
-    lat: 51.5074,
-    lon: -0.1278, // London, England
-    timeline: [
-      {
-        year: "1791",
-        title: "Panopticon Theory by Jeremy Bentham",
-        content:
-          "Bentham's Panopticon design introduced the idea of constant surveillance as a tool for control and reform. While never fully realized, its concept influenced prison architecture globally.",
-        images: [
-          { src: "/images/isp/panopticon-diagram.jpg", caption: "Diagram of Bentham's Panopticon." },
-          { src: "/images/isp/panopticon-sketch.jpg", caption: "Conceptual sketch of a surveillance-based prison." }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Eastern State Penitentiary",
-    lat: 39.9680,
-    lon: -75.1720, // Philadelphia, USA
-    timeline: [
-      {
-        year: "1829",
-        title: "Eastern State Penitentiary Opens",
-        content:
-          "Influenced prison architecture worldwide with its radial design and focus on solitary confinement as a means of rehabilitation.",
-        images: [
-          { src: "/images/isp/eastern-axon.jpg", caption: "Axonometric drawing of Eastern State." },
-          { src: "/images/isp/eastern-ruins.jpg", caption: "Photograph of the ruins." },
-          { src: "/images/isp/eastern-cell.jpg", caption: "Original cell interior." }
-        ]
-      }
-    ]
-  },
-  {
-    name: "British Penal Colonies",
-    lat: -42.8821,
-    lon: 147.3272, // Hobart, Tasmania (Australia as main example)
-    timeline: [
-      {
-        year: "1850s–1900s",
-        title: "British Penal Colonies",
-        content:
-          "Britain transported prisoners to Australia, India, and South Africa as forced colonial labor. These penal colonies shaped settlement patterns and local economies.",
-        images: [
-          { src: "/images/isp/convict-ship.jpg", caption: "Convict ship en route to Australia." },
-          { src: "/images/isp/penal-map.jpg", caption: "Map showing British penal colonies." },
-          { src: "/images/isp/port-arthur-ruins.jpg", caption: "Ruins of Port Arthur penal colony." }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Nazi Concentration Camps",
-    lat: 52.5200,
-    lon: 13.4050, // Berlin, Germany (center of Nazi regime)
-    timeline: [
-      {
-        year: "1933",
-        title: "Nazi Concentration Camps Begin",
-        content:
-          "Not traditional prisons, but extreme forms of incarceration and genocide. Camps like Auschwitz became symbols of state terror.",
-        images: [
-          { src: "/images/isp/camp-gate.jpg", caption: "Entrance to a Nazi concentration camp." },
-          { src: "/images/isp/camp-bunkers.jpg", caption: "Prisoner bunkers." },
-          { src: "/images/isp/camp-mugshots.jpg", caption: "Prisoner mugshots." },
-          { src: "/images/isp/camp-graffiti.jpg", caption: "Resistance graffiti from inside the camps." }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Scandinavian Prison Reform",
-    lat: 59.9139,
-    lon: 10.7522, // Oslo, Norway
-    timeline: [
-      {
-        year: "1960s–70s",
-        title: "Scandinavian Prison Reform",
-        content:
-          "Norway and Sweden pioneered a model focused on rehabilitation, dignity, and humane treatment, influencing modern prison reform worldwide.",
-        images: [
-          { src: "/images/isp/halden-prison.jpg", caption: "Halden Prison's humane interiors." },
-          { src: "/images/isp/halden-cell.jpg", caption: "Example of a dignified prison cell." },
-          { src: "/images/isp/halden-communal.jpg", caption: "Communal living unit in a Scandinavian prison." }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Abolition Movements & Global Reform",
-    lat: 52.0705,
-    lon: 4.3007, // The Hague, Netherlands (symbolic for global reform)
-    timeline: [
-      {
-        year: "2000s–Present",
-        title: "Abolition Movements & Global Reform",
-        content:
-          "Pushback against mass incarceration and privatization grows globally. Grassroots movements and new prison models in places like the Netherlands and Norway advocate for alternatives to incarceration.",
-        images: [
-          { src: "/images/isp/prison-protest.jpg", caption: "Protest against mass incarceration." },
-          { src: "/images/isp/reform-poster.jpg", caption: "Poster supporting prison reform." },
-          { src: "/images/isp/new-facility.jpg", caption: "Photo from a modern, humane facility." }
-        ]
-      }
-    ]
-  }
-];
+{
+  name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM (c. 1188–1902 CE)",
+  lat: 51.5153,
+  lon: -0.1012, // Newgate Street and Old Bailey, City of London
+  timeline: [
+    {
+      year: "c. 1188–1902 CE",
+      title: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM",
+      content: `
+Newgate Prison began as a small city jail built into one of London’s ancient Roman gates, established around 1188 as part of Henry II’s legal reforms. Over the next seven centuries it became a symbol of the brutality, spectacle, and chaos of England’s prison system; known for overcrowding, filth, disease, and public executions, Newgate reflected how deeply punishment was tied to fear and public control.
+
+By the 1400s, reformers pushed for some division between men, women, and debtors, but conditions remained horrific for most. Rebuilt after the Great Fire of London by Christopher Wren, and then redesigned in the 1770s by George Dance the Younger after the Gordon Riots, the prison took on a fortress-like appearance with blank stone walls and narrow corridors; this design became known as terrible architecture, where the building itself was meant to intimidate.
+
+Public hangings outside Newgate drew crowds of thousands well into the 1800s, and in one event in 1807, over thirty spectators were crushed to death. These violent spectacles, along with growing advocacy from reformers like Elizabeth Fry, helped shift views on incarceration and led to real changes in how prisoners—especially women and children—were treated.
+
+Newgate’s reputation was shaped by literature as much as architecture; writers like Charles Dickens and Daniel Defoe visited and wrote about its conditions, stirring public outrage. The prison finally closed in 1902 and was demolished two years later, replaced by the Central Criminal Court, known as the Old Bailey. Today, only part of the wall remains, but its legacy continues in every prison that followed.
+      `,
+      images: [
+        {
+          src: "/images/isp/newgate-door.jpg",
+          caption: "Prison Door (wooden and iron reinforced) — Heavy door from Newgate’s interior wing, showing the physical weight of confinement and daily control."
+        },
+        {
+          src: "/images/isp/newgate-whipping-post.jpg",
+          caption: "Whipping Post — Used for corporal punishment inside the yard, this post was part of the prison’s disciplinary routine."
+        },
+        {
+          src: "/images/isp/newgate-restraints.jpg",
+          caption: "Waist Belt and Cuffs (restraints) — Iron restraints used on prisoners during transit or solitary confinement to limit movement and resistance."
+        },
+        {
+          src: "/images/isp/newgate-truncheon.jpg",
+          caption: "Truncheon (wooden baton) — Standard issue for Newgate guards, used for crowd control and cell enforcement in the 1800s."
+        },
+        {
+          src: "/images/isp/newgate-axe.jpg",
+          caption: "Executioner’s Axe — Believed to have been used at public executions tied to the Old Bailey, it symbolizes Newgate’s long role in capital punishment."
+        },
+        {
+          src: "/images/isp/newgate-church-painting.jpg",
+          caption: "Painting from the Garden of St Sepulchre’s Church — View looking toward Newgate from the churchyard that once rang its bell to signal executions."
+        },
+        {
+          src: "/images/isp/newgate-yard.jpg",
+          caption: "Exercise Yard (interior scene) — Engraving of prisoners under guard in Newgate’s central courtyard, showing routine, exposure, and overcrowding."
+        },
+        {
+          src: "/images/isp/newgate-condemned-cell.jpg",
+          caption: "Condemned Cell (stone-walled chamber) — Cell where prisoners spent their final days before execution, often alone and under constant surveillance."
+        },
+        {
+          src: "/images/isp/newgate-court.jpg",
+          caption: "Court (Old Bailey courtroom view) — Depiction of the adjoining court where prisoners were tried, sentenced, and sometimes walked directly to execution."
+        }
+      ],
+      sources: [
+        "London Museum – History of Newgate Prison",
+        "Historic England – Newgate Architecture",
+        "Ancient Origins – Gordon Riots and Prison Fire",
+        "Soane Museum – Prison Plans and Engravings",
+        "Museum of London – Newgate Prison Object Collection and Stories"
+      ]
+    }
+  ]
+},
