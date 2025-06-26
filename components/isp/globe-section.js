@@ -7,9 +7,9 @@ import * as THREE from "three";
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
-const LONDON_WHEEL_RADIUS = 0.6; // degrees, distance from cluster center
+const LONDON_WHEEL_RADIUS = 0.6;
 const LONDON_WHEEL_ALTITUDE = 0.018;
-const CLUSTER_DOT_SIZE = 1.2; // White cluster dot (largest)
+const CLUSTER_DOT_SIZE = 1.2; // White/red cluster dot (largest)
 const DOT_SIZE = 0.8;          // Normal red dots
 const CLUSTER_WHEEL_DOT_SIZE = 0.6; // Red dots in cluster wheel
 const DOT_ALTITUDE = 0.012;
@@ -17,6 +17,7 @@ const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
 const CLUSTER_RING_RATIO = 0.7; // Ratio of ring diameter to main dot
+const CLUSTER_RING_ALT_OFFSET = 0.002; // Altitude offset so ring sits above white dot
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -25,19 +26,15 @@ function getNonLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
 }
 function getLondonClusterCenter() {
-  // Average lat/lon of London markers
   const londonMarkers = getLondonMarkers();
   if (londonMarkers.length === 0) return { lat: 51.5, lng: -0.1 };
-  const lat =
-    londonMarkers.reduce((sum, m) => sum + m.lat, 0) / londonMarkers.length;
-  const lng =
-    londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
+  const lat = londonMarkers.reduce((sum, m) => sum + m.lat, 0) / londonMarkers.length;
+  const lng = londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
   return { lat, lng };
 }
 
 // Utility: convert lat/lng/altitude to 3D xyz for Three.js globe radius 1
 function latLngAltToVec3(lat, lng, altitude = 0) {
-  // Globe radius is 1, altitude is fraction above surface
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
   const r = 1 + altitude;
@@ -92,7 +89,6 @@ export default function GlobeSection({ onMarkerClick }) {
   useEffect(() => {
     if (!londonExpanded) return;
     const collapse = (e) => {
-      // Collapse only if not clicking on a dot
       if (
         !e.target.classList.contains("london-dot") &&
         !e.target.classList.contains("london-cluster-dot")
@@ -104,7 +100,7 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("mousedown", collapse);
   }, [londonExpanded]);
 
-  // Prepare pointsData, objectsData, linesData, customPointObject, customLineObject
+  // Prepare pointsData, objectsData, linesData, customPointObject, customLineObject, tocList
   const {
     pointsData,
     objectsData,
@@ -118,12 +114,18 @@ export default function GlobeSection({ onMarkerClick }) {
     const londonCenter = getLondonClusterCenter();
 
     // Table of Contents: Use ALL locations, in order as in globeLocations
-    const tocList = globeLocations.map((marker, idx) => ({
-      idx,
-      roman: toRoman(idx + 1),
-      name: marker.name,
-      marker
-    }));
+    // --- PATCH: Update titles for 1 and 2 to match custom titles ---
+    const tocList = globeLocations.map((marker, idx) => {
+      let overrideName = marker.name;
+      if (idx === 0) overrideName = "MESOPOTAMIA: THE FIRST PRISONS";
+      if (idx === 1) overrideName = "THE MAMERTINE PRISON (CARCER TULLIANUM)";
+      return {
+        idx,
+        roman: toRoman(idx + 1),
+        name: overrideName,
+        marker
+      }
+    });
 
     // Default: non-London dots
     let pointsData = nonLondonMarkers.map((m) => ({
@@ -148,18 +150,25 @@ export default function GlobeSection({ onMarkerClick }) {
           ...londonCenter,
           markerId: "london-cluster",
           isLondonCluster: true,
+          altitude: DOT_ALTITUDE,
         },
       ];
       // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (1.2)
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
-          // White dot (main)
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 0.5;
+          // White dot at base altitude
+          const dotGeom = new THREE.CircleGeometry(dotRadius, 36);
+          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+          const dot = new THREE.Mesh(dotGeom, dotMat);
+          dot.renderOrder = 2;
+          dot.position.set(0, 0, 0);
+          group.add(dot);
+
+          // Red ring, slightly above base altitude for visibility
           const ringOuter = dotRadius * CLUSTER_RING_RATIO;
           const ringInner = ringOuter * 0.75;
-
-          // Outer red ring (centered on white dot)
           const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
           const ringMat = new THREE.MeshBasicMaterial({
             color: CLUSTER_RING_COLOR,
@@ -167,17 +176,9 @@ export default function GlobeSection({ onMarkerClick }) {
             transparent: false,
           });
           const ring = new THREE.Mesh(ringGeom, ringMat);
-          ring.renderOrder = 1;
+          ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100); // move up slightly (100x for scale)
+          ring.renderOrder = 3;
           group.add(ring);
-
-          // Main white dot
-          const dotGeom = new THREE.CircleGeometry(dotRadius, 36);
-          const dotMat = new THREE.MeshBasicMaterial({
-            color: CLUSTER_CENTER_COLOR,
-          });
-          const dot = new THREE.Mesh(dotGeom, dotMat);
-          dot.renderOrder = 2;
-          group.add(dot);
 
           group.userData = { markerId: "london-cluster" };
           return group;
@@ -189,15 +190,9 @@ export default function GlobeSection({ onMarkerClick }) {
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS;
       objectsData = londonMarkers.map((marker, idx) => {
-        // Distribute points evenly around a circle
         const angle = (2 * Math.PI * idx) / N;
-        // Offset by radius in degrees
-        const lat =
-          londonCenter.lat +
-          wheelRadius * Math.cos(angle);
-        const lng =
-          londonCenter.lng +
-          wheelRadius * Math.sin(angle);
+        const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
+        const lng = londonCenter.lng + wheelRadius * Math.sin(angle);
         return {
           ...marker,
           lat,
@@ -251,11 +246,8 @@ export default function GlobeSection({ onMarkerClick }) {
           lineObj.end.lng,
           lineObj.end.alt
         );
-        // Make a dotted line
         const points = [start, end];
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-        // Dotted: use LineDashedMaterial
         const material = new THREE.LineDashedMaterial({
           color: DOT_COLOR,
           opacity: 0.53,
@@ -264,9 +256,8 @@ export default function GlobeSection({ onMarkerClick }) {
           dashSize: 0.08,
           gapSize: 0.065,
         });
-
         const line = new THREE.Line(geometry, material);
-        line.computeLineDistances(); // Needed for dashed lines!
+        line.computeLineDistances();
         line.renderOrder = 0;
         return line;
       };
@@ -276,12 +267,10 @@ export default function GlobeSection({ onMarkerClick }) {
 
   // Handle clicking on London cluster or wheel dots
   const handleObjectClick = (obj) => {
-    // Wheel collapsed: expand on cluster dot click
     if (obj && obj.markerId === "london-cluster") {
       setLondonExpanded(true);
       setHovered(null);
     } else if (obj && obj.isLondonWheel) {
-      // Wheel expanded: click a London dot to open info and collapse
       const marker = getLondonMarkers().find((m) => m.name === obj.markerId);
       if (marker) {
         onMarkerClick(marker);
@@ -309,10 +298,9 @@ export default function GlobeSection({ onMarkerClick }) {
   };
 
   // Responsive width/height
-  const vw =
-    typeof window !== "undefined" ? window.innerWidth : 1400;
-  const globeWidth = Math.max(380, Math.min(950, vw * 0.88));
-  const globeHeight = Math.max(340, Math.min(520, vw * 0.42));
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
+  const globeWidth = Math.max(480, Math.min(950, vw * 0.88));
+  const globeHeight = Math.max(420, Math.min(520, vw * 0.52));
 
   // TOC click handler
   function handleTOCClick(marker) {
@@ -348,7 +336,7 @@ export default function GlobeSection({ onMarkerClick }) {
           width: globeWidth,
           height: globeHeight,
           maxWidth: 950,
-          minWidth: 320,
+          minWidth: 340,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -407,8 +395,7 @@ export default function GlobeSection({ onMarkerClick }) {
               borderRadius: 7,
               boxShadow: "0 1.5px 12px rgba(32,32,32,0.15)",
               padding: "10px 16px",
-              fontFamily:
-                "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
               fontSize: 15,
               minWidth: 120,
               maxWidth: 260,
@@ -440,38 +427,42 @@ export default function GlobeSection({ onMarkerClick }) {
       <nav
         aria-label="Table of Contents"
         style={{
-          marginLeft: isMobile ? 0 : 44,
+          marginLeft: isMobile ? 0 : 38,
           marginRight: isMobile ? 0 : 0,
           marginTop: isMobile ? 12 : 0,
-          minWidth: isMobile ? "100%" : 270,
-          maxWidth: isMobile ? "100%" : 320,
-          width: isMobile ? "100%" : 288,
+          minWidth: isMobile ? "100%" : 210,
+          maxWidth: isMobile ? "100%" : 260,
+          width: isMobile ? "100%" : 210,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: isMobile ? "flex-start" : "center",
+          background: "none",
+          boxShadow: "none",
         }}
       >
         <div style={{
           width: "100%",
-          background: "rgba(255,255,255,0.99)",
-          borderRadius: 16,
-          boxShadow: "0 2.5px 16px rgba(32,32,32,0.14)",
-          padding: isMobile ? "18px 10px 18px 16px" : "24px 22px 26px 22px",
-          border: "1px solid #f2eae2",
+          background: "none",
+          borderRadius: 0,
+          boxShadow: "none",
+          padding: 0,
+          border: "none",
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
         }}>
           <div style={{
             fontWeight: 700,
-            fontSize: 18,
-            marginBottom: 14,
+            fontSize: 11,
+            marginBottom: 10,
             color: "#b32c2c",
-            letterSpacing: ".06em",
+            letterSpacing: ".12em",
             textAlign: "left",
             textTransform: "uppercase",
             fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            lineHeight: 1,
+            paddingLeft: 3,
           }}>
             TABLE OF CONTENTS
           </div>
@@ -481,48 +472,60 @@ export default function GlobeSection({ onMarkerClick }) {
             padding: 0,
             display: "flex",
             flexDirection: "column",
-            gap: isMobile ? 10 : 14,
+            gap: isMobile ? 7 : 7,
           }}>
             {tocList.map((item, idx) => (
-              <li key={item.name}>
+              <li key={item.name} style={{ width: "100%" }}>
                 <button
                   style={{
                     background: "none",
                     border: "none",
                     color: "#b32c2c",
-                    fontWeight: 700,
-                    fontSize: 16.5,
+                    fontWeight: 500,
+                    fontSize: 10.5,
                     cursor: "pointer",
                     fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                     display: "flex",
                     alignItems: "center",
-                    gap: 10,
-                    padding: "2.5px 0 2.5px 0",
-                    transition: "color 0.14s",
-                    borderRadius: 6,
+                    gap: 7,
+                    padding: "1.5px 0 1.5px 0",
+                    borderRadius: 4,
                     width: "100%",
                     textAlign: "left",
+                    lineHeight: 1.15,
+                    textTransform: "uppercase",
+                    letterSpacing: ".06em",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    transition: "color 0.14s",
                   }}
                   onClick={() => handleTOCClick(item.marker)}
                   onMouseEnter={e => setHovered({ name: item.name, year: item.marker.timeline?.[0]?.year || "" })}
                   onMouseLeave={e => setHovered(null)}
                   tabIndex={0}
                   aria-label={`Jump to ${item.name}`}
+                  title={item.name}
                 >
                   <span style={{
                     fontFamily: "serif",
                     fontWeight: 400,
-                    fontSize: 17.5,
-                    minWidth: 28,
+                    fontSize: 11.5,
+                    minWidth: 18,
                     letterSpacing: ".03em",
-                    marginRight: 5,
+                    marginRight: 2,
+                    color: "#b32c2c",
+                    opacity: 0.93,
                   }}>{item.roman}.</span>
                   <span style={{
                     flex: 1,
                     fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                    fontWeight: 700,
-                    fontSize: 15.6,
-                    letterSpacing: ".00em",
+                    fontWeight: 500,
+                    fontSize: 10.5,
+                    letterSpacing: ".06em",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
                   }}>{item.name}</span>
                 </button>
               </li>
