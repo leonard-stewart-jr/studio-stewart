@@ -2,7 +2,7 @@ export default [
   {
     name: "MESOPOTAMIA: THE FIRST PRISONS (c. 3200–1600 BCE)",
     lat: 32.5,
-    lon: 44.5, // Central Mesopotamia: Sumer, Akkad, Babylon (modern Iraq)
+    lon: 44.5,
     timeline: [
       {
         year: "c. 3200–1600 BCE",
@@ -46,7 +46,7 @@ These were the first known spaces built to contain people through state power. T
   {
     name: "THE MAMERTINE PRISON (CARCER TULLIANUM)",
     lat: 41.8931,
-    lon: 12.4828, // Capitoline Hill, Rome, Italy
+    lon: 12.4828,
     timeline: [
       {
         year: "c. 600–300 BCE",
@@ -94,8 +94,8 @@ What makes the Mamertine significant in prison history is that it marked a shift
   {
     name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON (c. 1078–1952 CE)",
     lat: 51.5081,
-    lon: -0.0759, // London, England
-    clusterGroup: "london", // <-- add this
+    lon: -0.0759,
+    clusterGroup: "london",
     timeline: [
       {
         year: "c. 1078–1952 CE",
@@ -151,7 +151,7 @@ The Tower was used into the modern era, even during both World Wars; the last pr
   {
     name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM (c. 1188–1902 CE)",
     lat: 51.5153,
-    lon: -0.1012, // Newgate Street and Old Bailey, City of London
+    lon: -0.1012,
     clusterGroup: "london",
     timeline: [
       {
@@ -217,7 +217,7 @@ Newgate’s reputation was shaped by literature as much as architecture; writers
   {
     name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON (c. 1557 CE)",
     lat: 51.0543,
-    lon: 3.7215, // Ghent, Austrian Netherlands (modern Belgium)
+    lon: 3.7215,
     timeline: [
       {
         year: "c. 1557 CE",
@@ -261,7 +261,7 @@ While critics later described it as overly militarized, the Maison de Force laid
   {
     name: "PANOPTICON THEORY BY JEREMY BENTHAM (c. 1791)",
     lat: 51.5,
-    lon: -0.1, // England (Proposed; never fully built)
+    lon: -0.1,
     clusterGroup: "london",
     timeline: [
       {
@@ -312,7 +312,7 @@ Bentham was also one of the key proponents of Utilitarianism, the ethical theory
   {
     name: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE (c. 1844–1884)",
     lat: 51.53,
-    lon: -0.11, // London as central map marker
+    lon: -0.11,
     clusterGroup: "london",
     timeline: [
       {
@@ -364,7 +364,7 @@ In each case, the floorplan became the primary instrument of control; space itse
   {
     name: "EASTERN STATE PENITENTIARY OPENS (c. 1829)",
     lat: 39.9721,
-    lon: -75.1720, // Philadelphia, Pennsylvania, USA
+    lon: -75.1720,
     timeline: [
       {
         year: "c. 1829",
@@ -425,7 +425,7 @@ Eastern State became one of the most influential prisons in global history; auth
   {
     name: "BRITISH PENAL COLONIES (c. 1850s–1900s)",
     lat: -43.153,
-    lon: 147.857, // Port Arthur, Tasmania as primary marker
+    lon: 147.857,
     timeline: [
       {
         year: "c. 1850s–1900s",
@@ -473,7 +473,7 @@ Though later criticized for moral cruelty and harsh discipline, these colonies r
   {
     name: "THE RISE OF THE NAZI CAMP SYSTEM (1933–1945)",
     lat: 50.0359,
-    lon: 19.1783, // Auschwitz as central marker for Nazi camp network
+    lon: 19.1783,
     timeline: [
       {
         year: "1933–1945",
@@ -526,7 +526,7 @@ By 1945, an estimated 18 million people had passed through the Nazi camp system;
   {
     name: "SCANDINAVIAN PRISON REFORM (1960s–1970s)",
     lat: 59.1275,
-    lon: 11.3894, // Halden, Norway as central marker
+    lon: 11.3894,
     timeline: [
       {
         year: "1960s–1970s",
@@ -565,8 +565,8 @@ This Scandinavian model—later adopted by Denmark and Finland—demonstrated si
           "academic.oup.com – Sweden’s KRUM reforms",
           "Tidsskrift.dk – prisoners’ rights campaigns",
           "Wikipedia – Nordic prison education and Folkhemmet social model"
-      ]
-    }
-  ]
-}
+        ]
+      }
+    ]
+  }
 ];
