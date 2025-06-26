@@ -186,19 +186,19 @@ Newgate’s reputation was shaped by literature as much as architecture; writers
           caption: "Executioner’s Axe — Believed to have been used at public executions tied to the Old Bailey, it symbolizes Newgate’s long role in capital punishment."
         },
         {
-          src: "/images/isp/newgate-church-painting.jpg",
+          src: "/images/isp/newgate-church-painting.png",
           caption: "Painting from the Garden of St Sepulchre’s Church — View looking toward Newgate from the churchyard that once rang its bell to signal executions."
         },
         {
-          src: "/images/isp/newgate-yard.jpg",
+          src: "/images/isp/newgate-yard.png",
           caption: "Exercise Yard (interior scene) — Engraving of prisoners under guard in Newgate’s central courtyard, showing routine, exposure, and overcrowding."
         },
         {
-          src: "/images/isp/newgate-condemned-cell.jpg",
+          src: "/images/isp/newgate-condemned-cell.png",
           caption: "Condemned Cell (stone-walled chamber) — Cell where prisoners spent their final days before execution, often alone and under constant surveillance."
         },
         {
-          src: "/images/isp/newgate-court.jpg",
+          src: "/images/isp/newgate-court.png",
           caption: "Court (Old Bailey courtroom view) — Depiction of the adjoining court where prisoners were tried, sentenced, and sometimes walked directly to execution."
         }
       ],
