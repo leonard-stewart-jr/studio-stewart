@@ -256,3 +256,53 @@ While critics later described it as overly militarized, the Maison de Force laid
     }
   ]
 },
+{
+  name: "PANOPTICON THEORY BY JEREMY BENTHAM (c. 1791)",
+  lat: 51.5,
+  lon: -0.1, // England (Proposed; never fully built)
+  timeline: [
+    {
+      year: "c. 1791",
+      title: "PANOPTICON THEORY BY JEREMY BENTHAM",
+      content: `
+In 1791, philosopher and reformer Jeremy Bentham proposed the Panopticon, a circular prison design that allowed one guard to observe all inmates from a central tower, while remaining unseen. The core idea was that prisoners would never know when they were being watched, so they would begin to monitor their own behavior. This created a system of psychological control through visibility, not force.
+
+The structure was designed so that all cells faced inward, wrapping around a central inspection tower. The observer inside the tower could see out, but prisoners could not see in; there were blinds and architectural tricks that maintained one-way visibility. Prisoners were isolated from each other, placed in rows of identical cells, and kept under the assumption of constant surveillance.
+
+Bentham believed this model could apply beyond prisons—he suggested it could be used in schools, factories, hospitals, and asylums. His brother Samuel experimented with parts of the design while working for the British navy, but no true Panopticon was built during Bentham’s life.
+
+Even though it stayed mostly on paper, the Panopticon theory left a legacy. It changed how prisons were imagined—less about physical confinement and more about mental discipline. Later thinkers like Michel Foucault used the Panopticon as a symbol for modern systems of control, where power operates invisibly but constantly, training people to police themselves.
+
+Bentham was also one of the key proponents of Utilitarianism, the ethical theory that maximizes happiness and well-being, or the greatest good for the greatest number.
+      `,
+      images: [
+        {
+          src: "/images/isp/panopticon-section-plan.jpg",
+          caption: "Section/plan drawing of the Panopticon (1791) — Renders cross‑section and plan in one image, making clear how internal architecture supports surveillance: drawn by Willey Reveley."
+        },
+        {
+          src: "/images/isp/panopticon-interior.jpg",
+          caption: "Interior view of a Panopticon-like rotunda — A photograph of a built structure echoing Bentham’s model with radial tiers facing an observation tower."
+        },
+        {
+          src: "/images/isp/panopticon-interior2.jpg",
+          caption: "Alternate interior view — Another example of a Panopticon-inspired prison interior, showing surveillance lines and arrangement of cells."
+        },
+        {
+          src: "/images/isp/panopticon-section.jpg",
+          caption: "Section drawing of the Panopticon (1791) — View of a panopticon prison drawn by Willey Reveley."
+        },
+        {
+          src: "/images/isp/panopticon-plan.jpg",
+          caption: "Plan drawing of the Panopticon (1791) — View of the panopticon prison, by Reveley."
+        }
+      ],
+      sources: [
+        "British Library – Panopticon and Bentham Archive",
+        "University College London – The Bentham Project",
+        "Yale University Press – Foucault’s Discipline and Punish",
+        "Bowring, J. – The Works of Jeremy Bentham"
+      ]
+    }
+  ]
+},
