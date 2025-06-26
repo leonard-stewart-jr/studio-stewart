@@ -306,3 +306,55 @@ Bentham was also one of the key proponents of Utilitarianism, the ethical theory
     }
   ]
 },
+{
+  name: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE (c. 1844–1884)",
+  lat: 51.53,
+  lon: -0.11, // London as central map marker
+  timeline: [
+    {
+      year: "c. 1844–1884",
+      title: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE",
+      content: `
+After Bentham’s Panopticon proposed that architecture itself could control behavior, the nineteenth century became the testing ground for prisons that turned this idea into physical form. Across Europe and the Americas, new facilities were designed not just to confine but to dominate space; to watch, isolate, and restructure daily life through layout alone.
+
+Pentonville Prison in London, and Moabit Prison in Berlin, used radial planning with long corridors branching from a central surveillance point, enforcing silence, routine, and individual isolation. Prision Modelo in Madrid refined the radial idea with a central chapel, layered circulation, and segmented wings that echoed both religious and inspection-based order. American examples like the First Western Penitentiary in Pittsburgh, and Eastern State Penitentiary in Philadelphia, used linear wings or spoke-like cells to enforce solitary confinement as moral correction, with every inmate treated as both a body to monitor and a mind to reform.
+
+Maison de Force in Ghent was retrofitted into a militarized star layout; it maintained gender separation, chapel-centered circulation, and work zones designed for control through labor. The National Penitentiary in Mexico City, and the Central Prison in St Petersburg, applied the same geometry on a larger scale with mechanical additions like central plumbing, heating, and rigid security routes; proving the Panopticon theory was no longer a concept; it was a global structure.
+
+In each case, the floorplan became the primary instrument of control; space itself punished, trained, and observed. These were not just buildings, they were full-scale diagrams of the state’s power.
+      `,
+      images: [
+        {
+          src: "/images/isp/pentonville-prison-1844.jpg",
+          caption: "Pentonville Prison, London, 1844 — Radial layout with a central surveillance tower and spoke-like wings designed to isolate prisoners and monitor all movement from a single point."
+        },
+        {
+          src: "/images/isp/moabit-prison-berlin-1844.jpg",
+          caption: "Moabit Prison, Berlin, 1844 — Symmetrical layout combining solitary cell blocks with military precision, built to enforce silence, labor, and total visibility."
+        },
+        {
+          src: "/images/isp/prision-modelo-madrid-1877.jpg",
+          caption: "Prisión Modelo, Madrid, 1877 — Highly ordered radial floorplan with separate zones for rehabilitation, inspection, and religious reform built into architecture."
+        },
+        {
+          src: "/images/isp/national-penitentiary-mexico-1885.jpg",
+          caption: "National Penitentiary, Mexico City, 1885 — Octagonal plan integrating ventilation, plumbing, and guard routes into a rigid design shaped by European surveillance ideals."
+        },
+        // Maison de Force image REMOVED here
+        {
+          src: "/images/isp/first-western-penitentiary-pittsburgh-1820.jpg",
+          caption: "First Western Penitentiary, Pittsburgh, 1820 — One of the first American prisons to adopt solitary confinement, with narrow cell rows meant for constant control and reflection."
+        },
+        {
+          src: "/images/isp/central-prison-stpetersburg-1884.jpg",
+          caption: "Central Prison, St Petersburg, 1884 — Fortress-like circular floorplan with radiating cell blocks emphasizing separation, surveillance, and mechanical regulation."
+        }
+      ],
+      sources: [
+        "Johnston, N. (2006) Forms of Constraint: A History of Prison Architecture",
+        "OJP NCJRS – Forms of Constraint summary",
+        "Amazon – Forms of Constraint background and reviews"
+      ]
+    }
+  ]
+},
