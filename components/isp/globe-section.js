@@ -17,11 +17,8 @@ export default function GlobeSection({ onMarkerClick }) {
         ...marker,
         lat: marker.lat,
         lng: marker.lon, // <-- CRITICAL: use lng not lon for react-globe.gl
-        color:
-          marker.clusterGroup === "london"
-            ? "#b32c2c"
-            : "#224488",
-        size: marker.clusterGroup === "london" ? 1.6 : 1.2,
+        color: "#ff00cc", // bright magenta for all
+        size: 3.5,        // very large for visibility
         year:
           marker.timeline && marker.timeline.length > 0
             ? marker.timeline[0].year
@@ -48,6 +45,13 @@ export default function GlobeSection({ onMarkerClick }) {
     return () =>
       window.removeEventListener("mousemove", handleMouseMove);
   }, [hovered]);
+
+  // Optionally: Set initial globe view to show the whole world
+  useEffect(() => {
+    if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
+      globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
+    }
+  }, []);
 
   return (
     <section
@@ -92,7 +96,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pointLng="lng"
           pointColor="color"
           pointRadius="size"
-          pointAltitude={0.012}
+          pointAltitude={0.15} // much higher above surface for all points
           onPointHover={setHovered}
           onPointClick={onMarkerClick}
           backgroundColor="rgba(0,0,0,0)"
