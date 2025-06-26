@@ -20,27 +20,27 @@ export default function IndependentStudio() {
   return (
     <>
 
-      {/* NAVIGATION LAYERS IN "CARD" STYLE */}
-      {/* Main nav: handled by layout/header, so only render cards from tabs down */}
-      <div className="nav-card nav-card-mid" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <div style={{ width: 88, minWidth: 88 }} />
-        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-          <SectionTabs
-            activeSection={mainSection}
-            setActiveSection={setMainSection}
-          />
-        </div>
-        <div style={{ width: 66, minWidth: 66 }} />
-      </div>
-      {mainSection === "history" && (
-        <div className="nav-card nav-card-bot" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-          <div style={{ width: 88, minWidth: 88 }} />
-          <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-          </div>
-          <div style={{ width: 66, minWidth: 66 }} />
-        </div>
-      )}
+{/* NAVIGATION LAYERS IN "CARD" STYLE */}
+{/* Main nav: handled by layout/header, so only render cards from tabs down */}
+<div className="nav-card nav-card-mid" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+  <div style={{ width: 88, minWidth: 88 }} />
+  <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+    <SectionTabs
+      activeSection={mainSection}
+      setActiveSection={setMainSection}
+    />
+  </div>
+  <div style={{ width: 66, minWidth: 66 }} />
+</div>
+{mainSection === "history" && (
+  <div className="nav-card nav-card-bot" style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+    <div style={{ width: 88, minWidth: 88 }} />
+    <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+      <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+    </div>
+    <div style={{ width: 66, minWidth: 66 }} />
+  </div>
+)}
 
       {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
       {mainSection === "history" && (
