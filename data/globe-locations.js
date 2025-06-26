@@ -277,7 +277,7 @@ Bentham was also one of the key proponents of Utilitarianism, the ethical theory
       `,
       images: [
         {
-          src: "/images/isp/panopticon-section-plan.jpg",
+          src: "/images/isp/panopticon-section-plan.png",
           caption: "Section/plan drawing of the Panopticon (1791) — Renders cross‑section and plan in one image, making clear how internal architecture supports surveillance: drawn by Willey Reveley."
         },
         {
@@ -289,11 +289,11 @@ Bentham was also one of the key proponents of Utilitarianism, the ethical theory
           caption: "Alternate interior view — Another example of a Panopticon-inspired prison interior, showing surveillance lines and arrangement of cells."
         },
         {
-          src: "/images/isp/panopticon-section.jpg",
+          src: "/images/isp/panopticon-section.png",
           caption: "Section drawing of the Panopticon (1791) — View of a panopticon prison drawn by Willey Reveley."
         },
         {
-          src: "/images/isp/panopticon-plan.jpg",
+          src: "/images/isp/panopticon-plan.png",
           caption: "Plan drawing of the Panopticon (1791) — View of the panopticon prison, by Reveley."
         }
       ],
@@ -401,7 +401,7 @@ Eastern State became one of the most influential prisons in global history; auth
             caption: "Floorplan — Annotated floor plan of Eastern State Penitentiary in 1836 showing access, cells, and yards."
           },
           {
-            src: "/images/isp/eastern-aerial-modern.jpg",
+            src: "/images/isp/eastern-aerial-modern.png",
             caption: "Aerial View — Image of the complex in recent times."
           },
           {
@@ -415,8 +415,7 @@ Eastern State became one of the most influential prisons in global history; auth
           "Patel S., “Prisoners of Solitude: Eastern State and Mental Health Outcomes”, NCIB PMC",
           "Autopsy of Architecture – Architectural Analysis",
           "JSTOR – Revisiting the History of American Solitary Confinement"
-        ]
-      }
-    ]
-  }
-];
+      ]
+    }
+  ]
+},
