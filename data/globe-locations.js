@@ -91,15 +91,15 @@ What makes the Mamertine significant in prison history is that it marked a shift
       }
     ]
   },
-{
-  name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON (c. 1078–1952 CE)",
-  lat: 51.5081,
-  lon: -0.0759, // London, England
-  timeline: [
-    {
-      year: "c. 1078–1952 CE",
-      title: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON",
-      content: `
+  {
+    name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON (c. 1078–1952 CE)",
+    lat: 51.5081,
+    lon: -0.0759, // London, England
+    timeline: [
+      {
+        year: "c. 1078–1952 CE",
+        title: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON",
+        content: `
 Built under William the Conqueror around 1078, the Tower of London started as a fortress and royal residence but eventually became one of the most iconic prisons in history; for over 850 years, it was used to hold political enemies, prisoners of war, and even monarchs. It was never a typical prison; some inmates lived in furnished apartments while others were locked away in dark dungeons like the Beauchamp Tower, the Bloody Tower, or the Little Ease.
 
 The Little Ease was a stone cell barely large enough to stand or crouch, designed to inflict maximum psychological suffering; the Beauchamp Tower still holds graffiti scratched into the walls by prisoners like John Dudley and Thomas Abel, names, dates, symbols, and prayers carved during long years of confinement.
@@ -107,55 +107,55 @@ The Little Ease was a stone cell barely large enough to stand or crouch, designe
 Famous prisoners like Anne Boleyn, Guy Fawkes, Lady Jane Grey, and Elizabeth I were all held here under vastly different circumstances; during Tudor and Stuart reigns, the Tower was used as a place of political suppression, where punishment was often public and symbolic, aimed at showing the state’s control.
 
 The Tower was used into the modern era, even during both World Wars; the last prisoners were the Kray twins in 1952. The Tower of London matters to the story of prison history because it shows how confinement was not just about law but about spectacle, politics, and fear; it stood for centuries as a public symbol of what could happen when you challenged power.
-      `,
-      images: [
-        {
-          src: "/images/isp/beauchamp-graffiti.jpg",
-          caption: "Beauchamp Tower graffiti — Prisoner carvings etched into the walls by those awaiting trial or execution."
-        },
-        {
-          src: "/images/isp/little-ease-cell.jpg",
-          caption: "Little Ease cell — A stone cube designed to keep a person from sitting, standing, or lying comfortably."
-        },
-        {
-          src: "/images/isp/tower-london-modern.jpg",
-          caption: "Tower of London today — Aerial view showing the complex in the middle of the growing city."
-        },
-        {
-          src: "/images/isp/bowyer-tower-pencil.jpg",
-          caption: "Bowyer Tower (pencil drawing) — Nineteenth-century architectural sketch of the prison room interior, emphasizing line work and structure."
-        },
-        {
-          src: "/images/isp/bowyer-tower-painted.jpg",
-          caption: "Bowyer Tower (painted) — Nineteenth-century painting showing a more atmospheric, colored interior of the Tower’s prison room."
-        }
-      ],
-      sources: [
-        "Historic Royal Palaces",
-        "Imprisonment at the Tower",
-        "EnglishMonarchs",
-        "Tower of London History",
-        "Waymarking dot com",
-        "Past and Present of the Tower",
-        "Ancient Origins",
-        "The Cell Called Little Ease",
-        "The Tower of London: Past and Present - London, U. K. - There's a Book About It on Waymarking.com",
-        "https://englishmonarchs.co.uk/tower_london_13.html",
-        "Imprisonment at the Tower exhibition | Tower of London | Historic Royal Palaces",
-        "The Tiny Cell called \"Little Ease\" was the Most Feared Room in the Tower of London"
-      ]
-    }
-  ]
-},
-{
-  name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM (c. 1188–1902 CE)",
-  lat: 51.5153,
-  lon: -0.1012, // Newgate Street and Old Bailey, City of London
-  timeline: [
-    {
-      year: "c. 1188–1902 CE",
-      title: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM",
-      content: `
+        `,
+        images: [
+          {
+            src: "/images/isp/beauchamp-graffiti.jpg",
+            caption: "Beauchamp Tower graffiti — Prisoner carvings etched into the walls by those awaiting trial or execution."
+          },
+          {
+            src: "/images/isp/little-ease-cell.jpg",
+            caption: "Little Ease cell — A stone cube designed to keep a person from sitting, standing, or lying comfortably."
+          },
+          {
+            src: "/images/isp/tower-london-modern.jpg",
+            caption: "Tower of London today — Aerial view showing the complex in the middle of the growing city."
+          },
+          {
+            src: "/images/isp/bowyer-tower-pencil.jpg",
+            caption: "Bowyer Tower (pencil drawing) — Nineteenth-century architectural sketch of the prison room interior, emphasizing line work and structure."
+          },
+          {
+            src: "/images/isp/bowyer-tower-painted.jpg",
+            caption: "Bowyer Tower (painted) — Nineteenth-century painting showing a more atmospheric, colored interior of the Tower’s prison room."
+          }
+        ],
+        sources: [
+          "Historic Royal Palaces",
+          "Imprisonment at the Tower",
+          "EnglishMonarchs",
+          "Tower of London History",
+          "Waymarking dot com",
+          "Past and Present of the Tower",
+          "Ancient Origins",
+          "The Cell Called Little Ease",
+          "The Tower of London: Past and Present - London, U. K. - There's a Book About It on Waymarking.com",
+          "https://englishmonarchs.co.uk/tower_london_13.html",
+          "Imprisonment at the Tower exhibition | Tower of London | Historic Royal Palaces",
+          "The Tiny Cell called \"Little Ease\" was the Most Feared Room in the Tower of London"
+        ]
+      }
+    ]
+  },
+  {
+    name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM (c. 1188–1902 CE)",
+    lat: 51.5153,
+    lon: -0.1012, // Newgate Street and Old Bailey, City of London
+    timeline: [
+      {
+        year: "c. 1188–1902 CE",
+        title: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM",
+        content: `
 Newgate Prison began as a small city jail built into one of London’s ancient Roman gates, established around 1188 as part of Henry II’s legal reforms. Over the next seven centuries it became a symbol of the brutality, spectacle, and chaos of England’s prison system; known for overcrowding, filth, disease, and public executions, Newgate reflected how deeply punishment was tied to fear and public control.
 
 By the 1400s, reformers pushed for some division between men, women, and debtors, but conditions remained horrific for most. Rebuilt after the Great Fire of London by Christopher Wren, and then redesigned in the 1770s by George Dance the Younger after the Gordon Riots, the prison took on a fortress-like appearance with blank stone walls and narrow corridors; this design became known as terrible architecture, where the building itself was meant to intimidate.
@@ -163,64 +163,64 @@ By the 1400s, reformers pushed for some division between men, women, and debtors
 Public hangings outside Newgate drew crowds of thousands well into the 1800s, and in one event in 1807, over thirty spectators were crushed to death. These violent spectacles, along with growing advocacy from reformers like Elizabeth Fry, helped shift views on incarceration and led to real changes in how prisoners—especially women and children—were treated.
 
 Newgate’s reputation was shaped by literature as much as architecture; writers like Charles Dickens and Daniel Defoe visited and wrote about its conditions, stirring public outrage. The prison finally closed in 1902 and was demolished two years later, replaced by the Central Criminal Court, known as the Old Bailey. Today, only part of the wall remains, but its legacy continues in every prison that followed.
-      `,
-      images: [
-        {
-          src: "/images/isp/newgate-door.jpg",
-          caption: "Prison Door (wooden and iron reinforced) — Heavy door from Newgate’s interior wing, showing the physical weight of confinement and daily control."
-        },
-        {
-          src: "/images/isp/newgate-whipping-post.jpg",
-          caption: "Whipping Post — Used for corporal punishment inside the yard, this post was part of the prison’s disciplinary routine."
-        },
-        {
-          src: "/images/isp/newgate-restraints.jpg",
-          caption: "Waist Belt and Cuffs (restraints) — Iron restraints used on prisoners during transit or solitary confinement to limit movement and resistance."
-        },
-        {
-          src: "/images/isp/newgate-truncheon.jpg",
-          caption: "Truncheon (wooden baton) — Standard issue for Newgate guards, used for crowd control and cell enforcement in the 1800s."
-        },
-        {
-          src: "/images/isp/newgate-axe.jpg",
-          caption: "Executioner’s Axe — Believed to have been used at public executions tied to the Old Bailey, it symbolizes Newgate’s long role in capital punishment."
-        },
-        {
-          src: "/images/isp/newgate-church-painting.png",
-          caption: "Painting from the Garden of St Sepulchre’s Church — View looking toward Newgate from the churchyard that once rang its bell to signal executions."
-        },
-        {
-          src: "/images/isp/newgate-yard.png",
-          caption: "Exercise Yard (interior scene) — Engraving of prisoners under guard in Newgate’s central courtyard, showing routine, exposure, and overcrowding."
-        },
-        {
-          src: "/images/isp/newgate-condemned-cell.png",
-          caption: "Condemned Cell (stone-walled chamber) — Cell where prisoners spent their final days before execution, often alone and under constant surveillance."
-        },
-        {
-          src: "/images/isp/newgate-court.png",
-          caption: "Court (Old Bailey courtroom view) — Depiction of the adjoining court where prisoners were tried, sentenced, and sometimes walked directly to execution."
-        }
-      ],
-      sources: [
-        "London Museum – History of Newgate Prison",
-        "Historic England – Newgate Architecture",
-        "Ancient Origins – Gordon Riots and Prison Fire",
-        "Soane Museum – Prison Plans and Engravings",
-        "Museum of London – Newgate Prison Object Collection and Stories"
-      ]
-    }
-  ]
-},
-{
-  name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON (c. 1557 CE)",
-  lat: 51.0543,
-  lon: 3.7215, // Ghent, Austrian Netherlands (modern Belgium)
-  timeline: [
-    {
-      year: "c. 1557 CE",
-      title: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON",
-      content: `
+        `,
+        images: [
+          {
+            src: "/images/isp/newgate-door.jpg",
+            caption: "Prison Door (wooden and iron reinforced) — Heavy door from Newgate’s interior wing, showing the physical weight of confinement and daily control."
+          },
+          {
+            src: "/images/isp/newgate-whipping-post.jpg",
+            caption: "Whipping Post — Used for corporal punishment inside the yard, this post was part of the prison’s disciplinary routine."
+          },
+          {
+            src: "/images/isp/newgate-restraints.jpg",
+            caption: "Waist Belt and Cuffs (restraints) — Iron restraints used on prisoners during transit or solitary confinement to limit movement and resistance."
+          },
+          {
+            src: "/images/isp/newgate-truncheon.jpg",
+            caption: "Truncheon (wooden baton) — Standard issue for Newgate guards, used for crowd control and cell enforcement in the 1800s."
+          },
+          {
+            src: "/images/isp/newgate-axe.jpg",
+            caption: "Executioner’s Axe — Believed to have been used at public executions tied to the Old Bailey, it symbolizes Newgate’s long role in capital punishment."
+          },
+          {
+            src: "/images/isp/newgate-church-painting.png",
+            caption: "Painting from the Garden of St Sepulchre’s Church — View looking toward Newgate from the churchyard that once rang its bell to signal executions."
+          },
+          {
+            src: "/images/isp/newgate-yard.png",
+            caption: "Exercise Yard (interior scene) — Engraving of prisoners under guard in Newgate’s central courtyard, showing routine, exposure, and overcrowding."
+          },
+          {
+            src: "/images/isp/newgate-condemned-cell.png",
+            caption: "Condemned Cell (stone-walled chamber) — Cell where prisoners spent their final days before execution, often alone and under constant surveillance."
+          },
+          {
+            src: "/images/isp/newgate-court.png",
+            caption: "Court (Old Bailey courtroom view) — Depiction of the adjoining court where prisoners were tried, sentenced, and sometimes walked directly to execution."
+          }
+        ],
+        sources: [
+          "London Museum – History of Newgate Prison",
+          "Historic England – Newgate Architecture",
+          "Ancient Origins – Gordon Riots and Prison Fire",
+          "Soane Museum – Prison Plans and Engravings",
+          "Museum of London – Newgate Prison Object Collection and Stories"
+        ]
+      }
+    ]
+  },
+  {
+    name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON (c. 1557 CE)",
+    lat: 51.0543,
+    lon: 3.7215, // Ghent, Austrian Netherlands (modern Belgium)
+    timeline: [
+      {
+        year: "c. 1557 CE",
+        title: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON",
+        content: `
 One of the first prisons built specifically for rehabilitation, the Maison de Force was commissioned by city officials in 1557 to reflect more progressive values; it focused on structured reform through labour rather than physical punishment.
 
 The facility was designed with separate quarters for men, women, and debtors, and operated under a strict regime of silence, routine, and moral instruction; inmates spun wool, wove textiles, and participated in daily workshops, shared refectories, and chapel services.
@@ -228,43 +228,43 @@ The facility was designed with separate quarters for men, women, and debtors, an
 Its location adjacent to Ghent’s medieval Gravensteen Castle made it a tangible symbol of a new prison logic in the late 16th century; where the state aimed to correct rather than simply threaten or punish.
 
 While critics later described it as overly militarized, the Maison de Force laid the foundation for modern European prisons by blending isolation with enforced labour and moral order; it influenced Enlightenment-era penal philosophies across the continent.
-      `,
-      images: [
-        {
-          src: "/images/isp/maison-force-woodcut.jpg",
-          caption: "1557 woodcut from Praxis Rerum Civilium — Depicts Ghent’s “house of correction” showing guards and inmates in structured labor."
-        },
-        {
-          src: "/images/isp/maison-force-plan.jpg",
-          caption: "Plan of Maison de Force (1777, Howard) — Architectural layout emphasizing separate wings and central chapel."
-        },
-        {
-          src: "/images/isp/maison-force-plan2.png",
-          caption: "Alternate plan of Maison de Force (architect unknown) — Different historical drawing showing the prison’s radial divisions and circulation."
-        },
-        {
-          src: "/images/isp/maison-force-courtyard.jpg",
-          caption: "Central Courtyard, Maison de Force, Ghent (circa 1900) — A historic photograph from Ghent University Library, showing how the prison’s open exercise yard and radial wings remain intact."
-        }
-      ],
-      sources: [
-        "Cambridge University Press – Maison de Force at Ghent",
-        "A. Delierneux Jr. (1931) – Evolution of the Prison System in Belgium",
-        "Historic England – Plan of Maison de Force from Howard’s State of Prisons",
-        "Wikimedia Commons – Cour centrale de la Maison de Force"
-      ]
-    }
-  ]
-},
-{
-  name: "PANOPTICON THEORY BY JEREMY BENTHAM (c. 1791)",
-  lat: 51.5,
-  lon: -0.1, // England (Proposed; never fully built)
-  timeline: [
-    {
-      year: "c. 1791",
-      title: "PANOPTICON THEORY BY JEREMY BENTHAM",
-      content: `
+        `,
+        images: [
+          {
+            src: "/images/isp/maison-force-woodcut.jpg",
+            caption: "1557 woodcut from Praxis Rerum Civilium — Depicts Ghent’s “house of correction” showing guards and inmates in structured labor."
+          },
+          {
+            src: "/images/isp/maison-force-plan.jpg",
+            caption: "Plan of Maison de Force (1777, Howard) — Architectural layout emphasizing separate wings and central chapel."
+          },
+          {
+            src: "/images/isp/maison-force-plan2.png",
+            caption: "Alternate plan of Maison de Force (architect unknown) — Different historical drawing showing the prison’s radial divisions and circulation."
+          },
+          {
+            src: "/images/isp/maison-force-courtyard.jpg",
+            caption: "Central Courtyard, Maison de Force, Ghent (circa 1900) — A historic photograph from Ghent University Library, showing how the prison’s open exercise yard and radial wings remain intact."
+          }
+        ],
+        sources: [
+          "Cambridge University Press – Maison de Force at Ghent",
+          "A. Delierneux Jr. (1931) – Evolution of the Prison System in Belgium",
+          "Historic England – Plan of Maison de Force from Howard’s State of Prisons",
+          "Wikimedia Commons – Cour centrale de la Maison de Force"
+        ]
+      }
+    ]
+  },
+  {
+    name: "PANOPTICON THEORY BY JEREMY BENTHAM (c. 1791)",
+    lat: 51.5,
+    lon: -0.1, // England (Proposed; never fully built)
+    timeline: [
+      {
+        year: "c. 1791",
+        title: "PANOPTICON THEORY BY JEREMY BENTHAM",
+        content: `
 In 1791, philosopher and reformer Jeremy Bentham proposed the Panopticon, a circular prison design that allowed one guard to observe all inmates from a central tower, while remaining unseen. The core idea was that prisoners would never know when they were being watched, so they would begin to monitor their own behavior. This created a system of psychological control through visibility, not force.
 
 The structure was designed so that all cells faced inward, wrapping around a central inspection tower. The observer inside the tower could see out, but prisoners could not see in; there were blinds and architectural tricks that maintained one-way visibility. Prisoners were isolated from each other, placed in rows of identical cells, and kept under the assumption of constant surveillance.
@@ -274,47 +274,47 @@ Bentham believed this model could apply beyond prisons—he suggested it could b
 Even though it stayed mostly on paper, the Panopticon theory left a legacy. It changed how prisons were imagined—less about physical confinement and more about mental discipline. Later thinkers like Michel Foucault used the Panopticon as a symbol for modern systems of control, where power operates invisibly but constantly, training people to police themselves.
 
 Bentham was also one of the key proponents of Utilitarianism, the ethical theory that maximizes happiness and well-being, or the greatest good for the greatest number.
-      `,
-      images: [
-        {
-          src: "/images/isp/panopticon-section-plan.png",
-          caption: "Section/plan drawing of the Panopticon (1791) — Renders cross‑section and plan in one image, making clear how internal architecture supports surveillance: drawn by Willey Reveley."
-        },
-        {
-          src: "/images/isp/panopticon-interior.jpg",
-          caption: "Interior view of a Panopticon-like rotunda — A photograph of a built structure echoing Bentham’s model with radial tiers facing an observation tower."
-        },
-        {
-          src: "/images/isp/panopticon-interior2.jpg",
-          caption: "Alternate interior view — Another example of a Panopticon-inspired prison interior, showing surveillance lines and arrangement of cells."
-        },
-        {
-          src: "/images/isp/panopticon-section.png",
-          caption: "Section drawing of the Panopticon (1791) — View of a panopticon prison drawn by Willey Reveley."
-        },
-        {
-          src: "/images/isp/panopticon-plan.png",
-          caption: "Plan drawing of the Panopticon (1791) — View of the panopticon prison, by Reveley."
-        }
-      ],
-      sources: [
-        "British Library – Panopticon and Bentham Archive",
-        "University College London – The Bentham Project",
-        "Yale University Press – Foucault’s Discipline and Punish",
-        "Bowring, J. – The Works of Jeremy Bentham"
-      ]
-    }
-  ]
-},
-{
-  name: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE (c. 1844–1884)",
-  lat: 51.53,
-  lon: -0.11, // London as central map marker
-  timeline: [
-    {
-      year: "c. 1844–1884",
-      title: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE",
-      content: `
+        `,
+        images: [
+          {
+            src: "/images/isp/panopticon-section-plan.png",
+            caption: "Section/plan drawing of the Panopticon (1791) — Renders cross‑section and plan in one image, making clear how internal architecture supports surveillance: drawn by Willey Reveley."
+          },
+          {
+            src: "/images/isp/panopticon-interior.jpg",
+            caption: "Interior view of a Panopticon-like rotunda — A photograph of a built structure echoing Bentham’s model with radial tiers facing an observation tower."
+          },
+          {
+            src: "/images/isp/panopticon-interior2.jpg",
+            caption: "Alternate interior view — Another example of a Panopticon-inspired prison interior, showing surveillance lines and arrangement of cells."
+          },
+          {
+            src: "/images/isp/panopticon-section.png",
+            caption: "Section drawing of the Panopticon (1791) — View of a panopticon prison drawn by Willey Reveley."
+          },
+          {
+            src: "/images/isp/panopticon-plan.png",
+            caption: "Plan drawing of the Panopticon (1791) — View of the panopticon prison, by Reveley."
+          }
+        ],
+        sources: [
+          "British Library – Panopticon and Bentham Archive",
+          "University College London – The Bentham Project",
+          "Yale University Press – Foucault’s Discipline and Punish",
+          "Bowring, J. – The Works of Jeremy Bentham"
+        ]
+      }
+    ]
+  },
+  {
+    name: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE (c. 1844–1884)",
+    lat: 51.53,
+    lon: -0.11, // London as central map marker
+    timeline: [
+      {
+        year: "c. 1844–1884",
+        title: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE",
+        content: `
 After Bentham’s Panopticon proposed that architecture itself could control behavior, the nineteenth century became the testing ground for prisons that turned this idea into physical form. Across Europe and the Americas, new facilities were designed not just to confine but to dominate space; to watch, isolate, and restructure daily life through layout alone.
 
 Pentonville Prison in London, and Moabit Prison in Berlin, used radial planning with long corridors branching from a central surveillance point, enforcing silence, routine, and individual isolation. Prision Modelo in Madrid refined the radial idea with a central chapel, layered circulation, and segmented wings that echoed both religious and inspection-based order. American examples like the First Western Penitentiary in Pittsburgh, and Eastern State Penitentiary in Philadelphia, used linear wings or spoke-like cells to enforce solitary confinement as moral correction, with every inmate treated as both a body to monitor and a mind to reform.
@@ -322,42 +322,41 @@ Pentonville Prison in London, and Moabit Prison in Berlin, used radial planning 
 Maison de Force in Ghent was retrofitted into a militarized star layout; it maintained gender separation, chapel-centered circulation, and work zones designed for control through labor. The National Penitentiary in Mexico City, and the Central Prison in St Petersburg, applied the same geometry on a larger scale with mechanical additions like central plumbing, heating, and rigid security routes; proving the Panopticon theory was no longer a concept; it was a global structure.
 
 In each case, the floorplan became the primary instrument of control; space itself punished, trained, and observed. These were not just buildings, they were full-scale diagrams of the state’s power.
-      `,
-      images: [
-        {
-          src: "/images/isp/pentonville-prison-1844.jpg",
-          caption: "Pentonville Prison, London, 1844 — Radial layout with a central surveillance tower and spoke-like wings designed to isolate prisoners and monitor all movement from a single point."
-        },
-        {
-          src: "/images/isp/moabit-prison-berlin-1844.jpg",
-          caption: "Moabit Prison, Berlin, 1844 — Symmetrical layout combining solitary cell blocks with military precision, built to enforce silence, labor, and total visibility."
-        },
-        {
-          src: "/images/isp/prision-modelo-madrid-1877.jpg",
-          caption: "Prisión Modelo, Madrid, 1877 — Highly ordered radial floorplan with separate zones for rehabilitation, inspection, and religious reform built into architecture."
-        },
-        {
-          src: "/images/isp/national-penitentiary-mexico-1885.jpg",
-          caption: "National Penitentiary, Mexico City, 1885 — Octagonal plan integrating ventilation, plumbing, and guard routes into a rigid design shaped by European surveillance ideals."
-        },
-        // Maison de Force image REMOVED here
-        {
-          src: "/images/isp/first-western-penitentiary-pittsburgh-1820.jpg",
-          caption: "First Western Penitentiary, Pittsburgh, 1820 — One of the first American prisons to adopt solitary confinement, with narrow cell rows meant for constant control and reflection."
-        },
-        {
-          src: "/images/isp/central-prison-stpetersburg-1884.jpg",
-          caption: "Central Prison, St Petersburg, 1884 — Fortress-like circular floorplan with radiating cell blocks emphasizing separation, surveillance, and mechanical regulation."
-        }
-      ],
-      sources: [
-        "Johnston, N. (2006) Forms of Constraint: A History of Prison Architecture",
-        "OJP NCJRS – Forms of Constraint summary",
-        "Amazon – Forms of Constraint background and reviews"
-      ]
-    }
-  ]
-},
+        `,
+        images: [
+          {
+            src: "/images/isp/pentonville-prison-1844.jpg",
+            caption: "Pentonville Prison, London, 1844 — Radial layout with a central surveillance tower and spoke-like wings designed to isolate prisoners and monitor all movement from a single point."
+          },
+          {
+            src: "/images/isp/moabit-prison-berlin-1844.jpg",
+            caption: "Moabit Prison, Berlin, 1844 — Symmetrical layout combining solitary cell blocks with military precision, built to enforce silence, labor, and total visibility."
+          },
+          {
+            src: "/images/isp/prision-modelo-madrid-1877.jpg",
+            caption: "Prisión Modelo, Madrid, 1877 — Highly ordered radial floorplan with separate zones for rehabilitation, inspection, and religious reform built into architecture."
+          },
+          {
+            src: "/images/isp/national-penitentiary-mexico-1885.jpg",
+            caption: "National Penitentiary, Mexico City, 1885 — Octagonal plan integrating ventilation, plumbing, and guard routes into a rigid design shaped by European surveillance ideals."
+          },
+          {
+            src: "/images/isp/first-western-penitentiary-pittsburgh-1820.jpg",
+            caption: "First Western Penitentiary, Pittsburgh, 1820 — One of the first American prisons to adopt solitary confinement, with narrow cell rows meant for constant control and reflection."
+          },
+          {
+            src: "/images/isp/central-prison-stpetersburg-1884.jpg",
+            caption: "Central Prison, St Petersburg, 1884 — Fortress-like circular floorplan with radiating cell blocks emphasizing separation, surveillance, and mechanical regulation."
+          }
+        ],
+        sources: [
+          "Johnston, N. (2006) Forms of Constraint: A History of Prison Architecture",
+          "OJP NCJRS – Forms of Constraint summary",
+          "Amazon – Forms of Constraint background and reviews"
+        ]
+      }
+    ]
+  },
   {
     name: "EASTERN STATE PENITENTIARY OPENS (c. 1829)",
     lat: 39.9721,
@@ -415,19 +414,19 @@ Eastern State became one of the most influential prisons in global history; auth
           "Patel S., “Prisoners of Solitude: Eastern State and Mental Health Outcomes”, NCIB PMC",
           "Autopsy of Architecture – Architectural Analysis",
           "JSTOR – Revisiting the History of American Solitary Confinement"
-      ]
-    }
-  ]
-},
-{
-  name: "BRITISH PENAL COLONIES (c. 1850s–1900s)",
-  lat: -43.153,
-  lon: 147.857, // Port Arthur, Tasmania as primary marker
-  timeline: [
-    {
-      year: "c. 1850s–1900s",
-      title: "BRITISH PENAL COLONIES",
-      content: `
+        ]
+      }
+    ]
+  },
+  {
+    name: "BRITISH PENAL COLONIES (c. 1850s–1900s)",
+    lat: -43.153,
+    lon: 147.857, // Port Arthur, Tasmania as primary marker
+    timeline: [
+      {
+        year: "c. 1850s–1900s",
+        title: "BRITISH PENAL COLONIES",
+        content: `
 By the mid nineteenth century, Britain turned to convict transportation as a tool for both punishment and imperial expansion; the colonies served not just as destinations for the “undesirable” but as spaces of forced labor and territorial control.
 
 Australia became the most significant site of this strategy; from 1788 to 1868, over 162,000 convicts were shipped to the continent, many ending up in Port Arthur, Tasmania—a place reserved for repeat offenders and escapees, where labor included grinding flour by treadmill and timber cutting under conditions of silence and surveillance.
@@ -435,47 +434,47 @@ Australia became the most significant site of this strategy; from 1788 to 1868, 
 India and South Africa also absorbed transported prisoners who were used in public works, mining, and infrastructure—tying incarceration to imperial logistics; while less centralized than Australia’s system, they represented the same logic: punishment as utility.
 
 Though later criticized for moral cruelty and harsh discipline, these colonies redefined incarceration as a form of economic extraction and spatial dominance; they left behind ruins, administrative systems, and reform movements that carried their impact far beyond their original function.
-      `,
-      images: [
-        {
-          src: "/images/isp/port-arthur-ruins.png",
-          caption: "Port Arthur penitentiary ruins — This image shows the formal entrance of the main penitentiary structure at Port Arthur, Tasmania; the symmetrical sandstone facade with arched entryways and uniform masonry reflects the site’s rigid architectural order, representing both authority and containment in a distinctly colonial penal design."
-        },
-        {
-          src: "/images/isp/port-arthur-1863.jpg",
-          caption: "The Penitentiary at Port Arthur, c. 1863 — A historic photograph of the waterfront penitentiary in full operation; the multi-story brick structure with open-air upper levels and flanking staircases illustrates the scale and function of one of the harshest convict labor sites in the Australian penal colony system."
-        },
-        {
-          src: "/images/isp/convict-ship-engraving-1820.jpg",
-          caption: "Convict ship engraving, c. 1820 — This detailed 19th-century engraving captures a convict transport vessel anchored in harbor, with prisoners gathered on deck in chains and guards nearby; the image symbolizes Britain’s imperial penal strategy of exile and labor through forced maritime relocation."
-        },
-        {
-          src: "/images/isp/henry-clabby-mugshot-1874.jpg",
-          caption: "Mugshot of Henry Clabby, 1874 — Early photographic identification from Port Arthur’s system of documentation, taken by Thomas J. Nevin for Tasmanian prison records."
-        },
-        {
-          src: "/images/isp/norfolk-island-prison.jpg",
-          caption: "Prison Colony on Norfolk Island — This vintage image captures the prison buildings in structured condition with intact masonry and open courtyards, illustrating the orderly layout and architectural solidity of one of Britain’s harshest secondary penal colonies during its operational peak."
-        }
-      ],
-      sources: [
-        "National Museum of Australia – convict transportation and labor history",
-        "Port Arthur Historic Site Visitor Guide – penitentiary design and operations",
-        "Amusing Planet – architecture and psychological tactics of the Separate Prison",
-        "Thomas J. Nevin Tasmanian Archives – convict photography and inmate records"
-      ]
-    }
-  ]
-},
-{
-  name: "THE RISE OF THE NAZI CAMP SYSTEM (1933–1945)",
-  lat: 50.0359,
-  lon: 19.1783, // Auschwitz as central marker for Nazi camp network
-  timeline: [
-    {
-      year: "1933–1945",
-      title: "THE RISE OF THE NAZI CAMP SYSTEM",
-      content: `
+        `,
+        images: [
+          {
+            src: "/images/isp/port-arthur-ruins.png",
+            caption: "Port Arthur penitentiary ruins — This image shows the formal entrance of the main penitentiary structure at Port Arthur, Tasmania; the symmetrical sandstone facade with arched entryways and uniform masonry reflects the site’s rigid architectural order, representing both authority and containment in a distinctly colonial penal design."
+          },
+          {
+            src: "/images/isp/port-arthur-1863.jpg",
+            caption: "The Penitentiary at Port Arthur, c. 1863 — A historic photograph of the waterfront penitentiary in full operation; the multi-story brick structure with open-air upper levels and flanking staircases illustrates the scale and function of one of the harshest convict labor sites in the Australian penal colony system."
+          },
+          {
+            src: "/images/isp/convict-ship-engraving-1820.jpg",
+            caption: "Convict ship engraving, c. 1820 — This detailed 19th-century engraving captures a convict transport vessel anchored in harbor, with prisoners gathered on deck in chains and guards nearby; the image symbolizes Britain’s imperial penal strategy of exile and labor through forced maritime relocation."
+          },
+          {
+            src: "/images/isp/henry-clabby-mugshot-1874.jpg",
+            caption: "Mugshot of Henry Clabby, 1874 — Early photographic identification from Port Arthur’s system of documentation, taken by Thomas J. Nevin for Tasmanian prison records."
+          },
+          {
+            src: "/images/isp/norfolk-island-prison.jpg",
+            caption: "Prison Colony on Norfolk Island — This vintage image captures the prison buildings in structured condition with intact masonry and open courtyards, illustrating the orderly layout and architectural solidity of one of Britain’s harshest secondary penal colonies during its operational peak."
+          }
+        ],
+        sources: [
+          "National Museum of Australia – convict transportation and labor history",
+          "Port Arthur Historic Site Visitor Guide – penitentiary design and operations",
+          "Amusing Planet – architecture and psychological tactics of the Separate Prison",
+          "Thomas J. Nevin Tasmanian Archives – convict photography and inmate records"
+        ]
+      }
+    ]
+  },
+  {
+    name: "THE RISE OF THE NAZI CAMP SYSTEM (1933–1945)",
+    lat: 50.0359,
+    lon: 19.1783, // Auschwitz as central marker for Nazi camp network
+    timeline: [
+      {
+        year: "1933–1945",
+        title: "THE RISE OF THE NAZI CAMP SYSTEM",
+        content: `
 Following Adolf Hitler’s rise to power in 1933, Nazi Germany established a vast system of concentration camps across Germany and occupied Europe; these were not conventional prisons, but instruments of terror, labor, and extermination, operated outside the legal system and intended to silence political enemies, marginalize targeted groups, and later, implement the Final Solution.
 
 The first camp, Dachau, opened near Munich just weeks after Hitler became chancellor; initially created for political dissidents, it quickly became a model for hundreds more. The SS developed a tiered hierarchy of camps—transit, labor, and death—each designed to extract labor, inflict punishment, or conduct mass killings. Auschwitz, the largest and most infamous, functioned as all three; its design included electrified fencing, crematoria, gas chambers, forced barracks, and guard towers, making it an architecture of systemic annihilation.
@@ -483,52 +482,52 @@ The first camp, Dachau, opened near Munich just weeks after Hitler became chance
 These camps operated beyond the framework of justice; no trials were held, and prisoners included Jews, Roma, homosexuals, Jehovah’s Witnesses, disabled people, Poles, Soviets, and others deemed enemies by the Nazi regime. Some camps emphasized psychological control through humiliation and overcrowding; others, like Buchenwald and Sachsenhausen, operated factories and quarries using slave labor.
 
 By 1945, an estimated 18 million people had passed through the Nazi camp system; over six million were murdered, many within these institutions. The legacy of this carceral structure fundamentally altered global human rights law, postwar justice systems, and prison ethics—serving as a permanent warning of how incarceration can become genocide under state ideology.
-      `,
-      images: [
-        {
-          src: "/images/isp/auschwitz-drone.jpg",
-          caption: "Auschwitz-Imagery — Drone image showing 12 buildings within Auschwitz."
-        },
-        {
-          src: "/images/isp/buchenwald-barracks-1945.png",
-          caption: "Buchenwald concentration camp barracks, post-liberation (1945) — Wooden housing blocks photographed after U.S. forces liberated the site, revealing overcrowded conditions."
-        },
-        {
-          src: "/images/isp/buchenwald-inmate-photo.jpg",
-          caption: "Buchenwald Inmate Photo — Image taken of prisoners by the US Army 6th armored division on April 11th, 1945."
-        },
-        {
-          src: "/images/isp/dachau-watchtower.jpg",
-          caption: "Dachau Watchtower — Dachau was created in 1933 and was one of the first Nazi concentration camps."
-        },
-        {
-          src: "/images/isp/dachau-liberation.jpg",
-          caption: "Dachau Liberation — Image taken of prisoners by the US Army’s 42nd Infantry Division, on April 29th, 1945."
-        }
-      ],
-      sources: [
-        "United States Holocaust Memorial Museum",
-        "Auschwitz-Birkenau State Museum Archives",
-        "Megargee J., Concentration Camps: A Historical Encyclopedia of the Nazi System",
-        "International Tracing Service Archives",
-        "Yad Vashem – The World Holocaust Remembrance Center",
-        "Concentration camps – The Holocaust Explained: Designed for schools",
-        "Four weeks in the hands of Hitler's hell-hounds : the Nazi murder camp of Dachau - The Wiener Holocaust Library",
-        "Pics: US troops liberated Dachau concentration camp 76 years ago | American Military News",
-        "US Forces Enter Buchenwald | Holocaust Encyclopedia"
-      ]
-    }
-  ]
-},
-{
-  name: "SCANDINAVIAN PRISON REFORM (1960s–1970s)",
-  lat: 59.1275,
-  lon: 11.3894, // Halden, Norway as central marker
-  timeline: [
-    {
-      year: "1960s–1970s",
-      title: "SCANDINAVIAN PRISON REFORM",
-      content: `
+        `,
+        images: [
+          {
+            src: "/images/isp/auschwitz-drone.jpg",
+            caption: "Auschwitz-Imagery — Drone image showing 12 buildings within Auschwitz."
+          },
+          {
+            src: "/images/isp/buchenwald-barracks-1945.png",
+            caption: "Buchenwald concentration camp barracks, post-liberation (1945) — Wooden housing blocks photographed after U.S. forces liberated the site, revealing overcrowded conditions."
+          },
+          {
+            src: "/images/isp/buchenwald-inmate-photo.jpg",
+            caption: "Buchenwald Inmate Photo — Image taken of prisoners by the US Army 6th armored division on April 11th, 1945."
+          },
+          {
+            src: "/images/isp/dachau-watchtower.jpg",
+            caption: "Dachau Watchtower — Dachau was created in 1933 and was one of the first Nazi concentration camps."
+          },
+          {
+            src: "/images/isp/dachau-liberation.jpg",
+            caption: "Dachau Liberation — Image taken of prisoners by the US Army’s 42nd Infantry Division, on April 29th, 1945."
+          }
+        ],
+        sources: [
+          "United States Holocaust Memorial Museum",
+          "Auschwitz-Birkenau State Museum Archives",
+          "Megargee J., Concentration Camps: A Historical Encyclopedia of the Nazi System",
+          "International Tracing Service Archives",
+          "Yad Vashem – The World Holocaust Remembrance Center",
+          "Concentration camps – The Holocaust Explained: Designed for schools",
+          "Four weeks in the hands of Hitler's hell-hounds : the Nazi murder camp of Dachau - The Wiener Holocaust Library",
+          "Pics: US troops liberated Dachau concentration camp 76 years ago | American Military News",
+          "US Forces Enter Buchenwald | Holocaust Encyclopedia"
+        ]
+      }
+    ]
+  },
+  {
+    name: "SCANDINAVIAN PRISON REFORM (1960s–1970s)",
+    lat: 59.1275,
+    lon: 11.3894, // Halden, Norway as central marker
+    timeline: [
+      {
+        year: "1960s–1970s",
+        title: "SCANDINAVIAN PRISON REFORM",
+        content: `
 During the 1960s and 70s, Norway and Sweden became international leaders in penological reform, rejecting punishment-centered incarceration in favor of systems rooted in rehabilitation, education, and dignity. These changes were shaped by rising social-democratic values and a regional commitment to social justice.
 
 In Sweden, a major prison strike in 1970 supported by the advocacy group KRUM brought national attention to inhumane prison conditions and inspired legal reforms that emphasized non-custodial alternatives, including probation, community service, and restorative justice. While changes rolled out gradually, these ideas shaped national policies into the 1980s and beyond.
@@ -536,33 +535,34 @@ In Sweden, a major prison strike in 1970 supported by the advocacy group KRUM br
 In Norway, reform became visible through architecture itself. Prisons moved away from bars and block layouts in favor of open shared kitchens, educational spaces, and human-centered environments. Halden Prison, opened in 2010 though planned decades earlier, was designed by Erik Møller Architects and HLM Architects. It became the most complete expression of these ideas, featuring private rooms with natural light, job training, and active daily schedules.
 
 This Scandinavian model—later adopted by Denmark and Finland—demonstrated significantly lower recidivism and reflected a broader political strategy to connect social equity with justice. The prison was no longer imagined as a tool of vengeance but a space of social repair, trust, and re-entry.
-      `,
-      images: [
-        {
-          src: "/images/isp/halden-sketch.jpg",
-          caption: "Halden Prison sketch — Early sketch of the prison campus."
-        },
-        {
-          src: "/images/isp/halden-aerial.png",
-          caption: "Halden aerial top view — Photograph of campus from above."
-        },
-        {
-          src: "/images/isp/halden-gym.jpg",
-          caption: "Recreation space — Halden Prison gymnasium is designed with wood floors, open space, and large windows, emphasizing wellness, movement, and rehabilitation over confinement."
-        },
-        {
-          src: "/images/isp/halden-kitchen.jpg",
-          caption: "Common space and Kitchen — Communal zones where inmates study, cook, and socialize, reinforcing autonomy and skill-building."
-        }
-      ],
-      sources: [
-        "The Guardian – “Inside Halden, the most humane prison in the world”",
-        "NPR – Halden’s philosophy and outcomes",
-        "MoMA – rehabilitation-centered architecture",
-        "academic.oup.com – Sweden’s KRUM reforms",
-        "Tidsskrift.dk – prisoners’ rights campaigns",
-        "Wikipedia – Nordic prison education and Folkhemmet social model"
-      ]
-    }
-  ]
-},
+        `,
+        images: [
+          {
+            src: "/images/isp/halden-sketch.jpg",
+            caption: "Halden Prison sketch — Early sketch of the prison campus."
+          },
+          {
+            src: "/images/isp/halden-aerial.png",
+            caption: "Halden aerial top view — Photograph of campus from above."
+          },
+          {
+            src: "/images/isp/halden-gym.jpg",
+            caption: "Recreation space — Halden Prison gymnasium is designed with wood floors, open space, and large windows, emphasizing wellness, movement, and rehabilitation over confinement."
+          },
+          {
+            src: "/images/isp/halden-kitchen.jpg",
+            caption: "Common space and Kitchen — Communal zones where inmates study, cook, and socialize, reinforcing autonomy and skill-building."
+          }
+        ],
+        sources: [
+          "The Guardian – “Inside Halden, the most humane prison in the world”",
+          "NPR – Halden’s philosophy and outcomes",
+          "MoMA – rehabilitation-centered architecture",
+          "academic.oup.com – Sweden’s KRUM reforms",
+          "Tidsskrift.dk – prisoners’ rights campaigns",
+          "Wikipedia – Nordic prison education and Folkhemmet social model"
+        ]
+      }
+    ]
+  }
+];
