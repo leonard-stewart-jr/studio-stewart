@@ -96,7 +96,7 @@ What makes the Mamertine significant in prison history is that it marked a shift
     lat: 51.5081,
     lon: -0.0759, // London, England
     clusterGroup: "london", // <-- add this
-    timeline: [/* ... */]
+    timeline: [
       {
         year: "c. 1078–1952 CE",
         title: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON",
@@ -152,7 +152,7 @@ The Tower was used into the modern era, even during both World Wars; the last pr
     name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM (c. 1188–1902 CE)",
     lat: 51.5153,
     lon: -0.1012, // Newgate Street and Old Bailey, City of London
-    clusterGroup: "london", // <-- add this
+    clusterGroup: "london",
     timeline: [
       {
         year: "c. 1188–1902 CE",
