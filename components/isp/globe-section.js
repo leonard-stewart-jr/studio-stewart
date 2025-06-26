@@ -128,9 +128,9 @@ export default function GlobeSection({ onMarkerClick }) {
         if (obj.isLondonCluster) {
           // White dot (main)
           const group = new THREE.Group();
-          const dotRadius = DOT_SIZE * 0.5;
+          const dotRadius = DOT_SIZE * 0.9;
           const ringOuter = dotRadius * CLUSTER_RING_RATIO;
-          const ringInner = ringOuter * 0.68;
+          const ringInner = ringOuter * 0.75;
 
           // Outer red ring (centered on white dot)
           const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
