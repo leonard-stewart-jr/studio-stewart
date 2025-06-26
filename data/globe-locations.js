@@ -561,8 +561,7 @@ This Scandinavian model—later adopted by Denmark and Finland—demonstrated si
           "academic.oup.com – Sweden’s KRUM reforms",
           "Tidsskrift.dk – prisoners’ rights campaigns",
           "Wikipedia – Nordic prison education and Folkhemmet social model"
-        ]
-      }
-    ]
-  }
+      ]
+    }
+  ]
 ];
