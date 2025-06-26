@@ -1,6 +1,6 @@
 export default [
   {
-    name: "THE FIRST KNOWN PRISONS circa 3200–1600 BCE",
+    name: "MESOPOTAMIA: THE FIRST PRISONS (c. 3200–1600 BCE)",
     lat: 32.5,
     lon: 44.5, // Central Mesopotamia: Sumer, Akkad, Babylon (modern Iraq)
     timeline: [
@@ -50,7 +50,7 @@ These were the first known spaces built to contain people through state power. T
     timeline: [
       {
         year: "c. 600–300 BCE",
-        title: "THE MAMERTINE PRISON (CARCER TULLIANUM)",
+        title: "THE MAMERTINE PRISON, ROME (c. 600–300 BCE)",
         content: `
 The Mamertine Prison is considered the oldest known prison in ancient Rome—dug into the bedrock beneath the Capitoline Hill sometime around 600 BCE. Unlike modern prisons, it wasn’t built for punishment through long-term confinement. Instead, it was a political tool designed to publicly break enemies of the Roman state. It functioned more like a death chamber than a rehabilitation center.
 
