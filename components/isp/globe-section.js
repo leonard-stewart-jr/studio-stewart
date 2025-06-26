@@ -16,7 +16,7 @@ export default function GlobeSection({ onMarkerClick }) {
       globeLocations.map((marker) => ({
         ...marker,
         lat: marker.lat,
-        lng: marker.lon,
+        lng: marker.lon, // <-- CRITICAL: use lng not lon for react-globe.gl
         color:
           marker.clusterGroup === "london"
             ? "#b32c2c"
@@ -86,7 +86,7 @@ export default function GlobeSection({ onMarkerClick }) {
           globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
           pointsData={pointsData}
           pointLat="lat"
-          pointLng="lng"
+          pointLng="lng" // <-- CRITICAL: lng, not lon
           pointColor="color"
           pointRadius="size"
           pointAltitude={0.012}
