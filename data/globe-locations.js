@@ -91,7 +91,7 @@ What makes the Mamertine significant in prison history is that it marked a shift
       }
     ]
   },
- {
+{
   name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON (c. 1078–1952 CE)",
   lat: 51.5081,
   lon: -0.0759, // London, England
@@ -122,8 +122,12 @@ The Tower was used into the modern era, even during both World Wars; the last pr
           caption: "Tower of London today — Aerial view showing the complex in the middle of the growing city."
         },
         {
-          src: "/images/isp/bowyer-tower-drawing.jpg",
-          caption: "Bowyer Tower drawing — Nineteenth century painting showing the interior of one of the Tower’s prison rooms."
+          src: "/images/isp/bowyer-tower-pencil.jpg",
+          caption: "Bowyer Tower (pencil drawing) — Nineteenth-century architectural sketch of the prison room interior, emphasizing line work and structure."
+        },
+        {
+          src: "/images/isp/bowyer-tower-painted.jpg",
+          caption: "Bowyer Tower (painted) — Nineteenth-century painting showing a more atmospheric, colored interior of the Tower’s prison room."
         }
       ],
       sources: [
