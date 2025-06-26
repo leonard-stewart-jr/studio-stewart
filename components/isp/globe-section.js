@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import * as THREE from "three";
 
 // Dynamic import because react-globe.gl uses WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -9,15 +8,9 @@ export default function GlobeSection() {
   const globeEl = useRef();
 
   // This is a single test point at the equator
-  const customLayerData = [
-    { lat: 0, lon: 0, name: "Test Dot" }
+  const pointsData = [
+    { lat: 0, lng: 0, size: 1.5, color: "#b32c2c" }
   ];
-
-  function renderDot(marker) {
-    const geometry = new THREE.SphereGeometry(1.1, 24, 24);
-    const material = new THREE.MeshBasicMaterial({ color: "#b32c2c" });
-    return new THREE.Mesh(geometry, material);
-  }
 
   return (
     <section style={{
@@ -48,9 +41,12 @@ export default function GlobeSection() {
         <Globe
           ref={globeEl}
           globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
-          customLayerData={customLayerData}
-          customThreeObject={renderDot}
-          pointsData={[]} // hide default points
+          pointsData={pointsData}
+          pointLat="lat"
+          pointLng="lng"
+          pointColor="color"
+          pointAltitude={0.01}
+          pointRadius="size"
           backgroundColor="rgba(0,0,0,0)"
           width={500}
           height={400}
