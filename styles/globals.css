@@ -41,6 +41,8 @@ body {
   z-index: 20;
   background: #fff;
   /* width: 100vw; REMOVE THIS LINE */
+  padding-left: 88px;
+  padding-right: 66px;
 }
 .nav-card-bot {
   box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
@@ -52,6 +54,8 @@ body {
   z-index: 15;
   background: #fff;
   /* width: 100vw; REMOVE THIS LINE */
+  padding-left: 88px;
+  padding-right: 66px;
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
@@ -263,6 +267,11 @@ nav.main-nav a[aria-current="page"]:hover {
 
 /* ====== ISP NAVS ====== */
 @media (max-width: 700px) {
+  .nav-card-mid,
+  .nav-card-bot {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
   .isp-section-tabs {
     gap: 11px;
     min-height: 36px;
