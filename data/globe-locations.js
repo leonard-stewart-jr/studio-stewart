@@ -520,3 +520,49 @@ By 1945, an estimated 18 million people had passed through the Nazi camp system;
     }
   ]
 },
+{
+  name: "SCANDINAVIAN PRISON REFORM (1960s–1970s)",
+  lat: 59.1275,
+  lon: 11.3894, // Halden, Norway as central marker
+  timeline: [
+    {
+      year: "1960s–1970s",
+      title: "SCANDINAVIAN PRISON REFORM",
+      content: `
+During the 1960s and 70s, Norway and Sweden became international leaders in penological reform, rejecting punishment-centered incarceration in favor of systems rooted in rehabilitation, education, and dignity. These changes were shaped by rising social-democratic values and a regional commitment to social justice.
+
+In Sweden, a major prison strike in 1970 supported by the advocacy group KRUM brought national attention to inhumane prison conditions and inspired legal reforms that emphasized non-custodial alternatives, including probation, community service, and restorative justice. While changes rolled out gradually, these ideas shaped national policies into the 1980s and beyond.
+
+In Norway, reform became visible through architecture itself. Prisons moved away from bars and block layouts in favor of open shared kitchens, educational spaces, and human-centered environments. Halden Prison, opened in 2010 though planned decades earlier, was designed by Erik Møller Architects and HLM Architects. It became the most complete expression of these ideas, featuring private rooms with natural light, job training, and active daily schedules.
+
+This Scandinavian model—later adopted by Denmark and Finland—demonstrated significantly lower recidivism and reflected a broader political strategy to connect social equity with justice. The prison was no longer imagined as a tool of vengeance but a space of social repair, trust, and re-entry.
+      `,
+      images: [
+        {
+          src: "/images/isp/halden-sketch.jpg",
+          caption: "Halden Prison sketch — Early sketch of the prison campus."
+        },
+        {
+          src: "/images/isp/halden-aerial.png",
+          caption: "Halden aerial top view — Photograph of campus from above."
+        },
+        {
+          src: "/images/isp/halden-gym.jpg",
+          caption: "Recreation space — Halden Prison gymnasium is designed with wood floors, open space, and large windows, emphasizing wellness, movement, and rehabilitation over confinement."
+        },
+        {
+          src: "/images/isp/halden-kitchen.jpg",
+          caption: "Common space and Kitchen — Communal zones where inmates study, cook, and socialize, reinforcing autonomy and skill-building."
+        }
+      ],
+      sources: [
+        "The Guardian – “Inside Halden, the most humane prison in the world”",
+        "NPR – Halden’s philosophy and outcomes",
+        "MoMA – rehabilitation-centered architecture",
+        "academic.oup.com – Sweden’s KRUM reforms",
+        "Tidsskrift.dk – prisoners’ rights campaigns",
+        "Wikipedia – Nordic prison education and Folkhemmet social model"
+      ]
+    }
+  ]
+},
