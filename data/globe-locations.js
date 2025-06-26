@@ -1,18 +1,44 @@
 export default [
   {
-    name: "Mesopotamian Detention Practices",
-    lat: 33.3152,
-    lon: 44.3661, // Baghdad, Iraq (approx Mesopotamia)
+    name: "THE FIRST KNOWN PRISONS circa 3200–1600 BCE",
+    lat: 32.5,
+    lon: 44.5, // Central Mesopotamia: Sumer, Akkad, Babylon (modern Iraq)
     timeline: [
       {
-        year: "c. 2000 BCE",
-        title: "Mesopotamian Detention Practices",
-        content:
-          "Earliest records of imprisonment as a temporary holding before punishment. Detention was not used for long-term punishment, but rather as a means to hold individuals until their fate was decided by authorities.",
+        year: "c. 3200–1600 BCE",
+        title: "THE FIRST KNOWN PRISONS",
+        content: `
+The first known prisons weren’t built for punishment the way we understand it today. In ancient Mesopotamia, across cities like Ur, Nippur, and Babylon, temple and state authorities operated early detention centers called “Houses of Confinement.” These spaces existed as far back as 3200 BCE, used not just to detain accused individuals, but to extract labor, collect debts, and await ritual trials or legal decisions.
+
+Codes like that of Ur-Nammu and Hammurabi mention imprisonment as a step in legal or spiritual processing, especially in cases like kidnapping or debt. But confinement wasn’t always the end sentence; it was part of a layered justice system that combined law, economy, and religion. In hymns to Nungal, the Mesopotamian goddess of prisons, incarceration was framed as a spiritual ordeal, refining the soul through hardship, like metal in fire.
+
+These were the first known spaces built to contain people through state power. They introduced ideas that carried through millennia: that confinement could punish, correct, and morally restore. They weren’t just early jails; they were foundational to the entire timeline of prison history, merging justice, control, and symbolic rehabilitation in one system.
+        `,
         images: [
-          { src: "/images/isp/cuneiform-tablet.jpg", caption: "Cuneiform tablet describing early legal codes." },
-          { src: "/images/isp/ziggurat-render.jpg", caption: "Artist's rendering of a ziggurat, the center of Mesopotamian cities." },
-          { src: "/images/isp/early-holding-chamber.jpg", caption: "Reconstruction of an early holding chamber." }
+          {
+            src: "/images/isp/flaying-of-rebels-relief.jpg",
+            caption: "Flaying of Rebels Relief (c. 661–631 BCE, Nineveh): Neo-Assyrian wall carving showing prisoners tortured as public warning under imperial justice."
+          },
+          {
+            src: "/images/isp/stele-of-hammurabi.jpg",
+            caption: "Stele of Hammurabi (c. 1754 BCE, Babylon): Stone pillar inscribed with Babylon’s legal code, including rules on imprisonment and physical retribution."
+          },
+          {
+            src: "/images/isp/code-of-lipit-ishtar.jpg",
+            caption: "Code of Lipit-Ishtar (c. 1860 BCE, Nippur): Early legal code by Sumerian king detailing civil rights and punishments, including imprisonment."
+          },
+          {
+            src: "/images/isp/map-ancient-mesopotamia.jpg",
+            caption: "Map of Ancient Mesopotamia (Modern Iraq): Geographic overview showing key cities like Ur, Akkad, and Babylon where detention systems began."
+          }
+        ],
+        sources: [
+          "Martin, R.K. (2020). The Birth of the Prison (PDF, ResearchGate)",
+          "Britannica – Code of Hammurabi",
+          "Asian Geographic – Birthplace of Justice",
+          "(PDF) The Birth of the Prison: The Functions of Imprisonment in Early Mesopotamia",
+          "Code of Hammurabi | Summary & History | Britannica",
+          "Mesopotamia: The Birthplace of Justice | Asian Geographic"
         ]
       }
     ]
