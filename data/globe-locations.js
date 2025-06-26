@@ -419,3 +419,51 @@ Eastern State became one of the most influential prisons in global history; auth
     }
   ]
 },
+{
+  name: "BRITISH PENAL COLONIES (c. 1850s–1900s)",
+  lat: -43.153,
+  lon: 147.857, // Port Arthur, Tasmania as primary marker
+  timeline: [
+    {
+      year: "c. 1850s–1900s",
+      title: "BRITISH PENAL COLONIES",
+      content: `
+By the mid nineteenth century, Britain turned to convict transportation as a tool for both punishment and imperial expansion; the colonies served not just as destinations for the “undesirable” but as spaces of forced labor and territorial control.
+
+Australia became the most significant site of this strategy; from 1788 to 1868, over 162,000 convicts were shipped to the continent, many ending up in Port Arthur, Tasmania—a place reserved for repeat offenders and escapees, where labor included grinding flour by treadmill and timber cutting under conditions of silence and surveillance.
+
+India and South Africa also absorbed transported prisoners who were used in public works, mining, and infrastructure—tying incarceration to imperial logistics; while less centralized than Australia’s system, they represented the same logic: punishment as utility.
+
+Though later criticized for moral cruelty and harsh discipline, these colonies redefined incarceration as a form of economic extraction and spatial dominance; they left behind ruins, administrative systems, and reform movements that carried their impact far beyond their original function.
+      `,
+      images: [
+        {
+          src: "/images/isp/port-arthur-ruins.png",
+          caption: "Port Arthur penitentiary ruins — This image shows the formal entrance of the main penitentiary structure at Port Arthur, Tasmania; the symmetrical sandstone facade with arched entryways and uniform masonry reflects the site’s rigid architectural order, representing both authority and containment in a distinctly colonial penal design."
+        },
+        {
+          src: "/images/isp/port-arthur-1863.jpg",
+          caption: "The Penitentiary at Port Arthur, c. 1863 — A historic photograph of the waterfront penitentiary in full operation; the multi-story brick structure with open-air upper levels and flanking staircases illustrates the scale and function of one of the harshest convict labor sites in the Australian penal colony system."
+        },
+        {
+          src: "/images/isp/convict-ship-engraving-1820.jpg",
+          caption: "Convict ship engraving, c. 1820 — This detailed 19th-century engraving captures a convict transport vessel anchored in harbor, with prisoners gathered on deck in chains and guards nearby; the image symbolizes Britain’s imperial penal strategy of exile and labor through forced maritime relocation."
+        },
+        {
+          src: "/images/isp/henry-clabby-mugshot-1874.jpg",
+          caption: "Mugshot of Henry Clabby, 1874 — Early photographic identification from Port Arthur’s system of documentation, taken by Thomas J. Nevin for Tasmanian prison records."
+        },
+        {
+          src: "/images/isp/norfolk-island-prison.jpg",
+          caption: "Prison Colony on Norfolk Island — This vintage image captures the prison buildings in structured condition with intact masonry and open courtyards, illustrating the orderly layout and architectural solidity of one of Britain’s harshest secondary penal colonies during its operational peak."
+        }
+      ],
+      sources: [
+        "National Museum of Australia – convict transportation and labor history",
+        "Port Arthur Historic Site Visitor Guide – penitentiary design and operations",
+        "Amusing Planet – architecture and psychological tactics of the Separate Prison",
+        "Thomas J. Nevin Tasmanian Archives – convict photography and inmate records"
+      ]
+    }
+  ]
+},
