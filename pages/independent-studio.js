@@ -22,15 +22,23 @@ export default function IndependentStudio() {
 
       {/* NAVIGATION LAYERS IN "CARD" STYLE */}
       {/* Main nav: handled by layout/header, so only render cards from tabs down */}
-      <div className="nav-card nav-card-mid">
-        <SectionTabs
-          activeSection={mainSection}
-          setActiveSection={setMainSection}
-        />
+      <div className="nav-card nav-card-mid" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+        <div style={{ width: 88, minWidth: 88 }} />
+        <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <SectionTabs
+            activeSection={mainSection}
+            setActiveSection={setMainSection}
+          />
+        </div>
+        <div style={{ width: 66, minWidth: 66 }} />
       </div>
       {mainSection === "history" && (
-        <div className="nav-card nav-card-bot">
-          <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+        <div className="nav-card nav-card-bot" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+          <div style={{ width: 88, minWidth: 88 }} />
+          <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
+          </div>
+          <div style={{ width: 66, minWidth: 66 }} />
         </div>
       )}
 
