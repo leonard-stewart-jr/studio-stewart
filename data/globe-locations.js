@@ -44,18 +44,49 @@ These were the first known spaces built to contain people through state power. T
     ]
   },
   {
-    name: "Mamertine Prison",
+    name: "THE MAMERTINE PRISON (CARCER TULLIANUM)",
     lat: 41.8931,
-    lon: 12.4828, // Rome, Italy
+    lon: 12.4828, // Capitoline Hill, Rome, Italy
     timeline: [
       {
-        year: "c. 600 BCE",
-        title: "Roman Mamertine Prison",
-        content:
-          "The first structured prison in Rome, primarily used for high-value political enemies and short-term confinement before execution or exile.",
+        year: "c. 600–300 BCE",
+        title: "THE MAMERTINE PRISON (CARCER TULLIANUM)",
+        content: `
+The Mamertine Prison is considered the oldest known prison in ancient Rome—dug into the bedrock beneath the Capitoline Hill sometime around 600 BCE. Unlike modern prisons, it wasn’t built for punishment through long-term confinement. Instead, it was a political tool designed to publicly break enemies of the Roman state. It functioned more like a death chamber than a rehabilitation center.
+
+It consisted of two parts: the Carcer, a simple holding room above, and the Tullianum, a pitch-black stone dungeon below that could only be accessed by being dropped through a hole in the floor. Once you were in the Tullianum, execution was usually the next step, sometimes by strangulation, sometimes just by being left to starve in silence.
+
+Many prominent prisoners met their end in this space: Jugurtha of Numidia, Vercingetorix of Gaul, Simon Bar Giora, and members of Catiline’s conspiracy. Later Christian legends claim that Saint Peter and Saint Paul were imprisoned here, with stories like Peter causing a spring to appear from the rock to baptize his jailers.
+
+What makes the Mamertine significant in prison history is that it marked a shift in state power—where imprisonment wasn’t used for correction or justice, but as ritualized elimination. It sets a precedent for how the state could use confinement not just to control bodies, but to shape public memory and enforce political authority.
+        `,
         images: [
-          { src: "/images/isp/mamertine-ruins.jpg", caption: "Ruins of the Mamertine Prison." },
-          { src: "/images/isp/roman-punishment.jpg", caption: "Ancient Roman illustration of punishment." }
+          {
+            src: "/images/isp/sotterraneo-tulliano.jpg",
+            caption: "Sotterraneo Tulliano (c. 290 BCE–70 CE): Gravestone listing prisoners executed at the site, including Jugurtha and Vercingetorix."
+          },
+          {
+            src: "/images/isp/mamertine-exterior.jpg",
+            caption: "Exterior View – Mamertine Today: The Baroque church of San Giuseppe dei Falegnami stands above the prison site."
+          },
+          {
+            src: "/images/isp/mamertine-interior.jpg",
+            caption: "Interior View – Tullianum Dungeon: Dark stone chamber where prisoners were held before execution."
+          },
+          {
+            src: "/images/isp/mamertine-section-golvin.jpg",
+            caption: "Section Diagram by Jean-Claude Golvin: Shows how prisoners were dropped from the Carcer to the Tullianum."
+          }
+        ],
+        sources: [
+          "Columbia University – Foucault 13/13: The Mamertine Prison",
+          "Ancient Origins – The Infamous Mamertine Prison",
+          "ColosseumRomeTickets – Mamertine Prison Overview",
+          "The Geographical Cure – Visiting Mamertine Prison",
+          "A Dispatch from Rome: The Mamertine Prison – Foucault 13/13",
+          "The Infamous Mamertine Prison and the Supposed Incarceration of Saint Peter | Ancient Origins",
+          "Mamertine Prison - Colosseum Rome Tickets",
+          "Visiting Mamertine Prison, An Eerie Pilgrimage Site In Rome - The Geographical Cure"
         ]
       }
     ]
