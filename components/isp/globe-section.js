@@ -9,7 +9,7 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 0.6; // degrees, distance from cluster center
 const LONDON_WHEEL_ALTITUDE = 0.018;
-const DOT_SIZE = 0.8;
+const DOT_SIZE = 0.6;
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
