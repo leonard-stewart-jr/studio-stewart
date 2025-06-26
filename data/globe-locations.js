@@ -212,3 +212,47 @@ Newgate’s reputation was shaped by literature as much as architecture; writers
     }
   ]
 },
+{
+  name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON (c. 1557 CE)",
+  lat: 51.0543,
+  lon: 3.7215, // Ghent, Austrian Netherlands (modern Belgium)
+  timeline: [
+    {
+      year: "c. 1557 CE",
+      title: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON",
+      content: `
+One of the first prisons built specifically for rehabilitation, the Maison de Force was commissioned by city officials in 1557 to reflect more progressive values; it focused on structured reform through labour rather than physical punishment.
+
+The facility was designed with separate quarters for men, women, and debtors, and operated under a strict regime of silence, routine, and moral instruction; inmates spun wool, wove textiles, and participated in daily workshops, shared refectories, and chapel services.
+
+Its location adjacent to Ghent’s medieval Gravensteen Castle made it a tangible symbol of a new prison logic in the late 16th century; where the state aimed to correct rather than simply threaten or punish.
+
+While critics later described it as overly militarized, the Maison de Force laid the foundation for modern European prisons by blending isolation with enforced labour and moral order; it influenced Enlightenment-era penal philosophies across the continent.
+      `,
+      images: [
+        {
+          src: "/images/isp/maison-force-woodcut.jpg",
+          caption: "1557 woodcut from Praxis Rerum Civilium — Depicts Ghent’s “house of correction” showing guards and inmates in structured labor."
+        },
+        {
+          src: "/images/isp/maison-force-plan.jpg",
+          caption: "Plan of Maison de Force (1777, Howard) — Architectural layout emphasizing separate wings and central chapel."
+        },
+        {
+          src: "/images/isp/maison-force-plan2.png",
+          caption: "Alternate plan of Maison de Force (architect unknown) — Different historical drawing showing the prison’s radial divisions and circulation."
+        },
+        {
+          src: "/images/isp/maison-force-courtyard.jpg",
+          caption: "Central Courtyard, Maison de Force, Ghent (circa 1900) — A historic photograph from Ghent University Library, showing how the prison’s open exercise yard and radial wings remain intact."
+        }
+      ],
+      sources: [
+        "Cambridge University Press – Maison de Force at Ghent",
+        "A. Delierneux Jr. (1931) – Evolution of the Prison System in Belgium",
+        "Historic England – Plan of Maison de Force from Howard’s State of Prisons",
+        "Wikimedia Commons – Cour centrale de la Maison de Force"
+      ]
+    }
+  ]
+},
