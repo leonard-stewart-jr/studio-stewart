@@ -24,7 +24,7 @@ export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const [hovered, setHovered] = useState(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [expandedCluster, setExpandedCluster] = useState(null); // "london" or null
+  const [expandedCluster, setExpandedCluster] = useState(false); // false or true
 
   // --- PREP DATA
   const londonMarkers = useMemo(
@@ -112,13 +112,18 @@ export default function GlobeSection({ onMarkerClick }) {
   };
 
   // --- Click handlers
-  function handleCustomLayerClick(obj) {
+  function handleCustomLayerClick(obj, event) {
     if (!obj || !obj.userData) return;
     if (obj.userData.isRing) {
-      setExpandedCluster(LONDON_CLUSTER_KEY);
+      setExpandedCluster(true);
       setHovered(null);
+      event && event.stopPropagation();
+    } else if (obj.userData.marker._isLondonWheel) {
+      setExpandedCluster(false);
+      onMarkerClick && onMarkerClick(obj.userData.marker);
     } else {
-      setExpandedCluster(null);
+      // Non-London marker
+      setExpandedCluster(false);
       onMarkerClick && onMarkerClick(obj.userData.marker);
     }
   }
@@ -127,7 +132,10 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   // Clicking globe background should close expanded
   useEffect(() => {
-    const handler = () => setExpandedCluster(null);
+    function handler(e) {
+      // Only collapse if something other than a marker was clicked
+      setExpandedCluster(false);
+    }
     if (expandedCluster) {
       window.addEventListener("click", handler, true);
       return () => window.removeEventListener("click", handler, true);
@@ -136,14 +144,15 @@ export default function GlobeSection({ onMarkerClick }) {
 
   // --- Compose layer data for Globe
   const customLayerData = useMemo(() => {
-    let data = [];
-    if (expandedCluster === LONDON_CLUSTER_KEY) {
-      data = [
+    if (expandedCluster) {
+      // Expanded: all non-London dots + wheel dots
+      return [
         ...nonLondonMarkers,
-        ...expandedLondonDots // wheel dots
+        ...expandedLondonDots
       ];
     } else {
-      data = [
+      // Not expanded: all non-London dots + the ring
+      return [
         ...nonLondonMarkers,
         {
           ...londonCenter,
@@ -152,7 +161,6 @@ export default function GlobeSection({ onMarkerClick }) {
         }
       ];
     }
-    return data;
   }, [expandedCluster, nonLondonMarkers, expandedLondonDots, londonCenter]);
 
   // --- Render
@@ -210,7 +218,7 @@ export default function GlobeSection({ onMarkerClick }) {
         />
         {/* Animated fade for the wheel */}
         <AnimatePresence>
-          {expandedCluster === LONDON_CLUSTER_KEY && (
+          {expandedCluster && (
             <motion.div
               key="london-wheel"
               initial="hidden"
@@ -223,7 +231,7 @@ export default function GlobeSection({ onMarkerClick }) {
                 top: 0,
                 width: globeWidth,
                 height: globeHeight,
-                pointerEvents: "none", // let globe handle
+                pointerEvents: "none",
                 zIndex: 8,
               }}
             />
