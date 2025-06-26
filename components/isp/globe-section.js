@@ -162,6 +162,10 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
     }
   }, [expandedCluster, nonLondonMarkers, expandedLondonDots, londonCenter]);
+  // --- ADD THESE LINES HERE, just before return!
+  console.log("customLayerData", customLayerData);
+  console.log("nonLondonMarkers", nonLondonMarkers);
+  console.log("londonMarkers", londonMarkers);
 
   // --- Render
   return (
