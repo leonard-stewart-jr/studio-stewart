@@ -29,11 +29,11 @@ export default function GlobeSection({ onMarkerClick }) {
   // --- PREP DATA
   const londonMarkers = useMemo(
     () => globeLocations.filter(m => m.clusterGroup === LONDON_CLUSTER_KEY),
-    []
+    [globeLocations]
   );
   const nonLondonMarkers = useMemo(
     () => globeLocations.filter(m => m.clusterGroup !== LONDON_CLUSTER_KEY),
-    []
+    [globeLocations]
   );
   const londonCenter = useMemo(
     () => getLondonClusterCenter(londonMarkers),
