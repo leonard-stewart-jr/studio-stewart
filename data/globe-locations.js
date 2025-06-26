@@ -70,7 +70,7 @@ What makes the Mamertine significant in prison history is that it marked a shift
             caption: "Exterior View – Mamertine Today: The Baroque church of San Giuseppe dei Falegnami stands above the prison site."
           },
           {
-            src: "/images/isp/mamertine-interior.jpg",
+            src: "/images/isp/mamertine-interior.jpeg",
             caption: "Interior View – Tullianum Dungeon: Dark stone chamber where prisoners were held before execution."
           },
           {
