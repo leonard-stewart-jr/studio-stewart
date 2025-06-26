@@ -91,41 +91,58 @@ What makes the Mamertine significant in prison history is that it marked a shift
       }
     ]
   },
-  {
-    name: "Tower of London",
-    lat: 51.5081,
-    lon: -0.0759,
-    timeline: [
-      {
-        year: "11th Century",
-        title: "Tower of London as a Prison",
-        content:
-          "Used to detain royalty, religious dissenters, and political prisoners. Over the centuries, it became a symbol of state power and the evolving concept of incarceration.",
-        images: [
-          { src: "/images/isp/tower-over-time.jpg", caption: "The Tower of London through the centuries." },
-          { src: "/images/isp/tower-interior.jpg", caption: "Prison interiors." },
-          { src: "/images/isp/tower-execution-site.jpg", caption: "Execution site at the Tower." }
-        ]
-      }
-    ]
-  },
-  {
-    name: "Maison de Force",
-    lat: 51.0536,
-    lon: 3.7304, // Ghent, Belgium
-    timeline: [
-      {
-        year: "1557",
-        title: "Maison de Force",
-        content:
-          "One of the first purpose-built reform prisons, emphasizing rehabilitation over punishment through labor and discipline.",
-        images: [
-          { src: "/images/isp/maison-engraving.jpg", caption: "Engraving of Maison de Force." },
-          { src: "/images/isp/maison-uniforms.jpg", caption: "Flemish penal uniforms." }
-        ]
-      }
-    ]
-  },
+ {
+  name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON (c. 1078–1952 CE)",
+  lat: 51.5081,
+  lon: -0.0759, // London, England
+  timeline: [
+    {
+      year: "c. 1078–1952 CE",
+      title: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON",
+      content: `
+Built under William the Conqueror around 1078, the Tower of London started as a fortress and royal residence but eventually became one of the most iconic prisons in history; for over 850 years, it was used to hold political enemies, prisoners of war, and even monarchs. It was never a typical prison; some inmates lived in furnished apartments while others were locked away in dark dungeons like the Beauchamp Tower, the Bloody Tower, or the Little Ease.
+
+The Little Ease was a stone cell barely large enough to stand or crouch, designed to inflict maximum psychological suffering; the Beauchamp Tower still holds graffiti scratched into the walls by prisoners like John Dudley and Thomas Abel, names, dates, symbols, and prayers carved during long years of confinement.
+
+Famous prisoners like Anne Boleyn, Guy Fawkes, Lady Jane Grey, and Elizabeth I were all held here under vastly different circumstances; during Tudor and Stuart reigns, the Tower was used as a place of political suppression, where punishment was often public and symbolic, aimed at showing the state’s control.
+
+The Tower was used into the modern era, even during both World Wars; the last prisoners were the Kray twins in 1952. The Tower of London matters to the story of prison history because it shows how confinement was not just about law but about spectacle, politics, and fear; it stood for centuries as a public symbol of what could happen when you challenged power.
+      `,
+      images: [
+        {
+          src: "/images/isp/beauchamp-graffiti.jpg",
+          caption: "Beauchamp Tower graffiti — Prisoner carvings etched into the walls by those awaiting trial or execution."
+        },
+        {
+          src: "/images/isp/little-ease-cell.jpg",
+          caption: "Little Ease cell — A stone cube designed to keep a person from sitting, standing, or lying comfortably."
+        },
+        {
+          src: "/images/isp/tower-london-modern.jpg",
+          caption: "Tower of London today — Aerial view showing the complex in the middle of the growing city."
+        },
+        {
+          src: "/images/isp/bowyer-tower-drawing.jpg",
+          caption: "Bowyer Tower drawing — Nineteenth century painting showing the interior of one of the Tower’s prison rooms."
+        }
+      ],
+      sources: [
+        "Historic Royal Palaces",
+        "Imprisonment at the Tower",
+        "EnglishMonarchs",
+        "Tower of London History",
+        "Waymarking dot com",
+        "Past and Present of the Tower",
+        "Ancient Origins",
+        "The Cell Called Little Ease",
+        "The Tower of London: Past and Present - London, U. K. - There's a Book About It on Waymarking.com",
+        "https://englishmonarchs.co.uk/tower_london_13.html",
+        "Imprisonment at the Tower exhibition | Tower of London | Historic Royal Palaces",
+        "The Tiny Cell called \"Little Ease\" was the Most Feared Room in the Tower of London"
+      ]
+    }
+  ]
+},
   {
     name: "Panopticon Theory",
     lat: 51.5074,
