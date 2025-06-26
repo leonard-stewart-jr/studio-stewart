@@ -9,15 +9,15 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 0.6;
 const LONDON_WHEEL_ALTITUDE = 0.018;
-const CLUSTER_DOT_SIZE = 1.2; // White/red cluster dot (largest)
-const DOT_SIZE = 0.8;          // Normal red dots
-const CLUSTER_WHEEL_DOT_SIZE = 0.6; // Red dots in cluster wheel
+const CLUSTER_DOT_SIZE = 1.6; // Make the London cluster dot even bigger than normal red dots
+const DOT_SIZE = 1.05;        // Normal red dots: a bit smaller than cluster
+const CLUSTER_WHEEL_DOT_SIZE = 0.7; // Red dots in cluster wheel
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
-const CLUSTER_RING_RATIO = 0.7; // Ratio of ring diameter to main dot
-const CLUSTER_RING_ALT_OFFSET = 0.002; // Altitude offset so ring sits above white dot
+const CLUSTER_RING_RATIO = 0.74;
+const CLUSTER_RING_ALT_OFFSET = 0.0035; // More visible above white
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -119,11 +119,16 @@ export default function GlobeSection({ onMarkerClick }) {
       let overrideName = marker.name;
       if (idx === 0) overrideName = "MESOPOTAMIA: THE FIRST PRISONS";
       if (idx === 1) overrideName = "THE MAMERTINE PRISON (CARCER TULLIANUM)";
+      // Date for second line
+      let year = "";
+      if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
+        year = marker.timeline[0].year;
       return {
         idx,
         roman: toRoman(idx + 1),
         name: overrideName,
-        marker
+        marker,
+        year,
       }
     });
 
@@ -153,13 +158,13 @@ export default function GlobeSection({ onMarkerClick }) {
           altitude: DOT_ALTITUDE,
         },
       ];
-      // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (1.2)
+      // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (1.6)
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 0.5;
           // White dot at base altitude
-          const dotGeom = new THREE.CircleGeometry(dotRadius, 36);
+          const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
           const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
           const dot = new THREE.Mesh(dotGeom, dotMat);
           dot.renderOrder = 2;
@@ -168,7 +173,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
           // Red ring, slightly above base altitude for visibility
           const ringOuter = dotRadius * CLUSTER_RING_RATIO;
-          const ringInner = ringOuter * 0.75;
+          const ringInner = ringOuter * 0.76;
           const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
           const ringMat = new THREE.MeshBasicMaterial({
             color: CLUSTER_RING_COLOR,
@@ -299,8 +304,8 @@ export default function GlobeSection({ onMarkerClick }) {
 
   // Responsive width/height
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
-  const globeWidth = Math.max(480, Math.min(950, vw * 0.88));
-  const globeHeight = Math.max(420, Math.min(520, vw * 0.52));
+  const globeWidth = Math.max(500, Math.min(950, vw * 0.93));
+  const globeHeight = Math.max(460, Math.min(560, vw * 0.53));
 
   // TOC click handler
   function handleTOCClick(marker) {
@@ -312,6 +317,7 @@ export default function GlobeSection({ onMarkerClick }) {
   // Responsive: stack on mobile, row on desktop
   const isMobile = vw < 800;
 
+  // Shift TOC to left and make width "fit-content"
   return (
     <section
       className="isp-globe-section"
@@ -427,111 +433,114 @@ export default function GlobeSection({ onMarkerClick }) {
       <nav
         aria-label="Table of Contents"
         style={{
-          marginLeft: isMobile ? 0 : 38,
-          marginRight: isMobile ? 0 : 0,
+          marginLeft: isMobile ? 0 : 18,
+          marginRight: 0,
           marginTop: isMobile ? 12 : 0,
-          minWidth: isMobile ? "100%" : 210,
-          maxWidth: isMobile ? "100%" : 260,
-          width: isMobile ? "100%" : 210,
+          minWidth: "fit-content",
+          maxWidth: isMobile ? "100%" : 315,
+          width: "fit-content",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: isMobile ? "center" : "flex-start",
           justifyContent: isMobile ? "flex-start" : "center",
           background: "none",
           boxShadow: "none",
         }}
       >
-        <div style={{
-          width: "100%",
-          background: "none",
-          borderRadius: 0,
-          boxShadow: "none",
+        <ol style={{
+          listStyle: "none",
+          margin: 0,
           padding: 0,
-          border: "none",
           display: "flex",
           flexDirection: "column",
-          alignItems: "stretch",
+          gap: isMobile ? 7 : 6,
+          width: "100%",
         }}>
-          <div style={{
-            fontWeight: 700,
-            fontSize: 11,
-            marginBottom: 10,
-            color: "#b32c2c",
-            letterSpacing: ".12em",
-            textAlign: "left",
-            textTransform: "uppercase",
-            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-            lineHeight: 1,
-            paddingLeft: 3,
-          }}>
-            TABLE OF CONTENTS
-          </div>
-          <ol style={{
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: isMobile ? 7 : 7,
-          }}>
-            {tocList.map((item, idx) => (
-              <li key={item.name} style={{ width: "100%" }}>
-                <button
+          {tocList.map((item, idx) => (
+            <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#b32c2c",
+                  fontWeight: 600,
+                  fontSize: 11,
+                  cursor: "pointer",
+                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 8,
+                  padding: "1.5px 0 1.5px 0",
+                  borderRadius: 4,
+                  width: "fit-content",
+                  textAlign: "left",
+                  lineHeight: 1.17,
+                  textTransform: "uppercase",
+                  letterSpacing: ".06em",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  transition: "color 0.14s",
+                  marginLeft: 0,
+                }}
+                onClick={() => handleTOCClick(item.marker)}
+                onMouseEnter={e => setHovered({ name: item.name, year: item.year })}
+                onMouseLeave={e => setHovered(null)}
+                tabIndex={0}
+                aria-label={`Jump to ${item.name}`}
+                title={item.name}
+              >
+                <span style={{
+                  fontFamily: "serif",
+                  fontWeight: 400,
+                  fontSize: 12,
+                  minWidth: 18,
+                  letterSpacing: ".03em",
+                  marginRight: 2,
+                  color: "#b32c2c",
+                  opacity: 0.93,
+                  flexShrink: 0,
+                }}>{item.roman}.</span>
+                <span style={{
+                  flex: 1,
+                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontWeight: 600,
+                  fontSize: 11,
+                  letterSpacing: ".06em",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  marginRight: 0,
+                  marginBottom: 0,
+                }}>
+                  {item.name}
+                </span>
+              </button>
+              {item.year && (
+                <div
                   style={{
-                    background: "none",
-                    border: "none",
-                    color: "#b32c2c",
-                    fontWeight: 500,
-                    fontSize: 10.5,
-                    cursor: "pointer",
                     fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 7,
-                    padding: "1.5px 0 1.5px 0",
-                    borderRadius: 4,
-                    width: "100%",
-                    textAlign: "left",
-                    lineHeight: 1.15,
-                    textTransform: "uppercase",
-                    letterSpacing: ".06em",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    transition: "color 0.14s",
-                  }}
-                  onClick={() => handleTOCClick(item.marker)}
-                  onMouseEnter={e => setHovered({ name: item.name, year: item.marker.timeline?.[0]?.year || "" })}
-                  onMouseLeave={e => setHovered(null)}
-                  tabIndex={0}
-                  aria-label={`Jump to ${item.name}`}
-                  title={item.name}
-                >
-                  <span style={{
-                    fontFamily: "serif",
                     fontWeight: 400,
-                    fontSize: 11.5,
-                    minWidth: 18,
+                    fontSize: 9.1,
+                    color: "#b1b1ae",
                     letterSpacing: ".03em",
-                    marginRight: 2,
-                    color: "#b32c2c",
-                    opacity: 0.93,
-                  }}>{item.roman}.</span>
-                  <span style={{
-                    flex: 1,
-                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                    fontWeight: 500,
-                    fontSize: 10.5,
-                    letterSpacing: ".06em",
-                    overflow: "hidden",
+                    marginLeft: 27,
+                    lineHeight: 1.18,
+                    marginTop: 0,
+                    marginBottom: 1,
                     whiteSpace: "nowrap",
+                    overflow: "hidden",
                     textOverflow: "ellipsis",
-                  }}>{item.name}</span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        </div>
+                    textTransform: "none",
+                    maxWidth: 235,
+                  }}
+                >
+                  {item.year}
+                </div>
+              )}
+            </li>
+          ))}
+        </ol>
       </nav>
     </section>
   );
