@@ -316,8 +316,9 @@ export default function GlobeSection({ onMarkerClick }) {
   const availHeight = Math.max(380, vh - bannerHeight);
 
   // Globe size: make globe as large as possible, responsive, but avoid overflow on small screens
-  const globeWidth = Math.max(500, Math.min(950, vw * 0.93));
-  const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60));
+  // INCREASE GLOBE SIZE by 1.3x AGAIN (total scaling: 1.69x original)
+  const globeWidth = Math.max(500, Math.min(950, vw * 0.93)) * 1.3;
+  const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60)) * 1.3;
 
   // TOC click handler
   function handleTOCClick(marker) {
@@ -329,7 +330,7 @@ export default function GlobeSection({ onMarkerClick }) {
   // Responsive: stack on mobile, row on desktop
   const isMobile = vw < 800;
 
-  // Vertically center globe and TOC in available space below banners
+  // Vertically center globe and TOC in available space below banners, but shift both down by 84px
   return (
     <section
       className="isp-globe-section"
@@ -347,7 +348,9 @@ export default function GlobeSection({ onMarkerClick }) {
         margin: 0,
         overflow: "hidden",
         boxSizing: "border-box",
-        position: "relative"
+        position: "relative",
+        // SHIFT SECTION DOWN 84px
+        marginTop: 84,
       }}
     >
       {/* Globe on the left */}
@@ -356,8 +359,8 @@ export default function GlobeSection({ onMarkerClick }) {
           flex: "0 1 auto",
           width: globeWidth,
           height: globeHeight,
-          maxWidth: 950,
-          minWidth: 340,
+          maxWidth: 950 * 1.3,
+          minWidth: 340 * 1.3,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
