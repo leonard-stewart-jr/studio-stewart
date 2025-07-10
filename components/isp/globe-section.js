@@ -16,7 +16,7 @@ const DOT_SIZE = 0.7; // Base size for normal timeline red dots
 
 // Sizing per latest user instructions:
 const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75; // red icon in cluster: 3/4 normal red dot size
-const CLUSTER_DOT_SIZE = DOT_SIZE * 1.3;        // white icon in cluster: 1.5x normal red dot size
+const CLUSTER_DOT_SIZE = DOT_SIZE * 2.2;        // white icon in cluster: 1.5x normal red dot size
 
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
