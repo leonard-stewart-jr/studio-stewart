@@ -7,16 +7,16 @@ import * as THREE from "three";
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
-const LONDON_WHEEL_RADIUS = 0.6;
+const LONDON_WHEEL_RADIUS = 1.1;
 const LONDON_WHEEL_ALTITUDE = 0.018;
 
 // --- DOT SIZE CONSTANTS ---
 // All cluster/center/cluster wheel red dots and the white cluster dot are now based on DOT_SIZE
-const DOT_SIZE = 1.05; // Base size for normal timeline red dots
+const DOT_SIZE = 0.7; // Base size for normal timeline red dots
 
 // Sizing per latest user instructions:
 const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75; // red icon in cluster: 3/4 normal red dot size
-const CLUSTER_DOT_SIZE = DOT_SIZE * 1.5;        // white icon in cluster: 1.5x normal red dot size
+const CLUSTER_DOT_SIZE = DOT_SIZE * 1.3;        // white icon in cluster: 1.5x normal red dot size
 
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
