@@ -350,7 +350,7 @@ export default function GlobeSection({ onMarkerClick }) {
         boxSizing: "border-box",
         position: "relative",
         // SHIFT SECTION DOWN 84px
-        marginTop: 84,
+        marginTop: 57,
       }}
     >
       {/* Globe on the left */}
