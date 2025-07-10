@@ -509,8 +509,8 @@ export default function GlobeSection({ onMarkerClick }) {
                 title={item.name}
               >
                 <span style={{
-                  fontFamily: "serif",
-                  fontWeight: 400,
+                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", // CHANGED from "serif"
+                  fontWeight: 700, // CHANGED from 400, now bold
                   fontSize: 12,
                   minWidth: 18,
                   letterSpacing: ".03em",
