@@ -9,9 +9,15 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 0.6;
 const LONDON_WHEEL_ALTITUDE = 0.018;
-const CLUSTER_DOT_SIZE = 1.6; // Make the London cluster dot even bigger than normal red dots
-const DOT_SIZE = 1.05;        // Normal red dots: a bit smaller than cluster
-const CLUSTER_WHEEL_DOT_SIZE = 0.7; // Red dots in cluster wheel
+
+// --- DOT SIZE CONSTANTS ---
+// All cluster/center/cluster wheel red dots and the white cluster dot are now based on DOT_SIZE
+const DOT_SIZE = 1.05; // Base size for normal timeline red dots
+
+// Sizing per latest user instructions:
+const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75; // red icon in cluster: 3/4 normal red dot size
+const CLUSTER_DOT_SIZE = DOT_SIZE * 1.5;        // white icon in cluster: 1.5x normal red dot size
+
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
@@ -158,11 +164,11 @@ export default function GlobeSection({ onMarkerClick }) {
           altitude: DOT_ALTITUDE,
         },
       ];
-      // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (1.6)
+      // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (white 1.5x red)
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          const dotRadius = CLUSTER_DOT_SIZE * 0.5 * 1.3; // SCALE UP BY 1.3x
+          const dotRadius = CLUSTER_DOT_SIZE * 0.5 * 1.3; // White dot: 1.5x DOT_SIZE, then 1.3x for global scaling
           // White dot at base altitude
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
           const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
@@ -191,7 +197,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // Expanded: show each London marker in a wheel formation
+      // Expanded: show each London marker in a wheel formation (red dots, 0.75x DOT_SIZE)
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3; // SCALE UP BY 1.3x
       objectsData = londonMarkers.map((marker, idx) => {
@@ -203,7 +209,7 @@ export default function GlobeSection({ onMarkerClick }) {
           lat,
           lng,
           color: DOT_COLOR,
-          size: CLUSTER_WHEEL_DOT_SIZE * 1.3, // SCALE UP BY 1.3x
+          size: CLUSTER_WHEEL_DOT_SIZE * 1.3, // (DOT_SIZE * 0.75) * 1.3
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
@@ -230,7 +236,8 @@ export default function GlobeSection({ onMarkerClick }) {
       // Custom renderer for the cluster wheel dots (smaller red)
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
-          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5 * 1.3, 32); // SCALE UP 1.3x
+          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5 * 1.3, 32);
+          // (DOT_SIZE * 0.75 * 0.5 * 1.3) radius
           const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
