@@ -138,7 +138,7 @@ export default function GlobeSection({ onMarkerClick }) {
       lat: m.lat,
       lng: m.lon,
       color: DOT_COLOR,
-      size: DOT_SIZE,
+      size: DOT_SIZE * 1.3, // SCALE UP ALL DOTS BY 1.3x
       altitude: DOT_ALTITUDE,
       markerId: m.name,
     }));
@@ -162,7 +162,7 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          const dotRadius = CLUSTER_DOT_SIZE * 0.5;
+          const dotRadius = CLUSTER_DOT_SIZE * 0.5 * 1.3; // SCALE UP BY 1.3x
           // White dot at base altitude
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
           const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
@@ -193,7 +193,7 @@ export default function GlobeSection({ onMarkerClick }) {
     } else {
       // Expanded: show each London marker in a wheel formation
       const N = londonMarkers.length;
-      const wheelRadius = LONDON_WHEEL_RADIUS;
+      const wheelRadius = LONDON_WHEEL_RADIUS * 1.3; // SCALE UP BY 1.3x
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
         const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
@@ -203,7 +203,7 @@ export default function GlobeSection({ onMarkerClick }) {
           lat,
           lng,
           color: DOT_COLOR,
-          size: CLUSTER_WHEEL_DOT_SIZE,
+          size: CLUSTER_WHEEL_DOT_SIZE * 1.3, // SCALE UP BY 1.3x
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
@@ -230,7 +230,7 @@ export default function GlobeSection({ onMarkerClick }) {
       // Custom renderer for the cluster wheel dots (smaller red)
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
-          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5, 32);
+          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5 * 1.3, 32); // SCALE UP 1.3x
           const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
@@ -302,10 +302,15 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-  // Responsive width/height
+  // Responsive width/height - use available viewport height minus banners (76+44+26)
+  const bannerHeight = 76 + 44 + 26 + 16; // add 16px for nav gaps/margins
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 900;
+  const availHeight = Math.max(380, vh - bannerHeight);
+
+  // Globe size: make globe as large as possible, responsive, but avoid overflow on small screens
   const globeWidth = Math.max(500, Math.min(950, vw * 0.93));
-  const globeHeight = Math.max(460, Math.min(560, vw * 0.53));
+  const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60));
 
   // TOC click handler
   function handleTOCClick(marker) {
@@ -317,13 +322,14 @@ export default function GlobeSection({ onMarkerClick }) {
   // Responsive: stack on mobile, row on desktop
   const isMobile = vw < 800;
 
-  // Shift TOC to left and make width "fit-content"
+  // Vertically center globe and TOC in available space below banners
   return (
     <section
       className="isp-globe-section"
       style={{
         width: "100vw",
-        minHeight: 0,
+        minHeight: availHeight,
+        height: availHeight,
         background: "transparent",
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
@@ -331,14 +337,16 @@ export default function GlobeSection({ onMarkerClick }) {
         justifyContent: "center",
         paddingTop: 0,
         paddingBottom: 0,
-        marginTop: "-10px",
-        marginBottom: 0,
+        margin: 0,
         overflow: "hidden",
+        boxSizing: "border-box",
+        position: "relative"
       }}
     >
       {/* Globe on the left */}
       <div
         style={{
+          flex: "0 1 auto",
           width: globeWidth,
           height: globeHeight,
           maxWidth: 950,
