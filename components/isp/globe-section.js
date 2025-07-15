@@ -76,35 +76,38 @@ export default function GlobeSection({ onMarkerClick }) {
       altitude: DOT_ALTITUDE,
     }));
 
-    const customPointObject = (obj) => {
-      if (!pinModel || !obj.isStandardPin) return null;
+const customPointObject = (obj) => {
+  if (!pinModel || !obj.isStandardPin) return null;
 
-      const group = new THREE.Group();
+  const group = new THREE.Group();
 
-      // 1. Pin scaling
-      const scale = 200;
-      const pin = pinModel.clone(true);
-      pin.traverse(child => {
-        if (child.isMesh) child.castShadow = false;
-      });
-      pin.scale.set(scale, scale, scale);
+  // Pin scaling
+  const scale = 200;
+  const pin = pinModel.clone(true);
+  pin.traverse(child => {
+    if (child.isMesh) child.castShadow = false;
+  });
+  pin.scale.set(scale, scale, scale);
 
-      // 2. Pin orientation
-      const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-      const target = globeVec.clone().normalize().negate();
-      const up = new THREE.Vector3(0, -1, 0); // Pin's down axis
-      const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
-      pin.setRotationFromQuaternion(quaternion);
+  // Correct: Compute globe vector for THIS pin's location
+  const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
-      // 3. Pin "pull out" offset
-      const offset = 0.08; // Slightly larger so the metal is visible
-      const outwardVec = globeVec.clone().normalize().multiplyScalar(offset);
-      pin.position.copy(outwardVec);
+  // Rotation: align pin-down axis (-Y) to inward normal at this location
+  const target = globeVec.clone().normalize().negate();
+  const up = new THREE.Vector3(0, -1, 0);
+  const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
+  pin.setRotationFromQuaternion(quaternion);
 
-      group.add(pin);
-      group.userData = { markerId: obj.markerId };
-      return group;
-    };
+  // Offset: move pin outward along surface normal for THIS location
+  const offset = 0.08;
+  const outwardVec = globeVec.clone().normalize().multiplyScalar(offset);
+  pin.position.copy(outwardVec);
+
+  group.add(pin);
+  group.userData = { markerId: obj.markerId };
+  return group;
+};
+
 
     return { objectsData, customPointObject };
   }, [pinReady]);
