@@ -87,7 +87,6 @@ function toRoman(num) {
   return result;
 }
 
-// Helper: get a US marker (not London), use "EASTERN STATE PENITENTIARY OPENS" if possible
 function getComparisonMarkerIdx(nonLondonMarkers) {
   const idx = nonLondonMarkers.findIndex(m => 
     m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
@@ -107,7 +106,8 @@ function getPinRotation(marker) {
   }
   // THE MAMERTINE PRISON (ROME)
   if (marker.name.toLowerCase().includes("mamertine")) {
-    return { axis: new THREE.Vector3(0, 0, 1), angle: Math.PI * 0.12 };
+    // TRY A BIG AXIS ROTATION FOR TESTING
+    return { axis: new THREE.Vector3(1, 0, 0), angle: Math.PI / 2 };
   }
   // MAISON DE FORCE (GHENT)
   if (marker.name.toLowerCase().includes("maison de force")) {
@@ -267,7 +267,7 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
-        // ALL STANDARD PINS (including mesopotamia, eastern state, etc)
+        // ALL STANDARD PINS
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = 200;
