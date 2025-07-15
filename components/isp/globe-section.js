@@ -95,7 +95,7 @@ export default function GlobeSection({ onMarkerClick }) {
         const group = new THREE.Group();
 
         // 3D Pin at large scale
-        const scale = 10; // LARGE for debugging
+        const scale = 100; // LARGE for debugging
         const pin = pinModel.clone(true);
         pin.traverse((child) => {
           if (child.isMesh) child.castShadow = false;
