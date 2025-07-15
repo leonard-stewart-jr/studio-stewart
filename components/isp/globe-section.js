@@ -8,10 +8,6 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
-const LONDON_WHEEL_RADIUS = 1.1;
-const LONDON_WHEEL_ALTITUDE = 0.018;
-
-const DOT_SIZE = 0.7;
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 
@@ -24,7 +20,6 @@ function loadPinModel() {
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
     loader.load("/models/3D_map_pin.glb", (gltf) => {
-      // Color the pin body red, leave metal gray
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
           if (
@@ -47,12 +42,23 @@ function getNonLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
 }
 
-// Helper: get a US marker (not London), use "EASTERN STATE PENITENTIARY OPENS" if possible
 function getComparisonMarkerIdx(nonLondonMarkers) {
   const idx = nonLondonMarkers.findIndex(m => 
     m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
   );
   return idx !== -1 ? idx : 0;
+}
+
+// Utility: Converts lat/lng to globe vector
+function latLngAltToVec3(lat, lng, altitude = 0) {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lng + 180) * (Math.PI / 180);
+  const r = 1 + altitude;
+  return new THREE.Vector3(
+    r * Math.sin(phi) * Math.cos(theta),
+    r * Math.cos(phi),
+    r * Math.sin(phi) * Math.sin(theta)
+  );
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -85,7 +91,6 @@ export default function GlobeSection({ onMarkerClick }) {
         lng: nonLondonMarkers[comparisonMarkerIdx].lon,
         markerId: nonLondonMarkers[comparisonMarkerIdx].name,
         isStandardPin: true,
-        showHelper: true,
         altitude: DOT_ALTITUDE,
       }
     ];
@@ -94,8 +99,8 @@ export default function GlobeSection({ onMarkerClick }) {
       if (obj.isStandardPin && pinModel) {
         const group = new THREE.Group();
 
-        // 3D Pin at large scale
-        const scale = 100; // LARGE for debugging
+        // 3D Pin at 2x previous scale
+        const scale = 200; // Previous was 100
         const pin = pinModel.clone(true);
         pin.traverse((child) => {
           if (child.isMesh) child.castShadow = false;
@@ -103,27 +108,31 @@ export default function GlobeSection({ onMarkerClick }) {
         pin.scale.set(scale, scale, scale);
         pin.position.set(0, 0, 0);
 
-        group.add(pin);
+        // Rotate pin so tip points toward globe surface
+        // Pin's "down" direction assumed to be -Y
+        // Get globe surface vector at marker location
+        const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+        // Make pin point "down" (-Y) along globeVec
+        // Default orientation is -Y, so align -Y to globeVec direction
+        const target = globeVec.clone().normalize();
+        const up = new THREE.Vector3(0, -1, 0); // Pin's "down" axis
 
-        // Helper box at origin
-        if (obj.showHelper) {
-          const helperBox = new THREE.Mesh(
-            new THREE.BoxGeometry(0.5, 0.5, 0.5),
-            new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-          );
-          group.add(helperBox);
-        }
+        // Compute quaternion rotation from -Y to target vector
+        const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
+        pin.setRotationFromQuaternion(quaternion);
+
+        group.add(pin);
 
         // Debug: log bounding box and position
         const box = new THREE.Box3().setFromObject(pin);
         const size = box.getSize(new THREE.Vector3());
         console.log(
-          "[DEBUG] Rendering ONLY 3D pin for marker:",
+          "[DEBUG] Rendering 3D pin for marker:",
           obj.markerId,
           "Scale:", scale,
           "BBox size:", size,
           "Pin position:", pin.position,
-          "Pin model:", pin
+          "Pin rotation:", pin.rotation
         );
 
         group.userData = { markerId: obj.markerId };
