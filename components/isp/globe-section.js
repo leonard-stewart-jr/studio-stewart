@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { useRef, useState, useMemo, useEffect } from "react";
 import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 // Dynamic import because react-globe.gl uses WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -20,6 +21,39 @@ const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
 const CLUSTER_RING_RATIO = 0.74;
 const CLUSTER_RING_ALT_OFFSET = 0.0035;
+
+// 3D pin model state (loaded once on client)
+let pinModel = null;
+let pinModelPromise = null;
+function loadPinModel() {
+  if (pinModel) return Promise.resolve(pinModel);
+  if (pinModelPromise) return pinModelPromise;
+  pinModelPromise = new Promise((resolve, reject) => {
+    const loader = new GLTFLoader();
+    loader.load("/models/3D_map_pin.glb", (gltf) => {
+      // Color the pin body red, leave metal gray
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          // Adjust by name/material as needed
+          if (
+            (child.material && child.material.name && child.material.name.toLowerCase().includes("red")) ||
+            child.name.toLowerCase().includes("body") ||
+            child.name.toLowerCase().includes("pin")
+          ) {
+            child.material.color.set(DOT_COLOR);
+          }
+          // Optionally set metal to gray if needed
+          // else if (child.material && child.material.name && child.material.name.toLowerCase().includes("metal")) {
+          //   child.material.color.set("#999");
+          // }
+        }
+      });
+      pinModel = gltf.scene;
+      resolve(pinModel);
+    }, undefined, reject);
+  });
+  return pinModelPromise;
+}
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -62,17 +96,21 @@ function toRoman(num) {
   return result;
 }
 
-// Load map-pin SVG texture once (outside component for efficiency)
-const textureLoader = typeof window !== "undefined" ? new THREE.TextureLoader() : null;
-const mapPinTexture = textureLoader
-  ? textureLoader.load("/images/map-pin.svg")
-  : null;
-
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const globeContainerRef = useRef();
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
+  const [pinReady, setPinReady] = useState(false);
+
+  // Load the 3D pin model on mount
+  useEffect(() => {
+    let mounted = true;
+    loadPinModel().then(() => {
+      if (mounted) setPinReady(true);
+    });
+    return () => { mounted = false; };
+  }, []);
 
   const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
   const tocRefs = useRef([]);
@@ -144,6 +182,7 @@ export default function GlobeSection({ onMarkerClick }) {
     let customLineObject = undefined;
 
     if (!londonExpanded) {
+      // ALL PINS ARE 3D except the cluster
       objectsData = [
         {
           ...londonCenter,
@@ -152,20 +191,22 @@ export default function GlobeSection({ onMarkerClick }) {
           altitude: DOT_ALTITUDE,
           label: "London Cluster",
         },
+        ...nonLondonMarkers.map(m => ({
+          ...m,
+          lat: m.lat,
+          lng: m.lon,
+          markerId: m.name,
+          isStandardPin: true,
+          altitude: DOT_ALTITUDE,
+        })),
       ];
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
+          // White circle with red open ring (original style)
           const group = new THREE.Group();
-          // White cluster dot: use map-pin SVG, 1.5x bigger
-          const dotRadius = CLUSTER_DOT_SIZE * 1.5 * 1.3;
+          const dotRadius = CLUSTER_DOT_SIZE * 1.3;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
-          const dotMat = mapPinTexture
-            ? new THREE.MeshBasicMaterial({
-                map: mapPinTexture,
-                color: DOT_COLOR,
-                transparent: true,
-              })
-            : new THREE.MeshBasicMaterial({ color: DOT_COLOR });
+          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
           const dot = new THREE.Mesh(dotGeom, dotMat);
           dot.renderOrder = 2;
           dot.position.set(0, 0, 0);
@@ -187,9 +228,22 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: "london-cluster" };
           return group;
         }
+        if (obj.isStandardPin && pinModel) {
+          // Normal pin, scale to match dot size
+          const scale = DOT_SIZE * 1.3 * 2.5; // Tune factor for visual match
+          const pin = pinModel.clone(true);
+          pin.traverse((child) => {
+            if (child.isMesh) child.castShadow = false;
+          });
+          pin.scale.set(scale, scale, scale);
+          pin.position.set(0, 0, 0);
+          pin.userData = { markerId: obj.markerId };
+          return pin;
+        }
         return null;
       };
     } else {
+      // London wheel: ALL pins are 3D pins, bigger size
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
       objectsData = londonMarkers.map((marker, idx) => {
@@ -201,7 +255,6 @@ export default function GlobeSection({ onMarkerClick }) {
           lat,
           lng,
           color: DOT_COLOR,
-          // 3x bigger on expansion (size property)
           size: CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3,
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
@@ -209,6 +262,7 @@ export default function GlobeSection({ onMarkerClick }) {
           actualLat: marker.lat,
           actualLng: marker.lon,
           label: marker.name,
+          isStandardPin: true,
         };
       });
 
@@ -227,19 +281,17 @@ export default function GlobeSection({ onMarkerClick }) {
       }));
 
       customPointObject = (obj) => {
-        if (obj.isLondonWheel) {
-          // Use map-pin SVG, 3x bigger
-          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 3 * 0.5 * 1.3, 32);
-          const mat = mapPinTexture
-            ? new THREE.MeshBasicMaterial({
-                map: mapPinTexture,
-                color: DOT_COLOR,
-                transparent: true,
-              })
-            : new THREE.MeshBasicMaterial({ color: DOT_COLOR });
-          const mesh = new THREE.Mesh(geom, mat);
-          mesh.userData = { markerId: obj.markerId };
-          return mesh;
+        if (obj.isStandardPin && pinModel) {
+          // Pin model, 3x bigger for expanded
+          const scale = CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3 * 2.1; // Tune factor for visual match
+          const pin = pinModel.clone(true);
+          pin.traverse((child) => {
+            if (child.isMesh) child.castShadow = false;
+          });
+          pin.scale.set(scale, scale, scale);
+          pin.position.set(0, 0, 0);
+          pin.userData = { markerId: obj.markerId };
+          return pin;
         }
         return null;
       };
@@ -272,7 +324,7 @@ export default function GlobeSection({ onMarkerClick }) {
       };
     }
     return { pointsData, objectsData, linesData, customPointObject, customLineObject, tocList };
-  }, [londonExpanded]);
+  }, [londonExpanded, pinReady]);
 
   // Calculate marker screen positions for all globeLocations -- PAGE coordinates!
   useEffect(() => {
@@ -347,6 +399,14 @@ export default function GlobeSection({ onMarkerClick }) {
       }
       setLondonExpanded(false);
       setHovered(null);
+    } else if (obj && obj.isStandardPin) {
+      // For non-London markers etc
+      const marker = globeLocations.find((m) => m.name === obj.markerId);
+      if (marker) {
+        onMarkerClick(marker);
+      }
+      setLondonExpanded(false);
+      setHovered(null);
     }
   };
 
@@ -366,6 +426,27 @@ export default function GlobeSection({ onMarkerClick }) {
     setHovered(null);
   }
   const isMobile = vw < 800;
+
+  // Wait for pin model to be ready
+  if (!pinReady) {
+    return (
+      <section
+        className="isp-globe-section"
+        style={{
+          width: "100vw",
+          minHeight: availHeight,
+          height: availHeight,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 24,
+          color: "#b32c2c",
+        }}
+      >
+        Loading globe...
+      </section>
+    );
+  }
 
   return (
     <section
