@@ -11,12 +11,9 @@ const LONDON_WHEEL_RADIUS = 1.1;
 const LONDON_WHEEL_ALTITUDE = 0.018;
 
 // --- DOT SIZE CONSTANTS ---
-// All cluster/center/cluster wheel red dots and the white cluster dot are now based on DOT_SIZE
 const DOT_SIZE = 0.7; // Base size for normal timeline red dots
-
-// Sizing per latest user instructions:
 const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75; // red icon in cluster: 3/4 normal red dot size
-const CLUSTER_DOT_SIZE = DOT_SIZE * 2.2;        // white icon in cluster: 1.5x normal red dot size
+const CLUSTER_DOT_SIZE = DOT_SIZE * 2.2;        // white icon in cluster: much larger now
 
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
@@ -74,14 +71,15 @@ export default function GlobeSection({ onMarkerClick }) {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [londonExpanded, setLondonExpanded] = useState(false);
 
+  // NEW: markerScreenPositions state for visual debugging
+  const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
+
   // Tooltip mouse position tracking
   useEffect(() => {
-    const handleMouseMove = (e) =>
-      setMouse({ x: e.clientX, y: e.clientY });
+    const handleMouseMove = (e) => setMouse({ x: e.clientX, y: e.clientY });
     if (hovered) window.addEventListener("mousemove", handleMouseMove);
     else setMouse({ x: 0, y: 0 });
-    return () =>
-      window.removeEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [hovered]);
 
   // Auto center globe
@@ -120,12 +118,10 @@ export default function GlobeSection({ onMarkerClick }) {
     const londonCenter = getLondonClusterCenter();
 
     // Table of Contents: Use ALL locations, in order as in globeLocations
-    // --- PATCH: Update titles for 1 and 2 to match custom titles ---
     const tocList = globeLocations.map((marker, idx) => {
       let overrideName = marker.name;
       if (idx === 0) overrideName = "MESOPOTAMIA: THE FIRST PRISONS";
       if (idx === 1) overrideName = "THE MAMERTINE PRISON (CARCER TULLIANUM)";
-      // Date for second line
       let year = "";
       if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
         year = marker.timeline[0].year;
@@ -144,7 +140,7 @@ export default function GlobeSection({ onMarkerClick }) {
       lat: m.lat,
       lng: m.lon,
       color: DOT_COLOR,
-      size: DOT_SIZE * 1.3, // SCALE UP ALL DOTS BY 1.3x
+      size: DOT_SIZE * 1.3,
       altitude: DOT_ALTITUDE,
       markerId: m.name,
     }));
@@ -155,7 +151,6 @@ export default function GlobeSection({ onMarkerClick }) {
     let customLineObject = undefined;
 
     if (!londonExpanded) {
-      // Show one cluster dot for London as a custom object
       objectsData = [
         {
           ...londonCenter,
@@ -164,12 +159,10 @@ export default function GlobeSection({ onMarkerClick }) {
           altitude: DOT_ALTITUDE,
         },
       ];
-      // Custom renderer for the cluster dot: white dot with red ring, at CLUSTER_DOT_SIZE (white 1.5x red)
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          const dotRadius = CLUSTER_DOT_SIZE * 0.5 * 1.3; // White dot: 1.5x DOT_SIZE, then 1.3x for global scaling
-          // White dot at base altitude
+          const dotRadius = CLUSTER_DOT_SIZE * 0.5 * 1.3;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
           const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
           const dot = new THREE.Mesh(dotGeom, dotMat);
@@ -177,7 +170,6 @@ export default function GlobeSection({ onMarkerClick }) {
           dot.position.set(0, 0, 0);
           group.add(dot);
 
-          // Red ring, slightly above base altitude for visibility
           const ringOuter = dotRadius * CLUSTER_RING_RATIO;
           const ringInner = ringOuter * 0.76;
           const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
@@ -187,7 +179,7 @@ export default function GlobeSection({ onMarkerClick }) {
             transparent: false,
           });
           const ring = new THREE.Mesh(ringGeom, ringMat);
-          ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100); // move up slightly (100x for scale)
+          ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100);
           ring.renderOrder = 3;
           group.add(ring);
 
@@ -197,9 +189,8 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // Expanded: show each London marker in a wheel formation (red dots, 0.75x DOT_SIZE)
       const N = londonMarkers.length;
-      const wheelRadius = LONDON_WHEEL_RADIUS * 1.3; // SCALE UP BY 1.3x
+      const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
         const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
@@ -209,7 +200,7 @@ export default function GlobeSection({ onMarkerClick }) {
           lat,
           lng,
           color: DOT_COLOR,
-          size: CLUSTER_WHEEL_DOT_SIZE * 1.3, // (DOT_SIZE * 0.75) * 1.3
+          size: CLUSTER_WHEEL_DOT_SIZE * 1.3,
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
@@ -218,7 +209,6 @@ export default function GlobeSection({ onMarkerClick }) {
         };
       });
 
-      // Dotted, semi-transparent lines from cluster center to real locations
       linesData = objectsData.map((obj) => ({
         start: {
           lat: londonCenter.lat,
@@ -233,11 +223,9 @@ export default function GlobeSection({ onMarkerClick }) {
         markerId: obj.markerId,
       }));
 
-      // Custom renderer for the cluster wheel dots (smaller red)
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
           const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5 * 1.3, 32);
-          // (DOT_SIZE * 0.75 * 0.5 * 1.3) radius
           const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
@@ -246,7 +234,6 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
 
-      // Custom renderer for the lines (dotted, semi-transparent red)
       customLineObject = (lineObj) => {
         const start = latLngAltToVec3(
           lineObj.start.lat,
@@ -276,6 +263,44 @@ export default function GlobeSection({ onMarkerClick }) {
     }
     return { pointsData, objectsData, linesData, customPointObject, customLineObject, tocList };
   }, [londonExpanded]);
+
+  // -- NEW: Calculate marker screen positions for all globeLocations --
+  useEffect(() => {
+    function updateMarkerPositions() {
+      if (!globeEl.current || typeof globeEl.current.getScreenCoords !== "function") return;
+      const positions = globeLocations.map((marker, idx) => {
+        const { lat, lon } = marker;
+        // getScreenCoords returns { x, y } in pixels relative to globe canvas
+        const coords = globeEl.current.getScreenCoords(lat, lon);
+        return {
+          marker,
+          idx,
+          x: coords.x,
+          y: coords.y,
+        };
+      });
+      setMarkerScreenPositions(positions);
+    }
+
+    // Run when globe is ready and on window resize
+    updateMarkerPositions();
+
+    window.addEventListener("resize", updateMarkerPositions);
+
+    // Try to listen for globe camera movement (rotation, zoom)
+    // react-globe.gl does not emit camera events natively, but we can poll for changes
+    let animationFrame;
+    function pollCamera() {
+      updateMarkerPositions();
+      animationFrame = requestAnimationFrame(pollCamera);
+    }
+    animationFrame = requestAnimationFrame(pollCamera);
+
+    return () => {
+      window.removeEventListener("resize", updateMarkerPositions);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
+  }, []);
 
   // Handle clicking on London cluster or wheel dots
   const handleObjectClick = (obj) => {
@@ -316,7 +341,6 @@ export default function GlobeSection({ onMarkerClick }) {
   const availHeight = Math.max(380, vh - bannerHeight);
 
   // Globe size: make globe as large as possible, responsive, but avoid overflow on small screens
-  // INCREASE GLOBE SIZE by 1.3x AGAIN (total scaling: 1.69x original)
   const globeWidth = Math.max(500, Math.min(950, vw * 0.93)) * 1.3;
   const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60)) * 1.3;
 
@@ -330,7 +354,6 @@ export default function GlobeSection({ onMarkerClick }) {
   // Responsive: stack on mobile, row on desktop
   const isMobile = vw < 800;
 
-  // Vertically center globe and TOC in available space below banners, but shift both down by 84px
   return (
     <section
       className="isp-globe-section"
@@ -349,7 +372,6 @@ export default function GlobeSection({ onMarkerClick }) {
         overflow: "hidden",
         boxSizing: "border-box",
         position: "relative",
-        // SHIFT SECTION DOWN 84px
         marginTop: 57,
       }}
     >
@@ -446,6 +468,51 @@ export default function GlobeSection({ onMarkerClick }) {
             )}
           </div>
         )}
+        {/* Visual debugging: dots at marker screen positions */}
+        <div
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: globeWidth,
+            height: globeHeight,
+            zIndex: 99,
+          }}
+        >
+          {markerScreenPositions.map((pos, idx) => (
+            typeof pos.x === "number" && typeof pos.y === "number" ? (
+              <div
+                key={pos.marker.name + "-" + idx}
+                style={{
+                  position: "absolute",
+                  left: pos.x - 7,
+                  top: pos.y - 7,
+                  width: 14,
+                  height: 14,
+                  background: "#e6dbb9",
+                  borderRadius: "50%",
+                  border: "2px solid #b32c2c",
+                  opacity: 0.85,
+                  zIndex: 99,
+                  pointerEvents: "none",
+                  boxShadow: "0 1px 6px #3332",
+                  transition: "background 0.12s",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  color: "#b32c2c",
+                  textAlign: "center"
+                }}
+                title={pos.marker.name}
+              >
+                {pos.idx + 1}
+              </div>
+            ) : null
+          ))}
+        </div>
       </div>
       {/* Table of Contents on the right */}
       <nav
@@ -509,8 +576,8 @@ export default function GlobeSection({ onMarkerClick }) {
                 title={item.name}
               >
                 <span style={{
-                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", // CHANGED from "serif"
-                  fontWeight: 700, // CHANGED from 400, now bold
+                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  fontWeight: 700,
                   fontSize: 12,
                   minWidth: 18,
                   letterSpacing: ".03em",
