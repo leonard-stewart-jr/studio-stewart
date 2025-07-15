@@ -94,8 +94,10 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Every pin uses standard orientation (tip "stuck in" to globe)
+// Each pin has its own rotation so the tip points into the globe at its location.
 function getPinRotation(marker) {
+  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "up" (0, -1, 0) to this normal.
+  // This will work for every pin, each at its own axis.
   return { type: "standard" };
 }
 
@@ -244,7 +246,7 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation logic
+          // Orientation logic: tip points into the globe, each at its own axis
           const pinRotation = getPinRotation(obj);
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
@@ -253,6 +255,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
           if (pinRotation && pinRotation.type === "standard") {
             // Standard: tip points toward globe center, "pulled out"
+            // Each pin uses its own axis (surface normal)
             const up = new THREE.Vector3(0, -1, 0);
             const target = markerVec.clone().normalize().negate();
             const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
