@@ -13,51 +13,45 @@ const mesopotamiaSlides = [
   {
     title: "MESOPOTAMIA: THE FIRST PRISONS",
     year: "c. 3200–1600 BCE",
-    description: `
-      The first known prisons weren’t built for punishment the way we understand it today. 
-      In ancient Mesopotamia, across cities like Ur, Nippur, and Babylon, temple and state authorities operated early detention centers called “Houses of Confinement.” 
-      These spaces existed as far back as 3200 BCE, used not just to detain accused individuals, but to extract labor, collect debts, and await ritual trials or legal decisions.
-      <br/><br/>
-      Codes like that of Ur-Nammu and Hammurabi mention imprisonment as a step in legal or spiritual processing, especially in cases like kidnapping or debt. 
-      But confinement wasn’t always the end sentence; it was part of a layered justice system that combined law, economy, and religion. 
-      In hymns to Nungal, the Mesopotamian goddess of prisons, incarceration was framed as a spiritual ordeal, refining the soul through hardship, like metal in fire.
-      <br/><br/>
-      These were the first known spaces built to contain people through state power. 
-      They introduced ideas that carried through millennia: that confinement could punish, correct, and morally restore. 
-      They weren’t just early jails; they were foundational to the entire timeline of prison history, merging justice, control, and symbolic rehabilitation in one system.
-    `,
+    description:
+      "The first known prisons weren’t built for punishment the way we understand it today. " +
+      "In ancient Mesopotamia, across cities like Ur, Nippur, and Babylon, temple and state authorities operated early detention centers called “Houses of Confinement.” " +
+      "These spaces existed as far back as 3200 BCE, used not just to detain accused individuals, but to extract labor, collect debts, and await ritual trials or legal decisions.\n\n" +
+      "Codes like that of Ur-Nammu and Hammurabi mention imprisonment as a step in legal or spiritual processing, especially in cases like kidnapping or debt. " +
+      "But confinement wasn’t always the end sentence; it was part of a layered justice system that combined law, economy, and religion. " +
+      "In hymns to Nungal, the Mesopotamian goddess of prisons, incarceration was framed as a spiritual ordeal, refining the soul through hardship, like metal in fire.\n\n" +
+      "These were the first known spaces built to contain people through state power. " +
+      "They introduced ideas that carried through millennia: that confinement could punish, correct, and morally restore. " +
+      "They weren’t just early jails; they were foundational to the entire timeline of prison history, merging justice, control, and symbolic rehabilitation in one system.",
     image: "/images/isp/flaying-of-rebels-relief.jpg",
     caption: "Flaying of Rebels Relief (c. 661–631 BCE, Nineveh): Neo-Assyrian wall carving showing prisoners tortured as public warning under imperial justice."
   },
   {
     title: "Stele of Hammurabi",
     year: "c. 1754 BCE",
-    description: `
-      The Stele of Hammurabi is a stone pillar inscribed with one of the earliest and most influential legal codes in history. 
-      Dating to around 1754 BCE in Babylon, it includes rules on imprisonment and physical retribution. 
-      The code outlines punishments for theft, debt, and abuse, and established legal precedent for the use of confinement as social control.
-    `,
+    description:
+      "The Stele of Hammurabi is a stone pillar inscribed with one of the earliest and most influential legal codes in history. " +
+      "Dating to around 1754 BCE in Babylon, it includes rules on imprisonment and physical retribution. " +
+      "The code outlines punishments for theft, debt, and abuse, and established legal precedent for the use of confinement as social control.",
     image: "/images/isp/stele-of-hammurabi.png",
     caption: "Stele of Hammurabi (c. 1754 BCE, Babylon): Stone pillar inscribed with Babylon’s legal code, including rules on imprisonment and physical retribution."
   },
   {
     title: "Code of Lipit-Ishtar",
     year: "c. 1860 BCE",
-    description: `
-      The Code of Lipit-Ishtar, carved around 1860 BCE in Nippur, details civil rights and punishments in the Sumerian kingdom. 
-      This early legal code described a variety of penalties, including imprisonment, reflecting the state's growing power over individual liberty. 
-      It marks a transition toward more structured and written justice systems in Mesopotamia.
-    `,
+    description:
+      "The Code of Lipit-Ishtar, carved around 1860 BCE in Nippur, details civil rights and punishments in the Sumerian kingdom. " +
+      "This early legal code described a variety of penalties, including imprisonment, reflecting the state's growing power over individual liberty. " +
+      "It marks a transition toward more structured and written justice systems in Mesopotamia.",
     image: "/images/isp/code-of-lipit-ishtar.jpg",
     caption: "Code of Lipit-Ishtar (c. 1860 BCE, Nippur): Early legal code by Sumerian king detailing civil rights and punishments, including imprisonment."
   },
   {
     title: "Map of Ancient Mesopotamia",
     year: "",
-    description: `
-      This map provides a geographic overview showing key cities like Ur, Akkad, and Babylon where detention systems began. 
-      The dense network of city-states fostered the development of legal codes and the early use of imprisonment as a tool of statecraft.
-    `,
+    description:
+      "This map provides a geographic overview showing key cities like Ur, Akkad, and Babylon where detention systems began. " +
+      "The dense network of city-states fostered the development of legal codes and the early use of imprisonment as a tool of statecraft.",
     image: "/images/isp/map-ancient-mesopotamia.jpg",
     caption: "Map of Ancient Mesopotamia (Modern Iraq): Geographic overview showing key cities like Ur, Akkad, and Babylon where detention systems began."
   }
@@ -86,6 +80,15 @@ export default function InfoModal({ open, onClose, marker }) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
 
+  // Helper to render description with paragraphs from plain text
+  function renderParagraphs(text) {
+    return text
+      .split(/\n{2,}/)
+      .map((para, idx) => (
+        <p key={idx} style={{ marginBottom: "1em" }}>{para.trim()}</p>
+      ));
+  }
+
   return (
     <ModalBackdrop
       ref={backdropRef}
@@ -108,7 +111,9 @@ export default function InfoModal({ open, onClose, marker }) {
                 <SlideInfo>
                   <SlideTitle>{slide.title}</SlideTitle>
                   {slide.year && <SlideYear>{slide.year}</SlideYear>}
-                  <SlideDesc dangerouslySetInnerHTML={{ __html: slide.description }} />
+                  <SlideDesc>
+                    {renderParagraphs(slide.description)}
+                  </SlideDesc>
                 </SlideInfo>
                 <SlideImageWrapper>
                   <img src={slide.image} alt={slide.title} />
