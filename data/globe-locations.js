@@ -1,6 +1,6 @@
 export default [
   {
-    name: "MESOPOTAMIA: THE FIRST PRISONS (c. 3200–1600 BCE)",
+    name: "MESOPOTAMIA: THE FIRST PRISONS",
     lat: 32.5,
     lon: 44.5,
     timeline: [
@@ -92,7 +92,7 @@ What makes the Mamertine significant in prison history is that it marked a shift
     ]
   },
   {
-    name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON (c. 1078–1952 CE)",
+    name: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON",
     lat: 51.5081,
     lon: -0.0759,
     clusterGroup: "london",
@@ -149,7 +149,7 @@ The Tower was used into the modern era, even during both World Wars; the last pr
     ]
   },
   {
-    name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM (c. 1188–1902 CE)",
+    name: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM",
     lat: 51.5153,
     lon: -0.1012,
     clusterGroup: "london",
@@ -215,7 +215,7 @@ Newgate’s reputation was shaped by literature as much as architecture; writers
     ]
   },
   {
-    name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON (c. 1557 CE)",
+    name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON",
     lat: 51.0543,
     lon: 3.7215,
     timeline: [
@@ -259,7 +259,7 @@ While critics later described it as overly militarized, the Maison de Force laid
     ]
   },
   {
-    name: "PANOPTICON THEORY BY JEREMY BENTHAM (c. 1791)",
+    name: "PANOPTICON THEORY BY JEREMY BENTHAM",
     lat: 51.5,
     lon: -0.1,
     clusterGroup: "london",
