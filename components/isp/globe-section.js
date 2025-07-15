@@ -64,15 +64,14 @@ function toRoman(num) {
 
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
+  const globeContainerRef = useRef();
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
 
-  // Visual debugging: marker screen positions
   const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
-
-  // Refs for TOC buttons
   const tocRefs = useRef([]);
   const [tocScreenPositions, setTocScreenPositions] = useState([]);
+  const [svgDims, setSvgDims] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
@@ -254,21 +253,33 @@ export default function GlobeSection({ onMarkerClick }) {
     return { pointsData, objectsData, linesData, customPointObject, customLineObject, tocList };
   }, [londonExpanded]);
 
-  // Calculate marker screen positions for all globeLocations
+  // Calculate marker screen positions for all globeLocations -- PAGE coordinates!
   useEffect(() => {
     function updateMarkerPositions() {
-      if (!globeEl.current || typeof globeEl.current.getScreenCoords !== "function") return;
-      const positions = globeLocations.map((marker, idx) => {
+      if (
+        !globeEl.current ||
+        typeof globeEl.current.getScreenCoords !== "function" ||
+        !globeContainerRef.current
+      )
+        return;
+
+      const globeRect = globeContainerRef.current.getBoundingClientRect();
+
+      const positions = globeLocations.map((marker) => {
         const { lat, lon } = marker;
         const coords = globeEl.current.getScreenCoords(lat, lon);
+        // coords are relative to globe canvas, add globe's position in window
         return {
-          marker,
-          idx,
-          x: coords.x,
-          y: coords.y,
+          x: globeRect.left + coords.x,
+          y: globeRect.top + coords.y,
         };
       });
       setMarkerScreenPositions(positions);
+
+      setSvgDims({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     }
 
     updateMarkerPositions();
@@ -286,7 +297,7 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }, []);
 
-  // Calculate TOC entry screen positions
+  // Calculate TOC entry screen positions (already in page coordinates)
   useEffect(() => {
     function updateTocPositions() {
       const positions = tocRefs.current.map(ref => {
@@ -358,6 +369,7 @@ export default function GlobeSection({ onMarkerClick }) {
     >
       {/* Globe on the left */}
       <div
+        ref={globeContainerRef}
         style={{
           flex: "0 1 auto",
           width: globeWidth,
@@ -531,12 +543,13 @@ export default function GlobeSection({ onMarkerClick }) {
         position: 'fixed',
         left: 0,
         top: 0,
-        width: '100vw',
-        height: '100vh',
+        width: svgDims.width,
+        height: svgDims.height,
         pointerEvents: 'none',
         zIndex: 90,
+        pointerEvents: "none",
       }}>
-        <svg width={window.innerWidth} height={window.innerHeight} style={{ display: 'block', width: '100vw', height: '100vh' }}>
+        <svg width={svgDims.width} height={svgDims.height} style={{ display: 'block', width: svgDims.width, height: svgDims.height }}>
           {markerScreenPositions.map((markerPos, idx) => {
             const tocPos = tocScreenPositions[idx];
             if (!markerPos || !tocPos || typeof markerPos.x !== "number" || typeof markerPos.y !== "number" || typeof tocPos.x !== "number" || typeof tocPos.y !== "number") return null;
