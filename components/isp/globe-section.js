@@ -409,51 +409,6 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
-        {/* Visual debugging: dots at marker screen positions */}
-        <div
-          style={{
-            pointerEvents: "none",
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: globeWidth,
-            height: globeHeight,
-            zIndex: 99,
-          }}
-        >
-          {markerScreenPositions.map((pos, idx) => (
-            typeof pos.x === "number" && typeof pos.y === "number" ? (
-              <div
-                key={pos.marker.name + "-" + idx}
-                style={{
-                  position: "absolute",
-                  left: pos.x - 7,
-                  top: pos.y - 7,
-                  width: 14,
-                  height: 14,
-                  background: "#e6dbb9",
-                  borderRadius: "50%",
-                  border: "2px solid #b32c2c",
-                  opacity: 0.85,
-                  zIndex: 99,
-                  pointerEvents: "none",
-                  boxShadow: "0 1px 6px #3332",
-                  transition: "background 0.12s",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 9,
-                  fontWeight: 700,
-                  color: "#b32c2c",
-                  textAlign: "center"
-                }}
-                title={pos.marker.name}
-              >
-                {pos.idx + 1}
-              </div>
-            ) : null
-          ))}
-        </div>
       </div>
       {/* Table of Contents on the right */}
       <nav
