@@ -553,7 +553,7 @@ export default function GlobeSection({ onMarkerClick }) {
           lineStartLat={(l) => l.start.lat}
           lineStartLng={(l) => l.start.lng}
           lineStartAltitude={(l) => l.start.alt}
-          lineEndLat={(l) => l.end.lat)
+          lineEndLat={(l) => l.end.lat}
           lineEndLng={(l) => l.end.lng}
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
