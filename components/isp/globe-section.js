@@ -150,8 +150,8 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          // FIX: Make the white cluster dot match the standard red dot size
-          const dotRadius = CLUSTER_DOT_SIZE * 1.3;
+          // 1.5x bigger than last version for the white cluster dot
+          const dotRadius = CLUSTER_DOT_SIZE * 1.5 * 1.3;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
           const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
           const dot = new THREE.Mesh(dotGeom, dotMat);
@@ -189,7 +189,8 @@ export default function GlobeSection({ onMarkerClick }) {
           lat,
           lng,
           color: DOT_COLOR,
-          size: CLUSTER_WHEEL_DOT_SIZE * 1.3,
+          // 3x bigger on expansion (size property)
+          size: CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3,
           altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
@@ -215,7 +216,8 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
-          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 0.5 * 1.3, 32);
+          // 3x bigger on expansion (geometry)
+          const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 3 * 0.5 * 1.3, 32);
           const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
