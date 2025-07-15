@@ -42,10 +42,6 @@ function loadPinModel() {
           ) {
             child.material.color.set(DOT_COLOR);
           }
-          // Optionally set metal to gray if needed
-          // else if (child.material && child.material.name && child.material.name.toLowerCase().includes("metal")) {
-          //   child.material.color.set("#999");
-          // }
         }
       });
       pinModel = gltf.scene;
@@ -103,7 +99,6 @@ export default function GlobeSection({ onMarkerClick }) {
   const [londonExpanded, setLondonExpanded] = useState(false);
   const [pinReady, setPinReady] = useState(false);
 
-  // Load the 3D pin model on mount
   useEffect(() => {
     let mounted = true;
     loadPinModel().then(() => {
@@ -138,7 +133,6 @@ export default function GlobeSection({ onMarkerClick }) {
   }, [londonExpanded]);
 
   const {
-    pointsData,
     objectsData,
     linesData,
     customPointObject,
@@ -165,24 +159,13 @@ export default function GlobeSection({ onMarkerClick }) {
       }
     });
 
-    let pointsData = nonLondonMarkers.map((m) => ({
-      ...m,
-      lat: m.lat,
-      lng: m.lon,
-      color: DOT_COLOR,
-      size: DOT_SIZE * 1.3,
-      altitude: DOT_ALTITUDE,
-      markerId: m.name,
-      label: m.name,
-    }));
-
     let objectsData = [];
     let linesData = [];
     let customPointObject = undefined;
     let customLineObject = undefined;
 
     if (!londonExpanded) {
-      // ALL PINS ARE 3D except the cluster
+      // Only objectsData (no pointsData)
       objectsData = [
         {
           ...londonCenter,
@@ -202,7 +185,6 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
-          // White circle with red open ring (original style)
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 1.3;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
@@ -229,8 +211,7 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
         if (obj.isStandardPin && pinModel) {
-          // Normal pin, scale to match dot size
-          const scale = DOT_SIZE * 1.3 * 2.5; // Tune factor for visual match
+          const scale = DOT_SIZE * 1.3 * 2.5; // Tune for visual match
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
@@ -243,7 +224,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // London wheel: ALL pins are 3D pins, bigger size
+      // London wheel: pins for London, larger
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
       objectsData = londonMarkers.map((marker, idx) => {
@@ -254,15 +235,13 @@ export default function GlobeSection({ onMarkerClick }) {
           ...marker,
           lat,
           lng,
-          color: DOT_COLOR,
-          size: CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3,
-          altitude: LONDON_WHEEL_ALTITUDE,
           markerId: marker.name,
           isLondonWheel: true,
           actualLat: marker.lat,
           actualLng: marker.lon,
           label: marker.name,
           isStandardPin: true,
+          altitude: LONDON_WHEEL_ALTITUDE,
         };
       });
 
@@ -282,8 +261,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
-          // Pin model, 3x bigger for expanded
-          const scale = CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3 * 2.1; // Tune factor for visual match
+          const scale = CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3 * 2.1;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
@@ -323,7 +301,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return line;
       };
     }
-    return { pointsData, objectsData, linesData, customPointObject, customLineObject, tocList };
+    return { objectsData, linesData, customPointObject, customLineObject, tocList };
   }, [londonExpanded, pinReady]);
 
   // Calculate marker screen positions for all globeLocations -- PAGE coordinates!
@@ -400,7 +378,6 @@ export default function GlobeSection({ onMarkerClick }) {
       setLondonExpanded(false);
       setHovered(null);
     } else if (obj && obj.isStandardPin) {
-      // For non-London markers etc
       const marker = globeLocations.find((m) => m.name === obj.markerId);
       if (marker) {
         onMarkerClick(marker);
@@ -496,7 +473,7 @@ export default function GlobeSection({ onMarkerClick }) {
           backgroundColor="rgba(0,0,0,0)"
           width={globeWidth}
           height={globeHeight}
-          pointsData={pointsData}
+          pointsData={[]} // <--- NO POINTS, ONLY OBJECTS
           pointLat="lat"
           pointLng="lng"
           pointColor="color"
