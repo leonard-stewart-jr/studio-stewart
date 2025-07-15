@@ -1,192 +1,291 @@
-import { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import { useEffect, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Navigation, Keyboard } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import styled from "styled-components";
 
-// Helper: get modal id (safe file name) from marker name
-function getModalId(name) {
-  if (!name) return "";
-  // Use lowercased, keep only letters/numbers, dash for spaces, strip punctuation/years
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+// Only needed once in your app
+SwiperCore.use([Navigation, Keyboard]);
 
-// Helper: theme per modalId
-const MODAL_THEMES = {
-  mesopotamia: {
-    background: "#f9f6eb",
-    accent: "#b32c2c"
+// Data structure for Mesopotamia modal slides
+const mesopotamiaSlides = [
+  {
+    title: "MESOPOTAMIA: THE FIRST PRISONS",
+    year: "c. 3200–1600 BCE",
+    description: `
+      The first known prisons weren’t built for punishment the way we understand it today. 
+      In ancient Mesopotamia, across cities like Ur, Nippur, and Babylon, temple and state authorities operated early detention centers called “Houses of Confinement.” 
+      These spaces existed as far back as 3200 BCE, used not just to detain accused individuals, but to extract labor, collect debts, and await ritual trials or legal decisions.
+      <br/><br/>
+      Codes like that of Ur-Nammu and Hammurabi mention imprisonment as a step in legal or spiritual processing, especially in cases like kidnapping or debt. 
+      But confinement wasn’t always the end sentence; it was part of a layered justice system that combined law, economy, and religion. 
+      In hymns to Nungal, the Mesopotamian goddess of prisons, incarceration was framed as a spiritual ordeal, refining the soul through hardship, like metal in fire.
+      <br/><br/>
+      These were the first known spaces built to contain people through state power. 
+      They introduced ideas that carried through millennia: that confinement could punish, correct, and morally restore. 
+      They weren’t just early jails; they were foundational to the entire timeline of prison history, merging justice, control, and symbolic rehabilitation in one system.
+    `,
+    image: "/images/isp/flaying-of-rebels-relief.jpg",
+    caption: "Flaying of Rebels Relief (c. 661–631 BCE, Nineveh): Neo-Assyrian wall carving showing prisoners tortured as public warning under imperial justice."
   },
-  // Add more here as needed
-};
+  {
+    title: "Stele of Hammurabi",
+    year: "c. 1754 BCE",
+    description: `
+      The Stele of Hammurabi is a stone pillar inscribed with one of the earliest and most influential legal codes in history. 
+      Dating to around 1754 BCE in Babylon, it includes rules on imprisonment and physical retribution. 
+      The code outlines punishments for theft, debt, and abuse, and established legal precedent for the use of confinement as social control.
+    `,
+    image: "/images/isp/stele-of-hammurabi.png",
+    caption: "Stele of Hammurabi (c. 1754 BCE, Babylon): Stone pillar inscribed with Babylon’s legal code, including rules on imprisonment and physical retribution."
+  },
+  {
+    title: "Code of Lipit-Ishtar",
+    year: "c. 1860 BCE",
+    description: `
+      The Code of Lipit-Ishtar, carved around 1860 BCE in Nippur, details civil rights and punishments in the Sumerian kingdom. 
+      This early legal code described a variety of penalties, including imprisonment, reflecting the state's growing power over individual liberty. 
+      It marks a transition toward more structured and written justice systems in Mesopotamia.
+    `,
+    image: "/images/isp/code-of-lipit-ishtar.jpg",
+    caption: "Code of Lipit-Ishtar (c. 1860 BCE, Nippur): Early legal code by Sumerian king detailing civil rights and punishments, including imprisonment."
+  },
+  {
+    title: "Map of Ancient Mesopotamia",
+    year: "",
+    description: `
+      This map provides a geographic overview showing key cities like Ur, Akkad, and Babylon where detention systems began. 
+      The dense network of city-states fostered the development of legal codes and the early use of imprisonment as a tool of statecraft.
+    `,
+    image: "/images/isp/map-ancient-mesopotamia.jpg",
+    caption: "Map of Ancient Mesopotamia (Modern Iraq): Geographic overview showing key cities like Ur, Akkad, and Babylon where detention systems began."
+  }
+];
 
 export default function InfoModal({ open, onClose, marker }) {
-  const [htmlContent, setHtmlContent] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [loadError, setLoadError] = useState(false);
+  const backdropRef = useRef(null);
 
-  // Get modalId
-  const modalId = marker ? getModalId(marker.name.split(":")[0]) : "";
-  const theme = MODAL_THEMES[modalId] || { background: "#fff", accent: "#b32c2c" };
+  // Modal should only render for Mesopotamia (for now)
+  if (!open || !marker || !marker.name.toLowerCase().startsWith("mesopotamia")) return null;
 
-  useEffect(() => {
-    if (!open || !modalId) {
-      setHtmlContent(null);
-      setLoadError(false);
-      return;
+  // Close modal on outside click
+  const handleBackdropClick = (e) => {
+    if (e.target === backdropRef.current) {
+      onClose();
     }
+  };
 
-    setLoading(true);
-    setHtmlContent(null);
-    setLoadError(false);
-
-    fetch(`/modals/isp/${modalId}.html`)
-      .then(res => {
-        if (!res.ok) throw new Error("Not found");
-        return res.text();
-      })
-      .then(html => {
-        setHtmlContent(html);
-        setLoading(false);
-      })
-      .catch(() => {
-        setHtmlContent(null);
-        setLoading(false);
-        setLoadError(true);
-      });
-  }, [open, modalId]);
-
-  if (!open || !marker) return null;
+  // Trap focus in modal
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = e => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, onClose]);
 
   return (
-    <Overlay onClick={onClose}>
-      <ModalContainer
-        themebg={theme.background}
-        accent={theme.accent}
-        onClick={e => e.stopPropagation()}
-      >
-        <CloseButton onClick={onClose} accent={theme.accent}>&times;</CloseButton>
-        {loading && (
-          <div style={{ padding: 64, textAlign: "center", color: theme.accent }}>
-            <div className="loader" style={{
-              margin: "0 auto 16px auto",
-              border: `4px solid #eee`,
-              borderTop: `4px solid ${theme.accent}`,
-              borderRadius: "50%",
-              width: 36, height: 36,
-              animation: "spin 1s linear infinite"
-            }} />
-            <div>Loading...</div>
-            <style>{`
-              @keyframes spin {
-                0% { transform: rotate(0deg);}
-                100% { transform: rotate(360deg);}
-              }
-            `}</style>
-          </div>
-        )}
-        {/* If HTML loaded, show it. Otherwise, fallback to legacy JSX */}
-        {!loading && htmlContent && (
-          <HTMLContent
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-            themebg={theme.background}
-            accent={theme.accent}
-          />
-        )}
-        {!loading && !htmlContent && loadError && (
-          // Fallback: show legacy modal (old rendering)
-          <LegacyContent marker={marker} />
-        )}
-      </ModalContainer>
-    </Overlay>
-  );
-}
-
-// Legacy fallback for events without HTML file
-function LegacyContent({ marker }) {
-  if (!marker || !marker.timeline) return <div>No data.</div>;
-  const event = marker.timeline[0];
-  return (
-    <div style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
-      <h2 style={{ marginTop: 0 }}>{marker.name}</h2>
-      <div style={{ color: "#b1b1ae", fontWeight: 700 }}>{event.year}</div>
-      <div style={{ fontWeight: 600, margin: "8px 0 12px 0" }}>{event.title}</div>
-      <div style={{ marginBottom: 16 }}>{event.content}</div>
-      {event.images && event.images.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
-          {event.images.map((img, i) => (
-            <div key={i} style={{ maxWidth: 160 }}>
-              <img src={img.src} alt={img.caption} style={{ width: "100%", borderRadius: 7, marginBottom: 2 }} />
-              <div style={{ fontSize: 12, color: "#888" }}>{img.caption}</div>
-            </div>
+    <ModalBackdrop
+      ref={backdropRef}
+      onClick={handleBackdropClick}
+      aria-modal="true"
+      role="dialog"
+    >
+      <ModalBody onClick={e => e.stopPropagation()}>
+        <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
+        <Swiper
+          navigation
+          keyboard
+          spaceBetween={0}
+          slidesPerView={1}
+          style={{ width: "100%", height: "100%" }}
+        >
+          {mesopotamiaSlides.map((slide, idx) => (
+            <SwiperSlide key={idx}>
+              <SlideLayout>
+                <SlideInfo>
+                  <SlideTitle>{slide.title}</SlideTitle>
+                  {slide.year && <SlideYear>{slide.year}</SlideYear>}
+                  <SlideDesc dangerouslySetInnerHTML={{ __html: slide.description }} />
+                </SlideInfo>
+                <SlideImageWrapper>
+                  <img src={slide.image} alt={slide.title} />
+                  <SlideCaption>{slide.caption}</SlideCaption>
+                </SlideImageWrapper>
+              </SlideLayout>
+            </SwiperSlide>
           ))}
-        </div>
-      )}
-      {event.sources && (
-        <div style={{ fontSize: 13, color: "#888" }}>
-          <b>Sources:</b>
-          <ul>
-            {event.sources.map((src, i) => <li key={i}>{src}</li>)}
-          </ul>
-        </div>
-      )}
-    </div>
+        </Swiper>
+      </ModalBody>
+    </ModalBackdrop>
   );
 }
 
-const Overlay = styled.div`
-  position: fixed; inset: 0; z-index: 999;
-  background: rgba(0,0,0,0.48);
-  display: flex; align-items: center; justify-content: center;
+// Styles
+const ModalBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0,0,0,0.56);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 76px; /* NAV BAR HEIGHT */
+  @media (max-width: 700px) {
+    align-items: flex-start;
+    padding-top: 0;
+  }
 `;
 
-const ModalContainer = styled.div`
-  background: ${props => props.themebg || "#fff"};
-  padding: 2.2rem 2.2rem 2.7rem 2.2rem;
-  border-radius: 1rem;
-  box-shadow: 0 8px 44px #2227;
-  max-width: 680px;
-  width: 97vw;
-  max-height: 94vh;
-  overflow-y: auto;
+const ModalBody = styled.div`
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 44px #2229;
+  max-width: 1100px;
+  width: 96vw;
+  max-height: calc(100vh - 92px);
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #181818;
-  position: relative;
-  @media (max-width: 600px) {
-    padding: 1.1rem 0.6rem 1.4rem 0.6rem;
+  overflow: hidden;
+  @media (max-width: 700px) {
     max-width: 100vw;
     width: 100vw;
-    max-height: 99vh;
-    border-radius: 0.7rem;
+    height: 96vh;
+    max-height: 98vh;
+    border-radius: 4vw;
   }
 `;
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 18px; right: 26px;
+  top: 22px;
+  right: 32px;
   background: none;
   border: none;
-  color: ${props => props.accent || "#b32c2c"};
-  font-size: 2.4rem;
+  color: #888;
+  font-size: 2.8rem;
   font-weight: bold;
-  line-height: 1;
-  z-index: 30;
+  z-index: 2;
   cursor: pointer;
-  transition: color 0.15s;
-  &:hover, &:focus { color: #a12020; }
-  @media (max-width: 600px) {
-    top: 12px; right: 13px; font-size: 2rem;
+  transition: color 0.18s;
+  &:hover, &:focus { color: #b32c2c; }
+  @media (max-width: 700px) {
+    top: 18px;
+    right: 18px;
+    font-size: 2.1rem;
   }
 `;
 
-const HTMLContent = styled.div`
-  /* Ensures modal HTML always matches your font and sizing */
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #181818;
-  font-size: 1.06em;
-  background: ${props => props.themebg || "none"};
-  /* Allow modal HTML to use its own classes/styles too */
-  a { color: ${props => props.accent || "#b32c2c"}; }
+const SlideLayout = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+  padding: 52px 40px 32px 40px;
+  box-sizing: border-box;
+  @media (max-width: 900px) {
+    flex-direction: column;
+    gap: 22px;
+    padding: 36px 8vw 24px 8vw;
+    align-items: flex-start;
+  }
+  @media (max-width: 700px) {
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px 2vw 12px 2vw;
+  }
+`;
+
+const SlideInfo = styled.div`
+  flex: 1.1 1 0;
+  min-width: 220px;
+  max-width: 410px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  @media (max-width: 900px) {
+    min-width: 0;
+    max-width: 100%;
+  }
+`;
+
+const SlideTitle = styled.h2`
+  font-size: 2.1rem;
+  font-weight: bold;
+  margin: 0 0 0.5em 0;
+  color: #b32c2c;
+  line-height: 1.13;
+  @media (max-width: 900px) {
+    font-size: 1.4rem;
+  }
+`;
+
+const SlideYear = styled.div`
+  color: #b1b1ae;
+  font-weight: 700;
+  font-size: 1.11rem;
+  margin-bottom: 0.7em;
+`;
+
+const SlideDesc = styled.div`
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #222;
+  margin-bottom: 1.4em;
+  line-height: 1.55;
+  @media (max-width: 900px) {
+    font-size: 0.98rem;
+    margin-bottom: 0.7em;
+  }
+`;
+
+const SlideImageWrapper = styled.div`
+  flex: 1.6 1 0;
+  min-width: 260px;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  @media (max-width: 900px) {
+    min-width: 0;
+    max-width: 100%;
+    gap: 8px;
+  }
+  img {
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 18px #2223;
+    object-fit: contain;
+    background: #eee;
+    @media (max-width: 900px) {
+      max-width: 100vw;
+      border-radius: 6vw;
+    }
+    @media (max-width: 700px) {
+      border-radius: 4vw;
+    }
+  }
+`;
+
+const SlideCaption = styled.div`
+  font-size: 0.99em;
+  color: #979174;
+  margin-bottom: 0.3em;
+  margin-top: -0.2em;
+  font-style: italic;
+  text-align: center;
+  max-width: 96%;
 `;
