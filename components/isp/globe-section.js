@@ -6,7 +6,6 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
-const LONDON_CLUSTER_GROUP = "london";
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 
@@ -48,6 +47,44 @@ function latLngAltToVec3(lat, lng, altitude = 0) {
   );
 }
 
+// Manual best-guess rotations for each pin (adjust as needed)
+function getPinRotation(marker) {
+  // EASTERN STATE PENITENTIARY: default "tip in globe" orientation
+  if (marker.name.toLowerCase().includes("eastern state")) {
+    return null; // Use standard orientation
+  }
+  // MESOPOTAMIA: THE FIRST PRISONS
+  if (marker.name.toLowerCase().includes("mesopotamia")) {
+    return { axis: new THREE.Vector3(1, 0, 0), angle: Math.PI * 0.22 };
+  }
+  // THE MAMERTINE PRISON (ROME)
+  if (marker.name.toLowerCase().includes("mamertine")) {
+    return { axis: new THREE.Vector3(0, 0, 1), angle: Math.PI * 0.12 };
+  }
+  // MAISON DE FORCE (GHENT)
+  if (marker.name.toLowerCase().includes("maison de force")) {
+    return { axis: new THREE.Vector3(-1, 0, 0), angle: Math.PI * 0.18 };
+  }
+  // SCANDINAVIAN PRISON REFORM (NORWAY/SWEDEN)
+  if (marker.name.toLowerCase().includes("scandinavian")) {
+    return { axis: new THREE.Vector3(0, 1, 0), angle: Math.PI * 0.1 };
+  }
+  // THE RISE OF THE NAZI CAMP SYSTEM (POLAND)
+  if (marker.name.toLowerCase().includes("nazi")) {
+    return { axis: new THREE.Vector3(0.6, 0.4, 0), angle: Math.PI * 0.18 };
+  }
+  // BRITISH PENAL COLONIES (AUSTRALIA)
+  if (marker.name.toLowerCase().includes("penal") || marker.name.toLowerCase().includes("australia")) {
+    return { axis: new THREE.Vector3(0, 0, 1), angle: Math.PI * 0.26 };
+  }
+  // LONDON CLUSTER: use standard orientation for all
+  if (marker.clusterGroup === "london") {
+    return null;
+  }
+  // Default: use standard orientation
+  return null;
+}
+
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const globeContainerRef = useRef();
@@ -61,24 +98,21 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => { mounted = false; };
   }, []);
 
-  // This is the fixed "ocean" target
-  const oceanLat = -30;
-  const oceanLng = -150;
-  const oceanVec = latLngAltToVec3(oceanLat, oceanLng, 0);
-
-  const { objectsData, customPointObject } = useMemo(() => {
-    const markers = globeLocations.filter(m => m.clusterGroup !== LONDON_CLUSTER_GROUP);
-
-    const objectsData = markers.map(marker => ({
+  // All markers, including cluster group
+  const objectsData = useMemo(() =>
+    globeLocations.map(marker => ({
       ...marker,
       lat: marker.lat,
       lng: marker.lon,
       markerId: marker.name,
       isStandardPin: true,
       altitude: DOT_ALTITUDE,
-    }));
+    })),
+    []
+  );
 
-    const customPointObject = (obj) => {
+  const customPointObject = useMemo(() => {
+    return (obj) => {
       if (!pinModel || !obj.isStandardPin) return null;
 
       const group = new THREE.Group();
@@ -89,18 +123,27 @@ export default function GlobeSection({ onMarkerClick }) {
       });
       pin.scale.set(scale, scale, scale);
 
-      // Compute this marker's vector
+      // Pin position vector
       const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
-      // Direction from marker to fixed ocean point
-      const target = oceanVec.clone().sub(markerVec).normalize();
-
-      // Pin-down axis
+      // Default orientation: tip points toward globe center (standard "stuck in" look)
+      let quaternion;
       const up = new THREE.Vector3(0, -1, 0);
-      const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
+      const standardTarget = markerVec.clone().normalize().negate();
+
+      // Manual override for specific pins
+      const manual = getPinRotation(obj);
+      if (manual) {
+        quaternion = new THREE.Quaternion().setFromAxisAngle(
+          manual.axis,
+          manual.angle
+        );
+      } else {
+        quaternion = new THREE.Quaternion().setFromUnitVectors(up, standardTarget);
+      }
       pin.setRotationFromQuaternion(quaternion);
 
-      // Offset outward so metal tip is visible
+      // "Pull out" offset along surface normal
       const offset = 0.08;
       const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
       pin.position.copy(outwardVec);
@@ -109,8 +152,6 @@ export default function GlobeSection({ onMarkerClick }) {
       group.userData = { markerId: obj.markerId };
       return group;
     };
-
-    return { objectsData, customPointObject };
   }, [pinReady]);
 
   // Responsive globe sizing (unchanged)
