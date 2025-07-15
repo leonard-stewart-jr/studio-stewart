@@ -274,18 +274,11 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
-        // SPECIAL: comparison marker, render both red dot and pin
+        // SPECIAL: comparison marker, render only pin (no red dot)
         if (obj.isStandardPin && obj.showDotAndPin) {
           const group = new THREE.Group();
 
-          // Red dot (old style)
-          const dotRadius = DOT_SIZE * 1.3;
-          const dotGeom = new THREE.CircleGeometry(dotRadius, 32);
-          const dotMat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
-          const dot = new THREE.Mesh(dotGeom, dotMat);
-          group.add(dot);
-
-          // 3D Pin
+          // 3D Pin only (no red dot)
           if (pinModel) {
             const scale = DOT_SIZE * 1.3 * 2.5;
             const pin = pinModel.clone(true);
@@ -307,19 +300,6 @@ export default function GlobeSection({ onMarkerClick }) {
             pin.position.copy(outwardVec);
 
             group.add(pin);
-
-            // Debug: log bounding box and model
-            const box = new THREE.Box3().setFromObject(pin);
-            const size = box.getSize(new THREE.Vector3());
-            console.log(
-              "[DEBUG] Rendering 3D pin for marker:",
-              obj.markerId,
-              "Scale:", scale,
-              "BBox size:", size,
-              "Pin model:", pin
-            );
-          } else {
-            console.log("[DEBUG] pinModel not loaded yet for comparison marker");
           }
 
           group.userData = { markerId: obj.markerId };
