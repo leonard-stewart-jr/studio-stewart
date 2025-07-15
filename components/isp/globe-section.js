@@ -99,8 +99,8 @@ export default function GlobeSection({ onMarkerClick }) {
       if (obj.isStandardPin && pinModel) {
         const group = new THREE.Group();
 
-        // 3D Pin at 2x previous scale
-        const scale = 200; // Previous was 100
+        // Scale the pin 2x what it was previously (was 100, now 200)
+        const scale = 200;
         const pin = pinModel.clone(true);
         pin.traverse((child) => {
           if (child.isMesh) child.castShadow = false;
@@ -108,16 +108,13 @@ export default function GlobeSection({ onMarkerClick }) {
         pin.scale.set(scale, scale, scale);
         pin.position.set(0, 0, 0);
 
-        // Rotate pin so tip points toward globe surface
-        // Pin's "down" direction assumed to be -Y
-        // Get globe surface vector at marker location
+        // Rotate pin so its tip points toward the center of the globe (looks "stuck in")
+        // Pin's "down" direction assumed to be -Y in the model
         const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-        // Make pin point "down" (-Y) along globeVec
-        // Default orientation is -Y, so align -Y to globeVec direction
-        const target = globeVec.clone().normalize();
+        // Flip direction so pin tip points inward
+        const target = globeVec.clone().normalize().negate();
         const up = new THREE.Vector3(0, -1, 0); // Pin's "down" axis
 
-        // Compute quaternion rotation from -Y to target vector
         const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
         pin.setRotationFromQuaternion(quaternion);
 
