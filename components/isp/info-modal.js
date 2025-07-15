@@ -1,255 +1,192 @@
-import styled from "styled-components";
+import { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
 
-// Accepts marker object with { name, timeline: [{ year, title, content, images, sources }] }
+// Helper: get modal id (safe file name) from marker name
+function getModalId(name) {
+  if (!name) return "";
+  // Use lowercased, keep only letters/numbers, dash for spaces, strip punctuation/years
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+// Helper: theme per modalId
+const MODAL_THEMES = {
+  mesopotamia: {
+    background: "#f9f6eb",
+    accent: "#b32c2c"
+  },
+  // Add more here as needed
+};
+
 export default function InfoModal({ open, onClose, marker }) {
-  if (!open || !marker) return null;
+  const [htmlContent, setHtmlContent] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
-  // Find first event with sources, if any exist
-  let sources = null;
-  if (marker.timeline && marker.timeline.length > 0) {
-    for (const event of marker.timeline) {
-      if (event.sources && event.sources.length > 0) {
-        sources = event.sources;
-        break;
-      }
+  // Get modalId
+  const modalId = marker ? getModalId(marker.name.split(":")[0]) : "";
+  const theme = MODAL_THEMES[modalId] || { background: "#fff", accent: "#b32c2c" };
+
+  useEffect(() => {
+    if (!open || !modalId) {
+      setHtmlContent(null);
+      setLoadError(false);
+      return;
     }
-  }
+
+    setLoading(true);
+    setHtmlContent(null);
+    setLoadError(false);
+
+    fetch(`/modals/isp/${modalId}.html`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.text();
+      })
+      .then(html => {
+        setHtmlContent(html);
+        setLoading(false);
+      })
+      .catch(() => {
+        setHtmlContent(null);
+        setLoading(false);
+        setLoadError(true);
+      });
+  }, [open, modalId]);
+
+  if (!open || !marker) return null;
 
   return (
     <Overlay onClick={onClose}>
-      <ModalContainer onClick={e => e.stopPropagation()}>
-        <h2>{marker.name}</h2>
-        {marker.timeline && marker.timeline.length > 0 ? (
-          <Timeline>
-            {marker.timeline.map((event, idx) => (
-              <TimelineEvent key={idx}>
-                <EventHeader>
-                  <EventYear>{event.year}</EventYear>
-                  <EventTitle>{event.title}</EventTitle>
-                </EventHeader>
-                <EventContent>{event.content}</EventContent>
-                {event.images && event.images.length > 0 && (
-                  <ImageGrid>
-                    {event.images.map((img, i) => (
-                      <ImageWrap key={i}>
-                        <img src={img.src} alt={img.caption} />
-                        {img.caption && (
-                          <ImageCaption>{img.caption}</ImageCaption>
-                        )}
-                      </ImageWrap>
-                    ))}
-                  </ImageGrid>
-                )}
-              </TimelineEvent>
-            ))}
-          </Timeline>
-        ) : (
-          <div>No timeline data available.</div>
+      <ModalContainer
+        themebg={theme.background}
+        accent={theme.accent}
+        onClick={e => e.stopPropagation()}
+      >
+        <CloseButton onClick={onClose} accent={theme.accent}>&times;</CloseButton>
+        {loading && (
+          <div style={{ padding: 64, textAlign: "center", color: theme.accent }}>
+            <div className="loader" style={{
+              margin: "0 auto 16px auto",
+              border: `4px solid #eee`,
+              borderTop: `4px solid ${theme.accent}`,
+              borderRadius: "50%",
+              width: 36, height: 36,
+              animation: "spin 1s linear infinite"
+            }} />
+            <div>Loading...</div>
+            <style>{`
+              @keyframes spin {
+                0% { transform: rotate(0deg);}
+                100% { transform: rotate(360deg);}
+              }
+            `}</style>
+          </div>
         )}
-        <CloseButton onClick={onClose}>Close</CloseButton>
-        {sources && (
-          <SourcesCorner>
-            <span>Sources:</span>
-            <ul>
-              {sources.map((src, i) => (
-                <li key={i}>
-                  {src}
-                </li>
-              ))}
-            </ul>
-          </SourcesCorner>
+        {/* If HTML loaded, show it. Otherwise, fallback to legacy JSX */}
+        {!loading && htmlContent && (
+          <HTMLContent
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+            themebg={theme.background}
+            accent={theme.accent}
+          />
+        )}
+        {!loading && !htmlContent && loadError && (
+          // Fallback: show legacy modal (old rendering)
+          <LegacyContent marker={marker} />
         )}
       </ModalContainer>
     </Overlay>
   );
 }
 
+// Legacy fallback for events without HTML file
+function LegacyContent({ marker }) {
+  if (!marker || !marker.timeline) return <div>No data.</div>;
+  const event = marker.timeline[0];
+  return (
+    <div style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
+      <h2 style={{ marginTop: 0 }}>{marker.name}</h2>
+      <div style={{ color: "#b1b1ae", fontWeight: 700 }}>{event.year}</div>
+      <div style={{ fontWeight: 600, margin: "8px 0 12px 0" }}>{event.title}</div>
+      <div style={{ marginBottom: 16 }}>{event.content}</div>
+      {event.images && event.images.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
+          {event.images.map((img, i) => (
+            <div key={i} style={{ maxWidth: 160 }}>
+              <img src={img.src} alt={img.caption} style={{ width: "100%", borderRadius: 7, marginBottom: 2 }} />
+              <div style={{ fontSize: 12, color: "#888" }}>{img.caption}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      {event.sources && (
+        <div style={{ fontSize: 13, color: "#888" }}>
+          <b>Sources:</b>
+          <ul>
+            {event.sources.map((src, i) => <li key={i}>{src}</li>)}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const Overlay = styled.div`
   position: fixed; inset: 0; z-index: 999;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.48);
   display: flex; align-items: center; justify-content: center;
 `;
 
 const ModalContainer = styled.div`
-  background: #fff;
-  padding: 2rem;
+  background: ${props => props.themebg || "#fff"};
+  padding: 2.2rem 2.2rem 2.7rem 2.2rem;
   border-radius: 1rem;
-  max-width: 540px;
-  width: 96vw;
-  max-height: 86vh;
+  box-shadow: 0 8px 44px #2227;
+  max-width: 680px;
+  width: 97vw;
+  max-height: 94vh;
   overflow-y: auto;
-  box-shadow: 0 8px 40px #2228;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #181818;
   position: relative;
-  > h2 {
-    margin-top: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-    letter-spacing: 0.01em;
-  }
   @media (max-width: 600px) {
     padding: 1.1rem 0.6rem 1.4rem 0.6rem;
     max-width: 100vw;
     width: 100vw;
     max-height: 99vh;
     border-radius: 0.7rem;
-    > h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.7rem;
-    }
-  }
-`;
-
-const Timeline = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2.2rem;
-  @media (max-width: 600px) {
-    gap: 1.2rem;
-  }
-`;
-
-const TimelineEvent = styled.div`
-  border-left: 3px solid #b32c2c;
-  padding-left: 1.2rem;
-  margin-bottom: 0.7rem;
-  @media (max-width: 600px) {
-    padding-left: 0.7rem;
-    font-size: 0.97em;
-  }
-`;
-
-const EventHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-  }
-`;
-
-const EventYear = styled.div`
-  font-size: 1.08em;
-  color: #b1b1ae;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  min-width: 80px;
-  @media (max-width: 600px) {
-    font-size: 1.01em;
-    min-width: unset;
-  }
-`;
-
-const EventTitle = styled.div`
-  font-weight: 600;
-  font-size: 1.15em;
-  color: #181818;
-  @media (max-width: 600px) {
-    font-size: 1.02em;
-  }
-`;
-
-const EventContent = styled.div`
-  font-size: 1em;
-  color: #333;
-  margin-bottom: 0.5rem;
-  margin-top: 0.3rem;
-  @media (max-width: 600px) {
-    font-size: 0.98em;
-  }
-`;
-
-const ImageGrid = styled.div`
-  display: flex;
-  gap: 11px;
-  flex-wrap: wrap;
-  margin-top: 0.55rem;
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 7px;
-    align-items: flex-start;
-  }
-`;
-
-const ImageWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 140px;
-  > img {
-    width: 100%;
-    max-width: 140px;
-    border-radius: 8px;
-    box-shadow: 0 1.5px 6px #3333;
-    margin-bottom: 3px;
-  }
-  @media (max-width: 600px) {
-    max-width: 96vw;
-    > img {
-      max-width: 96vw;
-    }
-  }
-`;
-
-const ImageCaption = styled.div`
-  font-size: 12px;
-  color: #888;
-  margin-top: 0.5px;
-  line-height: 1.2;
-  @media (max-width: 600px) {
-    font-size: 13px;
   }
 `;
 
 const CloseButton = styled.button`
-  margin-top: 2.4rem;
-  padding: 0.6rem 2rem;
-  border-radius: 10px;
+  position: absolute;
+  top: 18px; right: 26px;
+  background: none;
   border: none;
-  background: #b32c2c;
-  color: #fff;
+  color: ${props => props.accent || "#b32c2c"};
+  font-size: 2.4rem;
   font-weight: bold;
-  font-size: 1.15em;
+  line-height: 1;
+  z-index: 30;
   cursor: pointer;
-  transition: background 0.16s;
-  &:hover, &:focus {
-    background: #a12020;
-  }
+  transition: color 0.15s;
+  &:hover, &:focus { color: #a12020; }
   @media (max-width: 600px) {
-    margin-top: 1.3rem;
-    width: 100%;
-    font-size: 1.11em;
-    padding: 0.95rem 0;
+    top: 12px; right: 13px; font-size: 2rem;
   }
 `;
 
-const SourcesCorner = styled.div`
-  position: absolute;
-  bottom: 16px;
-  right: 22px;
-  background: rgba(255,255,255,0.94);
-  color: #7c7c7c;
-  font-size: 11px;
-  border-radius: 8px;
-  padding: 8px 14px 8px 10px;
-  max-width: 220px;
-  box-shadow: 0 2px 8px #b1b1ae33;
-  opacity: 0.9;
-  z-index: 20;
-  pointer-events: auto;
-  ul {
-    margin: 0.3em 0 0 0;
-    padding-left: 13px;
-    list-style: disc;
-  }
-  span {
-    font-weight: bold;
-    color: #b32c2c;
-    font-size: 12px;
-    margin-right: 5px;
-  }
+const HTMLContent = styled.div`
+  /* Ensures modal HTML always matches your font and sizing */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #181818;
+  font-size: 1.06em;
+  background: ${props => props.themebg || "none"};
+  /* Allow modal HTML to use its own classes/styles too */
+  a { color: ${props => props.accent || "#b32c2c"}; }
 `;
