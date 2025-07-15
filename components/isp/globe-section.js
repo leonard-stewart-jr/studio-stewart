@@ -38,17 +38,6 @@ function loadPinModel() {
   return pinModelPromise;
 }
 
-function getNonLondonMarkers() {
-  return globeLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
-}
-
-function getComparisonMarkerIdx(nonLondonMarkers) {
-  const idx = nonLondonMarkers.findIndex(m => 
-    m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
-  );
-  return idx !== -1 ? idx : 0;
-}
-
 // Utility: Converts lat/lng to globe vector
 function latLngAltToVec3(lat, lng, altitude = 0) {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -78,59 +67,47 @@ export default function GlobeSection({ onMarkerClick }) {
     objectsData,
     customPointObject
   } = useMemo(() => {
-    const nonLondonMarkers = getNonLondonMarkers();
-    const comparisonMarkerIdx = getComparisonMarkerIdx(nonLondonMarkers);
+    // Show pins for all markers except London (change if you want pins in London too)
+    const markers = globeLocations.filter(m => m.clusterGroup !== LONDON_CLUSTER_GROUP);
 
-    let objectsData = [];
-    let customPointObject = undefined;
-
-    objectsData = [
-      {
-        ...nonLondonMarkers[comparisonMarkerIdx],
-        lat: nonLondonMarkers[comparisonMarkerIdx].lat,
-        lng: nonLondonMarkers[comparisonMarkerIdx].lon,
-        markerId: nonLondonMarkers[comparisonMarkerIdx].name,
-        isStandardPin: true,
-        altitude: DOT_ALTITUDE,
-      }
-    ];
+    // If you want ALL markers, just use: const markers = globeLocations;
+    let objectsData = markers.map(marker => ({
+      ...marker,
+      lat: marker.lat,
+      lng: marker.lon,
+      markerId: marker.name,
+      isStandardPin: true,
+      altitude: DOT_ALTITUDE,
+    }));
 
     customPointObject = (obj) => {
       if (obj.isStandardPin && pinModel) {
         const group = new THREE.Group();
 
-        // Scale the pin 2x what it was previously (was 100, now 200)
+        // Scale pin
         const scale = 200;
         const pin = pinModel.clone(true);
         pin.traverse((child) => {
           if (child.isMesh) child.castShadow = false;
         });
         pin.scale.set(scale, scale, scale);
-        pin.position.set(0, 0, 0);
 
-        // Rotate pin so its tip points toward the center of the globe (looks "stuck in")
-        // Pin's "down" direction assumed to be -Y in the model
+        // Compute globe vector (surface location)
         const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-        // Flip direction so pin tip points inward
+
+        // Rotate pin so tip points toward center
         const target = globeVec.clone().normalize().negate();
         const up = new THREE.Vector3(0, -1, 0); // Pin's "down" axis
-
         const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
         pin.setRotationFromQuaternion(quaternion);
 
-        group.add(pin);
+        // "Pull" pin outward so more of tip is visible
+        // Offset along the globe surface normal
+        const offset = 0.05; // You can tweak this (0.05 is a good start)
+        const outwardVec = globeVec.clone().normalize().multiplyScalar(offset);
+        pin.position.copy(outwardVec);
 
-        // Debug: log bounding box and position
-        const box = new THREE.Box3().setFromObject(pin);
-        const size = box.getSize(new THREE.Vector3());
-        console.log(
-          "[DEBUG] Rendering 3D pin for marker:",
-          obj.markerId,
-          "Scale:", scale,
-          "BBox size:", size,
-          "Pin position:", pin.position,
-          "Pin rotation:", pin.rotation
-        );
+        group.add(pin);
 
         group.userData = { markerId: obj.markerId };
         return group;
