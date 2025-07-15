@@ -4,14 +4,14 @@ import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-// Dynamic import because react-globe.gl uses WebGL
+// Dynamic import for WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 
-// 3D pin model state (loaded once on client)
+// Pin model cache
 let pinModel = null;
 let pinModelPromise = null;
 function loadPinModel() {
@@ -38,7 +38,7 @@ function loadPinModel() {
   return pinModelPromise;
 }
 
-// Utility: Converts lat/lng to globe vector
+// Lat/lng/alt to Vector3
 function latLngAltToVec3(lat, lng, altitude = 0) {
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
@@ -63,15 +63,11 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => { mounted = false; };
   }, []);
 
-  const {
-    objectsData,
-    customPointObject
-  } = useMemo(() => {
-    // Show pins for all markers except London (change if you want pins in London too)
+  const { objectsData, customPointObject } = useMemo(() => {
+    // All markers except London get pins
     const markers = globeLocations.filter(m => m.clusterGroup !== LONDON_CLUSTER_GROUP);
 
-    // If you want ALL markers, just use: const markers = globeLocations;
-    let objectsData = markers.map(marker => ({
+    const objectsData = markers.map(marker => ({
       ...marker,
       lat: marker.lat,
       lng: marker.lon,
@@ -80,39 +76,34 @@ export default function GlobeSection({ onMarkerClick }) {
       altitude: DOT_ALTITUDE,
     }));
 
-    customPointObject = (obj) => {
-      if (obj.isStandardPin && pinModel) {
-        const group = new THREE.Group();
+    const customPointObject = (obj) => {
+      if (!pinModel || !obj.isStandardPin) return null;
 
-        // Scale pin
-        const scale = 200;
-        const pin = pinModel.clone(true);
-        pin.traverse((child) => {
-          if (child.isMesh) child.castShadow = false;
-        });
-        pin.scale.set(scale, scale, scale);
+      const group = new THREE.Group();
 
-        // Compute globe vector (surface location)
-        const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+      // 1. Pin scaling
+      const scale = 200;
+      const pin = pinModel.clone(true);
+      pin.traverse(child => {
+        if (child.isMesh) child.castShadow = false;
+      });
+      pin.scale.set(scale, scale, scale);
 
-        // Rotate pin so tip points toward center
-        const target = globeVec.clone().normalize().negate();
-        const up = new THREE.Vector3(0, -1, 0); // Pin's "down" axis
-        const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
-        pin.setRotationFromQuaternion(quaternion);
+      // 2. Pin orientation
+      const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+      const target = globeVec.clone().normalize().negate();
+      const up = new THREE.Vector3(0, -1, 0); // Pin's down axis
+      const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
+      pin.setRotationFromQuaternion(quaternion);
 
-        // "Pull" pin outward so more of tip is visible
-        // Offset along the globe surface normal
-        const offset = 0.05; // You can tweak this (0.05 is a good start)
-        const outwardVec = globeVec.clone().normalize().multiplyScalar(offset);
-        pin.position.copy(outwardVec);
+      // 3. Pin "pull out" offset
+      const offset = 0.08; // Slightly larger so the metal is visible
+      const outwardVec = globeVec.clone().normalize().multiplyScalar(offset);
+      pin.position.copy(outwardVec);
 
-        group.add(pin);
-
-        group.userData = { markerId: obj.markerId };
-        return group;
-      }
-      return null;
+      group.add(pin);
+      group.userData = { markerId: obj.markerId };
+      return group;
     };
 
     return { objectsData, customPointObject };
@@ -127,7 +118,6 @@ export default function GlobeSection({ onMarkerClick }) {
   const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60)) * 1.3;
   const isMobile = vw < 800;
 
-  // Wait for pin model to be ready
   if (!pinReady) {
     return (
       <section
@@ -169,7 +159,6 @@ export default function GlobeSection({ onMarkerClick }) {
         marginTop: 57,
       }}
     >
-      {/* Globe on the left */}
       <div
         ref={globeContainerRef}
         style={{
@@ -196,11 +185,11 @@ export default function GlobeSection({ onMarkerClick }) {
           backgroundColor="rgba(0,0,0,0)"
           width={globeWidth}
           height={globeHeight}
-          pointsData={[]} // <--- NO POINTS, ONLY OBJECTS
+          pointsData={[]} // Only objects, no points
           objectsData={objectsData}
           objectLat="lat"
           objectLng="lng"
-          objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
+          objectAltitude={obj => obj.altitude || DOT_ALTITUDE}
           objectThreeObject={customPointObject}
         />
       </div>
