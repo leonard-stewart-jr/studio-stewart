@@ -150,7 +150,8 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          const dotRadius = CLUSTER_DOT_SIZE * 0.5 * 1.3;
+          // FIX: Make the white cluster dot match the standard red dot size
+          const dotRadius = CLUSTER_DOT_SIZE * 1.3;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
           const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
           const dot = new THREE.Mesh(dotGeom, dotMat);
