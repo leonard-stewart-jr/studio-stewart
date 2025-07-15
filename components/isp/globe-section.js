@@ -62,6 +62,12 @@ function toRoman(num) {
   return result;
 }
 
+// Load map-pin SVG texture once (outside component for efficiency)
+const textureLoader = typeof window !== "undefined" ? new THREE.TextureLoader() : null;
+const mapPinTexture = textureLoader
+  ? textureLoader.load("/images/map-pin.svg")
+  : null;
+
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const globeContainerRef = useRef();
@@ -150,10 +156,16 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          // 1.5x bigger than last version for the white cluster dot
+          // White cluster dot: use map-pin SVG, 1.5x bigger
           const dotRadius = CLUSTER_DOT_SIZE * 1.5 * 1.3;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
-          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+          const dotMat = mapPinTexture
+            ? new THREE.MeshBasicMaterial({
+                map: mapPinTexture,
+                color: DOT_COLOR,
+                transparent: true,
+              })
+            : new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const dot = new THREE.Mesh(dotGeom, dotMat);
           dot.renderOrder = 2;
           dot.position.set(0, 0, 0);
@@ -216,9 +228,15 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         if (obj.isLondonWheel) {
-          // 3x bigger on expansion (geometry)
+          // Use map-pin SVG, 3x bigger
           const geom = new THREE.CircleGeometry(CLUSTER_WHEEL_DOT_SIZE * 3 * 0.5 * 1.3, 32);
-          const mat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
+          const mat = mapPinTexture
+            ? new THREE.MeshBasicMaterial({
+                map: mapPinTexture,
+                color: DOT_COLOR,
+                transparent: true,
+              })
+            : new THREE.MeshBasicMaterial({ color: DOT_COLOR });
           const mesh = new THREE.Mesh(geom, mat);
           mesh.userData = { markerId: obj.markerId };
           return mesh;
