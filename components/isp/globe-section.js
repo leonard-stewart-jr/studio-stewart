@@ -68,19 +68,10 @@ function toRoman(num) {
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const [hovered, setHovered] = useState(null);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [londonExpanded, setLondonExpanded] = useState(false);
 
   // NEW: markerScreenPositions state for visual debugging
   const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
-
-  // Tooltip mouse position tracking
-  useEffect(() => {
-    const handleMouseMove = (e) => setMouse({ x: e.clientX, y: e.clientY });
-    if (hovered) window.addEventListener("mousemove", handleMouseMove);
-    else setMouse({ x: 0, y: 0 });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [hovered]);
 
   // Auto center globe
   useEffect(() => {
@@ -143,6 +134,7 @@ export default function GlobeSection({ onMarkerClick }) {
       size: DOT_SIZE * 1.3,
       altitude: DOT_ALTITUDE,
       markerId: m.name,
+      label: m.name, // Add label for built-in react-globe.gl tooltip
     }));
 
     let objectsData = [];
@@ -157,6 +149,7 @@ export default function GlobeSection({ onMarkerClick }) {
           markerId: "london-cluster",
           isLondonCluster: true,
           altitude: DOT_ALTITUDE,
+          label: "London Cluster", // Add label to cluster for tooltip if desired
         },
       ];
       customPointObject = (obj) => {
@@ -206,6 +199,7 @@ export default function GlobeSection({ onMarkerClick }) {
           isLondonWheel: true,
           actualLat: marker.lat,
           actualLng: marker.lon,
+          label: marker.name, // Add label for built-in tooltip
         };
       });
 
@@ -319,19 +313,8 @@ export default function GlobeSection({ onMarkerClick }) {
 
   // Hover logic for custom objects (cluster, wheel)
   const handleObjectHover = (obj) => {
-    if (!obj) {
-      setHovered(null);
-      return;
-    }
-    if (obj.markerId === "london-cluster") {
-      setHovered({
-        name: "London Cluster: Expand to see sites",
-        year: "",
-      });
-    } else if (obj.isLondonWheel) {
-      const marker = getLondonMarkers().find((m) => m.name === obj.markerId);
-      setHovered(marker ? { name: marker.name, year: marker.timeline?.[0]?.year || "" } : null);
-    }
+    // keep for other logic (e.g. highlighting TOC or markers)
+    setHovered(obj);
   };
 
   // Responsive width/height - use available viewport height minus banners (76+44+26)
@@ -407,6 +390,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pointColor="color"
           pointRadius="size"
           pointAltitude="altitude"
+          pointLabel="label"
           onPointHover={setHovered}
           onPointClick={onMarkerClick}
           //
@@ -427,47 +411,6 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
-        {/* Tooltip for marker hover */}
-        {hovered && (
-          <div
-            style={{
-              position: "fixed",
-              left: mouse.x + 18,
-              top: mouse.y + 18,
-              zIndex: 100,
-              pointerEvents: "none",
-              background: "#fff",
-              color: "#181818",
-              borderRadius: 7,
-              boxShadow: "0 1.5px 12px rgba(32,32,32,0.15)",
-              padding: "10px 16px",
-              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-              fontSize: 15,
-              minWidth: 120,
-              maxWidth: 260,
-              border: "1px solid #e6dbb9",
-              opacity: 0.98,
-              transition: "opacity 0.15s",
-              lineHeight: "1.32",
-            }}
-          >
-            <div style={{ fontWeight: 700 }}>
-              {hovered.name}
-            </div>
-            {hovered.year && (
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "#b1b1ae",
-                  marginTop: 2,
-                  fontWeight: 400,
-                }}
-              >
-                {hovered.year}
-              </div>
-            )}
-          </div>
-        )}
         {/* Visual debugging: dots at marker screen positions */}
         <div
           style={{
