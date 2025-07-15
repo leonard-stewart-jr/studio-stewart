@@ -92,6 +92,15 @@ function toRoman(num) {
   return result;
 }
 
+// Helper: get a US marker (not London), use "EASTERN STATE PENITENTIARY OPENS" if possible
+function getComparisonMarkerIdx(nonLondonMarkers) {
+  const idx = nonLondonMarkers.findIndex(m => 
+    m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
+  );
+  // fallback: just the first non-london marker
+  return idx !== -1 ? idx : 0;
+}
+
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const globeContainerRef = useRef();
@@ -137,7 +146,8 @@ export default function GlobeSection({ onMarkerClick }) {
     linesData,
     customPointObject,
     customLineObject,
-    tocList
+    tocList,
+    comparisonMarkerIdx
   } = useMemo(() => {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
@@ -159,13 +169,15 @@ export default function GlobeSection({ onMarkerClick }) {
       }
     });
 
+    // Find the marker index to show both red dot + pin
+    const comparisonMarkerIdx = getComparisonMarkerIdx(nonLondonMarkers);
+
     let objectsData = [];
     let linesData = [];
     let customPointObject = undefined;
     let customLineObject = undefined;
 
     if (!londonExpanded) {
-      // Only objectsData (no pointsData)
       objectsData = [
         {
           ...londonCenter,
@@ -174,16 +186,19 @@ export default function GlobeSection({ onMarkerClick }) {
           altitude: DOT_ALTITUDE,
           label: "London Cluster",
         },
-        ...nonLondonMarkers.map(m => ({
+        ...nonLondonMarkers.map((m, idx) => ({
           ...m,
           lat: m.lat,
           lng: m.lon,
           markerId: m.name,
           isStandardPin: true,
+          showDotAndPin: idx === comparisonMarkerIdx,
+          idx,
           altitude: DOT_ALTITUDE,
         })),
       ];
       customPointObject = (obj) => {
+        // CLUSTER
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 1.3;
@@ -210,8 +225,50 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: "london-cluster" };
           return group;
         }
+
+        // SPECIAL: comparison marker, render both red dot and pin
+        if (obj.isStandardPin && obj.showDotAndPin) {
+          const group = new THREE.Group();
+
+          // Red dot (old style)
+          const dotRadius = DOT_SIZE * 1.3;
+          const dotGeom = new THREE.CircleGeometry(dotRadius, 32);
+          const dotMat = new THREE.MeshBasicMaterial({ color: DOT_COLOR });
+          const dot = new THREE.Mesh(dotGeom, dotMat);
+          group.add(dot);
+
+          // 3D Pin
+          if (pinModel) {
+            const scale = DOT_SIZE * 1.3 * 2.5;
+            const pin = pinModel.clone(true);
+            pin.traverse((child) => {
+              if (child.isMesh) child.castShadow = false;
+            });
+            pin.scale.set(scale, scale, scale);
+            pin.position.set(0, 0, 0);
+            group.add(pin);
+
+            // Debug: log bounding box and model
+            const box = new THREE.Box3().setFromObject(pin);
+            const size = box.getSize(new THREE.Vector3());
+            console.log(
+              "[DEBUG] Rendering 3D pin for marker:",
+              obj.markerId,
+              "Scale:", scale,
+              "BBox size:", size,
+              "Pin model:", pin
+            );
+          } else {
+            console.log("[DEBUG] pinModel not loaded yet for comparison marker");
+          }
+
+          group.userData = { markerId: obj.markerId };
+          return group;
+        }
+
+        // NORMAL PINS
         if (obj.isStandardPin && pinModel) {
-          const scale = DOT_SIZE * 1.3 * 2.5; // Tune for visual match
+          const scale = DOT_SIZE * 1.3 * 2.5;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
@@ -223,6 +280,7 @@ export default function GlobeSection({ onMarkerClick }) {
         }
         return null;
       };
+
     } else {
       // London wheel: pins for London, larger
       const N = londonMarkers.length;
@@ -301,7 +359,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return line;
       };
     }
-    return { objectsData, linesData, customPointObject, customLineObject, tocList };
+    return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
   }, [londonExpanded, pinReady]);
 
   // Calculate marker screen positions for all globeLocations -- PAGE coordinates!
@@ -495,7 +553,7 @@ export default function GlobeSection({ onMarkerClick }) {
           lineStartLat={(l) => l.start.lat}
           lineStartLng={(l) => l.start.lng}
           lineStartAltitude={(l) => l.start.alt}
-          lineEndLat={(l) => l.end.lat}
+          lineEndLat={(l) => l.end.lat)
           lineEndLng={(l) => l.end.lng}
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
