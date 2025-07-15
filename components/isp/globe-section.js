@@ -592,9 +592,9 @@ export default function GlobeSection({ onMarkerClick }) {
                 y1={markerPos.y}
                 x2={tocPos.x}
                 y2={tocPos.y}
-                stroke="#b32c2c"
-                strokeWidth={2}
-                opacity={0.18}
+                stroke="#ff2222"
+                strokeWidth={6}
+                opacity={1}
               />
             );
           })}
