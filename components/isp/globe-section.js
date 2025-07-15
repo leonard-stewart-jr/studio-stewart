@@ -94,42 +94,8 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Manual best-guess rotations for each pin (adjust as needed)
+// Every pin uses standard orientation (tip "stuck in" to globe)
 function getPinRotation(marker) {
-  // MESOPOTAMIA: THE FIRST PRISONS
-  if (marker.name.toLowerCase().includes("mesopotamia")) {
-    return { type: "standard" };
-  }
-  // EASTERN STATE PENITENTIARY: correct
-  if (marker.name.toLowerCase().includes("eastern state")) {
-    return { type: "standard" };
-  }
-  // THE MAMERTINE PRISON (ROME)
-  if (marker.name.toLowerCase().includes("mamertine")) {
-    // TRY A BIG AXIS ROTATION FOR TESTING
-    return { axis: new THREE.Vector3(1, 0, 0), angle: Math.PI / 2 };
-  }
-  // MAISON DE FORCE (GHENT)
-  if (marker.name.toLowerCase().includes("maison de force")) {
-    return { axis: new THREE.Vector3(-1, 0, 0), angle: Math.PI * 0.18 };
-  }
-  // SCANDINAVIAN PRISON REFORM (NORWAY/SWEDEN)
-  if (marker.name.toLowerCase().includes("scandinavian")) {
-    return { axis: new THREE.Vector3(0, 1, 0), angle: Math.PI * 0.1 };
-  }
-  // THE RISE OF THE NAZI CAMP SYSTEM (POLAND)
-  if (marker.name.toLowerCase().includes("nazi")) {
-    return { axis: new THREE.Vector3(0.6, 0.4, 0), angle: Math.PI * 0.18 };
-  }
-  // BRITISH PENAL COLONIES (AUSTRALIA)
-  if (marker.name.toLowerCase().includes("penal") || marker.name.toLowerCase().includes("australia")) {
-    return { axis: new THREE.Vector3(0, 0, 1), angle: Math.PI * 0.26 };
-  }
-  // LONDON CLUSTER: use standard orientation for all
-  if (marker.clusterGroup === "london") {
-    return { type: "standard" };
-  }
-  // Default: use standard orientation
   return { type: "standard" };
 }
 
@@ -282,7 +248,7 @@ export default function GlobeSection({ onMarkerClick }) {
           const pinRotation = getPinRotation(obj);
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
-          // --- CHANGE: use offset = 0.07 for ALL pins ---
+          // --- use offset = 0.07 for ALL pins ---
           const offset = 0.07;
 
           if (pinRotation && pinRotation.type === "standard") {
@@ -293,11 +259,6 @@ export default function GlobeSection({ onMarkerClick }) {
             pin.setRotationFromQuaternion(quaternion);
 
             // "Pull out" offset along surface normal
-            const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-            pin.position.copy(outwardVec);
-          } else if (pinRotation && pinRotation.axis && pinRotation.angle) {
-            // Manual override for special pins
-            pin.setRotationFromAxisAngle(pinRotation.axis, pinRotation.angle);
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
             pin.position.copy(outwardVec);
           }
