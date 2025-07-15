@@ -11,14 +11,11 @@ const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 1.1;
 const LONDON_WHEEL_ALTITUDE = 0.018;
 
-const DOT_SIZE = 0.7;
-const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75;
-const CLUSTER_DOT_SIZE = DOT_SIZE * 2.2;
-
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
+const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 const CLUSTER_RING_RATIO = 0.74;
 const CLUSTER_RING_ALT_OFFSET = 0.0035;
 
@@ -31,7 +28,6 @@ function loadPinModel() {
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
     loader.load("/models/3D_map_pin.glb", (gltf) => {
-      // Color the pin body red, leave metal gray
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
           if (
@@ -91,6 +87,7 @@ function toRoman(num) {
   return result;
 }
 
+// Helper: get a US marker (not London), use "EASTERN STATE PENITENTIARY OPENS" if possible
 function getComparisonMarkerIdx(nonLondonMarkers) {
   const idx = nonLondonMarkers.findIndex(m => 
     m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
@@ -270,16 +267,17 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
-        // ALL STANDARD PINS (including comparison marker, mesopotamia, etc)
+        // ALL STANDARD PINS (including mesopotamia, eastern state, etc)
         if (obj.isStandardPin && pinModel) {
-          const scale = DOT_SIZE * 1.3 * 2.5;
+          const group = new THREE.Group();
+          const scale = 200;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
           });
           pin.scale.set(scale, scale, scale);
 
-          // Decide pin orientation
+          // Orientation logic
           const pinRotation = getPinRotation(obj);
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
@@ -291,21 +289,21 @@ export default function GlobeSection({ onMarkerClick }) {
             pin.setRotationFromQuaternion(quaternion);
 
             // "Pull out" offset along surface normal
-            const offset = 0.08;
+            const offset = 0.05;
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
             pin.position.copy(outwardVec);
           } else if (pinRotation && pinRotation.axis && pinRotation.angle) {
             // Manual override for special pins
             pin.setRotationFromAxisAngle(pinRotation.axis, pinRotation.angle);
-
-            // "Pull out" offset along surface normal
-            const offset = 0.08;
+            const offset = 0.05;
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
             pin.position.copy(outwardVec);
           }
 
           pin.userData = { markerId: obj.markerId };
-          return pin;
+          group.add(pin);
+          group.userData = { markerId: obj.markerId };
+          return group;
         }
         return null;
       };
@@ -348,7 +346,8 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
-          const scale = CLUSTER_WHEEL_DOT_SIZE * 3 * 1.3 * 2.1;
+          const group = new THREE.Group();
+          const scale = 200;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
@@ -362,12 +361,14 @@ export default function GlobeSection({ onMarkerClick }) {
           const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
           pin.setRotationFromQuaternion(quaternion);
 
-          const offset = 0.08;
+          const offset = 0.05;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
 
           pin.userData = { markerId: obj.markerId };
-          return pin;
+          group.add(pin);
+          group.userData = { markerId: obj.markerId };
+          return group;
         }
         return null;
       };
