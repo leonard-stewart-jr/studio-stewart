@@ -34,7 +34,6 @@ function loadPinModel() {
       // Color the pin body red, leave metal gray
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
-          // Adjust by name/material as needed
           if (
             (child.material && child.material.name && child.material.name.toLowerCase().includes("red")) ||
             child.name.toLowerCase().includes("body") ||
@@ -92,12 +91,10 @@ function toRoman(num) {
   return result;
 }
 
-// Helper: get a US marker (not London), use "EASTERN STATE PENITENTIARY OPENS" if possible
 function getComparisonMarkerIdx(nonLondonMarkers) {
   const idx = nonLondonMarkers.findIndex(m => 
     m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
   );
-  // fallback: just the first non-london marker
   return idx !== -1 ? idx : 0;
 }
 
@@ -105,7 +102,6 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
 function getPinRotation(marker) {
   // MESOPOTAMIA: THE FIRST PRISONS
   if (marker.name.toLowerCase().includes("mesopotamia")) {
-    // Use correct orientation: tip in globe, "pulled out"
     return { type: "standard" };
   }
   // EASTERN STATE PENITENTIARY: correct
@@ -274,39 +270,7 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
-        // SPECIAL: comparison marker, render only pin (no red dot)
-        if (obj.isStandardPin && obj.showDotAndPin) {
-          const group = new THREE.Group();
-
-          // 3D Pin only (no red dot)
-          if (pinModel) {
-            const scale = DOT_SIZE * 1.3 * 2.5;
-            const pin = pinModel.clone(true);
-            pin.traverse((child) => {
-              if (child.isMesh) child.castShadow = false;
-            });
-            pin.scale.set(scale, scale, scale);
-
-            // Pin orientation for Eastern State (standard orientation)
-            const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-            const up = new THREE.Vector3(0, -1, 0);
-            const target = markerVec.clone().normalize().negate();
-            const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
-            pin.setRotationFromQuaternion(quaternion);
-
-            // "Pull out" offset along surface normal
-            const offset = 0.08;
-            const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-            pin.position.copy(outwardVec);
-
-            group.add(pin);
-          }
-
-          group.userData = { markerId: obj.markerId };
-          return group;
-        }
-
-        // NORMAL PINS
+        // ALL STANDARD PINS (including comparison marker, mesopotamia, etc)
         if (obj.isStandardPin && pinModel) {
           const scale = DOT_SIZE * 1.3 * 2.5;
           const pin = pinModel.clone(true);
@@ -318,6 +282,7 @@ export default function GlobeSection({ onMarkerClick }) {
           // Decide pin orientation
           const pinRotation = getPinRotation(obj);
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+
           if (pinRotation && pinRotation.type === "standard") {
             // Standard: tip points toward globe center, "pulled out"
             const up = new THREE.Vector3(0, -1, 0);
@@ -333,7 +298,7 @@ export default function GlobeSection({ onMarkerClick }) {
             // Manual override for special pins
             pin.setRotationFromAxisAngle(pinRotation.axis, pinRotation.angle);
 
-            // You can also "pull out" here if needed
+            // "Pull out" offset along surface normal
             const offset = 0.08;
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
             pin.position.copy(outwardVec);
@@ -437,7 +402,6 @@ export default function GlobeSection({ onMarkerClick }) {
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
   }, [londonExpanded, pinReady]);
 
-  // Calculate marker screen positions for all globeLocations -- PAGE coordinates!
   useEffect(() => {
     function updateMarkerPositions() {
       if (
@@ -452,7 +416,6 @@ export default function GlobeSection({ onMarkerClick }) {
       const positions = globeLocations.map((marker) => {
         const { lat, lon } = marker;
         const coords = globeEl.current.getScreenCoords(lat, lon);
-        // coords are relative to globe canvas, add globe's position in window
         return {
           x: globeRect.left + coords.x,
           y: globeRect.top + coords.y,
@@ -481,7 +444,6 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }, []);
 
-  // Calculate TOC entry screen positions (already in page coordinates)
   useEffect(() => {
     function updateTocPositions() {
       const positions = tocRefs.current.map(ref => {
@@ -537,7 +499,6 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
-  // Wait for pin model to be ready
   if (!pinReady) {
     return (
       <section
@@ -579,7 +540,6 @@ export default function GlobeSection({ onMarkerClick }) {
         marginTop: 57,
       }}
     >
-      {/* Globe on the left */}
       <div
         ref={globeContainerRef}
         style={{
@@ -615,7 +575,6 @@ export default function GlobeSection({ onMarkerClick }) {
           pointLabel="label"
           onPointHover={setHovered}
           onPointClick={onMarkerClick}
-          //
           objectsData={objectsData}
           objectLat="lat"
           objectLng="lng"
@@ -623,7 +582,6 @@ export default function GlobeSection({ onMarkerClick }) {
           objectThreeObject={customPointObject}
           onObjectClick={handleObjectClick}
           onObjectHover={handleObjectHover}
-          //
           linesData={londonExpanded ? linesData : []}
           lineStartLat={(l) => l.start.lat}
           lineStartLng={(l) => l.start.lng}
@@ -634,7 +592,6 @@ export default function GlobeSection({ onMarkerClick }) {
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
       </div>
-      {/* Table of Contents on the right */}
       <nav
         aria-label="Table of Contents"
         style={{
@@ -750,7 +707,6 @@ export default function GlobeSection({ onMarkerClick }) {
           ))}
         </ol>
       </nav>
-      {/* SVG overlay for trails from globe markers to TOC entries */}
       <div style={{
         position: 'fixed',
         left: 0,
