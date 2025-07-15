@@ -60,6 +60,19 @@ const mesopotamiaSlides = [
 export default function InfoModal({ open, onClose, marker }) {
   const backdropRef = useRef(null);
 
+  // Trap focus in modal and handle ESC close
+  useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.key === "Escape") onClose();
+    };
+    if (open) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, onClose]);
+
   // Modal should only render for Mesopotamia (for now)
   if (!open || !marker || !marker.name.toLowerCase().startsWith("mesopotamia")) return null;
 
@@ -69,16 +82,6 @@ export default function InfoModal({ open, onClose, marker }) {
       onClose();
     }
   };
-
-  // Trap focus in modal
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = e => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
 
   // Helper to render description with paragraphs from plain text
   function renderParagraphs(text) {
