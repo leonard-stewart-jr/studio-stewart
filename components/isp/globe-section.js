@@ -4,7 +4,6 @@ import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-// Dynamic import for WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
@@ -38,7 +37,6 @@ function loadPinModel() {
   return pinModelPromise;
 }
 
-// Lat/lng/alt to Vector3
 function latLngAltToVec3(lat, lng, altitude = 0) {
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
@@ -63,8 +61,12 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => { mounted = false; };
   }, []);
 
+  // This is the fixed "ocean" target
+  const oceanLat = -30;
+  const oceanLng = -150;
+  const oceanVec = latLngAltToVec3(oceanLat, oceanLng, 0);
+
   const { objectsData, customPointObject } = useMemo(() => {
-    // All markers except London get pins
     const markers = globeLocations.filter(m => m.clusterGroup !== LONDON_CLUSTER_GROUP);
 
     const objectsData = markers.map(marker => ({
@@ -76,43 +78,42 @@ export default function GlobeSection({ onMarkerClick }) {
       altitude: DOT_ALTITUDE,
     }));
 
-const customPointObject = (obj) => {
-  if (!pinModel || !obj.isStandardPin) return null;
+    const customPointObject = (obj) => {
+      if (!pinModel || !obj.isStandardPin) return null;
 
-  const group = new THREE.Group();
+      const group = new THREE.Group();
+      const scale = 200;
+      const pin = pinModel.clone(true);
+      pin.traverse(child => {
+        if (child.isMesh) child.castShadow = false;
+      });
+      pin.scale.set(scale, scale, scale);
 
-  // Pin scaling
-  const scale = 200;
-  const pin = pinModel.clone(true);
-  pin.traverse(child => {
-    if (child.isMesh) child.castShadow = false;
-  });
-  pin.scale.set(scale, scale, scale);
+      // Compute this marker's vector
+      const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
-  // Correct: Compute globe vector for THIS pin's location
-  const globeVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+      // Direction from marker to fixed ocean point
+      const target = oceanVec.clone().sub(markerVec).normalize();
 
-  // Rotation: align pin-down axis (-Y) to inward normal at this location
-  const target = globeVec.clone().normalize().negate();
-  const up = new THREE.Vector3(0, -1, 0);
-  const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
-  pin.setRotationFromQuaternion(quaternion);
+      // Pin-down axis
+      const up = new THREE.Vector3(0, -1, 0);
+      const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
+      pin.setRotationFromQuaternion(quaternion);
 
-  // Offset: move pin outward along surface normal for THIS location
-  const offset = 0.08;
-  const outwardVec = globeVec.clone().normalize().multiplyScalar(offset);
-  pin.position.copy(outwardVec);
+      // Offset outward so metal tip is visible
+      const offset = 0.08;
+      const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
+      pin.position.copy(outwardVec);
 
-  group.add(pin);
-  group.userData = { markerId: obj.markerId };
-  return group;
-};
-
+      group.add(pin);
+      group.userData = { markerId: obj.markerId };
+      return group;
+    };
 
     return { objectsData, customPointObject };
   }, [pinReady]);
 
-  // Responsive globe sizing
+  // Responsive globe sizing (unchanged)
   const bannerHeight = 76 + 44 + 26 + 16;
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
   const vh = typeof window !== "undefined" ? window.innerHeight : 900;
