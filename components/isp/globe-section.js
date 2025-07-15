@@ -10,17 +10,16 @@ const LONDON_CLUSTER_GROUP = "london";
 const LONDON_WHEEL_RADIUS = 1.1;
 const LONDON_WHEEL_ALTITUDE = 0.018;
 
-// --- DOT SIZE CONSTANTS ---
-const DOT_SIZE = 0.7; // Base size for normal timeline red dots
-const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75; // red icon in cluster: 3/4 normal red dot size
-const CLUSTER_DOT_SIZE = DOT_SIZE * 2.2;        // white icon in cluster: much larger now
+const DOT_SIZE = 0.7;
+const CLUSTER_WHEEL_DOT_SIZE = DOT_SIZE * 0.75;
+const CLUSTER_DOT_SIZE = DOT_SIZE * 2.2;
 
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_RING_COLOR = "#b32c2c";
 const CLUSTER_RING_RATIO = 0.74;
-const CLUSTER_RING_ALT_OFFSET = 0.0035; // More visible above white
+const CLUSTER_RING_ALT_OFFSET = 0.0035;
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -36,7 +35,6 @@ function getLondonClusterCenter() {
   return { lat, lng };
 }
 
-// Utility: convert lat/lng/altitude to 3D xyz for Three.js globe radius 1
 function latLngAltToVec3(lat, lng, altitude = 0) {
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
@@ -48,7 +46,6 @@ function latLngAltToVec3(lat, lng, altitude = 0) {
   );
 }
 
-// ---- Roman numeral utility ----
 function toRoman(num) {
   const map = [
     [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
@@ -70,17 +67,19 @@ export default function GlobeSection({ onMarkerClick }) {
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
 
-  // NEW: markerScreenPositions state for visual debugging
+  // Visual debugging: marker screen positions
   const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
 
-  // Auto center globe
+  // Refs for TOC buttons
+  const tocRefs = useRef([]);
+  const [tocScreenPositions, setTocScreenPositions] = useState([]);
+
   useEffect(() => {
     if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
       globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
     }
   }, []);
 
-  // Wheel click/collapse
   useEffect(() => {
     if (!londonExpanded) return;
     const collapse = (e) => {
@@ -95,7 +94,6 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("mousedown", collapse);
   }, [londonExpanded]);
 
-  // Prepare pointsData, objectsData, linesData, customPointObject, customLineObject, tocList
   const {
     pointsData,
     objectsData,
@@ -108,7 +106,6 @@ export default function GlobeSection({ onMarkerClick }) {
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
 
-    // Table of Contents: Use ALL locations, in order as in globeLocations
     const tocList = globeLocations.map((marker, idx) => {
       let overrideName = marker.name;
       if (idx === 0) overrideName = "MESOPOTAMIA: THE FIRST PRISONS";
@@ -125,7 +122,6 @@ export default function GlobeSection({ onMarkerClick }) {
       }
     });
 
-    // Default: non-London dots
     let pointsData = nonLondonMarkers.map((m) => ({
       ...m,
       lat: m.lat,
@@ -134,7 +130,7 @@ export default function GlobeSection({ onMarkerClick }) {
       size: DOT_SIZE * 1.3,
       altitude: DOT_ALTITUDE,
       markerId: m.name,
-      label: m.name, // Add label for built-in react-globe.gl tooltip
+      label: m.name,
     }));
 
     let objectsData = [];
@@ -149,7 +145,7 @@ export default function GlobeSection({ onMarkerClick }) {
           markerId: "london-cluster",
           isLondonCluster: true,
           altitude: DOT_ALTITUDE,
-          label: "London Cluster", // Add label to cluster for tooltip if desired
+          label: "London Cluster",
         },
       ];
       customPointObject = (obj) => {
@@ -199,7 +195,7 @@ export default function GlobeSection({ onMarkerClick }) {
           isLondonWheel: true,
           actualLat: marker.lat,
           actualLng: marker.lon,
-          label: marker.name, // Add label for built-in tooltip
+          label: marker.name,
         };
       });
 
@@ -258,13 +254,12 @@ export default function GlobeSection({ onMarkerClick }) {
     return { pointsData, objectsData, linesData, customPointObject, customLineObject, tocList };
   }, [londonExpanded]);
 
-  // -- NEW: Calculate marker screen positions for all globeLocations --
+  // Calculate marker screen positions for all globeLocations
   useEffect(() => {
     function updateMarkerPositions() {
       if (!globeEl.current || typeof globeEl.current.getScreenCoords !== "function") return;
       const positions = globeLocations.map((marker, idx) => {
         const { lat, lon } = marker;
-        // getScreenCoords returns { x, y } in pixels relative to globe canvas
         const coords = globeEl.current.getScreenCoords(lat, lon);
         return {
           marker,
@@ -276,13 +271,8 @@ export default function GlobeSection({ onMarkerClick }) {
       setMarkerScreenPositions(positions);
     }
 
-    // Run when globe is ready and on window resize
     updateMarkerPositions();
-
     window.addEventListener("resize", updateMarkerPositions);
-
-    // Try to listen for globe camera movement (rotation, zoom)
-    // react-globe.gl does not emit camera events natively, but we can poll for changes
     let animationFrame;
     function pollCamera() {
       updateMarkerPositions();
@@ -296,7 +286,24 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }, []);
 
-  // Handle clicking on London cluster or wheel dots
+  // Calculate TOC entry screen positions
+  useEffect(() => {
+    function updateTocPositions() {
+      const positions = tocRefs.current.map(ref => {
+        if (!ref) return null;
+        const rect = ref.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        };
+      });
+      setTocScreenPositions(positions);
+    }
+    updateTocPositions();
+    window.addEventListener("resize", updateTocPositions);
+    return () => window.removeEventListener("resize", updateTocPositions);
+  }, [tocList.length]);
+
   const handleObjectClick = (obj) => {
     if (obj && obj.markerId === "london-cluster") {
       setLondonExpanded(true);
@@ -311,30 +318,21 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-  // Hover logic for custom objects (cluster, wheel)
   const handleObjectHover = (obj) => {
-    // keep for other logic (e.g. highlighting TOC or markers)
     setHovered(obj);
   };
 
-  // Responsive width/height - use available viewport height minus banners (76+44+26)
-  const bannerHeight = 76 + 44 + 26 + 16; // add 16px for nav gaps/margins
+  const bannerHeight = 76 + 44 + 26 + 16;
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
   const vh = typeof window !== "undefined" ? window.innerHeight : 900;
   const availHeight = Math.max(380, vh - bannerHeight);
-
-  // Globe size: make globe as large as possible, responsive, but avoid overflow on small screens
   const globeWidth = Math.max(500, Math.min(950, vw * 0.93)) * 1.3;
   const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60)) * 1.3;
-
-  // TOC click handler
   function handleTOCClick(marker) {
     onMarkerClick(marker);
     setLondonExpanded(false);
     setHovered(null);
   }
-
-  // Responsive: stack on mobile, row on desktop
   const isMobile = vw < 800;
 
   return (
@@ -473,6 +471,8 @@ export default function GlobeSection({ onMarkerClick }) {
           justifyContent: isMobile ? "flex-start" : "center",
           background: "none",
           boxShadow: "none",
+          position: "relative",
+          zIndex: 100,
         }}
       >
         <ol style={{
@@ -487,6 +487,7 @@ export default function GlobeSection({ onMarkerClick }) {
           {tocList.map((item, idx) => (
             <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
               <button
+                ref={el => tocRefs.current[idx] = el}
                 style={{
                   background: "none",
                   border: "none",
@@ -570,6 +571,35 @@ export default function GlobeSection({ onMarkerClick }) {
           ))}
         </ol>
       </nav>
+      {/* SVG overlay for trails from globe markers to TOC entries */}
+      <div style={{
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        zIndex: 90,
+      }}>
+        <svg width={window.innerWidth} height={window.innerHeight} style={{ display: 'block', width: '100vw', height: '100vh' }}>
+          {markerScreenPositions.map((markerPos, idx) => {
+            const tocPos = tocScreenPositions[idx];
+            if (!markerPos || !tocPos || typeof markerPos.x !== "number" || typeof markerPos.y !== "number" || typeof tocPos.x !== "number" || typeof tocPos.y !== "number") return null;
+            return (
+              <line
+                key={idx}
+                x1={markerPos.x}
+                y1={markerPos.y}
+                x2={tocPos.x}
+                y2={tocPos.y}
+                stroke="#b32c2c"
+                strokeWidth={2}
+                opacity={0.18}
+              />
+            );
+          })}
+        </svg>
+      </div>
     </section>
   );
 }
