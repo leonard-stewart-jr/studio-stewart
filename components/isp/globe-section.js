@@ -242,7 +242,30 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         // CLUSTER
         if (obj.isLondonCluster) {
-          // [cluster code unchanged]
+          const group = new THREE.Group();
+          const dotRadius = CLUSTER_DOT_SIZE * 1.3;
+          const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
+          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+          const dot = new THREE.Mesh(dotGeom, dotMat);
+          dot.renderOrder = 2;
+          dot.position.set(0, 0, 0);
+          group.add(dot);
+
+          const ringOuter = dotRadius * CLUSTER_RING_RATIO;
+          const ringInner = ringOuter * 0.76;
+          const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: CLUSTER_RING_COLOR,
+            side: THREE.DoubleSide,
+            transparent: false,
+          });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100);
+          ring.renderOrder = 3;
+          group.add(ring);
+
+          group.userData = { markerId: "london-cluster" };
+          return group;
         }
 
         // ALL STANDARD PINS
@@ -275,48 +298,6 @@ export default function GlobeSection({ onMarkerClick }) {
           } else if (pinRotation && pinRotation.axis && pinRotation.angle) {
             // Manual override for special pins
             pin.setRotationFromAxisAngle(pinRotation.axis, pinRotation.angle);
-            const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-            pin.position.copy(outwardVec);
-          }
-
-          pin.userData = { markerId: obj.markerId };
-          group.add(pin);
-          group.userData = { markerId: obj.markerId };
-          return group;
-        }
-        return null;
-      };
-
-
-        // ALL STANDARD PINS
-        if (obj.isStandardPin && pinModel) {
-          const group = new THREE.Group();
-          const scale = 200;
-          const pin = pinModel.clone(true);
-          pin.traverse((child) => {
-            if (child.isMesh) child.castShadow = false;
-          });
-          pin.scale.set(scale, scale, scale);
-
-          // Orientation logic
-          const pinRotation = getPinRotation(obj);
-          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-
-          if (pinRotation && pinRotation.type === "standard") {
-            // Standard: tip points toward globe center, "pulled out"
-            const up = new THREE.Vector3(0, -1, 0);
-            const target = markerVec.clone().normalize().negate();
-            const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
-            pin.setRotationFromQuaternion(quaternion);
-
-            // "Pull out" offset along surface normal
-            const offset = 0.05;
-            const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-            pin.position.copy(outwardVec);
-          } else if (pinRotation && pinRotation.axis && pinRotation.angle) {
-            // Manual override for special pins
-            pin.setRotationFromAxisAngle(pinRotation.axis, pinRotation.angle);
-            const offset = 0.05;
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
             pin.position.copy(outwardVec);
           }
@@ -382,7 +363,8 @@ export default function GlobeSection({ onMarkerClick }) {
           const quaternion = new THREE.Quaternion().setFromUnitVectors(up, target);
           pin.setRotationFromQuaternion(quaternion);
 
-          const offset = 0.05;
+          // Use offset = 0.07 for London wheel pins too
+          const offset = 0.07;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
 
