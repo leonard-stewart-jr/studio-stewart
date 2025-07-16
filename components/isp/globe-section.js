@@ -104,7 +104,7 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
 
 // Each pin has its own rotation so the tip points into the globe at its location.
 function getPinRotation(marker) {
-  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "tip" (-Y) to this normal.
+  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "tip" (-Z) to this normal.
   // This will work for every pin, each at its own axis.
   return { type: "standard" };
 }
@@ -262,8 +262,8 @@ export default function GlobeSection({ onMarkerClick }) {
           const offset = 0.07;
 
           if (pinRotation && pinRotation.type === "standard") {
-            // The pin's tip is -Y, so use up = (0, -1, 0)
-            const up = new THREE.Vector3(0, -1, 0);
+            // The pin's tip is -Z, so use up = (0, 0, -1)
+            const up = new THREE.Vector3(0, 0, -1);
             const surfaceNormal = markerVec.clone().normalize();
             const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
             pin.setRotationFromQuaternion(quaternion);
@@ -329,7 +329,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
           // Standard cluster orientation
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const up = new THREE.Vector3(0, -1, 0);
+          const up = new THREE.Vector3(0, 0, -1);
           const surfaceNormal = markerVec.clone().normalize();
           const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
           pin.setRotationFromQuaternion(quaternion);
