@@ -16,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-globe.gl": "^2.33.2",
     "react-leaflet": "^4.2.1",
+    "react-pdf": "^10.0.1",
     "styled-components": "^6.1.18",
     "swiper": "^11.2.10",
     "three": "^0.177.0"
