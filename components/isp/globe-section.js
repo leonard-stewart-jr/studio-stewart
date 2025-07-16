@@ -31,7 +31,7 @@ function loadPinModel() {
 
     // DRACO setup (required for compressed models)
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/'); // official CDN
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
     loader.setDRACOLoader(dracoLoader);
 
     loader.load("/models/3D_map_pin.glb", (gltf) => {
@@ -51,6 +51,21 @@ function loadPinModel() {
     }, undefined, reject);
   });
   return pinModelPromise;
+}
+
+// --- ADD BACK THESE FUNCTIONS ---
+function getLondonMarkers() {
+  return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
+}
+function getNonLondonMarkers() {
+  return globeLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
+}
+function getLondonClusterCenter() {
+  const londonMarkers = getLondonMarkers();
+  if (londonMarkers.length === 0) return { lat: 51.5, lng: -0.1 };
+  const lat = londonMarkers.reduce((sum, m) => sum + m.lat, 0) / londonMarkers.length;
+  const lng = londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
+  return { lat, lng };
 }
 
 function latLngAltToVec3(lat, lng, altitude = 0) {
