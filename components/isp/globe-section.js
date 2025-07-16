@@ -256,13 +256,12 @@ export default function GlobeSection({ onMarkerClick }) {
           if (pinRotation && pinRotation.type === "standard") {
             // Standard: tip points toward globe center, "pulled out"
             // Each pin uses its own axis (surface normal)
-            // FIX: Use model's +Y axis for tip direction, then rotate X by -90deg to match model orientation
             const up = new THREE.Vector3(0, 1, 0);
             const surfaceNormal = markerVec.clone().normalize();
             const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
             pin.setRotationFromQuaternion(quaternion);
-            // Manual fix: rotate X by -90deg to match model
             pin.rotateX(-Math.PI / 2);
+            pin.rotateY(Math.PI); // <-- Flip 180 degrees so pin tip points inward
 
             // "Pull out" offset along surface normal
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
@@ -325,12 +324,12 @@ export default function GlobeSection({ onMarkerClick }) {
 
           // Standard cluster orientation
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          // FIX: Use model's +Y axis for tip direction, then rotate X by -90deg to match model orientation
           const up = new THREE.Vector3(0, 1, 0);
           const surfaceNormal = markerVec.clone().normalize();
           const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
           pin.setRotationFromQuaternion(quaternion);
           pin.rotateX(-Math.PI / 2);
+          pin.rotateY(Math.PI); // <-- Flip 180 degrees so pin tip points inward
 
           // Use offset = 0.07 for London wheel pins too
           const offset = 0.07;
