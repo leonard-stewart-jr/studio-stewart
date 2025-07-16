@@ -120,24 +120,24 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// --- Robust, non-deforming pin orientation: -Y (needle) points to globe core, no skew, just quaternion ---
-// Optional: twist so "base" faces north (commented out for minimal, robust orientation)
+// --- CORRECTED: -Y (needle) should point towards globe center (opposite surface normal) ---
 function orientPin(pin, markerVec) {
   const surfaceNormal = markerVec.clone().normalize();
   const axis = new THREE.Vector3(0, -1, 0); // -Y in model
-  const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, surfaceNormal);
+  const towardCenter = surfaceNormal.clone().negate(); // toward globe center
+  const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
   pin.setRotationFromQuaternion(quaternion);
 
   // // Optional: twist so base faces north
   // const globeUp = new THREE.Vector3(0, 1, 0);
-  // const projectedUp = globeUp.clone().projectOnPlane(surfaceNormal).normalize();
+  // const projectedUp = globeUp.clone().projectOnPlane(towardCenter).normalize();
   // if (projectedUp.lengthSq() > 1e-6) {
   //   const modelZ = new THREE.Vector3(0, 0, 1).applyQuaternion(quaternion); // model's Z after rotation
   //   let angle = Math.atan2(
-  //     modelZ.clone().cross(projectedUp).dot(surfaceNormal),
+  //     modelZ.clone().cross(projectedUp).dot(towardCenter),
   //     modelZ.dot(projectedUp)
   //   );
-  //   pin.rotateOnAxis(surfaceNormal, angle);
+  //   pin.rotateOnAxis(towardCenter, angle);
   // }
 }
 
@@ -286,7 +286,7 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Robust, non-deforming orientation: -Y to globe core
+          // CORRECTED ORIENTATION: -Y to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
@@ -349,7 +349,7 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Robust, non-deforming orientation: -Y to globe core
+          // CORRECTED ORIENTATION: -Y to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
