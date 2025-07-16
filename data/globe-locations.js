@@ -310,7 +310,7 @@ Bentham was also one of the key proponents of Utilitarianism, the ethical theory
     ]
   },
   {
-    name: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE (c. 1844–1884)",
+    name: "THE EVOLUTION OF MILITARIZED PRISON ARCHITECTURE",
     lat: 51.53,
     lon: -0.11,
     clusterGroup: "london",
@@ -362,7 +362,7 @@ In each case, the floorplan became the primary instrument of control; space itse
     ]
   },
   {
-    name: "EASTERN STATE PENITENTIARY OPENS (c. 1829)",
+    name: "EASTERN STATE PENITENTIARY OPENS",
     lat: 39.9721,
     lon: -75.1720,
     timeline: [
@@ -423,7 +423,7 @@ Eastern State became one of the most influential prisons in global history; auth
     ]
   },
   {
-    name: "BRITISH PENAL COLONIES (c. 1850s–1900s)",
+    name: "BRITISH PENAL COLONIES",
     lat: -43.153,
     lon: 147.857,
     timeline: [
@@ -471,7 +471,7 @@ Though later criticized for moral cruelty and harsh discipline, these colonies r
     ]
   },
   {
-    name: "THE RISE OF THE NAZI CAMP SYSTEM (1933–1945)",
+    name: "THE RISE OF THE NAZI CAMP SYSTEM",
     lat: 50.0359,
     lon: 19.1783,
     timeline: [
@@ -524,7 +524,7 @@ By 1945, an estimated 18 million people had passed through the Nazi camp system;
     ]
   },
   {
-    name: "SCANDINAVIAN PRISON REFORM (1960s–1970s)",
+    name: "SCANDINAVIAN PRISON REFORM",
     lat: 59.1275,
     lon: 11.3894,
     timeline: [
