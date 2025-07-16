@@ -247,7 +247,7 @@ export default function GlobeSection({ onMarkerClick }) {
         // ALL STANDARD PINS
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 7;
+          const scale = 0.01;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
@@ -263,7 +263,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
           if (pinRotation && pinRotation.type === "standard") {
             // The pin's tip is -Y, so use up = (0, -1, 0)
-            const up = new THREE.Vector3(0, 0, 0);
+            const up = new THREE.Vector3(0, -1, 0);
             const surfaceNormal = markerVec.clone().normalize();
             const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
             pin.setRotationFromQuaternion(quaternion);
@@ -320,7 +320,7 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 200;
+          const scale = 0.01;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
