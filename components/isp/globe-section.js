@@ -38,17 +38,31 @@ function loadPinModel() {
       // --- Assign material colors by name ---
       gltf.scene.traverse((child) => {
         if (child.isMesh && child.material && child.material.name) {
-          if (child.material.name.toLowerCase().includes("needle")) {
-            // Metal look: shiny, silver
-            child.material.color.set("#cccccc");
-            child.material.metalness = 1.0;
-            child.material.roughness = 0.25;
-            child.material.envMapIntensity = 0.9;
-          } else if (child.material.name.toLowerCase().includes("base")) {
-            // Base: solid red
-            child.material.color.set("#b32c2c");
-            child.material.metalness = 0.2;
-            child.material.roughness = 0.6;
+          // Check for material array
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => {
+              if (mat.name.toLowerCase().includes("needle")) {
+                mat.color.set("#cccccc");
+                mat.metalness = 1.0;
+                mat.roughness = 0.25;
+                mat.envMapIntensity = 0.9;
+              } else if (mat.name.toLowerCase().includes("base")) {
+                mat.color.set("#b32c2c");
+                mat.metalness = 0.2;
+                mat.roughness = 0.6;
+              }
+            });
+          } else {
+            if (child.material.name.toLowerCase().includes("needle")) {
+              child.material.color.set("#cccccc");
+              child.material.metalness = 1.0;
+              child.material.roughness = 0.25;
+              child.material.envMapIntensity = 0.9;
+            } else if (child.material.name.toLowerCase().includes("base")) {
+              child.material.color.set("#b32c2c");
+              child.material.metalness = 0.2;
+              child.material.roughness = 0.6;
+            }
           }
         }
       });
@@ -108,8 +122,8 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Compute the orientation so pin -Z points to globe center and +Y is as "upright" as possible on the tangent plane toward north pole
-function computePinOrientation(markerVec) {
+// New orientation: align -Y (needle) to globe surface normal
+function computePinOrientation_Y(markerVec) {
   const surfaceNormal = markerVec.clone().normalize(); // points "out" from globe center
   // Reference up is global north
   const globeUp = new THREE.Vector3(0, 1, 0);
@@ -127,22 +141,19 @@ function computePinOrientation(markerVec) {
   }
   projectedUp.normalize();
 
-  // -Z (model's tip) should align with surfaceNormal, +Y (model's base) should align with projectedUp
-  const m = new THREE.Matrix4();
-  // Columns: X (right), Y (up), Z (forward)
-  const tangent = new THREE.Vector3().crossVectors(projectedUp, surfaceNormal).normalize();
-  m.makeBasis(tangent, projectedUp, surfaceNormal);
+  // For -Y as needle, +X as right, +Z as "front"
+  // So basis: (right, up, forward) = (tangent, -surfaceNormal, binormal)
+  // We'll use:
+  //  up = -surfaceNormal (so -Y points toward globe core)
+  //  right = cross(projectedUp, -surfaceNormal)
+  //  forward = cross(up, right)
+  const up = surfaceNormal.clone().negate();
+  const right = new THREE.Vector3().crossVectors(projectedUp, up).normalize();
+  const forward = new THREE.Vector3().crossVectors(up, right).normalize();
 
-  // The model's -Z is "forward", +Y is "up"
-  // To align -Z to surfaceNormal, +Y to projectedUp, we need to rotate from model space to world
-  // So invert the Z and Y axes for the basis
-  // In Three.js, model's forward is -Z, up is +Y
-  // But makeBasis expects X (right), Y (up), Z (forward), with Z = forward
-  // So we use surfaceNormal as Z, projectedUp as Y, tangent as X
-  // To match model space orientation, we need to invert Z (since model's -Z points tip out)
-  // So, after makeBasis, apply a rotation of 180deg around X to invert Z
-  const rot180X = new THREE.Matrix4().makeRotationX(Math.PI);
-  m.multiply(rot180X);
+  // Construct matrix: columns are right, up, forward
+  const m = new THREE.Matrix4();
+  m.makeBasis(right, up, forward);
 
   const q = new THREE.Quaternion().setFromRotationMatrix(m);
   return q;
@@ -293,9 +304,9 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation logic: tip points into the globe, base upright
+          // Orientation logic: -Y points into the globe, base upright
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const quaternion = computePinOrientation(markerVec);
+          const quaternion = computePinOrientation_Y(markerVec);
           pin.setRotationFromQuaternion(quaternion);
 
           // "Pull out" offset along surface normal
@@ -357,9 +368,9 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation logic
+          // Orientation logic: -Y points into globe, base upright
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const quaternion = computePinOrientation(markerVec);
+          const quaternion = computePinOrientation_Y(markerVec);
           pin.setRotationFromQuaternion(quaternion);
 
           // Use offset = 0.07 for London wheel pins too
