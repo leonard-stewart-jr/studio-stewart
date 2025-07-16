@@ -96,7 +96,7 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
 
 // Each pin has its own rotation so the tip points into the globe at its location.
 function getPinRotation(marker) {
-  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "up" (0, 1, 0) to this normal.
+  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "tip" (-Y) to this normal.
   // This will work for every pin, each at its own axis.
   return { type: "standard" };
 }
@@ -254,14 +254,11 @@ export default function GlobeSection({ onMarkerClick }) {
           const offset = 0.07;
 
           if (pinRotation && pinRotation.type === "standard") {
-            // Standard: tip points toward globe center, "pulled out"
-            // Each pin uses its own axis (surface normal)
-            const up = new THREE.Vector3(0, 1, 0);
+            // The pin's tip is -Y, so use up = (0, -1, 0)
+            const up = new THREE.Vector3(0, -1, 0);
             const surfaceNormal = markerVec.clone().normalize();
             const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
             pin.setRotationFromQuaternion(quaternion);
-            pin.rotateX(-Math.PI / 2);
-            pin.rotateY(Math.PI); // <-- Flip 180 degrees so pin tip points inward
 
             // "Pull out" offset along surface normal
             const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
@@ -324,12 +321,10 @@ export default function GlobeSection({ onMarkerClick }) {
 
           // Standard cluster orientation
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const up = new THREE.Vector3(0, 1, 0);
+          const up = new THREE.Vector3(0, -1, 0);
           const surfaceNormal = markerVec.clone().normalize();
           const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
           pin.setRotationFromQuaternion(quaternion);
-          pin.rotateX(-Math.PI / 2);
-          pin.rotateY(Math.PI); // <-- Flip 180 degrees so pin tip points inward
 
           // Use offset = 0.07 for London wheel pins too
           const offset = 0.07;
