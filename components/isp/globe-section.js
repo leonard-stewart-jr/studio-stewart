@@ -586,7 +586,13 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
-        {/* Overlay for London cluster dot */}
+<Globe ... />
+{console.log(
+  'DEBUG hovered:', hovered,
+  'londonExpanded:', londonExpanded,
+  'londonClusterScreenPos:', londonClusterScreenPos,
+  'showLondonExpandOverlay:', showLondonExpandOverlay
+)}
         {showLondonExpandOverlay && (
   <div
     style={{
