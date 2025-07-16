@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "copy node_modules\\pdfjs-dist\\build\\pdf.worker.min.mjs public\\pdf.worker.min.js"
+    "postinstall": "shx cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js"
   },
   "dependencies": {
     "framer-motion": "^12.12.1",
@@ -22,5 +22,8 @@
     "styled-components": "^6.1.18",
     "swiper": "^11.2.10",
     "three": "^0.177.0"
+  },
+  "devDependencies": {
+    "shx": "^0.3.4"
   }
 }
