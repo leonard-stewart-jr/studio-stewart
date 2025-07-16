@@ -652,11 +652,11 @@ export default function GlobeSection({ onMarkerClick }) {
               boxShadow: "none",
               border: "none",
               whiteSpace: "nowrap",
-            }}
-          >
-            {hovered.name}
-          </div>
-        )}
+    }}
+  >
+    EXPAND
+  </div>
+)}
       </div>
       <nav
         aria-label="Table of Contents"
