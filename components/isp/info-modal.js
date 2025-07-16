@@ -1,5 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { Document, Page, pdfjs } from "react-pdf";
+
+// Set worker source for react-pdf
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+const MESO_PDF_PATH = "/models/world/mesopotamia.pdf";
+// Use your provided size for a perfect fit
+const MESO_PDF_WIDTH = 2995;
+const MESO_PDF_HEIGHT = 880;
 
 export default function InfoModal({ open, onClose, marker }) {
   const backdropRef = useRef(null);
@@ -32,6 +41,33 @@ export default function InfoModal({ open, onClose, marker }) {
     }
   };
 
+  // Responsive calculated height (modal) and PDF scale
+  const [pageReady, setPageReady] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const scrollAreaRef = useRef();
+
+  useEffect(() => {
+    const handleResize = () => {
+      // 92px = modal paddings/top margin, adjust if needed
+      const maxH = Math.min(window.innerHeight - 92, 900);
+      setContainerHeight(maxH);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Compute scale: always match vertical height to modal, width auto
+  const pdfScale = containerHeight ? (containerHeight / MESO_PDF_HEIGHT) : 1;
+  const renderedWidth = MESO_PDF_WIDTH * pdfScale;
+
+  // Scroll to left on open
+  useEffect(() => {
+    if (open && scrollAreaRef.current) {
+      scrollAreaRef.current.scrollLeft = 0;
+    }
+  }, [open, renderedWidth]);
+
   return (
     <ModalBackdrop
       ref={backdropRef}
@@ -39,10 +75,36 @@ export default function InfoModal({ open, onClose, marker }) {
       aria-modal="true"
       role="dialog"
     >
-      <ModalBody onClick={e => e.stopPropagation()}>
+      <ModalBody>
         <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
-        <ScrollArea>
-          <BlankCanvas />
+        <ScrollArea
+          ref={scrollAreaRef}
+          style={{
+            height: containerHeight,
+            minHeight: containerHeight,
+            maxHeight: containerHeight,
+            // horizontal scroll only!
+            overflowX: "auto",
+            overflowY: "hidden",
+          }}
+        >
+          <Document
+            file={MESO_PDF_PATH}
+            loading=""
+            error="Could not load PDF"
+            onLoadSuccess={() => setPageReady(true)}
+            renderMode="canvas"
+          >
+            <Page
+              pageNumber={1}
+              height={containerHeight}
+              width={null}
+              renderAnnotationLayer={false}
+              renderTextLayer={false}
+              loading=""
+              customTextRenderer={null}
+            />
+          </Document>
         </ScrollArea>
       </ModalBody>
     </ModalBackdrop>
@@ -59,7 +121,7 @@ const ModalBackdrop = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 76px;
+  padding-top: 48px;
   @media (max-width: 700px) {
     align-items: flex-start;
     padding-top: 0;
@@ -70,10 +132,10 @@ const ModalBody = styled.div`
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 8px 44px #2229;
-  max-width: 98vw;
-  width: 98vw;
-  max-height: calc(100vh - 92px);
-  height: 900px;
+  max-width: 99vw;
+  width: 99vw;
+  max-height: 96vh;
+  min-height: 350px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -109,26 +171,16 @@ const CloseButton = styled.button`
   }
 `;
 
-// This is the scrollable area for the super-wide canvas
 const ScrollArea = styled.div`
   width: 100%;
-  height: 850px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  background: transparent;
+  background: #f7f7f7;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-`;
-
-// The blank canvas rectangle for InDesign export
-const BlankCanvas = styled.div`
-  width: 6000px;
-  height: 850px;
-  background: #fff;
-  border: 2px solid #e6dbb9;
-  box-sizing: border-box;
-  border-radius: 16px;
-  margin: 24px 0 24px 0;
-  box-shadow: 0 4px 44px #e6dbb980;
+  scrollbar-width: thin;
+  scrollbar-color: #e6dbb9 #f0f0ed;
+  /* horizontal scroll only */
+  & > * {
+    margin: 0 auto;
+  }
 `;
