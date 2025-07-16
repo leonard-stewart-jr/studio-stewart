@@ -123,7 +123,7 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
 // --- AXIS FLIP: use -Z in model to point toward globe center (for Rhino/GLB axis swap) ---
 function orientPin(pin, markerVec) {
   const surfaceNormal = markerVec.clone().normalize();
-  const axis = new THREE.Vector3(0, 0, -1); // -Z in model (likely GLB/Three.js convention)
+  const axis = new THREE.Vector3(0, -1, -1);
   const towardCenter = surfaceNormal.clone().negate(); // toward globe center
   const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
   pin.setRotationFromQuaternion(quaternion);
