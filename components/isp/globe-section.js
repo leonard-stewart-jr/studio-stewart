@@ -250,34 +250,36 @@ export default function GlobeSection({ onMarkerClick }) {
         })),
       ];
 
-      if (obj.isLondonCluster) {
-  const group = new THREE.Group();
-  const dotRadius = CLUSTER_DOT_SIZE * 1.7; // easier to hover
-  const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
-  const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
-  const dot = new THREE.Mesh(dotGeom, dotMat);
-  dot.renderOrder = 2;
-  dot.position.set(0, 0, 0);
-  dot.name = "london-cluster-dot"; // NEW
-  dot.userData = { markerId: "london-cluster" }; // NEW
-  group.add(dot);
+      customPointObject = (obj) => {
+        // LONDON CLUSTER DOT/RING
+        if (obj.isLondonCluster) {
+          const group = new THREE.Group();
+          const dotRadius = CLUSTER_DOT_SIZE * 1.7;
+          const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
+          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+          const dot = new THREE.Mesh(dotGeom, dotMat);
+          dot.renderOrder = 2;
+          dot.position.set(0, 0, 0);
+          dot.name = "london-cluster-dot";
+          dot.userData = { markerId: "london-cluster" };
+          group.add(dot);
 
-  const ringOuter = dotRadius * CLUSTER_RING_RATIO;
-  const ringInner = ringOuter * 0.76;
-  const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
-  const ringMat = new THREE.MeshBasicMaterial({
-    color: CLUSTER_RING_COLOR,
-    side: THREE.DoubleSide,
-    transparent: false,
-  });
-  const ring = new THREE.Mesh(ringGeom, ringMat);
-  ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100);
-  ring.renderOrder = 3;
-  group.add(ring);
+          const ringOuter = dotRadius * CLUSTER_RING_RATIO;
+          const ringInner = ringOuter * 0.76;
+          const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: CLUSTER_RING_COLOR,
+            side: THREE.DoubleSide,
+            transparent: false,
+          });
+          const ring = new THREE.Mesh(ringGeom, ringMat);
+          ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100);
+          ring.renderOrder = 3;
+          group.add(ring);
 
-  group.userData = { markerId: "london-cluster" }; // Ensure group also gets markerId
-  return group;
-}
+          group.userData = { markerId: "london-cluster" };
+          return group;
+        }
 
         // ALL STANDARD PINS (non-London)
         if (obj.isStandardPin && pinModel) {
