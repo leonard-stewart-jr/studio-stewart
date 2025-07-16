@@ -4,7 +4,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 
 // PDF.js worker config: use local worker to avoid CORS issues!
 if (typeof window !== "undefined") {
-  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 }
 
 const MESO_PDF_PATH = "/models/world/mesopotamia.pdf";
