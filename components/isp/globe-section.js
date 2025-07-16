@@ -320,7 +320,7 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 200;
+          const scale = 2;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
