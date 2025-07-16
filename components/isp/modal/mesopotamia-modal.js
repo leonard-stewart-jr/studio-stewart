@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Document, Page, pdfjs } from "react-pdf";
 
-// This line ensures pdf.js worker is loaded only on the client
+// PDF.js worker config: use local worker to avoid CORS issues!
 if (typeof window !== "undefined") {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 }
 
 const MESO_PDF_PATH = "/models/world/mesopotamia.pdf";
