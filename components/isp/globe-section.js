@@ -474,10 +474,9 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-const handleObjectHover = (obj) => {
-  console.log("Hovered object:", obj);
-  setHovered(obj);
-};
+  const handleObjectHover = (obj) => {
+    setHovered(obj);
+  };
 
   const bannerHeight = 76 + 44 + 26 + 16;
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
@@ -492,11 +491,15 @@ const handleObjectHover = (obj) => {
   }
   const isMobile = vw < 800;
 
+  // Overlay for hovered object: show pin name or EXPAND for london cluster
   const showLondonExpandOverlay =
     hovered &&
     hovered.markerId === "london-cluster" &&
     !londonExpanded &&
     londonClusterScreenPos;
+
+  // Overlay for hovered regular pins (those with .name)
+  const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
 
   if (!pinReady) {
     return (
@@ -590,6 +593,7 @@ const handleObjectHover = (obj) => {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
+        {/* Overlay for London cluster dot */}
         {showLondonExpandOverlay && (
           <div
             style={{
@@ -619,6 +623,38 @@ const handleObjectHover = (obj) => {
             }}
           >
             EXPAND
+          </div>
+        )}
+        {/* Overlay for regular pins (with .name) */}
+        {showPinOverlay && (
+          <div
+            style={{
+              position: "fixed",
+              left: markerScreenPositions[hovered.idx]?.x ?? 0,
+              top: (markerScreenPositions[hovered.idx]?.y ?? 0) + 18,
+              zIndex: 999,
+              pointerEvents: "none",
+              background: "rgba(0,0,0,0.91)",
+              color: "#fff",
+              borderRadius: 4,
+              padding: "8px 18px",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: ".03em",
+              textTransform: "uppercase",
+              opacity: 1,
+              transition: "opacity 0.15s",
+              transform: "translate(-50%, 0)",
+              lineHeight: 1.17,
+              textAlign: "center",
+              userSelect: "none",
+              boxShadow: "none",
+              border: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {hovered.name}
           </div>
         )}
       </div>
@@ -679,7 +715,7 @@ const handleObjectHover = (obj) => {
                   marginLeft: 0,
                 }}
                 onClick={() => handleTOCClick(item.marker)}
-                onMouseEnter={e => setHovered({ name: item.name, year: item.year })}
+                onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx })}
                 onMouseLeave={e => setHovered(null)}
                 tabIndex={0}
                 aria-label={`Jump to ${item.name}`}
