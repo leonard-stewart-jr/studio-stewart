@@ -35,14 +35,20 @@ function loadPinModel() {
     loader.setDRACOLoader(dracoLoader);
 
     loader.load("/models/3D_map_pin.glb", (gltf) => {
+      // --- Assign material colors by name ---
       gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-          if (
-            (child.material && child.material.name && child.material.name.toLowerCase().includes("red")) ||
-            child.name.toLowerCase().includes("body") ||
-            child.name.toLowerCase().includes("pin")
-          ) {
-            child.material.color.set(DOT_COLOR);
+        if (child.isMesh && child.material && child.material.name) {
+          if (child.material.name.toLowerCase().includes("needle")) {
+            // Metal look: shiny, silver
+            child.material.color.set("#cccccc");
+            child.material.metalness = 1.0;
+            child.material.roughness = 0.25;
+            child.material.envMapIntensity = 0.9;
+          } else if (child.material.name.toLowerCase().includes("base")) {
+            // Base: solid red
+            child.material.color.set("#b32c2c");
+            child.material.metalness = 0.2;
+            child.material.roughness = 0.6;
           }
         }
       });
@@ -102,11 +108,44 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Each pin has its own rotation so the tip points into the globe at its location.
-function getPinRotation(marker) {
-  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "tip" (-Z) to this normal.
-  // This will work for every pin, each at its own axis.
-  return { type: "standard" };
+// Compute the orientation so pin -Z points to globe center and +Y is as "upright" as possible on the tangent plane toward north pole
+function computePinOrientation(markerVec) {
+  const surfaceNormal = markerVec.clone().normalize(); // points "out" from globe center
+  // Reference up is global north
+  const globeUp = new THREE.Vector3(0, 1, 0);
+
+  // Project globeUp onto tangent plane to get a consistent "up" for the base
+  const projectedUp = globeUp.clone().sub(
+    surfaceNormal.clone().multiplyScalar(globeUp.dot(surfaceNormal))
+  );
+
+  // If the point is at north/south pole, fallback to a local orthogonal
+  if (projectedUp.lengthSq() < 1e-6) {
+    // Use global Z instead
+    projectedUp.set(0, 0, 1).sub(surfaceNormal.clone().multiplyScalar(surfaceNormal.z));
+    if (projectedUp.lengthSq() < 1e-6) projectedUp.set(1, 0, 0);
+  }
+  projectedUp.normalize();
+
+  // -Z (model's tip) should align with surfaceNormal, +Y (model's base) should align with projectedUp
+  const m = new THREE.Matrix4();
+  // Columns: X (right), Y (up), Z (forward)
+  const tangent = new THREE.Vector3().crossVectors(projectedUp, surfaceNormal).normalize();
+  m.makeBasis(tangent, projectedUp, surfaceNormal);
+
+  // The model's -Z is "forward", +Y is "up"
+  // To align -Z to surfaceNormal, +Y to projectedUp, we need to rotate from model space to world
+  // So invert the Z and Y axes for the basis
+  // In Three.js, model's forward is -Z, up is +Y
+  // But makeBasis expects X (right), Y (up), Z (forward), with Z = forward
+  // So we use surfaceNormal as Z, projectedUp as Y, tangent as X
+  // To match model space orientation, we need to invert Z (since model's -Z points tip out)
+  // So, after makeBasis, apply a rotation of 180deg around X to invert Z
+  const rot180X = new THREE.Matrix4().makeRotationX(Math.PI);
+  m.multiply(rot180X);
+
+  const q = new THREE.Quaternion().setFromRotationMatrix(m);
+  return q;
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -254,24 +293,15 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation logic: tip points into the globe, each at its own axis
-          const pinRotation = getPinRotation(obj);
+          // Orientation logic: tip points into the globe, base upright
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+          const quaternion = computePinOrientation(markerVec);
+          pin.setRotationFromQuaternion(quaternion);
 
-          // --- use offset = 0.07 for ALL pins ---
+          // "Pull out" offset along surface normal
           const offset = 0.07;
-
-          if (pinRotation && pinRotation.type === "standard") {
-            // The pin's tip is -Z, so use up = (0, 0, -1)
-            const up = new THREE.Vector3(0, 0, -1);
-            const surfaceNormal = markerVec.clone().normalize();
-            const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
-            pin.setRotationFromQuaternion(quaternion);
-
-            // "Pull out" offset along surface normal
-            const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-            pin.position.copy(outwardVec);
-          }
+          const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
+          pin.position.copy(outwardVec);
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
@@ -327,11 +357,9 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Standard cluster orientation
+          // Orientation logic
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const up = new THREE.Vector3(0, 0, -1);
-          const surfaceNormal = markerVec.clone().normalize();
-          const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
+          const quaternion = computePinOrientation(markerVec);
           pin.setRotationFromQuaternion(quaternion);
 
           // Use offset = 0.07 for London wheel pins too
