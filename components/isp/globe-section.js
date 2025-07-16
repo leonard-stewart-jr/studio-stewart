@@ -3,6 +3,7 @@ import { useRef, useState, useMemo, useEffect } from "react";
 import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 // Dynamic import because react-globe.gl uses WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -27,15 +28,40 @@ function loadPinModel() {
   if (pinModelPromise) return pinModelPromise;
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
+
+    // DRACO setup (required for compressed models)
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
+    loader.setDRACOLoader(dracoLoader);
+
     loader.load("/models/3D_map_pin.glb", (gltf) => {
+      // --- Assign material colors by name ---
       gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-          if (
-            (child.material && child.material.name && child.material.name.toLowerCase().includes("red")) ||
-            child.name.toLowerCase().includes("body") ||
-            child.name.toLowerCase().includes("pin")
-          ) {
-            child.material.color.set(DOT_COLOR);
+        if (child.isMesh && child.material && child.material.name) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => {
+              if (mat.name.toLowerCase().includes("needle")) {
+                mat.color.set("#cccccc");
+                mat.metalness = 1.0;
+                mat.roughness = 0.25;
+                mat.envMapIntensity = 0.9;
+              } else if (mat.name.toLowerCase().includes("base")) {
+                mat.color.set("#b32c2c");
+                mat.metalness = 0.2;
+                mat.roughness = 0.6;
+              }
+            });
+          } else {
+            if (child.material.name.toLowerCase().includes("needle")) {
+              child.material.color.set("#cccccc");
+              child.material.metalness = 1.0;
+              child.material.roughness = 0.25;
+              child.material.envMapIntensity = 0.9;
+            } else if (child.material.name.toLowerCase().includes("base")) {
+              child.material.color.set("#b32c2c");
+              child.material.metalness = 0.2;
+              child.material.roughness = 0.6;
+            }
           }
         }
       });
@@ -94,11 +120,25 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Each pin has its own rotation so the tip points into the globe at its location.
-function getPinRotation(marker) {
-  // Compute the surface normal for this lat/lon and build a quaternion that aligns the pin's "tip" (-Y) to this normal.
-  // This will work for every pin, each at its own axis.
-  return { type: "standard" };
+// --- AXIS FLIP: use -Z in model to point toward globe center (for Rhino/GLB axis swap) ---
+function orientPin(pin, markerVec) {
+  const surfaceNormal = markerVec.clone().normalize();
+  const axis = new THREE.Vector3(0, 0, -1); // -Z in model (likely GLB/Three.js convention)
+  const towardCenter = surfaceNormal.clone().negate(); // toward globe center
+  const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
+  pin.setRotationFromQuaternion(quaternion);
+
+  // // Optional: twist so base faces north (not needed for "stab into globe")
+  // const globeUp = new THREE.Vector3(0, 1, 0);
+  // const projectedUp = globeUp.clone().projectOnPlane(towardCenter).normalize();
+  // if (projectedUp.lengthSq() > 1e-6) {
+  //   const modelY = new THREE.Vector3(0, 1, 0).applyQuaternion(quaternion); // model's Y after rotation
+  //   let angle = Math.atan2(
+  //     modelY.clone().cross(projectedUp).dot(towardCenter),
+  //     modelY.dot(projectedUp)
+  //   );
+  //   pin.rotateOnAxis(towardCenter, angle);
+  // }
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -239,31 +279,21 @@ export default function GlobeSection({ onMarkerClick }) {
         // ALL STANDARD PINS
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 200;
+          const scale = 7;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation logic: tip points into the globe, each at its own axis
-          const pinRotation = getPinRotation(obj);
+          // FLIPPED ORIENTATION: -Z to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+          orientPin(pin, markerVec);
 
-          // --- use offset = 0.07 for ALL pins ---
+          // Offset from globe surface
           const offset = 0.07;
-
-          if (pinRotation && pinRotation.type === "standard") {
-            // The pin's tip is -Y, so use up = (0, -1, 0)
-            const up = new THREE.Vector3(0, -1, 0);
-            const surfaceNormal = markerVec.clone().normalize();
-            const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
-            pin.setRotationFromQuaternion(quaternion);
-
-            // "Pull out" offset along surface normal
-            const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-            pin.position.copy(outwardVec);
-          }
+          const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
+          pin.position.copy(outwardVec);
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
@@ -312,21 +342,18 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 200;
+          const scale = 0.01;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
           });
           pin.scale.set(scale, scale, scale);
 
-          // Standard cluster orientation
+          // FLIPPED ORIENTATION: -Z to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const up = new THREE.Vector3(0, -1, 0);
-          const surfaceNormal = markerVec.clone().normalize();
-          const quaternion = new THREE.Quaternion().setFromUnitVectors(up, surfaceNormal);
-          pin.setRotationFromQuaternion(quaternion);
+          orientPin(pin, markerVec);
 
-          // Use offset = 0.07 for London wheel pins too
+          // Offset from globe surface
           const offset = 0.07;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
