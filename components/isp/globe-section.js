@@ -4,6 +4,9 @@ import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+// PDF support
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
@@ -110,12 +113,29 @@ function orientPin(pin, markerVec) {
   pin.setRotationFromQuaternion(quaternion);
 }
 
+// --------- PDF Support ---------
+const PDFS = [
+  {
+    name: "First Prison Timeline",
+    file: "/pdfs/first-prison-timeline.pdf",
+    width: 2995,
+    height: 880
+  },
+  // Add more PDFs here as needed, with custom size!
+  // { name: "Another PDF", file: "/pdfs/another.pdf", width: 2000, height: 1500 }
+];
+
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const globeContainerRef = useRef();
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
   const [pinReady, setPinReady] = useState(false);
+
+  // PDF state
+  const [selectedPDF, setSelectedPDF] = useState(PDFS[0]);
+  const [pdfNumPages, setPdfNumPages] = useState(null);
+  const [pdfPage, setPdfPage] = useState(1);
 
   useEffect(() => {
     let mounted = true;
@@ -514,6 +534,11 @@ export default function GlobeSection({ onMarkerClick }) {
     );
   }
 
+  // ------ PDF Section --------
+  // Responsive PDF scale based on container/vw
+  const pdfMaxWidth = Math.min(selectedPDF.width, vw * 0.97, 1200);
+  const pdfScale = pdfMaxWidth / selectedPDF.width;
+
   return (
     <section
       className="isp-globe-section"
@@ -586,40 +611,33 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
-<Globe ... />
-{console.log(
-  'DEBUG hovered:', hovered,
-  'londonExpanded:', londonExpanded,
-  'londonClusterScreenPos:', londonClusterScreenPos,
-  'showLondonExpandOverlay:', showLondonExpandOverlay
-)}
         {showLondonExpandOverlay && (
-  <div
-    style={{
-      position: "fixed",
-      left: londonClusterScreenPos?.x ?? 0,
-      top: (londonClusterScreenPos?.y ?? 0) + 18,
-      zIndex: 9999,
-      pointerEvents: "auto",
-      background: "yellow",
-      color: "black",
-      border: "2px solid red",
-      borderRadius: 4,
-      padding: "8px 18px",
-      fontWeight: 700,
-      fontSize: 18,
-      transform: "translate(-50%, 0)",
-      whiteSpace: "nowrap",
-    }}
-  >
-    EXPAND
-  </div>
-)}
-{showLondonExpandOverlay && (
-  <div style={{position:'fixed',top:0,left:0,zIndex:9999,color:'red',background:'white'}}>
-    DEBUG: showLondonExpandOverlay is TRUE. X: {londonClusterScreenPos?.x}, Y: {londonClusterScreenPos?.y}
-  </div>
-)}
+          <div
+            style={{
+              position: "fixed",
+              left: londonClusterScreenPos?.x ?? 0,
+              top: (londonClusterScreenPos?.y ?? 0) + 18,
+              zIndex: 9999,
+              pointerEvents: "auto",
+              background: "yellow",
+              color: "black",
+              border: "2px solid red",
+              borderRadius: 4,
+              padding: "8px 18px",
+              fontWeight: 700,
+              fontSize: 18,
+              transform: "translate(-50%, 0)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            EXPAND
+          </div>
+        )}
+        {showLondonExpandOverlay && (
+          <div style={{position:'fixed',top:0,left:0,zIndex:9999,color:'red',background:'white'}}>
+            DEBUG: showLondonExpandOverlay is TRUE. X: {londonClusterScreenPos?.x}, Y: {londonClusterScreenPos?.y}
+          </div>
+        )}
         {/* Overlay for regular pins (with .name) */}
         {showPinOverlay && (
           <div
@@ -796,6 +814,123 @@ export default function GlobeSection({ onMarkerClick }) {
             );
           })}
         </svg>
+      </div>
+      {/* -------- PDF PREVIEW --------- */}
+      <div style={{
+        marginLeft: isMobile ? 0 : 32,
+        marginTop: isMobile ? 42 : 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        background: "#fafafa",
+        borderRadius: 12,
+        padding: "26px 8px 26px 8px",
+        maxWidth: 1200,
+        minWidth: 330,
+        boxShadow: "0 4px 24px #eee"
+      }}>
+        <h3 style={{ fontSize: 22, marginBottom: 20, color: "#b32c2c", letterSpacing: 0.7, fontWeight: 700 }}>
+          PDF Preview
+        </h3>
+        <div style={{ marginBottom: 16 }}>
+          <label htmlFor="pdf-select" style={{ fontWeight: 600 }}>
+            Choose PDF:
+          </label>{" "}
+          <select
+            id="pdf-select"
+            value={selectedPDF.name}
+            onChange={e => {
+              const next = PDFS.find(pdf => pdf.name === e.target.value);
+              setSelectedPDF(next);
+              setPdfNumPages(null);
+              setPdfPage(1);
+            }}
+            style={{
+              fontSize: 16,
+              borderRadius: 5,
+              border: "1px solid #e6dbb9",
+              background: "#fff",
+              padding: "4px 10px"
+            }}
+          >
+            {PDFS.map(pdf => (
+              <option key={pdf.name} value={pdf.name}>{pdf.name}</option>
+            ))}
+          </select>
+        </div>
+        <div style={{
+          width: pdfMaxWidth,
+          minHeight: selectedPDF.height * pdfScale,
+          background: "#fff",
+          borderRadius: 12,
+          boxShadow: "0 2px 8px #ddd",
+          padding: 12,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}>
+          <Document
+            file={selectedPDF.file}
+            onLoadSuccess={({ numPages }) => setPdfNumPages(numPages)}
+            loading="Loading PDF..."
+            error="Failed to load PDF!"
+            renderMode="canvas"
+          >
+            <Page
+              pageNumber={pdfPage}
+              width={pdfMaxWidth}
+              loading="Loading page..."
+              renderAnnotationLayer={false}
+              renderTextLayer={false}
+            />
+          </Document>
+        </div>
+        <div style={{ marginTop: 14, textAlign: "center", color: "#888" }}>
+          {pdfNumPages && (
+            <>
+              <button
+                onClick={() => setPdfPage(n => Math.max(1, n - 1))}
+                disabled={pdfPage <= 1}
+                style={{
+                  marginRight: 12,
+                  padding: "6px 18px",
+                  fontSize: 16,
+                  borderRadius: 6,
+                  background: "#f2f2f2",
+                  border: "1px solid #ddd",
+                  cursor: pdfPage <= 1 ? "not-allowed" : "pointer"
+                }}
+              >
+                Previous
+              </button>
+              <span>
+                Page {pdfPage} of {pdfNumPages}
+              </span>
+              <button
+                onClick={() => setPdfPage(n => Math.min(pdfNumPages, n + 1))}
+                disabled={pdfPage >= pdfNumPages}
+                style={{
+                  marginLeft: 12,
+                  padding: "6px 18px",
+                  fontSize: 16,
+                  borderRadius: 6,
+                  background: "#f2f2f2",
+                  border: "1px solid #ddd",
+                  cursor: pdfPage >= pdfNumPages ? "not-allowed" : "pointer"
+                }}
+              >
+                Next
+              </button>
+            </>
+          )}
+        </div>
+        <div style={{ marginTop: 22, color: "#aaa", fontSize: 15 }}>
+          <span>
+            PDF Size: {selectedPDF.width}px × {selectedPDF.height}px.<br />
+            For best quality, PDF is shown at its original or max width.<br />
+            <b>To add more PDFs, add to the PDFS array at the top of this file.</b>
+          </span>
+        </div>
       </div>
     </section>
   );
