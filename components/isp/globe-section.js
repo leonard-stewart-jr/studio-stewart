@@ -157,6 +157,42 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("mousedown", collapse);
   }, [londonExpanded]);
 
+  // Compute London cluster dot screen position for overlay
+  const [londonClusterScreenPos, setLondonClusterScreenPos] = useState(null);
+
+  useEffect(() => {
+    function updateLondonClusterScreenPos() {
+      if (
+        !globeEl.current ||
+        typeof globeEl.current.getScreenCoords !== "function" ||
+        !globeContainerRef.current ||
+        londonExpanded
+      ) {
+        setLondonClusterScreenPos(null);
+        return;
+      }
+      const { lat, lng } = getLondonClusterCenter();
+      const coords = globeEl.current.getScreenCoords(lat, lng);
+      const globeRect = globeContainerRef.current.getBoundingClientRect();
+      setLondonClusterScreenPos({
+        x: globeRect.left + coords.x,
+        y: globeRect.top + coords.y,
+      });
+    }
+    updateLondonClusterScreenPos();
+    window.addEventListener("resize", updateLondonClusterScreenPos);
+    let animationFrame;
+    function poll() {
+      updateLondonClusterScreenPos();
+      animationFrame = requestAnimationFrame(poll);
+    }
+    animationFrame = requestAnimationFrame(poll);
+    return () => {
+      window.removeEventListener("resize", updateLondonClusterScreenPos);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
+  }, [londonExpanded]);
+
   const {
     objectsData,
     linesData,
@@ -271,10 +307,10 @@ export default function GlobeSection({ onMarkerClick }) {
       };
 
     } else {
-      // LONDON EXPANDED: show 4 pins in a wheel, each 1/3 size of main pin
+      // LONDON EXPANDED: show 4 pins in a wheel, each 2/3 size of main pin
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
-      const pinScale = 7 * (1 / 3);
+      const pinScale = 7 * (2 / 3);
 
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
@@ -463,6 +499,13 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
+  // Show overlay "Expand" directly over the London cluster dot on hover
+  const showLondonExpandOverlay =
+    hovered &&
+    hovered.markerId === "london-cluster" &&
+    !londonExpanded &&
+    londonClusterScreenPos;
+
   if (!pinReady) {
     return (
       <section
@@ -555,6 +598,36 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
+        {showLondonExpandOverlay && (
+          <div
+            style={{
+              position: "fixed",
+              left: londonClusterScreenPos.x,
+              top: londonClusterScreenPos.y - 38,
+              zIndex: 999,
+              pointerEvents: "none",
+              background: "#fff",
+              color: "#b32c2c",
+              borderRadius: 8,
+              boxShadow: "0 2px 18px #2223",
+              padding: "9px 22px 9px 22px",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: ".06em",
+              textTransform: "uppercase",
+              border: "1.5px solid #e6dbb9",
+              opacity: 0.98,
+              transition: "opacity 0.15s",
+              transform: "translate(-50%, 0)",
+              lineHeight: 1.18,
+              textAlign: "center",
+              userSelect: "none",
+            }}
+          >
+            Expand
+          </div>
+        )}
       </div>
       <nav
         aria-label="Table of Contents"
