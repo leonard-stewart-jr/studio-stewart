@@ -35,7 +35,6 @@ function loadPinModel() {
     loader.setDRACOLoader(dracoLoader);
 
     loader.load("/models/3D_map_pin.glb", (gltf) => {
-      // --- FORCE ALL MATERIALS TO SOLID RED FOR DEBUGGING NEEDLE/GRAY ISSUE ---
       gltf.scene.traverse((child) => {
         if (child.isMesh && child.material) {
           if (Array.isArray(child.material)) {
@@ -108,11 +107,10 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Find out which axis makes the pin "stab" the globe. (Currently set to -X as last tested good.)
 function orientPin(pin, markerVec) {
   const surfaceNormal = markerVec.clone().normalize();
   const axis = new THREE.Vector3(-1, 0, 0);
-  const towardCenter = surfaceNormal.clone().negate(); // toward globe center
+  const towardCenter = surfaceNormal.clone().negate();
   const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
   pin.setRotationFromQuaternion(quaternion);
 }
@@ -157,7 +155,6 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("mousedown", collapse);
   }, [londonExpanded]);
 
-  // Compute London cluster dot screen position for overlay
   const [londonClusterScreenPos, setLondonClusterScreenPos] = useState(null);
 
   useEffect(() => {
@@ -229,7 +226,6 @@ export default function GlobeSection({ onMarkerClick }) {
     let customLineObject = undefined;
 
     if (!londonExpanded) {
-      // MAIN GLOBE VIEW: show only cluster dot/ring for London (NO pin for cluster), plus all non-London pins
       objectsData = [
         {
           ...londonCenter,
@@ -251,12 +247,11 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
 
       customPointObject = (obj) => {
-        // LONDON CLUSTER DOT/RING
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 1.7;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
-          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR, side: THREE.DoubleSide, transparent: false });
           const dot = new THREE.Mesh(dotGeom, dotMat);
           dot.renderOrder = 2;
           dot.position.set(0, 0, 0);
@@ -278,10 +273,10 @@ export default function GlobeSection({ onMarkerClick }) {
           group.add(ring);
 
           group.userData = { markerId: "london-cluster" };
+          group.name = "london-cluster-group";
           return group;
         }
 
-        // ALL STANDARD PINS (non-London)
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = 7;
@@ -291,11 +286,9 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
-          // Increase offset so pins are farther out (default was 0.07)
           const offset = 0.15;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
@@ -309,7 +302,6 @@ export default function GlobeSection({ onMarkerClick }) {
       };
 
     } else {
-      // LONDON EXPANDED: show 4 pins in a wheel, each 2/3 size of main pin
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
       const pinScale = 7 * (2 / 3);
@@ -357,11 +349,9 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // Orientation
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
-          // Use larger offset so pins float above globe
           const offset = 0.15;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
@@ -501,7 +491,6 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
-  // Show overlay "Expand" in black bar style below the London cluster dot on hover
   const showLondonExpandOverlay =
     hovered &&
     hovered.markerId === "london-cluster" &&
@@ -575,7 +564,7 @@ export default function GlobeSection({ onMarkerClick }) {
           backgroundColor="rgba(0,0,0,0)"
           width={globeWidth}
           height={globeHeight}
-          pointsData={[]} // <--- NO POINTS, ONLY OBJECTS
+          pointsData={[]} 
           pointLat="lat"
           pointLng="lng"
           pointColor="color"
