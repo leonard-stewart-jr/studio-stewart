@@ -5,7 +5,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
-// Dynamic import because react-globe.gl uses WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
@@ -20,7 +19,6 @@ const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 const CLUSTER_RING_RATIO = 0.74;
 const CLUSTER_RING_ALT_OFFSET = 0.0035;
 
-// 3D pin model state (loaded once on client)
 let pinModel = null;
 let pinModelPromise = null;
 function loadPinModel() {
@@ -28,40 +26,24 @@ function loadPinModel() {
   if (pinModelPromise) return pinModelPromise;
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
-
-    // DRACO setup (required for compressed models)
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
     loader.setDRACOLoader(dracoLoader);
-
     loader.load("/models/3D_map_pin.glb", (gltf) => {
-      // --- Assign material colors by name ---
       gltf.scene.traverse((child) => {
-        if (child.isMesh && child.material && child.material.name) {
+        if (child.isMesh && child.material) {
           if (Array.isArray(child.material)) {
             child.material.forEach((mat) => {
-              if (mat.name.toLowerCase().includes("needle")) {
-                mat.color.set("#cccccc");
-                mat.metalness = 1.0;
-                mat.roughness = 0.25;
-                mat.envMapIntensity = 0.9;
-              } else if (mat.name.toLowerCase().includes("base")) {
-                mat.color.set("#b32c2c");
-                mat.metalness = 0.2;
-                mat.roughness = 0.6;
-              }
+              mat.color.set("#b32c2c");
+              mat.metalness = 0.2;
+              mat.roughness = 0.6;
+              mat.envMapIntensity = 0.3;
             });
           } else {
-            if (child.material.name.toLowerCase().includes("needle")) {
-              child.material.color.set("#cccccc");
-              child.material.metalness = 1.0;
-              child.material.roughness = 0.25;
-              child.material.envMapIntensity = 0.9;
-            } else if (child.material.name.toLowerCase().includes("base")) {
-              child.material.color.set("#b32c2c");
-              child.material.metalness = 0.2;
-              child.material.roughness = 0.6;
-            }
+            child.material.color.set("#b32c2c");
+            child.material.metalness = 0.2;
+            child.material.roughness = 0.6;
+            child.material.envMapIntensity = 0.3;
           }
         }
       });
@@ -120,25 +102,12 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// --- AXIS FLIP: use -Z in model to point toward globe center (for Rhino/GLB axis swap) ---
 function orientPin(pin, markerVec) {
   const surfaceNormal = markerVec.clone().normalize();
-  const axis = new THREE.Vector3(0, 0, -1); // -Z in model (likely GLB/Three.js convention)
-  const towardCenter = surfaceNormal.clone().negate(); // toward globe center
+  const axis = new THREE.Vector3(-1, 0, 0);
+  const towardCenter = surfaceNormal.clone().negate();
   const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
   pin.setRotationFromQuaternion(quaternion);
-
-  // // Optional: twist so base faces north (not needed for "stab into globe")
-  // const globeUp = new THREE.Vector3(0, 1, 0);
-  // const projectedUp = globeUp.clone().projectOnPlane(towardCenter).normalize();
-  // if (projectedUp.lengthSq() > 1e-6) {
-  //   const modelY = new THREE.Vector3(0, 1, 0).applyQuaternion(quaternion); // model's Y after rotation
-  //   let angle = Math.atan2(
-  //     modelY.clone().cross(projectedUp).dot(towardCenter),
-  //     modelY.dot(projectedUp)
-  //   );
-  //   pin.rotateOnAxis(towardCenter, angle);
-  // }
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -179,6 +148,41 @@ export default function GlobeSection({ onMarkerClick }) {
     };
     window.addEventListener("mousedown", collapse);
     return () => window.removeEventListener("mousedown", collapse);
+  }, [londonExpanded]);
+
+  const [londonClusterScreenPos, setLondonClusterScreenPos] = useState(null);
+
+  useEffect(() => {
+    function updateLondonClusterScreenPos() {
+      if (
+        !globeEl.current ||
+        typeof globeEl.current.getScreenCoords !== "function" ||
+        !globeContainerRef.current ||
+        londonExpanded
+      ) {
+        setLondonClusterScreenPos(null);
+        return;
+      }
+      const { lat, lng } = getLondonClusterCenter();
+      const coords = globeEl.current.getScreenCoords(lat, lng);
+      const globeRect = globeContainerRef.current.getBoundingClientRect();
+      setLondonClusterScreenPos({
+        x: globeRect.left + coords.x,
+        y: globeRect.top + coords.y,
+      });
+    }
+    updateLondonClusterScreenPos();
+    window.addEventListener("resize", updateLondonClusterScreenPos);
+    let animationFrame;
+    function poll() {
+      updateLondonClusterScreenPos();
+      animationFrame = requestAnimationFrame(poll);
+    }
+    animationFrame = requestAnimationFrame(poll);
+    return () => {
+      window.removeEventListener("resize", updateLondonClusterScreenPos);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
   }, [londonExpanded]);
 
   const {
@@ -235,28 +239,19 @@ export default function GlobeSection({ onMarkerClick }) {
           idx,
           altitude: DOT_ALTITUDE,
         })),
-        ...londonMarkers.map((m, idx) => ({
-          ...m,
-          lat: m.lat,
-          lng: m.lon,
-          markerId: m.name,
-          isStandardPin: true,
-          showDotAndPin: false,
-          idx: nonLondonMarkers.length + idx,
-          altitude: DOT_ALTITUDE,
-        })),
       ];
 
       customPointObject = (obj) => {
-        // CLUSTER
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          const dotRadius = CLUSTER_DOT_SIZE * 1.3;
+          const dotRadius = CLUSTER_DOT_SIZE * 1.7;
           const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
-          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR });
+          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR, side: THREE.DoubleSide, transparent: false });
           const dot = new THREE.Mesh(dotGeom, dotMat);
           dot.renderOrder = 2;
           dot.position.set(0, 0, 0);
+          dot.name = "london-cluster-dot";
+          dot.userData = { markerId: "london-cluster" };
           group.add(dot);
 
           const ringOuter = dotRadius * CLUSTER_RING_RATIO;
@@ -273,10 +268,10 @@ export default function GlobeSection({ onMarkerClick }) {
           group.add(ring);
 
           group.userData = { markerId: "london-cluster" };
+          group.name = "london-cluster-group";
           return group;
         }
 
-        // ALL STANDARD PINS
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = 7;
@@ -286,12 +281,10 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // FLIPPED ORIENTATION: -Z to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
-          // Offset from globe surface
-          const offset = 0.07;
+          const offset = 0.15;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
 
@@ -304,9 +297,10 @@ export default function GlobeSection({ onMarkerClick }) {
       };
 
     } else {
-      // London wheel: pins for London, larger
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
+      const pinScale = 7 * (2 / 3);
+
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
         const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
@@ -322,6 +316,7 @@ export default function GlobeSection({ onMarkerClick }) {
           label: marker.name,
           isStandardPin: true,
           altitude: LONDON_WHEEL_ALTITUDE,
+          pinScale,
         };
       });
 
@@ -342,19 +337,17 @@ export default function GlobeSection({ onMarkerClick }) {
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 0.01;
+          const scale = obj.pinScale ?? 7;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
           });
           pin.scale.set(scale, scale, scale);
 
-          // FLIPPED ORIENTATION: -Z to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
-          // Offset from globe surface
-          const offset = 0.07;
+          const offset = 0.15;
           const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
           pin.position.copy(outwardVec);
 
@@ -493,6 +486,14 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
+  const showLondonExpandOverlay =
+    hovered &&
+    hovered.markerId === "london-cluster" &&
+    !londonExpanded &&
+    londonClusterScreenPos;
+
+  const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
+
   if (!pinReady) {
     return (
       <section
@@ -560,7 +561,7 @@ export default function GlobeSection({ onMarkerClick }) {
           backgroundColor="rgba(0,0,0,0)"
           width={globeWidth}
           height={globeHeight}
-          pointsData={[]} // <--- NO POINTS, ONLY OBJECTS
+          pointsData={[]} 
           pointLat="lat"
           pointLng="lng"
           pointColor="color"
@@ -585,6 +586,72 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
+<Globe ... />
+{console.log(
+  'DEBUG hovered:', hovered,
+  'londonExpanded:', londonExpanded,
+  'londonClusterScreenPos:', londonClusterScreenPos,
+  'showLondonExpandOverlay:', showLondonExpandOverlay
+)}
+        {showLondonExpandOverlay && (
+  <div
+    style={{
+      position: "fixed",
+      left: londonClusterScreenPos?.x ?? 0,
+      top: (londonClusterScreenPos?.y ?? 0) + 18,
+      zIndex: 9999,
+      pointerEvents: "auto",
+      background: "yellow",
+      color: "black",
+      border: "2px solid red",
+      borderRadius: 4,
+      padding: "8px 18px",
+      fontWeight: 700,
+      fontSize: 18,
+      transform: "translate(-50%, 0)",
+      whiteSpace: "nowrap",
+    }}
+  >
+    EXPAND
+  </div>
+)}
+{showLondonExpandOverlay && (
+  <div style={{position:'fixed',top:0,left:0,zIndex:9999,color:'red',background:'white'}}>
+    DEBUG: showLondonExpandOverlay is TRUE. X: {londonClusterScreenPos?.x}, Y: {londonClusterScreenPos?.y}
+  </div>
+)}
+        {/* Overlay for regular pins (with .name) */}
+        {showPinOverlay && (
+          <div
+            style={{
+              position: "fixed",
+              left: markerScreenPositions[hovered.idx]?.x ?? 0,
+              top: (markerScreenPositions[hovered.idx]?.y ?? 0) + 18,
+              zIndex: 999,
+              pointerEvents: "none",
+              background: "rgba(0,0,0,0.91)",
+              color: "#fff",
+              borderRadius: 4,
+              padding: "8px 18px",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: ".03em",
+              textTransform: "uppercase",
+              opacity: 1,
+              transition: "opacity 0.15s",
+              transform: "translate(-50%, 0)",
+              lineHeight: 1.17,
+              textAlign: "center",
+              userSelect: "none",
+              boxShadow: "none",
+              border: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {hovered.name}
+          </div>
+        )}
       </div>
       <nav
         aria-label="Table of Contents"
@@ -643,7 +710,7 @@ export default function GlobeSection({ onMarkerClick }) {
                   marginLeft: 0,
                 }}
                 onClick={() => handleTOCClick(item.marker)}
-                onMouseEnter={e => setHovered({ name: item.name, year: item.year })}
+                onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx })}
                 onMouseLeave={e => setHovered(null)}
                 tabIndex={0}
                 aria-label={`Jump to ${item.name}`}
