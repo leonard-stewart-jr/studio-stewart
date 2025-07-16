@@ -3,6 +3,7 @@ import { useRef, useState, useMemo, useEffect } from "react";
 import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 // Dynamic import because react-globe.gl uses WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -27,6 +28,12 @@ function loadPinModel() {
   if (pinModelPromise) return pinModelPromise;
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
+
+    // DRACO setup (required for compressed models)
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/'); // official CDN
+    loader.setDRACOLoader(dracoLoader);
+
     loader.load("/models/3D_map_pin.glb", (gltf) => {
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
@@ -44,20 +51,6 @@ function loadPinModel() {
     }, undefined, reject);
   });
   return pinModelPromise;
-}
-
-function getLondonMarkers() {
-  return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
-}
-function getNonLondonMarkers() {
-  return globeLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
-}
-function getLondonClusterCenter() {
-  const londonMarkers = getLondonMarkers();
-  if (londonMarkers.length === 0) return { lat: 51.5, lng: -0.1 };
-  const lat = londonMarkers.reduce((sum, m) => sum + m.lat, 0) / londonMarkers.length;
-  const lng = londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
-  return { lat, lng };
 }
 
 function latLngAltToVec3(lat, lng, altitude = 0) {
