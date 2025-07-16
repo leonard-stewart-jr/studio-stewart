@@ -120,22 +120,22 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// --- CORRECTED: -Y (needle) should point towards globe center (opposite surface normal) ---
+// --- AXIS FLIP: use -Z in model to point toward globe center (for Rhino/GLB axis swap) ---
 function orientPin(pin, markerVec) {
   const surfaceNormal = markerVec.clone().normalize();
-  const axis = new THREE.Vector3(0, -1, 0); // -Y in model
+  const axis = new THREE.Vector3(0, 0, -1); // -Z in model (likely GLB/Three.js convention)
   const towardCenter = surfaceNormal.clone().negate(); // toward globe center
   const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
   pin.setRotationFromQuaternion(quaternion);
 
-  // // Optional: twist so base faces north
+  // // Optional: twist so base faces north (not needed for "stab into globe")
   // const globeUp = new THREE.Vector3(0, 1, 0);
   // const projectedUp = globeUp.clone().projectOnPlane(towardCenter).normalize();
   // if (projectedUp.lengthSq() > 1e-6) {
-  //   const modelZ = new THREE.Vector3(0, 0, 1).applyQuaternion(quaternion); // model's Z after rotation
+  //   const modelY = new THREE.Vector3(0, 1, 0).applyQuaternion(quaternion); // model's Y after rotation
   //   let angle = Math.atan2(
-  //     modelZ.clone().cross(projectedUp).dot(towardCenter),
-  //     modelZ.dot(projectedUp)
+  //     modelY.clone().cross(projectedUp).dot(towardCenter),
+  //     modelY.dot(projectedUp)
   //   );
   //   pin.rotateOnAxis(towardCenter, angle);
   // }
@@ -286,7 +286,7 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // CORRECTED ORIENTATION: -Y to globe core
+          // FLIPPED ORIENTATION: -Z to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
@@ -349,7 +349,7 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           pin.scale.set(scale, scale, scale);
 
-          // CORRECTED ORIENTATION: -Y to globe core
+          // FLIPPED ORIENTATION: -Z to globe core
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
 
