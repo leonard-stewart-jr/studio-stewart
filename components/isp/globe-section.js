@@ -588,36 +588,32 @@ export default function GlobeSection({ onMarkerClick }) {
         />
         {/* Overlay for London cluster dot */}
         {showLondonExpandOverlay && (
-          <div
-            style={{
-              position: "fixed",
-              left: londonClusterScreenPos.x,
-              top: londonClusterScreenPos.y + 18,
-              zIndex: 999,
-              pointerEvents: "none",
-              background: "rgba(0,0,0,0.91)",
-              color: "#fff",
-              borderRadius: 4,
-              padding: "8px 18px",
-              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: ".03em",
-              textTransform: "uppercase",
-              opacity: 1,
-              transition: "opacity 0.15s",
-              transform: "translate(-50%, 0)",
-              lineHeight: 1.17,
-              textAlign: "center",
-              userSelect: "none",
-              boxShadow: "none",
-              border: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            EXPAND
-          </div>
-        )}
+  <div
+    style={{
+      position: "fixed",
+      left: londonClusterScreenPos?.x ?? 0,
+      top: (londonClusterScreenPos?.y ?? 0) + 18,
+      zIndex: 9999,
+      pointerEvents: "auto",
+      background: "yellow",
+      color: "black",
+      border: "2px solid red",
+      borderRadius: 4,
+      padding: "8px 18px",
+      fontWeight: 700,
+      fontSize: 18,
+      transform: "translate(-50%, 0)",
+      whiteSpace: "nowrap",
+    }}
+  >
+    EXPAND
+  </div>
+)}
+{showLondonExpandOverlay && (
+  <div style={{position:'fixed',top:0,left:0,zIndex:9999,color:'red',background:'white'}}>
+    DEBUG: showLondonExpandOverlay is TRUE. X: {londonClusterScreenPos?.x}, Y: {londonClusterScreenPos?.y}
+  </div>
+)}
         {/* Overlay for regular pins (with .name) */}
         {showPinOverlay && (
           <div
