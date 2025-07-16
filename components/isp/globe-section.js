@@ -474,9 +474,10 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-  const handleObjectHover = (obj) => {
-    setHovered(obj);
-  };
+const handleObjectHover = (obj) => {
+  console.log("Hovered object:", obj);
+  setHovered(obj);
+};
 
   const bannerHeight = 76 + 44 + 26 + 16;
   const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
