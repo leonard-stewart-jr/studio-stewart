@@ -5,7 +5,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
-// Dynamic import because react-globe.gl uses WebGL
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
@@ -20,7 +19,6 @@ const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 const CLUSTER_RING_RATIO = 0.74;
 const CLUSTER_RING_ALT_OFFSET = 0.0035;
 
-// 3D pin model state (loaded once on client)
 let pinModel = null;
 let pinModelPromise = null;
 function loadPinModel() {
@@ -28,12 +26,9 @@ function loadPinModel() {
   if (pinModelPromise) return pinModelPromise;
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
-
-    // DRACO setup (required for compressed models)
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
     loader.setDRACOLoader(dracoLoader);
-
     loader.load("/models/3D_map_pin.glb", (gltf) => {
       gltf.scene.traverse((child) => {
         if (child.isMesh && child.material) {
@@ -491,14 +486,12 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
-  // Overlay for hovered object: show pin name or EXPAND for london cluster
   const showLondonExpandOverlay =
     hovered &&
     hovered.markerId === "london-cluster" &&
     !londonExpanded &&
     londonClusterScreenPos;
 
-  // Overlay for hovered regular pins (those with .name)
   const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
 
   if (!pinReady) {
@@ -652,11 +645,11 @@ export default function GlobeSection({ onMarkerClick }) {
               boxShadow: "none",
               border: "none",
               whiteSpace: "nowrap",
-    }}
-  >
-    EXPAND
-  </div>
-)}
+            }}
+          >
+            {hovered.name}
+          </div>
+        )}
       </div>
       <nav
         aria-label="Table of Contents"
