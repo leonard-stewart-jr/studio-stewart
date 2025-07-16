@@ -247,7 +247,7 @@ export default function GlobeSection({ onMarkerClick }) {
         // ALL STANDARD PINS
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 50;
+          const scale = 18;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) child.castShadow = false;
