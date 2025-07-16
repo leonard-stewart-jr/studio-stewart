@@ -499,7 +499,7 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
-  // Show overlay "Expand" directly over the London cluster dot on hover
+  // Show overlay "Expand" in black bar style below the London cluster dot on hover
   const showLondonExpandOverlay =
     hovered &&
     hovered.markerId === "london-cluster" &&
@@ -603,29 +603,30 @@ export default function GlobeSection({ onMarkerClick }) {
             style={{
               position: "fixed",
               left: londonClusterScreenPos.x,
-              top: londonClusterScreenPos.y - 38,
+              top: londonClusterScreenPos.y + 18,
               zIndex: 999,
               pointerEvents: "none",
-              background: "#fff",
-              color: "#b32c2c",
-              borderRadius: 8,
-              boxShadow: "0 2px 18px #2223",
-              padding: "9px 22px 9px 22px",
+              background: "rgba(0,0,0,0.91)",
+              color: "#fff",
+              borderRadius: 4,
+              padding: "8px 18px",
               fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
               fontWeight: 700,
               fontSize: 18,
-              letterSpacing: ".06em",
+              letterSpacing: ".03em",
               textTransform: "uppercase",
-              border: "1.5px solid #e6dbb9",
-              opacity: 0.98,
+              opacity: 1,
               transition: "opacity 0.15s",
               transform: "translate(-50%, 0)",
-              lineHeight: 1.18,
+              lineHeight: 1.17,
               textAlign: "center",
               userSelect: "none",
+              boxShadow: "none",
+              border: "none",
+              whiteSpace: "nowrap",
             }}
           >
-            Expand
+            EXPAND
           </div>
         )}
       </div>
