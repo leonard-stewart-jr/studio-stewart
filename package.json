@@ -6,13 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "shx cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js"
   },
   "dependencies": {
     "framer-motion": "^12.12.1",
     "leaflet": "^1.9.4",
     "next": "^14.2.4",
-    "pdfjs-dist": "^5.3.31",
     "react": "^18.2.0",
     "react-compare-slider": "^3.1.0",
     "react-dom": "^18.2.0",
