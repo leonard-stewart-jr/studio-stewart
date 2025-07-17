@@ -25,5 +25,9 @@
   },
   "devDependencies": {
     "shx": "^0.3.4"
-  }
+  },
+  "overrides": {
+  "pdfjs-dist": "^5.3.93",
+  "react-pdf/pdfjs-dist": "^5.3.93"
+}
 }
