@@ -1,9 +1,46 @@
+/* ====== COOLVETICA FONT FACES ====== */
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg It.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg Cond.otf') format('opentype');
+  font-weight: 500;
+  font-stretch: condensed;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg Cram.otf') format('opentype');
+  font-weight: 600;
+  font-stretch: ultra-condensed;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Hv Comp.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ====== GLOBAL RESETS ====== */
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
   background: #f9f9f7;
   color: #181818;
   overflow-y: hidden;
@@ -59,7 +96,7 @@ nav.main-nav {
   justify-content: center;
   gap: 32px; /* Top nav: keep as is */
   height: 76px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
 }
 
 nav.main-nav a {
@@ -111,7 +148,7 @@ nav.main-nav a[aria-current="page"]:hover {
 .isp-tab-btn {
   background: none;
   border: none;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.5px;
