@@ -1,20 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Document, Page, pdfjs } from "react-pdf";
 
-// PDF.js worker config: use local worker to avoid CORS issues!
-if (typeof window !== "undefined") {
-  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-}
-
-const MESO_PDF_PATH = "/models/world/mesopotamia.pdf";
-const MESO_PDF_WIDTH = 2995;
-const MESO_PDF_HEIGHT = 880;
+const MESO_HTML_PATH = "/models/world/mesopotamia/index.html";
 
 export default function MesopotamiaModal({ open, onClose }) {
   const backdropRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState(0);
-  const scrollAreaRef = useRef();
 
   // ESC closes
   useEffect(() => {
@@ -43,16 +34,6 @@ export default function MesopotamiaModal({ open, onClose }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Scroll to left on open
-  useEffect(() => {
-    if (open && scrollAreaRef.current) {
-      scrollAreaRef.current.scrollLeft = 0;
-    }
-  }, [open, containerHeight]);
-
-  // Scale PDF: fit height to modal, width auto
-  const pdfScale = containerHeight ? (containerHeight / MESO_PDF_HEIGHT) : 1;
-
   if (!open) return null;
 
   return (
@@ -65,7 +46,6 @@ export default function MesopotamiaModal({ open, onClose }) {
       <ModalBody>
         <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
         <ScrollArea
-          ref={scrollAreaRef}
           style={{
             height: containerHeight,
             minHeight: containerHeight,
@@ -74,14 +54,19 @@ export default function MesopotamiaModal({ open, onClose }) {
             overflowY: "hidden",
           }}
         >
-          <Document
-  file="/models/world/mesopotamia.pdf"
-  onLoadError={err => { console.error("PDF onLoadError", err); }}
-  onSourceError={err => { console.error("PDF onSourceError", err); }}
-  error="Could not load PDF"
->
-  <Page pageNumber={1} />
-</Document>
+          {/* The HTML timeline is embedded here */}
+          <iframe
+            src={MESO_HTML_PATH}
+            title="Mesopotamia Timeline"
+            style={{
+              width: "100%",
+              height: "100%",
+              border: "none",
+              background: "#fff",
+              borderRadius: 8,
+            }}
+            allowFullScreen
+          />
         </ScrollArea>
       </ModalBody>
     </ModalBackdrop>
