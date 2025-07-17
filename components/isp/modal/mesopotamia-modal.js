@@ -75,21 +75,13 @@ export default function MesopotamiaModal({ open, onClose }) {
           }}
         >
           <Document
-            file={MESO_PDF_PATH}
-            loading=""
-            error="Could not load PDF"
-            renderMode="canvas"
-          >
-            <Page
-              pageNumber={1}
-              height={containerHeight}
-              width={null}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
-              loading=""
-              customTextRenderer={null}
-            />
-          </Document>
+  file="/models/world/mesopotamia.pdf"
+  onLoadError={err => { console.error("PDF onLoadError", err); }}
+  onSourceError={err => { console.error("PDF onSourceError", err); }}
+  error="Could not load PDF"
+>
+  <Page pageNumber={1} />
+</Document>
         </ScrollArea>
       </ModalBody>
     </ModalBackdrop>
