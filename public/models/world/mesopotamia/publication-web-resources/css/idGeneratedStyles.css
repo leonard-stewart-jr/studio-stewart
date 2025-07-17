@@ -2,67 +2,69 @@
 	font-family:"Coolvetica Bk";
 	font-style:normal;
 	font-weight:normal;
-	src : url("../../font/CoolveticaBk-Regular.otf");
+	src : url("font/CoolveticaBk-Regular.otf");
 }
 @font-face {
 	font-family:"Coolvetica El";
 	font-style:italic;
 	font-weight:200;
-	src : url("../../font/CoolveticaEl-Italic.otf");
+	src : url("font/CoolveticaEl-Italic.otf");
 }
 @font-face {
 	font-family:"Coolvetica El";
 	font-style:oblique;
 	font-weight:200;
-	src : url("../../font/CoolveticaEl-Italic.otf");
+	src : url("font/CoolveticaEl-Italic.otf");
 }
 @font-face {
 	font-family:"Coolvetica Hv";
 	font-style:italic;
 	font-weight:900;
-	src : url("../../font/CoolveticaHv-Italic.otf");
+	src : url("font/CoolveticaHv-Italic.otf");
 }
 @font-face {
 	font-family:"Coolvetica Hv";
 	font-style:oblique;
 	font-weight:900;
-	src : url("../../font/CoolveticaHv-Italic.otf");
+	src : url("font/CoolveticaHv-Italic.otf");
 }
 @font-face {
 	font-family:"Coolvetica Hv";
 	font-style:normal;
 	font-weight:900;
-	src : url("../../font/CoolveticaHv-Regular.otf");
+	src : url("font/CoolveticaHv-Regular.otf");
 }
 @font-face {
 	font-family:"Coolvetica Lt";
 	font-style:italic;
 	font-weight:300;
-	src : url("../../font/CoolveticaLt-Italic.otf");
+	src : url("font/CoolveticaLt-Italic.otf");
 }
 @font-face {
 	font-family:"Coolvetica Lt";
 	font-style:oblique;
 	font-weight:300;
-	src : url("../../font/CoolveticaLt-Italic.otf");
+	src : url("font/CoolveticaLt-Italic.otf");
 }
 @font-face {
 	font-family:"Coolvetica Rg";
 	font-style:normal;
 	font-weight:bold;
-	src : url("../../font/CoolveticaRg-Bold.otf");
+	src : url("font/CoolveticaRg-Bold.otf");
 }
 @font-face {
 	font-family:"Minion Pro";
 	font-style:normal;
 	font-weight:normal;
-	src : url("../../font/MinionPro-Regular.otf");
+	src : url("font/MinionPro-Regular.otf");
 }
 body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
 	margin:0;
 	padding:0;
 	border-width:0;
 	text-rendering:optimizeSpeed;
+	/* Add fallback for all generic text */
+	font-family: "Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 }
 div > svg {
 	position:absolute;
@@ -83,7 +85,7 @@ span.CharOverride-1 {
 	-webkit-text-stroke-color:#000000;
 	-webkit-text-stroke-width:40px;
 	color:#b32c2c;
-	font-family:"Coolvetica Hv", sans-serif;
+	font-family:"Coolvetica Hv", Helvetica, Arial, sans-serif;
 	font-size:1200px;
 	font-style:normal;
 	font-weight:900;
@@ -94,7 +96,7 @@ span.CharOverride-2 {
 	-webkit-text-stroke-color:#000000;
 	-webkit-text-stroke-width:40px;
 	color:#b32c2c;
-	font-family:"Coolvetica Hv", sans-serif;
+	font-family:"Coolvetica Hv", Helvetica, Arial, sans-serif;
 	font-size:600px;
 	font-style:normal;
 	font-weight:900;
@@ -103,42 +105,42 @@ span.CharOverride-2 {
 }
 span.CharOverride-3 {
 	color:#414042;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:720px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-4 {
 	color:#58595b;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:280px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-5 {
 	color:#808285;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"Coolvetica Lt", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:280px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-6 {
 	color:#000000;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-7 {
 	color:#808285;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-8 {
 	color:#808285;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
@@ -146,77 +148,77 @@ span.CharOverride-8 {
 }
 span.CharOverride-9 {
 	color:#6d6e71;
-	font-family:"Coolvetica El", sans-serif;
+	font-family:"Coolvetica El", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:200;
 }
 span.CharOverride-10 {
 	color:#414042;
-	font-family:"Coolvetica Rg", sans-serif;
+	font-family:"Coolvetica Rg", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:bold;
 }
 span.CharOverride-11 {
 	color:#000000;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-12 {
 	color:#ffffff;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-13 {
 	color:#ffffff;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-14 {
 	color:#ffffff;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:100px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-15 {
 	color:#414042;
-	font-family:"Coolvetica Hv", sans-serif;
+	font-family:"Coolvetica Hv", Helvetica, Arial, sans-serif;
 	font-size:720px;
 	font-style:italic;
 	font-weight:900;
 }
 span.CharOverride-16 {
 	color:#000000;
-	font-family:"Coolvetica Rg", sans-serif;
+	font-family:"Coolvetica Rg", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:bold;
 }
 span.CharOverride-17 {
 	color:#808285;
-	font-family:"Coolvetica Rg", sans-serif;
+	font-family:"Coolvetica Rg", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:260px;
 	font-style:normal;
 	font-weight:bold;
 }
 span.CharOverride-18 {
 	color:#58595b;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"Coolvetica Lt", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:280px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-19 {
 	color:#414042;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"Coolvetica Bk", "Coolvetica", Helvetica, Arial, sans-serif;
 	font-size:480px;
 	font-style:normal;
 	font-weight:normal;
