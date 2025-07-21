@@ -2,12 +2,11 @@ import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const MODAL_HEIGHT = 800;
-const MODAL_MAX_WIDTH = 1200;
 const EDGE_HOVER_WIDTH = 48; // px from left/right edge for arrow cursor
 const SCROLL_AMOUNT = 440; // px to scroll per click
 const MODAL_MARGIN = 32; // px top, bottom, left
 
-export default function MesopotamiaModal({ open, onClose }) {
+export default function FloatingModal({ open, onClose, src, width = 1100 }) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
   const [mouseEdge, setMouseEdge] = useState(null);
@@ -42,7 +41,6 @@ export default function MesopotamiaModal({ open, onClose }) {
   function handleEdgeClick(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
-    // Try to scroll the iframe content horizontally
     if (iframeRef.current && iframeRef.current.contentWindow) {
       const win = iframeRef.current.contentWindow;
       if (x <= EDGE_HOVER_WIDTH) {
@@ -53,7 +51,6 @@ export default function MesopotamiaModal({ open, onClose }) {
     }
   }
 
-  // Set custom cursor for scroll area
   const cursorStyle =
     mouseEdge === "left"
       ? "url('/icons/arrow-left.svg'), w-resize"
@@ -66,15 +63,17 @@ export default function MesopotamiaModal({ open, onClose }) {
   return (
     <Backdrop ref={backdropRef} onClick={handleBackdropClick} role="dialog" aria-modal="true">
       <ModalContainer
+        style={{ width }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleEdgeClick}
-        style={{ cursor: cursorStyle }}
+        tabIndex={0}
+        cursor={cursorStyle}
       >
         <iframe
           ref={iframeRef}
-          src="/models/world/mesopotamia/index.html"
-          title="Mesopotamia Timeline"
+          src={src}
+          title="Modal Content"
           style={{
             width: "100%",
             height: "100%",
@@ -88,7 +87,6 @@ export default function MesopotamiaModal({ open, onClose }) {
   );
 }
 
-// --- Styled Components ---
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
@@ -104,8 +102,6 @@ const ModalContainer = styled.div`
   margin-bottom: ${MODAL_MARGIN}px;
   margin-left: ${MODAL_MARGIN}px;
   max-height: ${MODAL_HEIGHT}px;
-  width: 95vw;
-  max-width: ${MODAL_MAX_WIDTH}px;
   background: none;
   border-radius: 0;
   box-shadow: none;
