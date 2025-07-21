@@ -102,11 +102,14 @@ export default function FloatingModal({
 
 const Backdrop = styled.div`
   position: fixed;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 146px; /* Start the gray backdrop below header+tabs */
   z-index: 1600;
   background: rgba(32,32,32,0.22);
   display: flex;
-  align-items: flex-end; /* Push modal to bottom */
+  align-items: flex-end;
   justify-content: flex-start;
 `;
 
