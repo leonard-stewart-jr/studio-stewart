@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 // Default values
-const DEFAULT_HEIGHT = 880;
+const DEFAULT_HEIGHT = 720;
 const DEFAULT_MARGIN = 32;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
