@@ -7,24 +7,33 @@ const FloatingModal = dynamic(
 );
 
 export default function InfoModal({ open, onClose, marker }) {
-  // Example: Use modal for any marker
   if (open && marker && marker.name) {
-    // Map marker name to HTML file and width
+    // Create slug for HTML path
     let slug = marker.name.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-    let src = `/models/world/${slug}/index.html`; // Your convention
-    let width = marker.modalWidth || 1100; // You can set this per marker
+    let src = `/models/world/${slug}/index.html`;
 
-    // For now, hardcoded for Mesopotamia
+    // Use marker.modalWidth and marker.modalHeight if present, otherwise fallback to defaults
+    let width = marker.modalWidth || 2995;
+    let height = marker.modalHeight || 880;
+
+    // For now, hardcoded for Mesopotamia (update this logic as you add more modals)
     if (marker.name.toLowerCase().startsWith("mesopotamia")) {
       src = "/models/world/mesopotamia/index.html";
-      width = 1100;
+      width = 2995;
+      height = 880;
     }
 
     return (
-      <FloatingModal open={open} onClose={onClose} src={src} width={width} />
+      <FloatingModal
+        open={open}
+        onClose={onClose}
+        src={src}
+        width={width}
+        height={height}
+      />
     );
   }
 
-  // Fallback: No modal for other markers (add more logic here if needed)
+  // Fallback: No modal for other markers
   return null;
 }
