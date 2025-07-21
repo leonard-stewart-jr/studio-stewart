@@ -28,7 +28,7 @@ export default function MesopotamiaModal({ open, onClose }) {
         <CloseBtn onClick={onClose} aria-label="Close">&times;</CloseBtn>
         <ContentArea>
           <iframe
-            src="/publication-web-resources/html/publication.html"
+            src="/models/world/mesopotamia/index.html"
             title="Mesopotamia Timeline"
             style={{
               width: "100%",
