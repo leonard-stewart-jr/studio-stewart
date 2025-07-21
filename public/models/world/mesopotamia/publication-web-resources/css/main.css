@@ -1,4 +1,3 @@
-/* ====== COOLVETICA FONT FACES ====== */
 @font-face {
   font-family: 'Coolvetica';
   src: url('/fonts/Coolvetica Rg.otf') format('opentype');
@@ -35,17 +34,12 @@
   font-display: swap;
 }
 
-/* ====== GLOBAL RESETS ====== */
-html,
-body {
-  padding: 0;
+html, body {
   margin: 0;
+  overflow: hidden;
   font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
   background: #f9f9f7;
   color: #181818;
-  overflow-y: hidden;
-  height: 100vh;
-  min-height: 100vh;
 }
 
 /* ====== MODAL CONTENT STYLES ====== */
