@@ -1,46 +1,9 @@
-/* ====== COOLVETICA FONT FACES ====== */
-@font-face {
-  font-family: 'Coolvetica';
-  src: url('/fonts/Coolvetica Rg.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica';
-  src: url('/fonts/Coolvetica Rg It.otf') format('opentype');
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica';
-  src: url('/fonts/Coolvetica Rg Cond.otf') format('opentype');
-  font-weight: 500;
-  font-stretch: condensed;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica';
-  src: url('/fonts/Coolvetica Rg Cram.otf') format('opentype');
-  font-weight: 600;
-  font-stretch: ultra-condensed;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica';
-  src: url('/fonts/Coolvetica Hv Comp.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ====== GLOBAL RESETS ====== */
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "coolvetica", sans-serif;
   background: #f9f9f7;
   color: #181818;
   overflow-y: hidden;
@@ -74,7 +37,6 @@ body {
   padding: 0;
   z-index: 20;
   background: #fff;
-  /* No side padding - alignment handled by flex spacers in JSX */
 }
 .nav-card-bot {
   box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
@@ -85,7 +47,6 @@ body {
   padding: 0;
   z-index: 15;
   background: #fff;
-  /* No side padding - alignment handled by flex spacers in JSX */
 }
 
 /* ====== NAVIGATION (LINKS) ====== */
@@ -94,9 +55,9 @@ nav.main-nav {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 32px; /* Top nav: keep as is */
+  gap: 32px;
   height: 76px;
-  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "coolvetica", sans-serif;
 }
 
 nav.main-nav a {
@@ -129,12 +90,11 @@ nav.main-nav a[aria-current="page"]:hover {
 }
 
 /* ====== ISP PAGE NAV HIERARCHY ====== */
-/* --- Section Tabs: HISTORY / FUTURE --- */
 .isp-section-tabs {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 22px; /* Middle nav: reduced from 32px */
+  gap: 22px;
   background: transparent;
   padding: 0;
   min-height: 60px;
@@ -148,7 +108,7 @@ nav.main-nav a[aria-current="page"]:hover {
 .isp-tab-btn {
   background: none;
   border: none;
-  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "coolvetica", sans-serif;
   font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.5px;
@@ -193,12 +153,11 @@ nav.main-nav a[aria-current="page"]:hover {
   color: #bcbcb6;
 }
 
-/* --- Subnav: WORLD / USA / SOUTH DAKOTA --- */
 .isp-subnav-row {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px; /* Bottom nav: reduced from 22px */
+  gap: 12px;
   background: transparent;
   padding: 0;
   min-height: 40px;
@@ -263,7 +222,6 @@ nav.main-nav a[aria-current="page"]:hover {
   outline: 2px solid #e6dbb9;
 }
 
-/* ====== REMOVE OLD NAV DIVIDER ====== */
 .nav-divider {
   display: none !important;
 }
@@ -332,7 +290,6 @@ nav.main-nav a[aria-current="page"]:hover {
   padding-bottom: 0 !important;
 }
 /* ====== CUSTOM FLOATING MODAL SCROLLBAR ====== */
-/* For .mesopotamia-scrollbar in modal: matches sidebar style, sharp, floating */
 .mesopotamia-scrollbar::-webkit-scrollbar {
   height: 14px;
   background: transparent;
