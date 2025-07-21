@@ -107,7 +107,7 @@ const Backdrop = styled.div`
   bottom: 0;
   top: 76px;
   z-index: 1600;
-  background: rgba(32,32,32,0.22);
+  background: rgba(32,32,32,0.13);
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
