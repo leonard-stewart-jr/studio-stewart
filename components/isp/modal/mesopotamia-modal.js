@@ -4,6 +4,7 @@ import styled from "styled-components";
 const MESO_HTML_PATH = "/models/world/mesopotamia/index.html";
 const MESO_DOC_WIDTH = 2995;
 const MESO_DOC_HEIGHT = 880;
+const ASPECT_RATIO = MESO_DOC_WIDTH / MESO_DOC_HEIGHT; // ~3.4
 
 export default function MesopotamiaModal({ open, onClose }) {
   const backdropRef = useRef(null);
@@ -32,30 +33,23 @@ export default function MesopotamiaModal({ open, onClose }) {
         <ModalBody>
           <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           <ScrollArea>
-            <iframe
-              src={MESO_HTML_PATH}
-              title="Mesopotamia Timeline"
-              width={MESO_DOC_WIDTH}
-              height={MESO_DOC_HEIGHT}
-              style={{
-                minWidth: MESO_DOC_WIDTH,
-                minHeight: MESO_DOC_HEIGHT,
-                maxWidth: MESO_DOC_WIDTH,
-                maxHeight: MESO_DOC_HEIGHT,
-                border: "none",
-                display: "block",
-                background: "#fff",
-                borderRadius: 0,
-              }}
-              allowFullScreen
-            />
+            <ResponsiveIframeWrapper>
+              <iframe
+                src={MESO_HTML_PATH}
+                title="Mesopotamia Timeline"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                  display: "block",
+                  background: "#fff",
+                  borderRadius: 0,
+                }}
+                allowFullScreen
+              />
+            </ResponsiveIframeWrapper>
           </ScrollArea>
         </ModalBody>
-        <FloatingScrollbar>
-          <ScrollbarRail>
-            <ScrollbarThumb />
-          </ScrollbarRail>
-        </FloatingScrollbar>
       </ModalCenter>
     </ModalOuter>
   );
@@ -71,7 +65,7 @@ const ModalOuter = styled.div`
   align-items: center;
   justify-content: center;
   pointer-events: auto;
-  background: none;
+  background: rgba(0,0,0,0.15); /* subtle backdrop */
 `;
 
 const ModalCenter = styled.div`
@@ -79,8 +73,8 @@ const ModalCenter = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: fit-content;
-  height: fit-content;
+  width: 100vw;
+  height: 100vh;
   position: relative;
 `;
 
@@ -88,12 +82,10 @@ const ModalBody = styled.div`
   background: #fff;
   border-radius: 0;
   box-shadow: 0 8px 44px #2227;
-  width: ${MESO_DOC_WIDTH}px;
-  height: ${MESO_DOC_HEIGHT}px;
-  min-width: ${MESO_DOC_WIDTH}px;
-  min-height: ${MESO_DOC_HEIGHT}px;
-  max-width: 99vw;
-  max-height: 92vh;
+  width: 95vw;
+  max-width: 1200px;
+  height: auto;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -125,48 +117,24 @@ const ScrollArea = styled.div`
   background: #fff;
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
-  &::-webkit-scrollbar {
-    height: 0; /* hide default scrollbar for horizontal */
-    width: 0;
-    background: transparent;
+`;
+
+const ResponsiveIframeWrapper = styled.div`
+  width: 100%;
+  aspect-ratio: ${ASPECT_RATIO};
+  max-height: 72vh;
+  background: #fff;
+  /* For browsers without aspect-ratio: fallback */
+  @supports not (aspect-ratio: 1) {
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      padding-top: ${(1/ASPECT_RATIO)*100}%;
+    }
+    iframe {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+    }
   }
 `;
-
-const FloatingScrollbar = styled.div`
-  width: ${MESO_DOC_WIDTH}px;
-  max-width: 99vw;
-  position: absolute;
-  left: 0;
-  top: ${MESO_DOC_HEIGHT}px;
-  /* position at bottom of modal body, floating */
-  transform: translateY(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  background: transparent;
-  height: 22px;
-`;
-
-const ScrollbarRail = styled.div`
-  width: 100%;
-  height: 14px;
-  background: rgba(240,240,237,0.66);
-  border-radius: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  position: relative;
-`;
-
-const ScrollbarThumb = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 32%;
-  background: #e6dbb9;
-  border-radius: 0;
-  transition: background 0.15s;
-  &:hover { background: #d6c08e; }
-`;
-
-// --- END STYLED COMPONENTS ---
