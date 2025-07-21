@@ -331,3 +331,23 @@ nav.main-nav a[aria-current="page"]:hover {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
+/* ====== CUSTOM FLOATING MODAL SCROLLBAR ====== */
+/* For .mesopotamia-scrollbar in modal: matches sidebar style, sharp, floating */
+.mesopotamia-scrollbar::-webkit-scrollbar {
+  height: 14px;
+  background: transparent;
+}
+
+.mesopotamia-scrollbar::-webkit-scrollbar-thumb {
+  background: #e6dbb9;
+  border-radius: 0;
+}
+
+.mesopotamia-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #d6c08e;
+}
+
+.mesopotamia-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e6dbb9 #f0f0ed;
+}
