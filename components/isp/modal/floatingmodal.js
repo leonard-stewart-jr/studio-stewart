@@ -1,12 +1,11 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// Default values
+
 const DEFAULT_HEIGHT = 720;
 const DEFAULT_MARGIN = 32;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
-const VERTICAL_SHIFT = 200;
 
 export default function FloatingModal({
   open,
@@ -77,8 +76,8 @@ export default function FloatingModal({
           width,
           height,
           cursor: cursorStyle,
-          marginTop: VERTICAL_SHIFT, // Shift modal down 200px
-          marginBottom: DEFAULT_MARGIN // Keep bottom margin as DEFAULT_MARGIN
+          marginTop: 0, // No top margin
+          marginBottom: DEFAULT_MARGIN // 32px above bottom
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -107,14 +106,15 @@ const Backdrop = styled.div`
   z-index: 1600;
   background: rgba(32,32,32,0.22);
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end; /* Push modal to bottom */
   justify-content: flex-start;
 `;
 
 const ModalContainer = styled.div`
-  /* margin-top is set inline for VERTICAL_SHIFT (200px), margin-bottom as DEFAULT_MARGIN */
+  margin-top: 0;
+  margin-bottom: ${DEFAULT_MARGIN}px;
   margin-left: ${DEFAULT_MARGIN}px;
-  margin-right: 0;
+  margin-right: 0; /* No margin on right */
   height: ${({ height }) => typeof height === "number" ? `${height}px` : height};
   width: ${({ width }) => typeof width === "number" ? `${width}px` : width};
   background: none;
