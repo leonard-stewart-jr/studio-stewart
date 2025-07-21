@@ -105,7 +105,7 @@ const Backdrop = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  top: 146px; /* Start the gray backdrop below header+tabs */
+  top: 74px;
   z-index: 1600;
   background: rgba(32,32,32,0.22);
   display: flex;
