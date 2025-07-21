@@ -6,13 +6,14 @@ const DEFAULT_HEIGHT = 720;
 const DEFAULT_MARGIN = 32;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
+const VERTICAL_SHIFT = 200;
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width = 2995, // Set per modal (e.g. 2995 for first modal)
-  height = DEFAULT_HEIGHT // Default 880, can change for future modals
+  width = 2995,
+  height = DEFAULT_HEIGHT
 }) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
@@ -72,7 +73,13 @@ export default function FloatingModal({
   return (
     <Backdrop ref={backdropRef} onClick={handleBackdropClick} role="dialog" aria-modal="true">
       <ModalContainer
-        style={{ width, height, cursor: cursorStyle }}
+        style={{
+          width,
+          height,
+          cursor: cursorStyle,
+          marginTop: VERTICAL_SHIFT, // Shift modal down 200px
+          marginBottom: DEFAULT_MARGIN // Keep bottom margin as DEFAULT_MARGIN
+        }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleEdgeClick}
@@ -105,10 +112,9 @@ const Backdrop = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  margin-top: ${DEFAULT_MARGIN}px;
-  margin-bottom: ${DEFAULT_MARGIN}px;
+  /* margin-top is set inline for VERTICAL_SHIFT (200px), margin-bottom as DEFAULT_MARGIN */
   margin-left: ${DEFAULT_MARGIN}px;
-  margin-right: 0; /* No margin on right */
+  margin-right: 0;
   height: ${({ height }) => typeof height === "number" ? `${height}px` : height};
   width: ${({ width }) => typeof width === "number" ? `${width}px` : width};
   background: none;
@@ -119,6 +125,5 @@ const ModalContainer = styled.div`
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  /* The modal fills the right edge of the window */
   max-width: none;
 `;
