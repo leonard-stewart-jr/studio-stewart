@@ -4,11 +4,8 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        {/* Google Fonts: Open Sans */}
-        <link
-          href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap"
-          rel="stylesheet"
-        />
+        {/* Adobe Fonts: Coolvetica Typekit */}
+        <link rel="stylesheet" href="https://use.typekit.net/mzk5snr.css" />
         {/* Favicon: PNG fallback and SVG */}
         <link rel="icon" type="image/png" href="/assets/logo-mark-only-32.png" sizes="32x32" />
         <link rel="icon" type="image/svg+xml" href="/assets/logo-mark-only.svg" />
