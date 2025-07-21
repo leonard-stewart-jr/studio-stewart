@@ -1,12 +1,19 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const MODAL_HEIGHT = 800;
-const EDGE_HOVER_WIDTH = 48; // px from left/right edge for arrow cursor
-const SCROLL_AMOUNT = 440; // px to scroll per click
-const MODAL_MARGIN = 32; // px top, bottom, left
+// Default values
+const DEFAULT_HEIGHT = 880;
+const DEFAULT_MARGIN = 32;
+const EDGE_HOVER_WIDTH = 48;
+const SCROLL_AMOUNT = 440;
 
-export default function FloatingModal({ open, onClose, src, width = 1100 }) {
+export default function FloatingModal({
+  open,
+  onClose,
+  src,
+  width = 2995, // Set per modal (e.g. 2995 for first modal)
+  height = DEFAULT_HEIGHT // Default 880, can change for future modals
+}) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
   const [mouseEdge, setMouseEdge] = useState(null);
@@ -41,6 +48,7 @@ export default function FloatingModal({ open, onClose, src, width = 1100 }) {
   function handleEdgeClick(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
+    // Try to scroll the iframe content horizontally
     if (iframeRef.current && iframeRef.current.contentWindow) {
       const win = iframeRef.current.contentWindow;
       if (x <= EDGE_HOVER_WIDTH) {
@@ -51,6 +59,7 @@ export default function FloatingModal({ open, onClose, src, width = 1100 }) {
     }
   }
 
+  // Custom cursor for left/right edge
   const cursorStyle =
     mouseEdge === "left"
       ? "url('/icons/arrow-left.svg'), w-resize"
@@ -63,12 +72,10 @@ export default function FloatingModal({ open, onClose, src, width = 1100 }) {
   return (
     <Backdrop ref={backdropRef} onClick={handleBackdropClick} role="dialog" aria-modal="true">
       <ModalContainer
-        style={{ width }}
+        style={{ width, height, cursor: cursorStyle }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleEdgeClick}
-        tabIndex={0}
-        cursor={cursorStyle}
       >
         <iframe
           ref={iframeRef}
@@ -98,15 +105,20 @@ const Backdrop = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  margin-top: ${MODAL_MARGIN}px;
-  margin-bottom: ${MODAL_MARGIN}px;
-  margin-left: ${MODAL_MARGIN}px;
-  max-height: ${MODAL_HEIGHT}px;
+  margin-top: ${DEFAULT_MARGIN}px;
+  margin-bottom: ${DEFAULT_MARGIN}px;
+  margin-left: ${DEFAULT_MARGIN}px;
+  margin-right: 0; /* No margin on right */
+  height: ${({ height }) => typeof height === "number" ? `${height}px` : height};
+  width: ${({ width }) => typeof width === "number" ? `${width}px` : width};
   background: none;
   border-radius: 0;
   box-shadow: none;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* The modal fills the right edge of the window */
+  max-width: none;
 `;
