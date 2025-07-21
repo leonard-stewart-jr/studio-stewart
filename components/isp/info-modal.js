@@ -18,9 +18,9 @@ export default function InfoModal({ open, onClose, marker }) {
 
     // For now, hardcoded for Mesopotamia (update this logic as you add more modals)
     if (marker.name.toLowerCase().startsWith("mesopotamia")) {
-      src = "/models/world/mesopotamia/index.html";
-      width = 2995;
-      height = 880;
+      src = "/models/world/mesopotamia2/index.html";
+      width = 2436;
+      height = 720;
     }
 
     return (
