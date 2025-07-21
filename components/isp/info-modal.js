@@ -24,7 +24,7 @@ export default function InfoModal({ open, onClose, marker }) {
     } else if (marker.name.toLowerCase().includes("maison de force")) {
       src = "/models/world/maison_de_force/index.html";
     } else if (marker.name.toLowerCase().includes("mesopotamia")) {
-      src = "/models/world/mesopotamia-1/index.html";
+      src = "/models/world/mesopotamia/index.html";
     } else if (marker.name.toLowerCase().includes("militarized prison architecture")) {
       src = "/models/world/militarized_prison_architecture/index.html";
     } else if (marker.name.toLowerCase().includes("nazi camp system")) {
