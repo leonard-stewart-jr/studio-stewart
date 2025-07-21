@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const MESO_HTML_PATH = "/models/world/mesopotamia/index.html";
+const MESO_DOC_WIDTH = 2995;
+const MESO_DOC_HEIGHT = 880;
 
 export default function MesopotamiaModal({ open, onClose }) {
   const backdropRef = useRef(null);
-  const [containerHeight, setContainerHeight] = useState(0);
 
   // ESC closes
   useEffect(() => {
@@ -23,94 +24,82 @@ export default function MesopotamiaModal({ open, onClose }) {
     if (e.target === backdropRef.current) onClose();
   };
 
-  // Responsive height for modal content
-  useEffect(() => {
-    const handleResize = () => {
-      const maxH = Math.min(window.innerHeight - 92, 900);
-      setContainerHeight(maxH);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   if (!open) return null;
 
   return (
-    <ModalBackdrop
-      ref={backdropRef}
-      onClick={handleBackdropClick}
-      aria-modal="true"
-      role="dialog"
-    >
-      <ModalBody>
-        <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
-        <ScrollArea
-          style={{
-            height: containerHeight,
-            minHeight: containerHeight,
-            maxHeight: containerHeight,
-            overflowX: "auto",
-            overflowY: "hidden",
-          }}
-        >
-          {/* The HTML timeline is embedded here */}
-          <iframe
-            src={MESO_HTML_PATH}
-            title="Mesopotamia Timeline"
-            style={{
-              width: "100%",
-              height: "100%",
-              border: "none",
-              background: "#fff",
-              borderRadius: 8,
-            }}
-            allowFullScreen
-          />
-        </ScrollArea>
-      </ModalBody>
-    </ModalBackdrop>
+    <ModalOuter ref={backdropRef} onClick={handleBackdropClick} role="dialog" aria-modal="true">
+      <ModalCenter>
+        <ModalBody>
+          <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
+          <ScrollArea>
+            <iframe
+              src={MESO_HTML_PATH}
+              title="Mesopotamia Timeline"
+              width={MESO_DOC_WIDTH}
+              height={MESO_DOC_HEIGHT}
+              style={{
+                minWidth: MESO_DOC_WIDTH,
+                minHeight: MESO_DOC_HEIGHT,
+                maxWidth: MESO_DOC_WIDTH,
+                maxHeight: MESO_DOC_HEIGHT,
+                border: "none",
+                display: "block",
+                background: "#fff",
+                borderRadius: 0,
+              }}
+              allowFullScreen
+            />
+          </ScrollArea>
+        </ModalBody>
+        <FloatingScrollbar>
+          <ScrollbarRail>
+            <ScrollbarThumb />
+          </ScrollbarRail>
+        </FloatingScrollbar>
+      </ModalCenter>
+    </ModalOuter>
   );
 }
 
-// Styled components
+// --- STYLED COMPONENTS ---
 
-const ModalBackdrop = styled.div`
+const ModalOuter = styled.div`
   position: fixed;
   inset: 0;
-  z-index: 1200;
-  background: rgba(0,0,0,0.56);
+  z-index: 1600;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 48px;
-  @media (max-width: 700px) {
-    align-items: flex-start;
-    padding-top: 0;
-  }
+  pointer-events: auto;
+  background: none;
+`;
+
+const ModalCenter = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
+  height: fit-content;
+  position: relative;
 `;
 
 const ModalBody = styled.div`
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 8px 44px #2229;
+  border-radius: 0;
+  box-shadow: 0 8px 44px #2227;
+  width: ${MESO_DOC_WIDTH}px;
+  height: ${MESO_DOC_HEIGHT}px;
+  min-width: ${MESO_DOC_WIDTH}px;
+  min-height: ${MESO_DOC_HEIGHT}px;
   max-width: 99vw;
-  width: 99vw;
-  max-height: 96vh;
-  min-height: 350px;
+  max-height: 92vh;
   display: flex;
   flex-direction: column;
   position: relative;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Coolvetica', Helvetica, Arial, sans-serif;
   color: #181818;
   overflow: hidden;
-  @media (max-width: 700px) {
-    max-width: 100vw;
-    width: 100vw;
-    height: 96vh;
-    max-height: 98vh;
-    border-radius: 4vw;
-  }
 `;
 
 const CloseButton = styled.button`
@@ -126,22 +115,58 @@ const CloseButton = styled.button`
   cursor: pointer;
   transition: color 0.18s;
   &:hover, &:focus { color: #b32c2c; }
-  @media (max-width: 700px) {
-    top: 18px;
-    right: 18px;
-    font-size: 2.1rem;
-  }
 `;
 
 const ScrollArea = styled.div`
   width: 100%;
-  background: #f7f7f7;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: #fff;
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
-  & > * {
-    margin: 0 auto;
+  &::-webkit-scrollbar {
+    height: 0; /* hide default scrollbar for horizontal */
+    width: 0;
+    background: transparent;
   }
 `;
+
+const FloatingScrollbar = styled.div`
+  width: ${MESO_DOC_WIDTH}px;
+  max-width: 99vw;
+  position: absolute;
+  left: 0;
+  top: ${MESO_DOC_HEIGHT}px;
+  /* position at bottom of modal body, floating */
+  transform: translateY(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: transparent;
+  height: 22px;
+`;
+
+const ScrollbarRail = styled.div`
+  width: 100%;
+  height: 14px;
+  background: rgba(240,240,237,0.66);
+  border-radius: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  position: relative;
+`;
+
+const ScrollbarThumb = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 32%;
+  background: #e6dbb9;
+  border-radius: 0;
+  transition: background 0.15s;
+  &:hover { background: #d6c08e; }
+`;
+
+// --- END STYLED COMPONENTS ---
