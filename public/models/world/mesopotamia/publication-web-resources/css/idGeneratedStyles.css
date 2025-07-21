@@ -3,7 +3,10 @@ body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure 
 	padding:0;
 	border-width:0;
 	text-rendering:optimizeSpeed;
+	font-family:"coolvetica", sans-serif;
 }
+
+/* SVG/Frame and container styles */
 div > svg {
 	position:absolute;
 }
@@ -19,11 +22,13 @@ p.ParaOverride-1 {
 	line-height:1;
 	white-space:nowrap;
 }
+
+/* All CharOverride spans use Coolvetica from Adobe Fonts kit */
 span.CharOverride-1 {
 	-webkit-text-stroke-color:#000000;
 	-webkit-text-stroke-width:40px;
 	color:#b18d56;
-	font-family:"Coolvetica Hv", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:1200px;
 	font-style:normal;
 	font-weight:900;
@@ -32,49 +37,49 @@ span.CharOverride-1 {
 }
 span.CharOverride-2 {
 	color:#414042;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:720px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-3 {
 	color:#bd9f72;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:280px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-4 {
 	color:#808285;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:280px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-5 {
 	color:#d1d3d4;
-	font-family:"Coolvetica Rg", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:bold;
 }
 span.CharOverride-6 {
 	color:#000000;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-7 {
 	color:#58595b;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-8 {
 	color:#58595b;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
@@ -82,81 +87,82 @@ span.CharOverride-8 {
 }
 span.CharOverride-9 {
 	color:#58595b;
-	font-family:"Coolvetica El", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:200;
 }
 span.CharOverride-10 {
 	color:#000000;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-11 {
 	color:#ffffff;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-12 {
 	color:#b18d56;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-13 {
 	color:#b18d56;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-14 {
 	color:#b18d56;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:100px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-15 {
 	color:#d1d3d4;
-	font-family:"Coolvetica Hv", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:720px;
 	font-style:normal;
 	font-weight:900;
 }
 span.CharOverride-16 {
 	color:#d1d3d4;
-	font-family:"Coolvetica Rg", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:bold;
 }
 span.CharOverride-17 {
 	color:#d1d3d4;
-	font-family:"Coolvetica Rg", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:260px;
 	font-style:normal;
 	font-weight:bold;
 }
 span.CharOverride-18 {
 	color:#bd9f72;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:280px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-19 {
 	color:#d1d3d4;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:480px;
 	font-style:normal;
 	font-weight:normal;
 }
+
 #_idContainer000 {
 	-ms-transform:translate(13.999px,9.291px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
