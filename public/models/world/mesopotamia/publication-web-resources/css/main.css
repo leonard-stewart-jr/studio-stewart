@@ -1,27 +1,70 @@
-.contentIframeClass {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	border: none;
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
-.dummyIFrameClass {
-	display: none;
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg It.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
 }
-.prev, .next {
-	cursor: pointer;
-	position: absolute;
-	top: 50%;
-	padding: 15px;
-	color: rgb(0, 0, 0);
-	font-weight: bold;
-	font-size: 30px;
-	visibility: hidden;
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg Cond.otf') format('opentype');
+  font-weight: 500;
+  font-stretch: condensed;
+  font-display: swap;
 }
-.next {
-	right: 0;
-	border-radius: 3px 0 0 3px;
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Rg Cram.otf') format('opentype');
+  font-weight: 600;
+  font-stretch: ultra-condensed;
+  font-display: swap;
 }
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('/fonts/Coolvetica Hv Comp.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 html, body {
-	margin: 0;
-	overflow: hidden
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Coolvetica', Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  background: #f9f9f7;
+  color: #181818;
+}
+
+.contentIframeClass {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border: none;
+}
+
+.dummyIFrameClass {
+  display: none;
+}
+
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  padding: 15px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: 30px;
+  visibility: hidden;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
 }
