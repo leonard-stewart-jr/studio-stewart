@@ -5,12 +5,13 @@ const MODAL_TOTAL_HEIGHT = 720;
 const LEFT_GAP = 100; // Initial gap, disappears as you drag/scroll
 const EDGE_HOVER_WIDTH = 150; // 150px from each edge triggers arrow cursor/scroll
 const SCROLL_AMOUNT = 440;
+const MODAL_CONTENT_WIDTH = 2436; // <-- Fixed width for iframe content
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width = 2436,
+  width = MODAL_CONTENT_WIDTH,
   height = MODAL_TOTAL_HEIGHT,
 }) {
   const backdropRef = useRef(null);
@@ -191,7 +192,7 @@ export default function FloatingModal({
             src={src}
             title="Modal Content"
             style={{
-              width: "100%",
+              width: MODAL_CONTENT_WIDTH, // <-- FIXED WIDTH for overflow/scroll
               height: "100%",
               border: "none",
               background: "transparent",
