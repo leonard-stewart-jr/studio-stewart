@@ -136,6 +136,7 @@ export default function FloatingModal({
   );
 }
 
+// CHANGE: align-items: flex-start (was center) to remove bottom gap
 const Backdrop = styled.div`
   position: fixed;
   left: 0;
@@ -145,7 +146,7 @@ const Backdrop = styled.div`
   z-index: 1600;
   background: rgba(32,32,32,0.13);
   display: flex;
-  align-items: center; /* Vertical centering */
+  align-items: flex-start; /* <-- CHANGED FROM center */
   justify-content: center;
   padding: 0;
   margin: 0;
