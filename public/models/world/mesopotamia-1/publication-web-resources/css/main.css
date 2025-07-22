@@ -2,7 +2,6 @@ html, body {
   height: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
-  box-sizing: border-box !important;
   background: transparent !important;
   font-family: "coolvetica", sans-serif;
 }
@@ -14,7 +13,7 @@ html, body {
   top: 0;
   left: 0;
   border: none;
-  box-sizing: border-box;
+
 }
 
 .dummyIFrameClass {
