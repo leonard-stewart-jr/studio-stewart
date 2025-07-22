@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const MODAL_TOTAL_HEIGHT = 720;
-const MODAL_MARGIN = 28; // Top and bottom margin
 const LEFT_GAP = 100;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
@@ -80,9 +79,6 @@ export default function FloatingModal({
       ? "url('/icons/arrow-right.svg'), e-resize"
       : "grab";
 
-  // Modal content height (subtract margins)
-  const modalContentHeight = MODAL_TOTAL_HEIGHT - 2 * MODAL_MARGIN;
-
   if (!open) return null;
 
   return (
@@ -92,54 +88,50 @@ export default function FloatingModal({
       role="dialog"
       aria-modal="true"
     >
-      <ModalWrapper>
-        <ModalContainer
+      <ModalContainer
+        style={{
+          width: isMobile ? "98vw" : width,
+          maxWidth: "98vw",
+          height: MODAL_TOTAL_HEIGHT,
+          paddingLeft: isMobile ? 12 : LEFT_GAP,
+          paddingRight: isMobile ? 12 : 0,
+          cursor: cursorStyle,
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleEdgeClick}
+      >
+        <ScrollableContent
           style={{
-            width: isMobile ? "98vw" : width,
-            maxWidth: "98vw",
-            height: modalContentHeight,
-            marginTop: MODAL_MARGIN,
-            marginBottom: MODAL_MARGIN,
-            paddingLeft: isMobile ? 12 : LEFT_GAP,
-            paddingRight: isMobile ? 12 : 0,
-            cursor: cursorStyle,
+            width: "100%",
+            height: "100%",
+            overflowX: "auto",
+            overflowY: "hidden",
+            paddingBottom: SCROLLBAR_GAP,
+            boxSizing: "content-box"
           }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          onClick={handleEdgeClick}
+          className="mesopotamia-scrollbar"
         >
-          <ScrollableContent
+          <iframe
+            ref={iframeRef}
+            src={src}
+            title="Modal Content"
             style={{
               width: "100%",
-              height: "100%",
-              overflowX: "auto",
-              overflowY: "hidden",
-              paddingBottom: SCROLLBAR_GAP,
-              boxSizing: "content-box"
+              height: `calc(100% - ${SCROLLBAR_GAP}px)`,
+              border: "none",
+              background: "transparent",
+              display: "block"
             }}
-            className="mesopotamia-scrollbar"
-          >
-            <iframe
-              ref={iframeRef}
-              src={src}
-              title="Modal Content"
-              style={{
-                width: "100%",
-                height: `calc(100% - ${SCROLLBAR_GAP}px)`,
-                border: "none",
-                background: "transparent",
-                display: "block"
-              }}
-              onClick={handleIframeClick}
-            />
-          </ScrollableContent>
-          {isMobile && showLandscapeBanner && (
-            <LandscapeHint>
-              For best experience, rotate your phone to landscape
-            </LandscapeHint>
-          )}
-        </ModalContainer>
-      </ModalWrapper>
+            onClick={handleIframeClick}
+          />
+        </ScrollableContent>
+        {isMobile && showLandscapeBanner && (
+          <LandscapeHint>
+            For best experience, rotate your phone to landscape
+          </LandscapeHint>
+        )}
+      </ModalContainer>
     </Backdrop>
   );
 }
@@ -153,18 +145,11 @@ const Backdrop = styled.div`
   z-index: 1600;
   background: rgba(32,32,32,0.13);
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-`;
-
-const ModalWrapper = styled.div`
-  width: 100vw;
-  display: flex;
+  align-items: center; /* <-- vertical centering */
   justify-content: center;
 `;
 
 const ModalContainer = styled.div`
-  margin: 0 auto;
   background: none;
   border-radius: 0;
   box-shadow: none;
@@ -179,8 +164,6 @@ const ModalContainer = styled.div`
     height: 420px !important;
     padding-left: 8px !important;
     padding-right: 8px !important;
-    margin-top: 10px !important;
-    margin-bottom: 10px !important;
   }
 `;
 
