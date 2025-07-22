@@ -11,6 +11,7 @@ export default function FloatingModal({
   onClose,
   src,
   width = 2436,
+  height = 720,
 }) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
@@ -102,6 +103,7 @@ export default function FloatingModal({
         <ScrollableContent
           style={{
             width: "100%",
+            height: height,
             overflowX: "auto",
             overflowY: "hidden",
             paddingBottom: SCROLLBAR_GAP, // scrollbar sits inside the modal height
@@ -115,6 +117,7 @@ export default function FloatingModal({
             title="Modal Content"
             style={{
               width: "100%",
+              height: `calc(${height}px - ${SCROLLBAR_GAP}px)`,
               border: "none",
               background: "transparent",
               display: "block"
