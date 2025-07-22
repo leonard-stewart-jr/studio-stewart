@@ -5,7 +5,7 @@ const MODAL_TOTAL_HEIGHT = 720;
 const LEFT_GAP = 100;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
-const SCROLLBAR_GAP = 24; // Space between content and the scrollbar
+const SCROLLBAR_GAP = 0;
 
 export default function FloatingModal({
   open,
