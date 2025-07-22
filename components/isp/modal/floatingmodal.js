@@ -6,7 +6,6 @@ const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
 const HEADER_TABS_HEIGHT = 74;
 const MODAL_HEIGHT = 720;
-const BOTTOM_SCROLL_PADDING = 16; // Push horizontal scrollbar below content
 const LEFT_GAP = 100;
 
 export default function FloatingModal({
@@ -19,7 +18,6 @@ export default function FloatingModal({
   const iframeRef = useRef(null);
   const [mouseEdge, setMouseEdge] = useState(null);
 
-  // ESC closes
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") onClose();
@@ -28,12 +26,10 @@ export default function FloatingModal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
 
-  // Click outside (backdrop) closes
   function handleBackdropClick(e) {
     if (e.target === backdropRef.current) onClose();
   }
 
-  // Mouse edge detection for custom cursor
   function handleMouseMove(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
@@ -45,7 +41,6 @@ export default function FloatingModal({
     setMouseEdge(null);
   }
 
-  // Click edge to scroll iframe horizontally
   function handleEdgeClick(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
@@ -59,7 +54,6 @@ export default function FloatingModal({
     }
   }
 
-  // Custom cursor for left/right edge
   const cursorStyle =
     mouseEdge === "left"
       ? "url('/icons/arrow-left.svg'), w-resize"
@@ -95,7 +89,7 @@ export default function FloatingModal({
           title="Modal Content"
           style={{
             width: "100%",
-            height: MODAL_HEIGHT - BOTTOM_SCROLL_PADDING, // reduce so scrollbar is pushed below modal
+            height: "100%", // Fills exactly modal height
             border: "none",
             background: "transparent",
             display: "block"
@@ -135,5 +129,5 @@ const ModalContainer = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   max-width: none;
-  padding-bottom: ${BOTTOM_SCROLL_PADDING}px; /* pushes scrollbar below content */
+  box-sizing: border-box; /* ensures height includes border/padding */
 `;
