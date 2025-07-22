@@ -1,23 +1,33 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const DEFAULT_MARGIN = 32;
+const MODAL_TOTAL_HEIGHT = 720;
+const MODAL_MARGIN = 28; // Top and bottom margin
+const LEFT_GAP = 100;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
-const HEADER_TABS_HEIGHT = 74;
-const MODAL_HEIGHT = 720;
-const LEFT_GAP = 100;
-const SCROLLBAR_GAP = 28; // How much space you want between modal and scrollbar
+const SCROLLBAR_GAP = 24; // Space between content and the scrollbar
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width = 2995,
+  width = 2436,
 }) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
   const [mouseEdge, setMouseEdge] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showLandscapeBanner, setShowLandscapeBanner] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 800);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -55,12 +65,23 @@ export default function FloatingModal({
     }
   }
 
+  // Try to hint landscape on mobile
+  function handleIframeClick() {
+    if (isMobile) {
+      setShowLandscapeBanner(true);
+      setTimeout(() => setShowLandscapeBanner(false), 2800);
+    }
+  }
+
   const cursorStyle =
     mouseEdge === "left"
       ? "url('/icons/arrow-left.svg'), w-resize"
       : mouseEdge === "right"
       ? "url('/icons/arrow-right.svg'), e-resize"
       : "grab";
+
+  // Modal content height (subtract margins)
+  const modalContentHeight = MODAL_TOTAL_HEIGHT - 2 * MODAL_MARGIN;
 
   if (!open) return null;
 
@@ -71,16 +92,17 @@ export default function FloatingModal({
       role="dialog"
       aria-modal="true"
     >
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width}}>
+      <ModalWrapper>
         <ModalContainer
           style={{
-            width,
-            height: MODAL_HEIGHT,
+            width: isMobile ? "98vw" : width,
+            maxWidth: "98vw",
+            height: modalContentHeight,
+            marginTop: MODAL_MARGIN,
+            marginBottom: MODAL_MARGIN,
+            paddingLeft: isMobile ? 12 : LEFT_GAP,
+            paddingRight: isMobile ? 12 : 0,
             cursor: cursorStyle,
-            marginTop: 0,
-            marginBottom: DEFAULT_MARGIN,
-            marginLeft: LEFT_GAP,
-            overflow: 'visible' // allow scrollbar to overflow below
           }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -88,12 +110,12 @@ export default function FloatingModal({
         >
           <ScrollableContent
             style={{
-              width: '100%',
-              height: '100%',
-              overflowX: 'auto',
-              overflowY: 'hidden',
-              paddingBottom: SCROLLBAR_GAP, // pushes native scrollbar down
-              boxSizing: 'content-box'
+              width: "100%",
+              height: "100%",
+              overflowX: "auto",
+              overflowY: "hidden",
+              paddingBottom: SCROLLBAR_GAP,
+              boxSizing: "content-box"
             }}
             className="mesopotamia-scrollbar"
           >
@@ -103,15 +125,21 @@ export default function FloatingModal({
               title="Modal Content"
               style={{
                 width: "100%",
-                height: `calc(100% - ${SCROLLBAR_GAP}px)`, // reduces content height so scrollbar is pushed down
+                height: `calc(100% - ${SCROLLBAR_GAP}px)`,
                 border: "none",
                 background: "transparent",
                 display: "block"
               }}
+              onClick={handleIframeClick}
             />
           </ScrollableContent>
+          {isMobile && showLandscapeBanner && (
+            <LandscapeHint>
+              For best experience, rotate your phone to landscape
+            </LandscapeHint>
+          )}
         </ModalContainer>
-      </div>
+      </ModalWrapper>
     </Backdrop>
   );
 }
@@ -129,22 +157,31 @@ const Backdrop = styled.div`
   justify-content: center;
 `;
 
+const ModalWrapper = styled.div`
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+`;
+
 const ModalContainer = styled.div`
-  margin-top: 0;
-  margin-bottom: ${DEFAULT_MARGIN}px;
-  margin-left: ${LEFT_GAP}px;
-  margin-right: 0;
-  height: ${({ height }) => typeof height === "number" ? `${height}px` : height};
-  width: ${({ width }) => typeof width === "number" ? `${width}px` : width};
+  margin: 0 auto;
   background: none;
   border-radius: 0;
   box-shadow: none;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: visible;
-  max-width: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 98vw;
   box-sizing: border-box;
+  @media (max-width: 700px) {
+    height: 420px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+  }
 `;
 
 const ScrollableContent = styled.div`
@@ -154,4 +191,20 @@ const ScrollableContent = styled.div`
   overflow-y: hidden;
   box-sizing: content-box;
   padding-bottom: ${SCROLLBAR_GAP}px;
+`;
+
+const LandscapeHint = styled.div`
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e6dbb9;
+  color: #181818;
+  border-radius: 8px;
+  padding: 9px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 2001;
+  box-shadow: 0 2px 12px rgba(32,32,32,0.13);
+  pointer-events: none;
 `;
