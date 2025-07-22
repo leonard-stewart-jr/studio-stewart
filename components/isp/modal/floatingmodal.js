@@ -2,10 +2,9 @@ import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const MODAL_TOTAL_HEIGHT = 720;
-const LEFT_GAP = 100;
-const EDGE_HOVER_WIDTH = 48;
+const LEFT_GAP = 100; // Initial gap, disappears as you drag/scroll
+const EDGE_HOVER_WIDTH = 150; // 150px from each edge triggers arrow cursor/scroll
 const SCROLL_AMOUNT = 440;
-const SCROLLBAR_GAP = 0;
 
 export default function FloatingModal({
   open,
@@ -15,10 +14,12 @@ export default function FloatingModal({
   height = MODAL_TOTAL_HEIGHT,
 }) {
   const backdropRef = useRef(null);
-  const iframeRef = useRef(null);
+  const scrollRef = useRef(null);
   const [mouseEdge, setMouseEdge] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [scrollStart, setScrollStart] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [showLandscapeBanner, setShowLandscapeBanner] = useState(false);
 
   useEffect(() => {
     function handleResize() {
@@ -32,6 +33,12 @@ export default function FloatingModal({
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") onClose();
+      if (!scrollRef.current) return;
+      if (e.key === "ArrowLeft") {
+        scrollRef.current.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
+      } else if (e.key === "ArrowRight") {
+        scrollRef.current.scrollBy({ left: SCROLL_AMOUNT, behavior: "smooth" });
+      }
     }
     if (open) document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
@@ -41,6 +48,7 @@ export default function FloatingModal({
     if (e.target === backdropRef.current) onClose();
   }
 
+  // Mouse edge logic for arrow cursor and click-to-scroll
   function handleMouseMove(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
@@ -51,34 +59,97 @@ export default function FloatingModal({
   function handleMouseLeave() {
     setMouseEdge(null);
   }
-
   function handleEdgeClick(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      const win = iframeRef.current.contentWindow;
-      if (x <= EDGE_HOVER_WIDTH) {
-        win.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
-      } else if (x >= bounds.width - EDGE_HOVER_WIDTH) {
-        win.scrollBy({ left: SCROLL_AMOUNT, behavior: "smooth" });
+    if (!scrollRef.current) return;
+    if (x <= EDGE_HOVER_WIDTH) {
+      scrollRef.current.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
+    } else if (x >= bounds.width - EDGE_HOVER_WIDTH) {
+      scrollRef.current.scrollBy({ left: SCROLL_AMOUNT, behavior: "smooth" });
+    }
+  }
+
+  // Drag-to-scroll logic
+  function handleDragStart(e) {
+    if (e.button !== 0) return;
+    setIsDragging(true);
+    setDragStartX(e.clientX);
+    setScrollStart(scrollRef.current.scrollLeft);
+    document.body.style.cursor = "grabbing";
+  }
+  function handleDragMove(e) {
+    if (!isDragging) return;
+    const deltaX = e.clientX - dragStartX;
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollStart - deltaX;
+    }
+  }
+  function handleDragEnd() {
+    setIsDragging(false);
+    document.body.style.cursor = "";
+  }
+  useEffect(() => {
+    if (!isDragging) return;
+    window.addEventListener("mousemove", handleDragMove);
+    window.addEventListener("mouseup", handleDragEnd);
+    return () => {
+      window.removeEventListener("mousemove", handleDragMove);
+      window.removeEventListener("mouseup", handleDragEnd);
+    };
+  });
+
+  // Wheel scroll (horizontal)
+  function handleWheel(e) {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      // Already horizontal
+      return;
+    }
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
+      e.preventDefault();
+    }
+  }
+
+  // Touch drag
+  useEffect(() => {
+    let startX = 0, startScroll = 0, dragging = false;
+    function onTouchStart(e) {
+      if (!scrollRef.current) return;
+      if (e.touches.length !== 1) return;
+      dragging = true;
+      startX = e.touches[0].clientX;
+      startScroll = scrollRef.current.scrollLeft;
+    }
+    function onTouchMove(e) {
+      if (!dragging || !scrollRef.current || e.touches.length !== 1) return;
+      const deltaX = e.touches[0].clientX - startX;
+      scrollRef.current.scrollLeft = startScroll - deltaX;
+      e.preventDefault();
+    }
+    function onTouchEnd() {
+      dragging = false;
+    }
+    const node = scrollRef.current;
+    if (node) {
+      node.addEventListener("touchstart", onTouchStart, { passive: false });
+      node.addEventListener("touchmove", onTouchMove, { passive: false });
+      node.addEventListener("touchend", onTouchEnd, { passive: false });
+    }
+    return () => {
+      if (node) {
+        node.removeEventListener("touchstart", onTouchStart);
+        node.removeEventListener("touchmove", onTouchMove);
+        node.removeEventListener("touchend", onTouchEnd);
       }
-    }
-  }
+    };
+  }, [scrollRef.current]);
 
-  // Try to hint landscape on mobile
-  function handleIframeClick() {
-    if (isMobile) {
-      setShowLandscapeBanner(true);
-      setTimeout(() => setShowLandscapeBanner(false), 2800);
-    }
-  }
-
-  const cursorStyle =
-    mouseEdge === "left"
-      ? "url('/icons/arrow-left.svg'), w-resize"
-      : mouseEdge === "right"
-      ? "url('/icons/arrow-right.svg'), e-resize"
-      : "grab";
+  // Cursor logic for edge arrows & grab
+  let cursorStyle = "grab";
+  if (mouseEdge === "left") cursorStyle = "url('/icons/arrow-left.svg'), w-resize";
+  else if (mouseEdge === "right") cursorStyle = "url('/icons/arrow-right.svg'), e-resize";
+  else if (isDragging) cursorStyle = "grabbing";
 
   if (!open) return null;
 
@@ -92,53 +163,50 @@ export default function FloatingModal({
       <ModalContainer
         style={{
           width: isMobile ? "98vw" : width,
-          maxWidth: "98vw",
           height: height,
           paddingLeft: isMobile ? 12 : LEFT_GAP,
-          paddingRight: isMobile ? 12 : 0,
+          paddingRight: 0, // Remove right gap
           cursor: cursorStyle,
-          marginBottom: "32px", // Ensures modal sits 32px above bottom rail
+          boxSizing: "border-box",
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleEdgeClick}
+        onMouseDown={handleDragStart}
       >
         <ScrollableContent
+          ref={scrollRef}
           style={{
             width: "100%",
             height: "100%",
             overflowX: "auto",
             overflowY: "hidden",
-            paddingBottom: SCROLLBAR_GAP,
-            boxSizing: "border-box"
+            boxSizing: "border-box",
           }}
           className="mesopotamia-scrollbar"
+          tabIndex={0}
+          onWheel={handleWheel}
         >
           <iframe
-            ref={iframeRef}
             src={src}
             title="Modal Content"
             style={{
               width: "100%",
-              height: `calc(100%)`,
+              height: "100%",
               border: "none",
               background: "transparent",
-              display: "block"
+              display: "block",
+              pointerEvents: "auto",
             }}
-            onClick={handleIframeClick}
+            draggable={false}
           />
         </ScrollableContent>
-        {isMobile && showLandscapeBanner && (
-          <LandscapeHint>
-            For best experience, rotate your phone to landscape
-          </LandscapeHint>
-        )}
       </ModalContainer>
     </Backdrop>
   );
 }
 
-// Backdrop covers area below header (top: 76px) to bottom
+// Vertically center modal in gray background space
 const Backdrop = styled.div`
   position: fixed;
   left: 0;
@@ -146,15 +214,14 @@ const Backdrop = styled.div`
   top: 76px;
   bottom: 0;
   z-index: 1600;
-  background: rgba(32,32,32,0.13); /* original gray grid background */
+  background: rgba(32,32,32,0.13);
   display: flex;
-  justify-content: center;
-  align-items: flex-end; /* align modal at the bottom */
+  justify-content: flex-start;
+  align-items: center; /* Center vertically */
   padding: 0;
   margin: 0;
 `;
 
-// ModalContainer: 720px tall, sits 32px above the bottom, left gap as before
 const ModalContainer = styled.div`
   background: none;
   border-radius: 0;
@@ -164,12 +231,8 @@ const ModalContainer = styled.div`
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  max-width: 98vw;
   box-sizing: border-box;
   height: ${MODAL_TOTAL_HEIGHT}px;
-  padding-top: 0;
-  padding-bottom: 0;
-  margin-bottom: 32px; /* Ensures modal is 32px above bottom */
   @media (max-width: 700px) {
     height: 420px !important;
     padding-left: 8px !important;
@@ -183,21 +246,4 @@ const ScrollableContent = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   box-sizing: border-box;
-  padding-bottom: ${SCROLLBAR_GAP}px;
-`;
-
-const LandscapeHint = styled.div`
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #e6dbb9;
-  color: #181818;
-  border-radius: 8px;
-  padding: 9px 22px;
-  font-size: 16px;
-  font-weight: 600;
-  z-index: 2001;
-  box-shadow: 0 2px 12px rgba(32,32,32,0.13);
-  pointer-events: none;
 `;
