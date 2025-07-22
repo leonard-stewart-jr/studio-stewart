@@ -1,34 +1,24 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// Default values
-const DEFAULT_HEIGHT = 720;
 const DEFAULT_MARGIN = 32;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
-const HEADER_TABS_HEIGHT = 74; // Updated per your changes
+const HEADER_TABS_HEIGHT = 74;
+
+// Set modal height to exactly 720px (not dynamic)
+const MODAL_HEIGHT = 720;
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width = 2995, // Set per modal (e.g. 2995 for first modal)
-  height // We'll set height dynamically below
+  width = 2995,
+  // height is now fixed at 720
 }) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
   const [mouseEdge, setMouseEdge] = useState(null);
-  const [modalHeight, setModalHeight] = useState(DEFAULT_HEIGHT);
-
-  // Dynamically set modal height so it fits between tabs/header and 32px above bottom
-  useEffect(() => {
-    function updateHeight() {
-      setModalHeight(window.innerHeight - HEADER_TABS_HEIGHT - DEFAULT_MARGIN);
-    }
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
-  }, []);
 
   // ESC closes
   useEffect(() => {
@@ -60,7 +50,6 @@ export default function FloatingModal({
   function handleEdgeClick(e) {
     const bounds = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - bounds.left;
-    // Try to scroll the iframe content horizontally
     if (iframeRef.current && iframeRef.current.contentWindow) {
       const win = iframeRef.current.contentWindow;
       if (x <= EDGE_HOVER_WIDTH) {
@@ -91,7 +80,7 @@ export default function FloatingModal({
       <ModalContainer
         style={{
           width,
-          height: modalHeight,
+          height: MODAL_HEIGHT,
           cursor: cursorStyle,
           marginTop: 0,
           marginBottom: DEFAULT_MARGIN
@@ -126,15 +115,15 @@ const Backdrop = styled.div`
   z-index: 1600;
   background: rgba(32,32,32,0.13); /* Lower opacity for a lighter gray */
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
+  align-items: flex-end;   /* Modal flush to the bottom */
+  justify-content: center; /* Modal centered horizontally */
 `;
 
 const ModalContainer = styled.div`
   margin-top: 0;
   margin-bottom: ${DEFAULT_MARGIN}px;
-  margin-left: ${DEFAULT_MARGIN}px;
-  margin-right: 0; /* No margin on right */
+  margin-left: 0;
+  margin-right: 0;
   height: ${({ height }) => typeof height === "number" ? `${height}px` : height};
   width: ${({ width }) => typeof width === "number" ? `${width}px` : width};
   background: none;
@@ -144,6 +133,6 @@ const ModalContainer = styled.div`
   flex-direction: column;
   position: relative;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: hidden; /* Hide vertical scrollbar */
   max-width: none;
 `;
