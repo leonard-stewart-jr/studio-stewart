@@ -7,6 +7,7 @@ const SCROLL_AMOUNT = 440;
 const HEADER_TABS_HEIGHT = 74;
 const MODAL_HEIGHT = 720;
 const LEFT_GAP = 100;
+const SCROLLBAR_GAP = 28; // How much space you want between modal and scrollbar
 
 export default function FloatingModal({
   open,
@@ -70,32 +71,47 @@ export default function FloatingModal({
       role="dialog"
       aria-modal="true"
     >
-      <ModalContainer
-        style={{
-          width,
-          height: MODAL_HEIGHT,
-          cursor: cursorStyle,
-          marginTop: 0,
-          marginBottom: DEFAULT_MARGIN,
-          marginLeft: LEFT_GAP
-        }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleEdgeClick}
-      >
-        <iframe
-          ref={iframeRef}
-          src={src}
-          title="Modal Content"
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width}}>
+        <ModalContainer
           style={{
-            width: "100%",
-            height: "100%", // Fills exactly modal height
-            border: "none",
-            background: "transparent",
-            display: "block"
+            width,
+            height: MODAL_HEIGHT,
+            cursor: cursorStyle,
+            marginTop: 0,
+            marginBottom: DEFAULT_MARGIN,
+            marginLeft: LEFT_GAP,
+            overflow: 'visible' // allow scrollbar to overflow below
           }}
-        />
-      </ModalContainer>
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onClick={handleEdgeClick}
+        >
+          <ScrollableContent
+            style={{
+              width: '100%',
+              height: '100%',
+              overflowX: 'auto',
+              overflowY: 'hidden',
+              paddingBottom: SCROLLBAR_GAP, // pushes native scrollbar down
+              boxSizing: 'content-box'
+            }}
+            className="mesopotamia-scrollbar"
+          >
+            <iframe
+              ref={iframeRef}
+              src={src}
+              title="Modal Content"
+              style={{
+                width: "100%",
+                height: `calc(100% - ${SCROLLBAR_GAP}px)`, // reduces content height so scrollbar is pushed down
+                border: "none",
+                background: "transparent",
+                display: "block"
+              }}
+            />
+          </ScrollableContent>
+        </ModalContainer>
+      </div>
     </Backdrop>
   );
 }
@@ -126,8 +142,16 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: visible;
+  max-width: none;
+  box-sizing: border-box;
+`;
+
+const ScrollableContent = styled.div`
+  width: 100%;
+  height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  max-width: none;
-  box-sizing: border-box; /* ensures height includes border/padding */
+  box-sizing: content-box;
+  padding-bottom: ${SCROLLBAR_GAP}px;
 `;
