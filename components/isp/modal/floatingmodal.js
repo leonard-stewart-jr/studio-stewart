@@ -107,8 +107,8 @@ export default function FloatingModal({
             height: "100%",
             overflowX: "auto",
             overflowY: "hidden",
-            paddingBottom: SCROLLBAR_GAP,
-            boxSizing: "content-box"
+            paddingBottom: SCROLLBAR_GAP, // scrollbar sits inside the modal height
+            boxSizing: "border-box"
           }}
           className="mesopotamia-scrollbar"
         >
@@ -145,8 +145,10 @@ const Backdrop = styled.div`
   z-index: 1600;
   background: rgba(32,32,32,0.13);
   display: flex;
-  align-items: center; /* <-- vertical centering */
+  align-items: center; /* Vertical centering */
   justify-content: center;
+  padding: 0;
+  margin: 0;
 `;
 
 const ModalContainer = styled.div`
@@ -160,6 +162,10 @@ const ModalContainer = styled.div`
   overflow-y: hidden;
   max-width: 98vw;
   box-sizing: border-box;
+  height: 720px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
   @media (max-width: 700px) {
     height: 420px !important;
     padding-left: 8px !important;
@@ -172,7 +178,7 @@ const ScrollableContent = styled.div`
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  box-sizing: content-box;
+  box-sizing: border-box;
   padding-bottom: ${SCROLLBAR_GAP}px;
 `;
 
