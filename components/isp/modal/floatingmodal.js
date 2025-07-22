@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const MODAL_TOTAL_HEIGHT = 720;
 const LEFT_GAP = 100;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
@@ -92,7 +91,6 @@ export default function FloatingModal({
         style={{
           width: isMobile ? "98vw" : width,
           maxWidth: "98vw",
-          height: MODAL_TOTAL_HEIGHT,
           paddingLeft: isMobile ? 12 : LEFT_GAP,
           paddingRight: isMobile ? 12 : 0,
           cursor: cursorStyle,
@@ -104,7 +102,6 @@ export default function FloatingModal({
         <ScrollableContent
           style={{
             width: "100%",
-            height: "100%",
             overflowX: "auto",
             overflowY: "hidden",
             paddingBottom: SCROLLBAR_GAP, // scrollbar sits inside the modal height
@@ -118,7 +115,6 @@ export default function FloatingModal({
             title="Modal Content"
             style={{
               width: "100%",
-              height: `calc(100% - ${SCROLLBAR_GAP}px)`,
               border: "none",
               background: "transparent",
               display: "block"
@@ -136,22 +132,21 @@ export default function FloatingModal({
   );
 }
 
-// CHANGE: align-items: flex-start (was center) to remove bottom gap
+// Backdrop is fixed, anchored 32px above the bottom, no top, horizontally centered
 const Backdrop = styled.div`
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
-  top: 74px;
+  bottom: 32px;
   z-index: 1600;
   background: rgba(32,32,32,0.13);
   display: flex;
-  align-items: flex-start; /* <-- CHANGED FROM center */
   justify-content: center;
   padding: 0;
   margin: 0;
 `;
 
+// ModalContainer: no fixed height, left gap as before, horizontal sizing as before
 const ModalContainer = styled.div`
   background: none;
   border-radius: 0;
@@ -163,12 +158,10 @@ const ModalContainer = styled.div`
   overflow-y: hidden;
   max-width: 98vw;
   box-sizing: border-box;
-  height: 720px;
   padding-top: 0;
   padding-bottom: 0;
   margin: 0;
   @media (max-width: 700px) {
-    height: 420px !important;
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
@@ -176,7 +169,6 @@ const ModalContainer = styled.div`
 
 const ScrollableContent = styled.div`
   width: 100%;
-  height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   box-sizing: border-box;
