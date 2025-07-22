@@ -5,16 +5,15 @@ const DEFAULT_MARGIN = 32;
 const EDGE_HOVER_WIDTH = 48;
 const SCROLL_AMOUNT = 440;
 const HEADER_TABS_HEIGHT = 74;
-
-// Set modal height to exactly 720px (not dynamic)
 const MODAL_HEIGHT = 720;
+const BOTTOM_SCROLL_PADDING = 16; // Push horizontal scrollbar below content
+const LEFT_GAP = 100;
 
 export default function FloatingModal({
   open,
   onClose,
   src,
   width = 2995,
-  // height is now fixed at 720
 }) {
   const backdropRef = useRef(null);
   const iframeRef = useRef(null);
@@ -83,7 +82,8 @@ export default function FloatingModal({
           height: MODAL_HEIGHT,
           cursor: cursorStyle,
           marginTop: 0,
-          marginBottom: DEFAULT_MARGIN
+          marginBottom: DEFAULT_MARGIN,
+          marginLeft: LEFT_GAP
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -95,7 +95,7 @@ export default function FloatingModal({
           title="Modal Content"
           style={{
             width: "100%",
-            height: "100%",
+            height: MODAL_HEIGHT - BOTTOM_SCROLL_PADDING, // reduce so scrollbar is pushed below modal
             border: "none",
             background: "transparent",
             display: "block"
@@ -111,18 +111,18 @@ const Backdrop = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  top: 74px; /* Starts just below the tabs/header */
+  top: 74px;
   z-index: 1600;
-  background: rgba(32,32,32,0.13); /* Lower opacity for a lighter gray */
+  background: rgba(32,32,32,0.13);
   display: flex;
-  align-items: flex-end;   /* Modal flush to the bottom */
-  justify-content: center; /* Modal centered horizontally */
+  align-items: flex-end;
+  justify-content: center;
 `;
 
 const ModalContainer = styled.div`
   margin-top: 0;
   margin-bottom: ${DEFAULT_MARGIN}px;
-  margin-left: 0;
+  margin-left: ${LEFT_GAP}px;
   margin-right: 0;
   height: ${({ height }) => typeof height === "number" ? `${height}px` : height};
   width: ${({ width }) => typeof width === "number" ? `${width}px` : width};
@@ -133,6 +133,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   position: relative;
   overflow-x: auto;
-  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-y: hidden;
   max-width: none;
+  padding-bottom: ${BOTTOM_SCROLL_PADDING}px; /* pushes scrollbar below content */
 `;
