@@ -1,29 +1,3 @@
-/* === BULLETPROOF MODAL HEIGHT/CENTERING FIX === */
-html, body {
-  height: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
-  font-family: "coolvetica", sans-serif;
-}
-
-/* If you use a main wrapper/container for your modal HTML, add: */
-#main-container, .main-container, .modal-content, .Basic-Text-Frame, .Basic-Graphics-Frame {
-  height: 100% !important;
-  width: 100% !important;
-  position: relative;
-  box-sizing: border-box;
-}
-
-/* For any absolutely-positioned children (like .contentIframeClass): */
-.contentIframeClass {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  border: none;
-  box-sizing: border-box;
-}
 body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
 	margin:0;
 	padding:0;
