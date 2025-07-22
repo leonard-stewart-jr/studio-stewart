@@ -2,11 +2,11 @@ import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const MODAL_TOTAL_HEIGHT = 720;
-const LEFT_GAP = 100; // Initial gap, disappears as you drag/scroll
-const EDGE_HOVER_WIDTH = 150; // Now measured from SCREEN edge, not modal
+const LEFT_GAP = 100;
+const EDGE_HOVER_WIDTH = 150; // Measured from window edge, not modal
 const SCROLL_AMOUNT = 440;
-const MODAL_CONTENT_WIDTH = 2436; // Fixed width for iframe content
-const SCROLLBAR_HEIGHT = 14; // Matches .mesopotamia-scrollbar in CSS
+const MODAL_CONTENT_WIDTH = 2436;
+const SCROLLBAR_HEIGHT = 14;
 
 export default function FloatingModal({
   open,
@@ -50,7 +50,7 @@ export default function FloatingModal({
     if (e.target === backdropRef.current) onClose();
   }
 
-  // Mouse edge logic for arrow cursor and click-to-scroll (now uses SCREEN edge)
+  // Edge hover/click measured from SCREEN edge, not modal
   function handleMouseMove(e) {
     const x = e.clientX;
     if (x <= EDGE_HOVER_WIDTH) setMouseEdge("left");
@@ -70,7 +70,7 @@ export default function FloatingModal({
     }
   }
 
-  // Drag-to-scroll logic
+  // Drag-to-scroll: Attach to scrollable content, not just gray area
   function handleDragStart(e) {
     if (e.button !== 0) return;
     setIsDragging(true);
@@ -102,7 +102,6 @@ export default function FloatingModal({
   // Wheel scroll (horizontal)
   function handleWheel(e) {
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      // Already horizontal
       return;
     }
     if (scrollRef.current) {
@@ -165,14 +164,13 @@ export default function FloatingModal({
           width: isMobile ? "98vw" : width,
           height: height,
           paddingLeft: isMobile ? 12 : LEFT_GAP,
-          paddingRight: 0, // Remove right gap
+          paddingRight: 0,
           cursor: cursorStyle,
           boxSizing: "border-box",
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleEdgeClick}
-        onMouseDown={handleDragStart}
       >
         {/* This wrapper shifts the scrollbar down visually */}
         <ScrollBarSpacer>
@@ -184,16 +182,18 @@ export default function FloatingModal({
               overflowX: "auto",
               overflowY: "hidden",
               boxSizing: "border-box",
+              cursor: cursorStyle,
             }}
             className="mesopotamia-scrollbar"
             tabIndex={0}
             onWheel={handleWheel}
+            onMouseDown={handleDragStart} // <-- Attach drag to modal content for full width
           >
             <iframe
               src={src}
               title="Modal Content"
               style={{
-                width: MODAL_CONTENT_WIDTH, // Fixed width for overflow/scroll
+                width: MODAL_CONTENT_WIDTH,
                 height: "100%",
                 border: "none",
                 background: "transparent",
@@ -220,7 +220,7 @@ const Backdrop = styled.div`
   background: rgba(32,32,32,0.13);
   display: flex;
   justify-content: flex-start;
-  align-items: center; /* Center vertically */
+  align-items: center;
   padding: 0;
   margin: 0;
 `;
@@ -243,16 +243,14 @@ const ModalContainer = styled.div`
   }
 `;
 
-// This wrapper creates space below the scrollable area for the shifted scrollbar
 const ScrollBarSpacer = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  padding-bottom: ${SCROLLBAR_HEIGHT}px; /* Shift scrollbar down visually */
+  padding-bottom: ${SCROLLBAR_HEIGHT}px;
   box-sizing: border-box;
 `;
 
-// The scrollable area is moved down by using bottom: 0 and absolute positioning
 const ScrollableContent = styled.div`
   width: 100%;
   height: 100%;
@@ -262,6 +260,6 @@ const ScrollableContent = styled.div`
   left: 0;
   right: 0;
   top: 0;
-  bottom: ${SCROLLBAR_HEIGHT}px; /* Shift scrollbar down visually */
+  bottom: ${SCROLLBAR_HEIGHT}px;
   box-sizing: border-box;
 `;
