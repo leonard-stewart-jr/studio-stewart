@@ -1,28 +1,91 @@
-.contentIframeClass {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	border: none;
-}
-.dummyIFrameClass {
-	display: none;
-}
-.prev, .next {
-	cursor: pointer;
-	position: absolute;
-	top: 50%;
-	padding: 15px;
-	color: rgb(0, 0, 0);
-	font-weight: bold;
-	font-size: 30px;
-	visibility: hidden;
-}
-.next {
-	right: 0;
-	border-radius: 3px 0 0 3px;
-}
 html, body {
-	margin: 0;
-	overflow: hidden
-	font-family: "coolvetica", sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "coolvetica", sans-serif;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
+    margin:0;
+    padding:0;
+    border-width:0;
+    font-family:"coolvetica", sans-serif;
+    text-rendering:optimizeSpeed;
+}
+
+#main-container, .main-container, .modal-content, .Basic-Text-Frame, .Basic-Graphics-Frame {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.contentIframeClass {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+.dummyIFrameClass {
+    display: none;
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 15px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    font-size: 30px;
+    visibility: hidden;
+}
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+div > svg {
+    position:absolute;
+}
+
+div.Basic-Graphics-Frame {
+    border-color:#000000;
+    border-width:1px;
+    border-style:solid;
+}
+
+div.Basic-Text-Frame {
+    border-style:solid;
+}
+
+p.ParaOverride-1 {
+    line-height:1;
+    white-space:nowrap;
+}
+
+/* ... rest of your CharOverride and container styles ... */
+
+img._idGenObjectAttribute-1 {
+    height:100.00%;
+    min-width:100%;
+    width:100.00%;
+}
+
+img._idGenObjectAttribute-2 {
+    left:0px;
+    position:absolute;
+    top:0px;
+}
+
+div._idGenObjectStyle-Disabled {
+    background-color:transparent;
+    border-width:0px;
 }
