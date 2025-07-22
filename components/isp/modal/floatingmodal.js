@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 const MODAL_TOTAL_HEIGHT = 720;
 const LEFT_GAP = 100; // Initial gap, disappears as you drag/scroll
-const EDGE_HOVER_WIDTH = 150; // 150px from each edge triggers arrow cursor/scroll
+const EDGE_HOVER_WIDTH = 150; // Now measured from SCREEN edge, not modal
 const SCROLL_AMOUNT = 440;
-const MODAL_CONTENT_WIDTH = 2436; // <-- Fixed width for iframe content
+const MODAL_CONTENT_WIDTH = 2436; // Fixed width for iframe content
+const SCROLLBAR_HEIGHT = 14; // Matches .mesopotamia-scrollbar in CSS
 
 export default function FloatingModal({
   open,
@@ -49,24 +50,22 @@ export default function FloatingModal({
     if (e.target === backdropRef.current) onClose();
   }
 
-  // Mouse edge logic for arrow cursor and click-to-scroll
+  // Mouse edge logic for arrow cursor and click-to-scroll (now uses SCREEN edge)
   function handleMouseMove(e) {
-    const bounds = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - bounds.left;
+    const x = e.clientX;
     if (x <= EDGE_HOVER_WIDTH) setMouseEdge("left");
-    else if (x >= bounds.width - EDGE_HOVER_WIDTH) setMouseEdge("right");
+    else if (x >= window.innerWidth - EDGE_HOVER_WIDTH) setMouseEdge("right");
     else setMouseEdge(null);
   }
   function handleMouseLeave() {
     setMouseEdge(null);
   }
   function handleEdgeClick(e) {
-    const bounds = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - bounds.left;
+    const x = e.clientX;
     if (!scrollRef.current) return;
     if (x <= EDGE_HOVER_WIDTH) {
       scrollRef.current.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
-    } else if (x >= bounds.width - EDGE_HOVER_WIDTH) {
+    } else if (x >= window.innerWidth - EDGE_HOVER_WIDTH) {
       scrollRef.current.scrollBy({ left: SCROLL_AMOUNT, behavior: "smooth" });
     }
   }
@@ -175,33 +174,36 @@ export default function FloatingModal({
         onClick={handleEdgeClick}
         onMouseDown={handleDragStart}
       >
-        <ScrollableContent
-          ref={scrollRef}
-          style={{
-            width: "100%",
-            height: "100%",
-            overflowX: "auto",
-            overflowY: "hidden",
-            boxSizing: "border-box",
-          }}
-          className="mesopotamia-scrollbar"
-          tabIndex={0}
-          onWheel={handleWheel}
-        >
-          <iframe
-            src={src}
-            title="Modal Content"
+        {/* This wrapper shifts the scrollbar down visually */}
+        <ScrollBarSpacer>
+          <ScrollableContent
+            ref={scrollRef}
             style={{
-              width: MODAL_CONTENT_WIDTH, // <-- FIXED WIDTH for overflow/scroll
+              width: "100%",
               height: "100%",
-              border: "none",
-              background: "transparent",
-              display: "block",
-              pointerEvents: "auto",
+              overflowX: "auto",
+              overflowY: "hidden",
+              boxSizing: "border-box",
             }}
-            draggable={false}
-          />
-        </ScrollableContent>
+            className="mesopotamia-scrollbar"
+            tabIndex={0}
+            onWheel={handleWheel}
+          >
+            <iframe
+              src={src}
+              title="Modal Content"
+              style={{
+                width: MODAL_CONTENT_WIDTH, // Fixed width for overflow/scroll
+                height: "100%",
+                border: "none",
+                background: "transparent",
+                display: "block",
+                pointerEvents: "auto",
+              }}
+              draggable={false}
+            />
+          </ScrollableContent>
+        </ScrollBarSpacer>
       </ModalContainer>
     </Backdrop>
   );
@@ -241,10 +243,25 @@ const ModalContainer = styled.div`
   }
 `;
 
+// This wrapper creates space below the scrollable area for the shifted scrollbar
+const ScrollBarSpacer = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding-bottom: ${SCROLLBAR_HEIGHT}px; /* Shift scrollbar down visually */
+  box-sizing: border-box;
+`;
+
+// The scrollable area is moved down by using bottom: 0 and absolute positioning
 const ScrollableContent = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: ${SCROLLBAR_HEIGHT}px; /* Shift scrollbar down visually */
   box-sizing: border-box;
 `;
