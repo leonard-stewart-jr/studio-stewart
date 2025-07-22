@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const MODAL_TOTAL_HEIGHT = 720;
 const LEFT_GAP = 100;
-const EDGE_HOVER_WIDTH = 150; // Measured from window edge, not modal
+const EDGE_HOVER_WIDTH = 150; // Measured from window edge
 const SCROLL_AMOUNT = 440;
 const MODAL_CONTENT_WIDTH = 2436;
 const SCROLLBAR_HEIGHT = 14;
@@ -50,7 +50,7 @@ export default function FloatingModal({
     if (e.target === backdropRef.current) onClose();
   }
 
-  // Edge hover/click measured from SCREEN edge, not modal
+  // Edge hover/click measured from SCREEN edge
   function handleMouseMove(e) {
     const x = e.clientX;
     if (x <= EDGE_HOVER_WIDTH) setMouseEdge("left");
@@ -70,7 +70,7 @@ export default function FloatingModal({
     }
   }
 
-  // Drag-to-scroll: Attach to scrollable content, not just gray area
+  // Drag-to-scroll logic (via transparent overlay)
   function handleDragStart(e) {
     if (e.button !== 0) return;
     setIsDragging(true);
@@ -172,7 +172,6 @@ export default function FloatingModal({
         onMouseLeave={handleMouseLeave}
         onClick={handleEdgeClick}
       >
-        {/* This wrapper shifts the scrollbar down visually */}
         <ScrollBarSpacer>
           <ScrollableContent
             ref={scrollRef}
@@ -187,7 +186,6 @@ export default function FloatingModal({
             className="mesopotamia-scrollbar"
             tabIndex={0}
             onWheel={handleWheel}
-            onMouseDown={handleDragStart} // <-- Attach drag to modal content for full width
           >
             <iframe
               src={src}
@@ -202,6 +200,14 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
+            {/* Transparent overlay for drag-to-scroll */}
+            <DragOverlay
+              style={{
+                pointerEvents: isDragging ? "auto" : "none",
+                cursor: isDragging ? "grabbing" : "grab"
+              }}
+              onMouseDown={handleDragStart}
+            />
           </ScrollableContent>
         </ScrollBarSpacer>
       </ModalContainer>
@@ -209,7 +215,6 @@ export default function FloatingModal({
   );
 }
 
-// Vertically center modal in gray background space
 const Backdrop = styled.div`
   position: fixed;
   left: 0;
@@ -262,4 +267,15 @@ const ScrollableContent = styled.div`
   top: 0;
   bottom: ${SCROLLBAR_HEIGHT}px;
   box-sizing: border-box;
+`;
+
+const DragOverlay = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 10;
+  /* pointer-events toggled by JS logic for drag */
 `;
