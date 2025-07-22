@@ -120,7 +120,7 @@ export default function FloatingModal({
             title="Modal Content"
             style={{
               width: "100%",
-              height: `calc(100% - ${SCROLLBAR_GAP}px)`,
+              height: `calc(100%)`,
               border: "none",
               background: "transparent",
               display: "block"
