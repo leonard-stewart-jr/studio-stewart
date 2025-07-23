@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// Always use the provided flexible width for content, but the modal itself is full viewport
 const MODAL_TOTAL_HEIGHT = 720;
 const SCROLLBAR_HEIGHT = 14;
 const CENTER_OFFSET = 201; // px from left edge to center title block
@@ -10,7 +9,7 @@ export default function FloatingModal({
   open,
   onClose,
   src,
-  width = 2436, // content width, flexible
+  width,   // <-- Now required: always pass content width as prop!
   height = MODAL_TOTAL_HEIGHT,
 }) {
   const backdropRef = useRef(null);
@@ -27,20 +26,19 @@ export default function FloatingModal({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Calculate the scroll bounds:
+  // Calculate scroll bounds:
   // - minScroll: left edge CENTER_OFFSET px from left of content is at the center of the viewport
   // - maxScroll: right edge CENTER_OFFSET px from right of content is at the center of the viewport
   function getMinScroll(contentWidth, viewportWidth) {
     return Math.max(0, CENTER_OFFSET - viewportWidth / 2);
   }
   function getMaxScroll(contentWidth, viewportWidth) {
-    // Clamp so we never scroll past right edge centered
     return Math.max(0, contentWidth - CENTER_OFFSET - viewportWidth / 2);
   }
 
   // On open, scroll so CENTER_OFFSET from left is centered
   useEffect(() => {
-    if (open && scrollRef.current) {
+    if (open && scrollRef.current && width) {
       const viewportW = window.innerWidth;
       const minScroll = getMinScroll(width, viewportW);
       scrollRef.current.scrollLeft = minScroll;
