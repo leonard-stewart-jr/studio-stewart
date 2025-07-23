@@ -1,15 +1,16 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
+// Always use the provided flexible width for content, but the modal itself is full viewport
 const MODAL_TOTAL_HEIGHT = 720;
-const LEFT_TITLE_CENTER = 201; // px from left edge of content to center title
 const SCROLLBAR_HEIGHT = 14;
+const CENTER_OFFSET = 201; // px from left edge to center title block
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width = 2436, // content width (iframe), flexible
+  width = 2436, // content width, flexible
   height = MODAL_TOTAL_HEIGHT,
 }) {
   const backdropRef = useRef(null);
@@ -26,30 +27,47 @@ export default function FloatingModal({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Center 201px into content on open
-  useEffect(() => {
-    if (open && scrollRef.current) {
-      // Modal container width
-      const modalW = Math.min(
-        isMobile ? window.innerWidth * 0.98 : 1200,
-        window.innerWidth * 0.98
-      );
-      // We want 201px into content to be centered in modal
-      // scrollLeft = 201 - (modalW / 2)
-      const scrollTo =
-        Math.max(0, LEFT_TITLE_CENTER - modalW / 2);
-      scrollRef.current.scrollLeft = scrollTo;
-    }
-  }, [open, width, isMobile]);
-
-  function handleBackdropClick(e) {
-    if (e.target === backdropRef.current) onClose();
+  // Calculate the scroll bounds:
+  // - minScroll: left edge CENTER_OFFSET px from left of content is at the center of the viewport
+  // - maxScroll: right edge CENTER_OFFSET px from right of content is at the center of the viewport
+  function getMinScroll(contentWidth, viewportWidth) {
+    return Math.max(0, CENTER_OFFSET - viewportWidth / 2);
+  }
+  function getMaxScroll(contentWidth, viewportWidth) {
+    // Clamp so we never scroll past right edge centered
+    return Math.max(0, contentWidth - CENTER_OFFSET - viewportWidth / 2);
   }
 
-  // Drag-to-scroll logic (for horizontal scroll)
+  // On open, scroll so CENTER_OFFSET from left is centered
+  useEffect(() => {
+    if (open && scrollRef.current) {
+      const viewportW = window.innerWidth;
+      const minScroll = getMinScroll(width, viewportW);
+      scrollRef.current.scrollLeft = minScroll;
+    }
+    // eslint-disable-next-line
+  }, [open, width, isMobile]);
+
+  // Clamp scroll position on user scroll
+  function clampScroll() {
+    if (!scrollRef.current) return;
+    const viewportW = window.innerWidth;
+    const minScroll = getMinScroll(width, viewportW);
+    const maxScroll = getMaxScroll(width, viewportW);
+    const scrollLeft = scrollRef.current.scrollLeft;
+    if (scrollLeft < minScroll) {
+      scrollRef.current.scrollLeft = minScroll;
+    }
+    if (scrollLeft > maxScroll) {
+      scrollRef.current.scrollLeft = maxScroll;
+    }
+  }
+
+  // Drag-to-scroll
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
+
   function handleDragStart(e) {
     if (e.button !== 0) return;
     setIsDragging(true);
@@ -59,14 +77,15 @@ export default function FloatingModal({
   }
   function handleDragMove(e) {
     if (!isDragging) return;
+    if (!scrollRef.current) return;
     const deltaX = e.clientX - dragStartX;
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollStart - deltaX;
-    }
+    scrollRef.current.scrollLeft = scrollStart - deltaX;
+    clampScroll();
   }
   function handleDragEnd() {
     setIsDragging(false);
     document.body.style.cursor = "";
+    clampScroll();
   }
   useEffect(() => {
     if (!isDragging) return;
@@ -76,13 +95,15 @@ export default function FloatingModal({
       window.removeEventListener("mousemove", handleDragMove);
       window.removeEventListener("mouseup", handleDragEnd);
     };
+    // eslint-disable-next-line
   }, [isDragging]);
 
-  // Touch drag
+  // Touch drag for mobile
   useEffect(() => {
     let startX = 0, startScroll = 0, dragging = false;
     function onTouchStart(e) {
-      if (!scrollRef.current || e.touches.length !== 1) return;
+      if (!scrollRef.current) return;
+      if (e.touches.length !== 1) return;
       dragging = true;
       startX = e.touches[0].clientX;
       startScroll = scrollRef.current.scrollLeft;
@@ -91,10 +112,12 @@ export default function FloatingModal({
       if (!dragging || !scrollRef.current || e.touches.length !== 1) return;
       const deltaX = e.touches[0].clientX - startX;
       scrollRef.current.scrollLeft = startScroll - deltaX;
+      clampScroll();
       e.preventDefault();
     }
     function onTouchEnd() {
       dragging = false;
+      clampScroll();
     }
     const node = scrollRef.current;
     if (node) {
@@ -109,25 +132,43 @@ export default function FloatingModal({
         node.removeEventListener("touchend", onTouchEnd);
       }
     };
-  }, [scrollRef.current]);
+    // eslint-disable-next-line
+  }, [scrollRef.current, width]);
 
-  // Wheel scroll (horizontal, also keep vertical locked)
+  // Wheel scroll: horizontal only, clamp
   function handleWheel(e) {
+    if (!scrollRef.current) return;
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-      if (scrollRef.current) {
-        scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
-        e.preventDefault();
+      scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
+    }
+    clampScroll();
+    e.preventDefault();
+  }
+
+  // Keyboard navigation, clamp
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (!open || !scrollRef.current) return;
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") {
+        scrollRef.current.scrollBy({ left: -220, behavior: "smooth" });
+        setTimeout(clampScroll, 0);
+      } else if (e.key === "ArrowRight") {
+        scrollRef.current.scrollBy({ left: 220, behavior: "smooth" });
+        setTimeout(clampScroll, 0);
       }
     }
+    if (open) document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line
+  }, [open, width, onClose]);
+
+  // Backdrop click closes
+  function handleBackdropClick(e) {
+    if (e.target === backdropRef.current) onClose();
   }
 
   if (!open) return null;
-
-  // Modal window width (responsive)
-  const modalW = Math.min(
-    isMobile ? window.innerWidth * 0.98 : 1200,
-    window.innerWidth * 0.98
-  );
 
   return (
     <Backdrop
@@ -138,51 +179,61 @@ export default function FloatingModal({
     >
       <ModalContainer
         style={{
-          width: modalW,
+          width: "100vw",
           height: height,
-          maxWidth: "98vw",
-          minWidth: isMobile ? "95vw" : 400,
+          minWidth: "100vw",
+          maxWidth: "100vw",
           cursor: isDragging ? "grabbing" : "grab",
         }}
       >
-        <ScrollableContent
+        <ScrollableArea
           ref={scrollRef}
+          className="mesopotamia-scrollbar"
           style={{
-            width: "100%",
+            width: "100vw",
             height: "100%",
             overflowX: "auto",
             overflowY: "hidden",
-            boxSizing: "border-box",
             position: "relative",
+            boxSizing: "border-box",
             cursor: isDragging ? "grabbing" : "grab",
             paddingBottom: SCROLLBAR_HEIGHT,
           }}
-          className="mesopotamia-scrollbar"
           tabIndex={0}
           onWheel={handleWheel}
+          onScroll={clampScroll}
         >
-          <iframe
-            src={src}
-            title="Modal Content"
+          <Content
             style={{
               width: width,
               minWidth: width,
               height: "100%",
-              border: "none",
-              background: "transparent",
-              display: "block",
-              pointerEvents: "auto",
+              position: "relative",
             }}
-            draggable={false}
-          />
-          <DragOverlay
-            style={{
-              pointerEvents: "auto",
-              cursor: isDragging ? "grabbing" : "grab"
-            }}
-            onMouseDown={handleDragStart}
-          />
-        </ScrollableContent>
+          >
+            <iframe
+              src={src}
+              title="Modal Content"
+              style={{
+                width: width,
+                minWidth: width,
+                height: "100%",
+                border: "none",
+                background: "transparent",
+                display: "block",
+                pointerEvents: "auto",
+              }}
+              draggable={false}
+            />
+            <DragOverlay
+              style={{
+                pointerEvents: "auto",
+                cursor: isDragging ? "grabbing" : "grab"
+              }}
+              onMouseDown={handleDragStart}
+            />
+          </Content>
+        </ScrollableArea>
         <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
       </ModalContainer>
     </Backdrop>
@@ -199,32 +250,42 @@ const Backdrop = styled.div`
   z-index: 1600;
   background: rgba(32,32,32,0.13);
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 0;
   margin: 0;
 `;
 
 const ModalContainer = styled.div`
-  background: #fff;
+  background: none;
   border-radius: 0;
-  box-shadow: 0 6px 42px 0 rgba(0,0,0,0.18);
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: visible;
   box-sizing: border-box;
   height: ${MODAL_TOTAL_HEIGHT}px;
+  width: 100vw;
+  min-width: 100vw;
+  max-width: 100vw;
 `;
 
-const ScrollableContent = styled.div`
-  width: 100%;
+const ScrollableArea = styled.div`
+  width: 100vw;
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   position: relative;
   box-sizing: border-box;
-  /* Custom scrollbar is handled globally via .mesopotamia-scrollbar */
+`;
+
+const Content = styled.div`
+  width: ${props => props.width || 2436}px;
+  min-width: ${props => props.width || 2436}px;
+  height: 100%;
+  position: relative;
+  box-sizing: border-box;
 `;
 
 const DragOverlay = styled.div`
