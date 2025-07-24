@@ -197,17 +197,15 @@ export default function GlobeSection({ onMarkerClick }) {
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
 
+    // CHANGE: Always use marker.name for TOC titles
     const tocList = globeLocations.map((marker, idx) => {
-      let overrideName = marker.name;
-      if (idx === 0) overrideName = "MESOPOTAMIA: THE FIRST PRISONS";
-      if (idx === 1) overrideName = "THE MAMERTINE PRISON (CARCER TULLIANUM)";
       let year = "";
       if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
         year = marker.timeline[0].year;
       return {
         idx,
         roman: toRoman(idx + 1),
-        name: overrideName,
+        name: marker.name,
         marker,
         year,
       }
