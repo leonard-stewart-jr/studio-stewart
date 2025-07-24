@@ -1,50 +1,25 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// The content is always fully visible, and scrollbar is directly beneath it.
-// Modal covers the entire window, but content is centered horizontally at both ends.
-
-const CENTER_LOCK = true; // for readability
+// This modal always positions content 200px from the left edge of the viewport.
+// The scroll area and scrollbar are the same width as the content (from data file).
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width,   // REQUIRED: pass the content width as prop
-  height = 720, // content height (matches your HTML content/iframe)
+  width,   // REQUIRED: passed from data file (see globe-locations.js)
+  height = 720, // content height
 }) {
   const backdropRef = useRef(null);
   const scrollRef = useRef(null);
 
-  // Calculate min/max scroll positions so content is centered at both ends
-  function getMinScroll(contentWidth, viewportWidth) {
-    // At left, left edge of content is centered in window
-    return Math.max(0, (contentWidth / 2) - (viewportWidth / 2));
-  }
-  function getMaxScroll(contentWidth, viewportWidth) {
-    // At right, right edge of content is centered in window
-    return Math.max(0, (contentWidth / 2) + (contentWidth - viewportWidth) / 2);
-  }
-
-  // On open: scroll so left edge is centered
+  // On open, scroll so left edge of content is at 200px from the left of the viewport
   useEffect(() => {
     if (open && scrollRef.current && width) {
-      const viewportW = window.innerWidth;
-      const minScroll = getMinScroll(width, viewportW);
-      scrollRef.current.scrollLeft = minScroll;
+      scrollRef.current.scrollLeft = 0;
     }
   }, [open, width]);
-
-  // Clamp scroll position to valid range
-  function clampScroll() {
-    if (!scrollRef.current || !width) return;
-    const viewportW = window.innerWidth;
-    const minScroll = getMinScroll(width, viewportW);
-    const maxScroll = getMaxScroll(width, viewportW);
-    const scrollLeft = scrollRef.current.scrollLeft;
-    if (scrollLeft < minScroll) scrollRef.current.scrollLeft = minScroll;
-    if (scrollLeft > maxScroll) scrollRef.current.scrollLeft = maxScroll;
-  }
 
   // Drag-to-scroll logic
   const [isDragging, setIsDragging] = useState(false);
@@ -62,12 +37,10 @@ export default function FloatingModal({
     if (!isDragging || !scrollRef.current) return;
     const deltaX = e.clientX - dragStartX;
     scrollRef.current.scrollLeft = scrollStart - deltaX;
-    clampScroll();
   }
   function handleDragEnd() {
     setIsDragging(false);
     document.body.style.cursor = "";
-    clampScroll();
   }
   useEffect(() => {
     if (!isDragging) return;
@@ -92,12 +65,10 @@ export default function FloatingModal({
       if (!dragging || !scrollRef.current || e.touches.length !== 1) return;
       const deltaX = e.touches[0].clientX - startX;
       scrollRef.current.scrollLeft = startScroll - deltaX;
-      clampScroll();
       e.preventDefault();
     }
     function onTouchEnd() {
       dragging = false;
-      clampScroll();
     }
     const node = scrollRef.current;
     if (node) {
@@ -114,25 +85,23 @@ export default function FloatingModal({
     };
   }, [scrollRef.current, width]);
 
-  // Wheel scroll: horizontal only, clamp
+  // Wheel scroll: horizontal only
   function handleWheel(e) {
     if (!scrollRef.current) return;
+    // Use deltaY for horizontal scroll; you can adjust multiplier for speed
     scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
-    clampScroll();
     e.preventDefault();
   }
 
-  // Keyboard navigation, clamp
+  // Keyboard navigation
   useEffect(() => {
     function handleKeyDown(e) {
       if (!open || !scrollRef.current) return;
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") {
         scrollRef.current.scrollBy({ left: -220, behavior: "smooth" });
-        setTimeout(clampScroll, 0);
       } else if (e.key === "ArrowRight") {
         scrollRef.current.scrollBy({ left: 220, behavior: "smooth" });
-        setTimeout(clampScroll, 0);
       }
     }
     if (open) document.addEventListener("keydown", handleKeyDown);
@@ -146,7 +115,7 @@ export default function FloatingModal({
 
   if (!open) return null;
 
-  // Center content vertically using flex, but keep the background transparent
+  // Styles for modal content
   return (
     <Backdrop
       ref={backdropRef}
@@ -155,12 +124,13 @@ export default function FloatingModal({
       aria-modal="true"
     >
       <ModalContentWrap>
+        {/* The scroll area starts 200px from the left edge and matches content width */}
         <HorizontalScrollArea
           ref={scrollRef}
           className="mesopotamia-scrollbar"
           style={{
-            width: "100vw",
-            maxWidth: "100vw",
+            width: width,
+            maxWidth: width,
             height: height + 14, // content + scrollbar
             overflowX: "auto",
             overflowY: "hidden",
@@ -168,10 +138,10 @@ export default function FloatingModal({
             boxSizing: "border-box",
             cursor: isDragging ? "grabbing" : "grab",
             background: "transparent",
+            marginLeft: 200, // Start 200px from left edge of viewport
           }}
           tabIndex={0}
           onWheel={handleWheel}
-          onScroll={clampScroll}
         >
           <ContentBlock
             style={{
@@ -244,23 +214,20 @@ const ModalContentWrap = styled.div`
 `;
 
 const HorizontalScrollArea = styled.div`
-  width: 100vw;
-  max-width: 100vw;
-  margin: 0 auto;
+  /* width and marginLeft set in inline style */
+  margin: 0;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
   pointer-events: auto;
   background: none;
-  /* Custom scrollbar handled globally */
 `;
 
 const ContentBlock = styled.div`
   position: relative;
   box-sizing: border-box;
   margin: 0 auto;
-  /* No overflow, keep content fully visible */
 `;
 
 const DragOverlay = styled.div`
