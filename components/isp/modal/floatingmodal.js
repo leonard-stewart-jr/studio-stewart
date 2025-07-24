@@ -11,18 +11,43 @@ export default function FloatingModal({
   const backdropRef = useRef(null);
   const scrollRef = useRef(null);
 
-  // On open, scroll to left edge
-  useEffect(() => {
-    if (open && scrollRef.current) {
-      scrollRef.current.scrollLeft = 0;
-    }
-  }, [open, width]);
+  // --- BUFFER LOGIC ---
+  const bufferWidth = 200;
+  const totalScrollableWidth = bufferWidth + width + bufferWidth;
+  const visibleWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const scrollAreaWidth = visibleWidth;
+
+  // Track scroll position
+  const [scrollX, setScrollX] = useState(0);
 
   // Drag-to-scroll logic
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
+  // SVG scrollbar logic
+  const dragBarHeight = 22;
+  const dragHandleRadius = 12;
+  const dragBarColor = "#e6dbb9";
+  const dragBarTrackColor = "#f0f0ed";
+  const [isDraggingHandle, setIsDraggingHandle] = useState(false);
+
+  // Ensure scroll starts at 0 on open
+  useEffect(() => {
+    if (open && scrollRef.current) {
+      scrollRef.current.scrollLeft = 0;
+      setScrollX(0);
+    }
+  }, [open, width]);
+
+  // Update scrollX on scroll
+  function onScroll() {
+    if (scrollRef.current) {
+      setScrollX(scrollRef.current.scrollLeft);
+    }
+  }
+
+  // Drag-to-scroll for content
   function handleDragStart(e) {
     if (e.button !== 0) return;
     setIsDragging(true);
@@ -109,10 +134,62 @@ export default function FloatingModal({
     if (e.target === backdropRef.current) onClose();
   }
 
-  if (!open) return null;
+  // HIDE NATIVE SCROLLBAR
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    scrollRef.current.style.scrollbarWidth = "none";
+    scrollRef.current.style.msOverflowStyle = "none";
+    // For Webkit browsers:
+    scrollRef.current.classList.add("hide-native-scrollbar");
+    // Clean up:
+    return () => {
+      if (scrollRef.current) scrollRef.current.classList.remove("hide-native-scrollbar");
+    };
+  }, []);
 
-  // The total scrollable area is 200px buffer + content width + 200px buffer
-  const bufferWidth = 200;
+  // --- SVG SCROLLBAR LOGIC ---
+  // The bar's width is the total scrollable width (content + both buffers)
+  // The handle's position maps to scrollLeft (0 = left, max = right)
+  const maxScroll = totalScrollableWidth - scrollAreaWidth;
+  const svgBarWidth = totalScrollableWidth;
+  // Scroll percent (avoid divide by zero)
+  const percent = maxScroll > 0 ? scrollX / maxScroll : 0;
+  // Handle position: inside the bar, respect handle radius at each end
+  const handleX = dragHandleRadius + percent * (svgBarWidth - 2 * dragHandleRadius);
+
+  // Dragging the handle
+  function handleBarDragStart(e) {
+    e.preventDefault();
+    setIsDraggingHandle(true);
+    document.body.style.cursor = "grabbing";
+  }
+  function handleBarDragMove(e) {
+    if (!isDraggingHandle || !scrollRef.current) return;
+    const svgRect = document.getElementById("custom-drag-bar-svg")?.getBoundingClientRect();
+    if (!svgRect) return;
+    let x = e.clientX - svgRect.left;
+    x = Math.max(dragHandleRadius, Math.min(svgBarWidth - dragHandleRadius, x));
+    // Convert x back to scrollLeft
+    const newPercent = (x - dragHandleRadius) / (svgBarWidth - 2 * dragHandleRadius);
+    const newScroll = newPercent * maxScroll;
+    scrollRef.current.scrollLeft = newScroll;
+    setScrollX(newScroll);
+  }
+  function handleBarDragEnd() {
+    setIsDraggingHandle(false);
+    document.body.style.cursor = "";
+  }
+  useEffect(() => {
+    if (!isDraggingHandle) return;
+    window.addEventListener("mousemove", handleBarDragMove);
+    window.addEventListener("mouseup", handleBarDragEnd);
+    return () => {
+      window.removeEventListener("mousemove", handleBarDragMove);
+      window.removeEventListener("mouseup", handleBarDragEnd);
+    };
+  }, [isDraggingHandle, svgBarWidth, maxScroll]);
+
+  if (!open) return null;
 
   return (
     <Backdrop
@@ -125,10 +202,10 @@ export default function FloatingModal({
         {/* Scroll area: full viewport width, no margin */}
         <HorizontalScrollArea
           ref={scrollRef}
-          className="mesopotamia-scrollbar"
+          className="mesopotamia-scrollbar hide-native-scrollbar"
           style={{
-            width: "100vw",
-            maxWidth: "100vw",
+            width: scrollAreaWidth,
+            maxWidth: scrollAreaWidth,
             height: height + 14,
             overflowX: "auto",
             overflowY: "hidden",
@@ -137,9 +214,11 @@ export default function FloatingModal({
             cursor: isDragging ? "grabbing" : "grab",
             background: "transparent",
             pointerEvents: "auto",
+            scrollbarWidth: "none"
           }}
           tabIndex={0}
           onWheel={handleWheel}
+          onScroll={onScroll}
         >
           {/* LEFT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
@@ -186,7 +265,86 @@ export default function FloatingModal({
           {/* RIGHT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
         </HorizontalScrollArea>
+        {/* Custom SVG drag bar below the content */}
+        <div
+          style={{
+            width: svgBarWidth,
+            margin: "0 auto",
+            height: dragBarHeight,
+            overflow: "visible",
+            pointerEvents: "none",
+            userSelect: "none",
+            position: "relative"
+          }}
+        >
+          <svg
+            id="custom-drag-bar-svg"
+            width={svgBarWidth}
+            height={dragBarHeight}
+            style={{
+              display: "block",
+              width: svgBarWidth,
+              height: dragBarHeight,
+              pointerEvents: "auto",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              zIndex: 30,
+            }}
+            onMouseDown={e => {
+              // Only drag if clicking on the handle
+              const svgRect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - svgRect.left;
+              if (
+                x >= handleX - dragHandleRadius &&
+                x <= handleX + dragHandleRadius
+              ) {
+                handleBarDragStart(e);
+              }
+            }}
+          >
+            {/* Track */}
+            <rect
+              x={dragHandleRadius}
+              y={dragBarHeight / 2 - 3}
+              width={svgBarWidth - 2 * dragHandleRadius}
+              height={6}
+              rx={3}
+              fill={dragBarTrackColor}
+            />
+            {/* Bar */}
+            <rect
+              x={dragHandleRadius}
+              y={dragBarHeight / 2 - 3}
+              width={svgBarWidth - 2 * dragHandleRadius}
+              height={6}
+              rx={3}
+              fill={dragBarColor}
+              opacity={0.6}
+            />
+            {/* Handle */}
+            <circle
+              cx={handleX}
+              cy={dragBarHeight / 2}
+              r={dragHandleRadius}
+              fill={dragBarColor}
+              stroke="#d6c08e"
+              strokeWidth={2}
+              style={{
+                cursor: "grab",
+                pointerEvents: "auto",
+                opacity: 1,
+                filter: isDraggingHandle ? "drop-shadow(0 2px 8px #e6dbb9cc)" : "none"
+              }}
+              onMouseDown={handleBarDragStart}
+            />
+          </svg>
+        </div>
       </ModalContentWrap>
+      <style>{`
+        .hide-native-scrollbar::-webkit-scrollbar { display: none !important; }
+        .hide-native-scrollbar { scrollbar-width: none !important; }
+      `}</style>
     </Backdrop>
   );
 }
