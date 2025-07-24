@@ -152,7 +152,18 @@ export default function FloatingModal({
   function handleMouseLeave() {
     setHoverSide(null);
   }
-
+  // Double-click-to-shift logic (now 1000px)
+function handleOverlayDoubleClick(e) {
+  if (isDragging) return;
+  if (!scrollRef.current) return;
+  const vw = window.innerWidth;
+  const x = e.clientX;
+  const amount = 1000;
+  if (x < vw / 3) {
+    scrollRef.current.scrollBy({ left: -amount, behavior: "smooth" });
+  } else if (x > (2 * vw) / 3) {
+    scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
+  }
   // Double-click-to-shift logic (500px)
   function handleOverlayDoubleClick(e) {
     if (isDragging) return;
@@ -238,44 +249,43 @@ export default function FloatingModal({
               draggable={false}
             />
             {/* Transparent overlay for drag-to-scroll, double-click, and arrow hover */}
-            <DragOverlay
-              style={{
-                pointerEvents: "auto",
-                cursor: isDragging
-                  ? "grabbing"
-                  : hoverSide === "left"
-                  ? "w-resize"
-                  : hoverSide === "right"
-                  ? "e-resize"
-                  : "grab"
-              }}
-              onMouseDown={handleDragStart}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              onDoubleClick={handleOverlayDoubleClick}
-            >
-              {/* Optional: Custom arrow SVGs on hover */}
-              {hoverSide === "left" && !isDragging && (
-                <ArrowIcon
-                  direction="left"
-                  style={{
-                    left: 16,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              )}
-              {hoverSide === "right" && !isDragging && (
-                <ArrowIcon
-                  direction="right"
-                  style={{
-                    right: 16,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              )}
-            </DragOverlay>
+<DragOverlay
+  style={{
+    pointerEvents: "auto",
+    cursor: isDragging
+      ? "grabbing"
+      : hoverSide === "left"
+      ? "w-resize"
+      : hoverSide === "right"
+      ? "e-resize"
+      : "grab"
+  }}
+  onMouseDown={handleDragStart}
+  onMouseMove={handleMouseMove}
+  onMouseLeave={handleMouseLeave}
+  onDoubleClick={handleOverlayDoubleClick}
+>
+  {hoverSide === "left" && !isDragging && (
+    <ArrowIcon
+      direction="left"
+      style={{
+        left: 16,
+        top: "50%",
+        transform: "translateY(-50%)",
+      }}
+    />
+  )}
+  {hoverSide === "right" && !isDragging && (
+    <ArrowIcon
+      direction="right"
+      style={{
+        right: 16,
+        top: "50%",
+        transform: "translateY(-50%)",
+      }}
+    />
+  )}
+</DragOverlay>
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
           {/* RIGHT transparent buffer */}
