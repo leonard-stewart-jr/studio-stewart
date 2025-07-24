@@ -1,23 +1,24 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// This modal always positions content 200px from the left edge of the viewport.
-// The scroll area and scrollbar are the same width as the content (from data file).
+// Modal positions content 200px from left edge of viewport.
+// Scroll area and scrollbar are the same width as the content.
+// Dragging and scroll wheel both work.
 
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width,   // REQUIRED: passed from data file (see globe-locations.js)
-  height = 720, // content height
+  width,   // From data file
+  height = 720,
 }) {
   const backdropRef = useRef(null);
   const scrollRef = useRef(null);
 
-  // On open, scroll so left edge of content is at 200px from the left of the viewport
+  // On open, start at the left edge (200px from viewport edge)
   useEffect(() => {
     if (open && scrollRef.current && width) {
-      scrollRef.current.scrollLeft = 0;
+      scrollRef.current.scrollLeft = 0; // No offset needed, area is already offset
     }
   }, [open, width]);
 
@@ -88,7 +89,6 @@ export default function FloatingModal({
   // Wheel scroll: horizontal only
   function handleWheel(e) {
     if (!scrollRef.current) return;
-    // Use deltaY for horizontal scroll; you can adjust multiplier for speed
     scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
     e.preventDefault();
   }
@@ -115,7 +115,6 @@ export default function FloatingModal({
 
   if (!open) return null;
 
-  // Styles for modal content
   return (
     <Backdrop
       ref={backdropRef}
@@ -131,7 +130,7 @@ export default function FloatingModal({
           style={{
             width: width,
             maxWidth: width,
-            height: height + 14, // content + scrollbar
+            height: height + 14,
             overflowX: "auto",
             overflowY: "hidden",
             position: "relative",
@@ -139,6 +138,7 @@ export default function FloatingModal({
             cursor: isDragging ? "grabbing" : "grab",
             background: "transparent",
             marginLeft: 200, // Start 200px from left edge of viewport
+            pointerEvents: "auto", // Ensure events are captured
           }}
           tabIndex={0}
           onWheel={handleWheel}
