@@ -25,7 +25,7 @@ export default function FloatingModal({
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
-  // Arrow hover logic
+  // Arrow hover logic by vertical thirds of viewport
   const [hoverSide, setHoverSide] = useState(null); // "left", "right", or null
 
   // Ensure scroll starts at 0 on open
@@ -82,7 +82,7 @@ export default function FloatingModal({
     function onTouchMove(e) {
       if (!dragging || !scrollRef.current || e.touches.length !== 1) return;
       const deltaX = e.touches[0].clientX - startX;
-      scrollRef.current.scrollLeft = scrollStart - deltaX;
+      scrollRef.current.scrollLeft = startScroll - deltaX;
       e.preventDefault();
     }
     function onTouchEnd() {
@@ -116,9 +116,9 @@ export default function FloatingModal({
       if (!open || !scrollRef.current) return;
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") {
-        scrollRef.current.scrollBy({ left: -250, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: -500, behavior: "smooth" });
       } else if (e.key === "ArrowRight") {
-        scrollRef.current.scrollBy({ left: 250, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: 500, behavior: "smooth" });
       }
     }
     if (open) document.addEventListener("keydown", handleKeyDown);
@@ -141,31 +141,31 @@ export default function FloatingModal({
     };
   }, []);
 
-  // Hover logic for left/right arrow
+  // Arrow "side" logic by vertical thirds of viewport
   function handleMouseMove(e) {
-    if (!scrollRef.current) return setHoverSide(null);
-    const rect = scrollRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    if (x < rect.width / 2) setHoverSide("left");
-    else setHoverSide("right");
+    const vw = window.innerWidth;
+    const x = e.clientX;
+    if (x < vw / 3) setHoverSide("left");
+    else if (x > (2 * vw) / 3) setHoverSide("right");
+    else setHoverSide(null);
   }
   function handleMouseLeave() {
     setHoverSide(null);
   }
 
-  // Click-to-shift logic
-  function handleOverlayClick(e) {
-    // Only click shift if not dragging (prevents accidental jumps)
+  // Double-click-to-shift logic (500px)
+  function handleOverlayDoubleClick(e) {
     if (isDragging) return;
     if (!scrollRef.current) return;
-    const rect = scrollRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const amount = 250;
-    if (x < rect.width / 2) {
+    const vw = window.innerWidth;
+    const x = e.clientX;
+    const amount = 500;
+    if (x < vw / 3) {
       scrollRef.current.scrollBy({ left: -amount, behavior: "smooth" });
-    } else {
+    } else if (x > (2 * vw) / 3) {
       scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
     }
+    // If in the center third, do nothing on double click
   }
 
   if (!open) return null;
@@ -237,7 +237,7 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
-            {/* Transparent overlay for drag-to-scroll, click-shift, and arrow hover */}
+            {/* Transparent overlay for drag-to-scroll, double-click, and arrow hover */}
             <DragOverlay
               style={{
                 pointerEvents: "auto",
@@ -252,7 +252,7 @@ export default function FloatingModal({
               onMouseDown={handleDragStart}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              onClick={handleOverlayClick}
+              onDoubleClick={handleOverlayDoubleClick}
             >
               {/* Optional: Custom arrow SVGs on hover */}
               {hoverSide === "left" && !isDragging && (
