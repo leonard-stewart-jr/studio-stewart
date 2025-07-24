@@ -2,8 +2,12 @@ import dynamic from "next/dynamic";
 import { useRef, useState, useMemo, useEffect } from "react";
 import globeLocations from "../../data/globe-locations";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import {
+  loadPinModel,
+  orientPin,
+  latLngAltToVec3,
+  getPinModel
+} from "./modal/pin-utils";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
@@ -19,41 +23,6 @@ const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 const CLUSTER_RING_RATIO = 0.74;
 const CLUSTER_RING_ALT_OFFSET = 0.0035;
 
-let pinModel = null;
-let pinModelPromise = null;
-function loadPinModel() {
-  if (pinModel) return Promise.resolve(pinModel);
-  if (pinModelPromise) return pinModelPromise;
-  pinModelPromise = new Promise((resolve, reject) => {
-    const loader = new GLTFLoader();
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
-    loader.setDRACOLoader(dracoLoader);
-    loader.load("/models/3D_map_pin.glb", (gltf) => {
-      gltf.scene.traverse((child) => {
-        if (child.isMesh && child.material) {
-          if (Array.isArray(child.material)) {
-            child.material.forEach((mat) => {
-              mat.color.set("#b32c2c");
-              mat.metalness = 0.2;
-              mat.roughness = 0.6;
-              mat.envMapIntensity = 0.3;
-            });
-          } else {
-            child.material.color.set("#b32c2c");
-            child.material.metalness = 0.2;
-            child.material.roughness = 0.6;
-            child.material.envMapIntensity = 0.3;
-          }
-        }
-      });
-      pinModel = gltf.scene;
-      resolve(pinModel);
-    }, undefined, reject);
-  });
-  return pinModelPromise;
-}
-
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
 }
@@ -66,17 +35,6 @@ function getLondonClusterCenter() {
   const lat = londonMarkers.reduce((sum, m) => sum + m.lat, 0) / londonMarkers.length;
   const lng = londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
   return { lat, lng };
-}
-
-function latLngAltToVec3(lat, lng, altitude = 0) {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lng + 180) * (Math.PI / 180);
-  const r = 1 + altitude;
-  return new THREE.Vector3(
-    r * Math.sin(phi) * Math.cos(theta),
-    r * Math.cos(phi),
-    r * Math.sin(phi) * Math.sin(theta)
-  );
 }
 
 function toRoman(num) {
@@ -100,14 +58,6 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
     m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
   );
   return idx !== -1 ? idx : 0;
-}
-
-function orientPin(pin, markerVec) {
-  const surfaceNormal = markerVec.clone().normalize();
-  const axis = new THREE.Vector3(0, 0, 1);
-  const towardCenter = surfaceNormal.clone().negate();
-  const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
-  pin.setRotationFromQuaternion(quaternion);
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -217,6 +167,8 @@ export default function GlobeSection({ onMarkerClick }) {
     let linesData = [];
     let customPointObject = undefined;
     let customLineObject = undefined;
+
+    const pinModel = getPinModel();
 
     if (!londonExpanded) {
       objectsData = [
