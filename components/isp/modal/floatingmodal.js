@@ -290,7 +290,7 @@ export default function FloatingModal({
   );
 }
 
-// Arrow icon SVG component
+// Arrow icon SVG component (single chevron, left/right)
 function ArrowIcon({ direction = "left", style = {} }) {
   // Single arrow for left, single arrow for right
   return (
