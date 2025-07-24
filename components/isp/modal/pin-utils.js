@@ -39,14 +39,9 @@ export function loadPinModel() {
   return pinModelPromise;
 }
 
-export function orientPin(pin, markerVec) {
-  const surfaceNormal = markerVec.clone().normalize();
-  const axis = new THREE.Vector3(0, 0, 1); // +Z axis for tip
-  const towardCenter = surfaceNormal.clone().negate();
-  const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
-  pin.setRotationFromQuaternion(quaternion);
-}
-
+/**
+ * Converts latitude, longitude, and altitude to a THREE.Vector3 position on a sphere.
+ */
 export function latLngAltToVec3(lat, lng, altitude = 0) {
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
@@ -58,7 +53,21 @@ export function latLngAltToVec3(lat, lng, altitude = 0) {
   );
 }
 
-// For access in GlobeSection
+/**
+ * Orients the pin so that its +Z axis (the "tip") points toward the center of the globe.
+ * The pin should be positioned on the surface using the markerVec, and then oriented.
+ */
+export function orientPin(pin, markerVec) {
+  // The pin's +Z axis should point toward the center (0,0,0)
+  // So we want +Z to align with the negative markerVec direction
+  // (since markerVec points away from the center)
+  const target = new THREE.Vector3(0, 0, 0);
+  pin.lookAt(target);
+
+  // If your pin points AWAY from the globe after this, rotate it 180° around X or Y
+  // pin.rotateX(Math.PI); // Uncomment if needed based on your model orientation
+}
+
 export function getPinModel() {
   return pinModel;
 }
