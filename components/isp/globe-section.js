@@ -104,7 +104,7 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
 
 function orientPin(pin, markerVec) {
   const surfaceNormal = markerVec.clone().normalize();
-  const axis = new THREE.Vector3(-1, 0, 0);
+  const axis = new THREE.Vector3(0, 0, 1);
   const towardCenter = surfaceNormal.clone().negate();
   const quaternion = new THREE.Quaternion().setFromUnitVectors(axis, towardCenter);
   pin.setRotationFromQuaternion(quaternion);
