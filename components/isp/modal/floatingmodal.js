@@ -18,14 +18,6 @@ export default function FloatingModal({
     }
   }, [open, width]);
 
-  // Track scroll position for possible future custom scrollbar
-  const [scrollX, setScrollX] = useState(0);
-  function onScroll() {
-    if (scrollRef.current) {
-      setScrollX(scrollRef.current.scrollLeft);
-    }
-  }
-
   // Drag-to-scroll logic
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
@@ -119,6 +111,9 @@ export default function FloatingModal({
 
   if (!open) return null;
 
+  // The total scrollable area is 200px buffer + content width + 200px buffer
+  const bufferWidth = 200;
+
   return (
     <Backdrop
       ref={backdropRef}
@@ -127,13 +122,13 @@ export default function FloatingModal({
       aria-modal="true"
     >
       <ModalContentWrap>
-        {/* The scroll area is the size of the viewport (or nearly), NOT the content width! */}
+        {/* Scroll area: full viewport width, no margin */}
         <HorizontalScrollArea
           ref={scrollRef}
           className="mesopotamia-scrollbar"
           style={{
-            width: "calc(100vw - 200px)",   // viewport width minus offset
-            maxWidth: "calc(100vw - 200px)",
+            width: "100vw",
+            maxWidth: "100vw",
             height: height + 14,
             overflowX: "auto",
             overflowY: "hidden",
@@ -141,13 +136,13 @@ export default function FloatingModal({
             boxSizing: "border-box",
             cursor: isDragging ? "grabbing" : "grab",
             background: "transparent",
-            marginLeft: 200, // 200px offset from left edge
             pointerEvents: "auto",
           }}
           tabIndex={0}
           onWheel={handleWheel}
-          onScroll={onScroll}
         >
+          {/* LEFT transparent buffer */}
+          <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
           <ContentBlock
             style={{
               width: width,
@@ -161,7 +156,7 @@ export default function FloatingModal({
               background: "white",
               boxShadow: "0 6px 42px 0 rgba(0,0,0,0.18)",
               borderRadius: 0,
-              margin: "0 auto",
+              margin: 0,
             }}
           >
             <iframe
@@ -188,6 +183,8 @@ export default function FloatingModal({
             />
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
+          {/* RIGHT transparent buffer */}
+          <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
         </HorizontalScrollArea>
       </ModalContentWrap>
     </Backdrop>
@@ -232,7 +229,13 @@ const HorizontalScrollArea = styled.div`
 const ContentBlock = styled.div`
   position: relative;
   box-sizing: border-box;
-  margin: 0 auto;
+  margin: 0;
+`;
+
+const BufferDiv = styled.div`
+  flex-shrink: 0;
+  background: transparent;
+  height: 100%;
 `;
 
 const DragOverlay = styled.div`
