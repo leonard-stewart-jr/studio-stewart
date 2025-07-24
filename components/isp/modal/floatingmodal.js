@@ -25,12 +25,8 @@ export default function FloatingModal({
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
-  // SVG scrollbar logic
-  const dragBarHeight = 22;
-  const dragHandleRadius = 12;
-  const dragBarColor = "#e6dbb9";
-  const dragBarTrackColor = "#f0f0ed";
-  const [isDraggingHandle, setIsDraggingHandle] = useState(false);
+  // Arrow hover logic
+  const [hoverSide, setHoverSide] = useState(null); // "left", "right", or null
 
   // Ensure scroll starts at 0 on open
   useEffect(() => {
@@ -86,7 +82,7 @@ export default function FloatingModal({
     function onTouchMove(e) {
       if (!dragging || !scrollRef.current || e.touches.length !== 1) return;
       const deltaX = e.touches[0].clientX - startX;
-      scrollRef.current.scrollLeft = startScroll - deltaX;
+      scrollRef.current.scrollLeft = scrollStart - deltaX;
       e.preventDefault();
     }
     function onTouchEnd() {
@@ -120,9 +116,9 @@ export default function FloatingModal({
       if (!open || !scrollRef.current) return;
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") {
-        scrollRef.current.scrollBy({ left: -220, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: -250, behavior: "smooth" });
       } else if (e.key === "ArrowRight") {
-        scrollRef.current.scrollBy({ left: 220, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: 250, behavior: "smooth" });
       }
     }
     if (open) document.addEventListener("keydown", handleKeyDown);
@@ -139,55 +135,38 @@ export default function FloatingModal({
     if (!scrollRef.current) return;
     scrollRef.current.style.scrollbarWidth = "none";
     scrollRef.current.style.msOverflowStyle = "none";
-    // For Webkit browsers:
     scrollRef.current.classList.add("hide-native-scrollbar");
-    // Clean up:
     return () => {
       if (scrollRef.current) scrollRef.current.classList.remove("hide-native-scrollbar");
     };
   }, []);
 
-  // --- SVG SCROLLBAR LOGIC ---
-  // The bar's width is the total scrollable width (content + both buffers)
-  // The handle's position maps to scrollLeft (0 = left, max = right)
-  const maxScroll = totalScrollableWidth - scrollAreaWidth;
-  const svgBarWidth = totalScrollableWidth;
-  // Scroll percent (avoid divide by zero)
-  const percent = maxScroll > 0 ? scrollX / maxScroll : 0;
-  // Handle position: inside the bar, respect handle radius at each end
-  const handleX = dragHandleRadius + percent * (svgBarWidth - 2 * dragHandleRadius);
+  // Hover logic for left/right arrow
+  function handleMouseMove(e) {
+    if (!scrollRef.current) return setHoverSide(null);
+    const rect = scrollRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x < rect.width / 2) setHoverSide("left");
+    else setHoverSide("right");
+  }
+  function handleMouseLeave() {
+    setHoverSide(null);
+  }
 
-  // Dragging the handle
-  function handleBarDragStart(e) {
-    e.preventDefault();
-    setIsDraggingHandle(true);
-    document.body.style.cursor = "grabbing";
+  // Click-to-shift logic
+  function handleOverlayClick(e) {
+    // Only click shift if not dragging (prevents accidental jumps)
+    if (isDragging) return;
+    if (!scrollRef.current) return;
+    const rect = scrollRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const amount = 250;
+    if (x < rect.width / 2) {
+      scrollRef.current.scrollBy({ left: -amount, behavior: "smooth" });
+    } else {
+      scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
+    }
   }
-  function handleBarDragMove(e) {
-    if (!isDraggingHandle || !scrollRef.current) return;
-    const svgRect = document.getElementById("custom-drag-bar-svg")?.getBoundingClientRect();
-    if (!svgRect) return;
-    let x = e.clientX - svgRect.left;
-    x = Math.max(dragHandleRadius, Math.min(svgBarWidth - dragHandleRadius, x));
-    // Convert x back to scrollLeft
-    const newPercent = (x - dragHandleRadius) / (svgBarWidth - 2 * dragHandleRadius);
-    const newScroll = newPercent * maxScroll;
-    scrollRef.current.scrollLeft = newScroll;
-    setScrollX(newScroll);
-  }
-  function handleBarDragEnd() {
-    setIsDraggingHandle(false);
-    document.body.style.cursor = "";
-  }
-  useEffect(() => {
-    if (!isDraggingHandle) return;
-    window.addEventListener("mousemove", handleBarDragMove);
-    window.addEventListener("mouseup", handleBarDragEnd);
-    return () => {
-      window.removeEventListener("mousemove", handleBarDragMove);
-      window.removeEventListener("mouseup", handleBarDragEnd);
-    };
-  }, [isDraggingHandle, svgBarWidth, maxScroll]);
 
   if (!open) return null;
 
@@ -211,7 +190,13 @@ export default function FloatingModal({
             overflowY: "hidden",
             position: "relative",
             boxSizing: "border-box",
-            cursor: isDragging ? "grabbing" : "grab",
+            cursor: isDragging
+              ? "grabbing"
+              : hoverSide === "left"
+              ? "w-resize"
+              : hoverSide === "right"
+              ? "e-resize"
+              : "grab",
             background: "transparent",
             pointerEvents: "auto",
             scrollbarWidth: "none"
@@ -252,100 +237,82 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
-            {/* Transparent overlay for drag-to-scroll */}
+            {/* Transparent overlay for drag-to-scroll, click-shift, and arrow hover */}
             <DragOverlay
               style={{
                 pointerEvents: "auto",
-                cursor: isDragging ? "grabbing" : "grab"
+                cursor: isDragging
+                  ? "grabbing"
+                  : hoverSide === "left"
+                  ? "w-resize"
+                  : hoverSide === "right"
+                  ? "e-resize"
+                  : "grab"
               }}
               onMouseDown={handleDragStart}
-            />
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleOverlayClick}
+            >
+              {/* Optional: Custom arrow SVGs on hover */}
+              {hoverSide === "left" && !isDragging && (
+                <ArrowIcon
+                  direction="left"
+                  style={{
+                    left: 16,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              )}
+              {hoverSide === "right" && !isDragging && (
+                <ArrowIcon
+                  direction="right"
+                  style={{
+                    right: 16,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              )}
+            </DragOverlay>
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
           {/* RIGHT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
         </HorizontalScrollArea>
-        {/* Custom SVG drag bar below the content */}
-        <div
-          style={{
-            width: svgBarWidth,
-            margin: "0 auto",
-            height: dragBarHeight,
-            overflow: "visible",
-            pointerEvents: "none",
-            userSelect: "none",
-            position: "relative"
-          }}
-        >
-          <svg
-            id="custom-drag-bar-svg"
-            width={svgBarWidth}
-            height={dragBarHeight}
-            style={{
-              display: "block",
-              width: svgBarWidth,
-              height: dragBarHeight,
-              pointerEvents: "auto",
-              position: "absolute",
-              left: 0,
-              top: 0,
-              zIndex: 30,
-            }}
-            onMouseDown={e => {
-              // Only drag if clicking on the handle
-              const svgRect = e.currentTarget.getBoundingClientRect();
-              const x = e.clientX - svgRect.left;
-              if (
-                x >= handleX - dragHandleRadius &&
-                x <= handleX + dragHandleRadius
-              ) {
-                handleBarDragStart(e);
-              }
-            }}
-          >
-            {/* Track */}
-            <rect
-              x={dragHandleRadius}
-              y={dragBarHeight / 2 - 3}
-              width={svgBarWidth - 2 * dragHandleRadius}
-              height={6}
-              rx={3}
-              fill={dragBarTrackColor}
-            />
-            {/* Bar */}
-            <rect
-              x={dragHandleRadius}
-              y={dragBarHeight / 2 - 3}
-              width={svgBarWidth - 2 * dragHandleRadius}
-              height={6}
-              rx={3}
-              fill={dragBarColor}
-              opacity={0.6}
-            />
-            {/* Handle */}
-            <circle
-              cx={handleX}
-              cy={dragBarHeight / 2}
-              r={dragHandleRadius}
-              fill={dragBarColor}
-              stroke="#d6c08e"
-              strokeWidth={2}
-              style={{
-                cursor: "grab",
-                pointerEvents: "auto",
-                opacity: 1,
-                filter: isDraggingHandle ? "drop-shadow(0 2px 8px #e6dbb9cc)" : "none"
-              }}
-              onMouseDown={handleBarDragStart}
-            />
-          </svg>
-        </div>
+        {/* Hide native scrollbar for all browsers */}
+        <style>{`
+          .hide-native-scrollbar::-webkit-scrollbar { display: none !important; }
+          .hide-native-scrollbar { scrollbar-width: none !important; }
+        `}</style>
       </ModalContentWrap>
-      <style>{`
-        .hide-native-scrollbar::-webkit-scrollbar { display: none !important; }
-        .hide-native-scrollbar { scrollbar-width: none !important; }
-      `}</style>
     </Backdrop>
+  );
+}
+
+// Arrow icon SVG component
+function ArrowIcon({ direction = "left", style = {} }) {
+  // Basic arrow, can be styled further
+  const d =
+    direction === "left"
+      ? "M18 12 L6 6 L6 18 Z"
+      : "M6 12 L18 6 L18 18 Z";
+  return (
+    <svg
+      width={34}
+      height={34}
+      viewBox="0 0 24 24"
+      style={{
+        position: "absolute",
+        ...style,
+        pointerEvents: "none",
+        opacity: 0.92,
+        filter: "drop-shadow(0 1px 7px #e6dbb9cc)",
+      }}
+    >
+      <path d={d} fill="#e6dbb9" />
+    </svg>
   );
 }
 
@@ -404,6 +371,7 @@ const DragOverlay = styled.div`
   height: 100%;
   background: transparent;
   z-index: 10;
+  user-select: none;
 `;
 
 const CloseButton = styled.button`
