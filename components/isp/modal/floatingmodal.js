@@ -1,59 +1,73 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// Modal positions content 200px from left edge of viewport.
-// Scroll area and scrollbar are the same width as the content.
-// Dragging and scroll wheel both work.
-
 export default function FloatingModal({
   open,
   onClose,
   src,
-  width,   // From data file
+  width,   // From data file (e.g., 2934)
   height = 720,
 }) {
-  const backdropRef = useRef(null);
   const scrollRef = useRef(null);
+  const backdropRef = useRef(null);
 
-  // On open, start at the left edge (200px from viewport edge)
-  useEffect(() => {
-    if (open && scrollRef.current && width) {
-      scrollRef.current.scrollLeft = 0; // No offset needed, area is already offset
-    }
-  }, [open, width]);
-
-  // Drag-to-scroll logic
-  const [isDragging, setIsDragging] = useState(false);
+  // Sync scroll position with custom handle
+  const [scrollX, setScrollX] = useState(0);
+  const [isDraggingContent, setIsDraggingContent] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
-  function handleDragStart(e) {
+  // Custom drag bar
+  const [isDraggingHandle, setIsDraggingHandle] = useState(false);
+  const dragBarHeight = 22;
+  const dragHandleRadius = 12;
+  const dragBarColor = "#e6dbb9"; // matches your scrollbar
+  const dragBarTrackColor = "#f0f0ed";
+
+  // Modal opens: scroll to left edge
+  useEffect(() => {
+    if (open && scrollRef.current) {
+      scrollRef.current.scrollLeft = 0;
+      setScrollX(0);
+    }
+  }, [open, width]);
+
+  // Update scrollX when content scrolls (e.g., by wheel/drag/keyboard)
+  function onScroll() {
+    if (scrollRef.current) {
+      setScrollX(scrollRef.current.scrollLeft);
+    }
+  }
+
+  // Drag-to-scroll for content
+  function handleContentDragStart(e) {
     if (e.button !== 0) return;
-    setIsDragging(true);
+    setIsDraggingContent(true);
     setDragStartX(e.clientX);
     setScrollStart(scrollRef.current.scrollLeft);
     document.body.style.cursor = "grabbing";
   }
-  function handleDragMove(e) {
-    if (!isDragging || !scrollRef.current) return;
-    const deltaX = e.clientX - dragStartX;
-    scrollRef.current.scrollLeft = scrollStart - deltaX;
+  function handleContentDragMove(e) {
+    if (!isDraggingContent) return;
+    const delta = e.clientX - dragStartX;
+    scrollRef.current.scrollLeft = scrollStart - delta;
   }
-  function handleDragEnd() {
-    setIsDragging(false);
+  function handleContentDragEnd() {
+    setIsDraggingContent(false);
     document.body.style.cursor = "";
   }
   useEffect(() => {
-    if (!isDragging) return;
-    window.addEventListener("mousemove", handleDragMove);
-    window.addEventListener("mouseup", handleDragEnd);
-    return () => {
-      window.removeEventListener("mousemove", handleDragMove);
-      window.removeEventListener("mouseup", handleDragEnd);
-    };
-  }, [isDragging]);
+    if (isDraggingContent) {
+      window.addEventListener("mousemove", handleContentDragMove);
+      window.addEventListener("mouseup", handleContentDragEnd);
+      return () => {
+        window.removeEventListener("mousemove", handleContentDragMove);
+        window.removeEventListener("mouseup", handleContentDragEnd);
+      };
+    }
+  }, [isDraggingContent]);
 
-  // Touch drag for mobile
+  // Touch drag for content
   useEffect(() => {
     let startX = 0, startScroll = 0, dragging = false;
     function onTouchStart(e) {
@@ -113,6 +127,66 @@ export default function FloatingModal({
     if (e.target === backdropRef.current) onClose();
   }
 
+  // --- Custom Drag Bar Logic ---
+  // Calculate handle position
+  const visibleWidth = typeof window !== "undefined"
+    ? Math.min(window.innerWidth - 200, width)
+    : width;
+  const scrollable = width > visibleWidth + 1;
+  const dragBarWidth = width;
+  const maxScroll = width - visibleWidth;
+  const handleX = scrollable && maxScroll > 0
+    ? (scrollX / maxScroll) * (dragBarWidth - 2 * dragHandleRadius) + dragHandleRadius
+    : dragHandleRadius;
+
+  // Dragging the handle
+  function handleBarDragStart(e) {
+    e.preventDefault();
+    setIsDraggingHandle(true);
+    document.body.style.cursor = "grabbing";
+  }
+  function handleBarDragMove(e) {
+    if (!isDraggingHandle) return;
+    const svgRect = document.getElementById("custom-drag-bar-svg").getBoundingClientRect();
+    let x = e.clientX - svgRect.left;
+    x = Math.max(dragHandleRadius, Math.min(dragBarWidth - dragHandleRadius, x));
+    // Convert handle position to scrollLeft
+    const percent = (x - dragHandleRadius) / (dragBarWidth - 2 * dragHandleRadius);
+    const newScroll = percent * maxScroll;
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = newScroll;
+      setScrollX(newScroll);
+    }
+  }
+  function handleBarDragEnd() {
+    setIsDraggingHandle(false);
+    document.body.style.cursor = "";
+  }
+  useEffect(() => {
+    if (!isDraggingHandle) return;
+    window.addEventListener("mousemove", handleBarDragMove);
+    window.addEventListener("mouseup", handleBarDragEnd);
+    return () => {
+      window.removeEventListener("mousemove", handleBarDragMove);
+      window.removeEventListener("mouseup", handleBarDragEnd);
+    };
+  });
+
+  // Hide native scrollbar with CSS
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    scrollRef.current.style.scrollbarWidth = "none";
+    scrollRef.current.style.msOverflowStyle = "none";
+    // For webkit
+    scrollRef.current.style.overflow = "scroll";
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .mesopotamia-scrollbar::-webkit-scrollbar { display: none !important; }
+    `;
+    scrollRef.current.appendChild(style);
+    return () => { if (scrollRef.current) scrollRef.current.removeChild(style); };
+  }, []);
+
   if (!open) return null;
 
   return (
@@ -123,25 +197,26 @@ export default function FloatingModal({
       aria-modal="true"
     >
       <ModalContentWrap>
-        {/* The scroll area starts 200px from the left edge and matches content width */}
         <HorizontalScrollArea
           ref={scrollRef}
           className="mesopotamia-scrollbar"
           style={{
             width: width,
             maxWidth: width,
-            height: height + 14,
+            height: height,
             overflowX: "auto",
             overflowY: "hidden",
             position: "relative",
             boxSizing: "border-box",
-            cursor: isDragging ? "grabbing" : "grab",
+            cursor: isDraggingContent ? "grabbing" : "grab",
             background: "transparent",
-            marginLeft: 200, // Start 200px from left edge of viewport
-            pointerEvents: "auto", // Ensure events are captured
+            marginLeft: 200,
+            pointerEvents: "auto",
+            scrollbarWidth: "none"
           }}
           tabIndex={0}
           onWheel={handleWheel}
+          onScroll={onScroll}
         >
           <ContentBlock
             style={{
@@ -173,16 +248,92 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
+            {/* Overlay to enable drag-to-scroll */}
             <DragOverlay
               style={{
                 pointerEvents: "auto",
-                cursor: isDragging ? "grabbing" : "grab"
+                cursor: isDraggingContent ? "grabbing" : "grab"
               }}
-              onMouseDown={handleDragStart}
+              onMouseDown={handleContentDragStart}
             />
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
         </HorizontalScrollArea>
+        {/* Custom SVG drag bar below the content */}
+        <div
+          style={{
+            width: width,
+            marginLeft: 200,
+            height: dragBarHeight,
+            overflow: "visible",
+            pointerEvents: "none",
+            userSelect: "none",
+            position: "relative"
+          }}
+        >
+          <svg
+            id="custom-drag-bar-svg"
+            width={dragBarWidth}
+            height={dragBarHeight}
+            style={{
+              display: "block",
+              width: dragBarWidth,
+              height: dragBarHeight,
+              pointerEvents: "auto",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              zIndex: 30,
+            }}
+            onMouseDown={e => {
+              // Allow drag handle only
+              const svgRect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - svgRect.left;
+              if (
+                x >= handleX - dragHandleRadius &&
+                x <= handleX + dragHandleRadius
+              ) {
+                handleBarDragStart(e);
+              }
+            }}
+          >
+            {/* Track */}
+            <rect
+              x={dragHandleRadius}
+              y={dragBarHeight / 2 - 3}
+              width={dragBarWidth - 2 * dragHandleRadius}
+              height={6}
+              rx={3}
+              fill={dragBarTrackColor}
+            />
+            {/* Bar */}
+            <rect
+              x={dragHandleRadius}
+              y={dragBarHeight / 2 - 3}
+              width={dragBarWidth - 2 * dragHandleRadius}
+              height={6}
+              rx={3}
+              fill={dragBarColor}
+              opacity={0.6}
+            />
+            {/* Handle */}
+            <circle
+              cx={handleX}
+              cy={dragBarHeight / 2}
+              r={dragHandleRadius}
+              fill={dragBarColor}
+              stroke="#d6c08e"
+              strokeWidth={2}
+              style={{
+                cursor: "grab",
+                pointerEvents: "auto",
+                opacity: scrollable ? 1 : 0.4,
+                filter: isDraggingHandle ? "drop-shadow(0 2px 8px #e6dbb9cc)" : "none"
+              }}
+              onMouseDown={handleBarDragStart}
+            />
+          </svg>
+        </div>
       </ModalContentWrap>
     </Backdrop>
   );
@@ -214,7 +365,6 @@ const ModalContentWrap = styled.div`
 `;
 
 const HorizontalScrollArea = styled.div`
-  /* width and marginLeft set in inline style */
   margin: 0;
   display: flex;
   flex-direction: row;
@@ -222,6 +372,8 @@ const HorizontalScrollArea = styled.div`
   justify-content: flex-start;
   pointer-events: auto;
   background: none;
+  /* Hide native scrollbar for webkit */
+  &::-webkit-scrollbar { display: none; }
 `;
 
 const ContentBlock = styled.div`
