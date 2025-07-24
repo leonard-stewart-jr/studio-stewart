@@ -19,7 +19,7 @@ export default [
     timeline: [
       {
         year: "c. 640 BCE–300 CE",
-        title: "THE MAMERTINE PRISON: POLITICAL DETENTION AND EXECUTION"
+        title: "POLITICAL DETENTION AND EXECUTION"
       }
     ]
   },
@@ -31,7 +31,7 @@ export default [
     timeline: [
       {
         year: "c. 1100–1952",
-        title: "THE TOWER OF LONDON: FORTRESS, PALACE, PRISON"
+        title: "FORTRESS, PALACE, PRISON"
       }
     ]
   },
@@ -43,7 +43,7 @@ export default [
     timeline: [
       {
         year: "c. 1188–1902",
-        title: "NEWGATE PRISON: FEAR, SPECTACLE, AND REFORM"
+        title: "FEAR, SPECTACLE, AND REFORM"
       }
     ]
   },
@@ -54,7 +54,7 @@ export default [
     timeline: [
       {
         year: "c. 1557 CE",
-        title: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON"
+        title: "LABOR, REFORM, AND THE MODERN PRISON"
       }
     ]
   },
