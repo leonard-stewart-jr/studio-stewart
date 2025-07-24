@@ -2,14 +2,12 @@ export default [
   {
     name: "MESOPOTAMIA: THE FIRST KNOWN PRISONS",
     modalWidth: 2934,
-    modalHeight: 720,
     lat: 32.5,
     lon: 44.5,
   },
   {
     name: "THE MAMERTINE PRISON: POLITICAL DETENTION AND EXECUTION",
     modalWidth: 3818,
-    modalHeight: 720,
     lat: 41.8931,
     lon: 12.4828,
   },
