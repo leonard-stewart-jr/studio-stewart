@@ -6,7 +6,8 @@ import {
   loadPinModel,
   orientPin,
   latLngAltToVec3,
-  getPinModel
+  getPinModel,
+  positionPin
 } from "./modal/pin-utils";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -233,10 +234,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
-
-          const offset = 0.15;
-          const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-          pin.position.copy(outwardVec);
+          positionPin(pin, markerVec, 0.12);
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
@@ -296,10 +294,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           orientPin(pin, markerVec);
-
-          const offset = 0.15;
-          const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
-          pin.position.copy(outwardVec);
+          positionPin(pin, markerVec, 0.12);
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
