@@ -51,7 +51,7 @@ export function orientPin(pin, markerVec) {
   const target = new THREE.Vector3(0, 0, 0);
   pin.lookAt(target);
 }
-export function positionPin(pin, markerVec, offset = -0.3) {
+export function positionPin(pin, markerVec, offset = -0.8) {
   const outwardVec = markerVec.clone().normalize().multiplyScalar(offset);
   pin.position.copy(outwardVec);
 }
