@@ -116,9 +116,9 @@ export default function FloatingModal({
       if (!open || !scrollRef.current) return;
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") {
-        scrollRef.current.scrollBy({ left: -500, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: -1000, behavior: "smooth" });
       } else if (e.key === "ArrowRight") {
-        scrollRef.current.scrollBy({ left: 500, behavior: "smooth" });
+        scrollRef.current.scrollBy({ left: 1000, behavior: "smooth" });
       }
     }
     if (open) document.addEventListener("keydown", handleKeyDown);
@@ -152,25 +152,14 @@ export default function FloatingModal({
   function handleMouseLeave() {
     setHoverSide(null);
   }
+
   // Double-click-to-shift logic (now 1000px)
-function handleOverlayDoubleClick(e) {
-  if (isDragging) return;
-  if (!scrollRef.current) return;
-  const vw = window.innerWidth;
-  const x = e.clientX;
-  const amount = 1000;
-  if (x < vw / 3) {
-    scrollRef.current.scrollBy({ left: -amount, behavior: "smooth" });
-  } else if (x > (2 * vw) / 3) {
-    scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
-  }
-  // Double-click-to-shift logic (500px)
   function handleOverlayDoubleClick(e) {
     if (isDragging) return;
     if (!scrollRef.current) return;
     const vw = window.innerWidth;
     const x = e.clientX;
-    const amount = 500;
+    const amount = 1000;
     if (x < vw / 3) {
       scrollRef.current.scrollBy({ left: -amount, behavior: "smooth" });
     } else if (x > (2 * vw) / 3) {
@@ -249,43 +238,43 @@ function handleOverlayDoubleClick(e) {
               draggable={false}
             />
             {/* Transparent overlay for drag-to-scroll, double-click, and arrow hover */}
-<DragOverlay
-  style={{
-    pointerEvents: "auto",
-    cursor: isDragging
-      ? "grabbing"
-      : hoverSide === "left"
-      ? "w-resize"
-      : hoverSide === "right"
-      ? "e-resize"
-      : "grab"
-  }}
-  onMouseDown={handleDragStart}
-  onMouseMove={handleMouseMove}
-  onMouseLeave={handleMouseLeave}
-  onDoubleClick={handleOverlayDoubleClick}
->
-  {hoverSide === "left" && !isDragging && (
-    <ArrowIcon
-      direction="left"
-      style={{
-        left: 16,
-        top: "50%",
-        transform: "translateY(-50%)",
-      }}
-    />
-  )}
-  {hoverSide === "right" && !isDragging && (
-    <ArrowIcon
-      direction="right"
-      style={{
-        right: 16,
-        top: "50%",
-        transform: "translateY(-50%)",
-      }}
-    />
-  )}
-</DragOverlay>
+            <DragOverlay
+              style={{
+                pointerEvents: "auto",
+                cursor: isDragging
+                  ? "grabbing"
+                  : hoverSide === "left"
+                  ? "w-resize"
+                  : hoverSide === "right"
+                  ? "e-resize"
+                  : "grab"
+              }}
+              onMouseDown={handleDragStart}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              onDoubleClick={handleOverlayDoubleClick}
+            >
+              {hoverSide === "left" && !isDragging && (
+                <ArrowIcon
+                  direction="left"
+                  style={{
+                    left: 16,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              )}
+              {hoverSide === "right" && !isDragging && (
+                <ArrowIcon
+                  direction="right"
+                  style={{
+                    right: 16,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              )}
+            </DragOverlay>
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
           {/* RIGHT transparent buffer */}
@@ -303,11 +292,7 @@ function handleOverlayDoubleClick(e) {
 
 // Arrow icon SVG component
 function ArrowIcon({ direction = "left", style = {} }) {
-  // Basic arrow, can be styled further
-  const d =
-    direction === "left"
-      ? "M18 12 L6 6 L6 18 Z"
-      : "M6 12 L18 6 L18 18 Z";
+  // Single arrow for left, single arrow for right
   return (
     <svg
       width={34}
@@ -321,7 +306,14 @@ function ArrowIcon({ direction = "left", style = {} }) {
         filter: "drop-shadow(0 1px 7px #e6dbb9cc)",
       }}
     >
-      <path d={d} fill="#e6dbb9" />
+      <polyline
+        points={direction === "left" ? "16,4 4,12 16,20" : "8,4 20,12 8,20"}
+        fill="none"
+        stroke="#e6dbb9"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
