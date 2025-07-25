@@ -8,7 +8,8 @@ import {
   latLngAltToVec3,
   getPinModel,
   positionPin,
-  getMonochromeShades
+  ANALOGOUS_REDS,
+  getAnalogousRedAssignments
 } from "./modal/pin-utils";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -139,10 +140,9 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }, [londonExpanded]);
 
-  // --- COLOR SHADE LOGIC ---
-  // Only for world for now
-  const worldShades = useMemo(
-    () => getMonochromeShades(BASE_WORLD_COLOR, globeLocations.length),
+  // --- ANALOGOUS RED PALETTE RANDOM ASSIGNMENT ---
+  const redAssignments = useMemo(
+    () => getAnalogousRedAssignments(globeLocations.length, 42),
     []
   );
 
@@ -158,7 +158,7 @@ export default function GlobeSection({ onMarkerClick }) {
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
 
-    // Add color to TOC for world
+    // Assign random color from palette to each marker, consistent for pin/TOC
     const tocList = globeLocations.map((marker, idx) => {
       let year = "";
       if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
@@ -169,7 +169,7 @@ export default function GlobeSection({ onMarkerClick }) {
         name: marker.name,
         marker,
         year,
-        color: worldShades[idx]
+        color: redAssignments[idx]
       }
     });
 
@@ -191,17 +191,21 @@ export default function GlobeSection({ onMarkerClick }) {
           altitude: DOT_ALTITUDE,
           label: "London Cluster",
         },
-        ...nonLondonMarkers.map((m, idx) => ({
-          ...m,
-          lat: m.lat,
-          lng: m.lon,
-          markerId: m.name,
-          isStandardPin: true,
-          showDotAndPin: idx === comparisonMarkerIdx,
-          idx,
-          altitude: DOT_ALTITUDE,
-          color: worldShades[globeLocations.findIndex(mm=>mm.name === m.name)]
-        })),
+        ...nonLondonMarkers.map((m, idx) => {
+          // Find the global index for color match
+          const globalIdx = globeLocations.findIndex(mm=>mm.name === m.name);
+          return {
+            ...m,
+            lat: m.lat,
+            lng: m.lon,
+            markerId: m.name,
+            isStandardPin: true,
+            showDotAndPin: idx === comparisonMarkerIdx,
+            idx,
+            altitude: DOT_ALTITUDE,
+            color: redAssignments[globalIdx]
+          }
+        }),
       ];
 
       customPointObject = (obj) => {
@@ -243,6 +247,7 @@ export default function GlobeSection({ onMarkerClick }) {
             if (child.isMesh) {
               child.castShadow = false;
               child.material = child.material.clone();
+              // Use the assigned color
               child.material.color.set(obj.color || BASE_WORLD_COLOR);
             }
           });
@@ -251,7 +256,7 @@ export default function GlobeSection({ onMarkerClick }) {
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
-          positionPin(pin, 4); // Pin tip at surface
+          positionPin(pin, 0); // <-- restore pin tip to globe surface
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
@@ -270,7 +275,6 @@ export default function GlobeSection({ onMarkerClick }) {
         const angle = (2 * Math.PI * idx) / N;
         const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
         const lng = londonCenter.lng + wheelRadius * Math.sin(angle);
-        // Use worldShades for London pins as well (keep consistent)
         const globalIdx = globeLocations.findIndex(m=>m.name === marker.name);
         return {
           ...marker,
@@ -284,7 +288,7 @@ export default function GlobeSection({ onMarkerClick }) {
           isStandardPin: true,
           altitude: LONDON_WHEEL_ALTITUDE,
           pinScale,
-          color: worldShades[globalIdx]
+          color: redAssignments[globalIdx]
         };
       });
 
@@ -357,9 +361,9 @@ export default function GlobeSection({ onMarkerClick }) {
       };
     }
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
-  }, [londonExpanded, pinReady, worldShades]);
+  }, [londonExpanded, pinReady, redAssignments]);
 
-  useEffect(() => {
+   useEffect(() => {
     function updateMarkerPositions() {
       if (
         !globeEl.current ||
