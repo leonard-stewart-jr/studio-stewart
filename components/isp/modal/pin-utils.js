@@ -69,7 +69,7 @@ export function orientPin(pin, markerVec) {
  * Positions the pin at an offset (in local Z) from its parent group (which is at markerVec).
  * By default, no offset (tip at globe surface).
  */
-export function positionPin(pin, offset = -5) {
+export function positionPin(pin, offset = -17) {
   pin.position.set(0, 0, -offset);
 }
 
