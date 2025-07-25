@@ -256,7 +256,7 @@ export default function GlobeSection({ onMarkerClick }) {
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
-          positionPin(pin, -3); // <-- restore pin tip to globe surface
+          positionPin(pin, -4); // <-- restore pin tip to globe surface
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
