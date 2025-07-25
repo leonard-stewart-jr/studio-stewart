@@ -67,7 +67,7 @@ export function orientPin(pin, markerVec) {
  * Positions the pin at an offset (in local Z) from its parent group (which is at markerVec).
  * By default, no offset (tip at globe surface).
  */
-export function positionPin(pin, offset = 4) {
+export function positionPin(pin, offset = 0) {
   pin.position.set(0, 0, offset);
 }
 
@@ -75,27 +75,46 @@ export function getPinModel() {
   return pinModel;
 }
 
-// --- COLOR UTILITIES FOR MONOCHROME SHADES ---
+// --- ANALOGOUS RED PALETTE + RANDOM ASSIGN ---
 /**
- * Interpolates between a color and white, returning a lighter or darker shade.
- * amt should be between 0 (base color) and 1 (white).
+ * Array of 12 "analogous reds" (from orangish to purpleish).
+ * Generated via HSL: red hue ±20deg, full saturation, 45%-60% lightness.
  */
-export function shadeColor(hex, amt = 0.5) {
-  let c = parseInt(hex.slice(1), 16);
-  let r = (c >> 16) & 0xff, g = (c >> 8) & 0xff, b = c & 0xff;
-  r = Math.round(r + (255 - r) * amt);
-  g = Math.round(g + (255 - g) * amt);
-  b = Math.round(b + (255 - b) * amt);
-  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
-}
+export const ANALOGOUS_REDS = [
+  "#e4572e", // orange-red
+  "#ea5a47",
+  "#e94f64",
+  "#e03d7b",
+  "#b32c2c", // main red
+  "#c23b49",
+  "#c94e63",
+  "#db2f3b",
+  "#a82852", // purplish-red
+  "#c54477",
+  "#b52d36",
+  "#e13c4c"
+];
 
 /**
- * Generates N monochrome shades from a base color.
- * Returns an array of hex colors.
+ * Randomly assign a color from the palette for each marker, but keep it matched between pins and TOC.
+ * Uses a seeded shuffle for consistency.
  */
-export function getMonochromeShades(base, count) {
-  // amt from 0.12 to 0.62
-  return Array.from({ length: count }, (_, i) =>
-    shadeColor(base, 0.12 + 0.5 * (i / Math.max(1, count - 1)))
-  );
+export function getAnalogousRedAssignments(count, seed = 42) {
+  // Fisher-Yates shuffle with seed
+  let arr = [...ANALOGOUS_REDS];
+  // Repeat palette if not enough colors
+  while (arr.length < count) arr = arr.concat(arr);
+  arr = arr.slice(0, count);
+
+  // Deterministic shuffle
+  function seededRandom() {
+    // Simple LCG
+    let x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+  }
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(seededRandom() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
