@@ -19,13 +19,11 @@ export function loadPinModel() {
         if (child.isMesh && child.material) {
           if (Array.isArray(child.material)) {
             child.material.forEach((mat) => {
-              mat.color.set("#b32c2c");
               mat.metalness = 0.2;
               mat.roughness = 0.6;
               mat.envMapIntensity = 0.3;
             });
           } else {
-            child.material.color.set("#b32c2c");
             child.material.metalness = 0.2;
             child.material.roughness = 0.6;
             child.material.envMapIntensity = 0.3;
@@ -69,10 +67,35 @@ export function orientPin(pin, markerVec) {
  * Positions the pin at an offset (in local Z) from its parent group (which is at markerVec).
  * By default, no offset (tip at globe surface).
  */
-export function positionPin(pin, offset = -17) {
-  pin.position.set(0, 0, -offset);
+export function positionPin(pin, offset = 4) {
+  pin.position.set(0, 0, offset);
 }
 
 export function getPinModel() {
   return pinModel;
+}
+
+// --- COLOR UTILITIES FOR MONOCHROME SHADES ---
+/**
+ * Interpolates between a color and white, returning a lighter or darker shade.
+ * amt should be between 0 (base color) and 1 (white).
+ */
+export function shadeColor(hex, amt = 0.5) {
+  let c = parseInt(hex.slice(1), 16);
+  let r = (c >> 16) & 0xff, g = (c >> 8) & 0xff, b = c & 0xff;
+  r = Math.round(r + (255 - r) * amt);
+  g = Math.round(g + (255 - g) * amt);
+  b = Math.round(b + (255 - b) * amt);
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
+}
+
+/**
+ * Generates N monochrome shades from a base color.
+ * Returns an array of hex colors.
+ */
+export function getMonochromeShades(base, count) {
+  // amt from 0.12 to 0.62
+  return Array.from({ length: count }, (_, i) =>
+    shadeColor(base, 0.12 + 0.5 * (i / Math.max(1, count - 1)))
+  );
 }
