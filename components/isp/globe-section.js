@@ -7,7 +7,8 @@ import {
   orientPin,
   latLngAltToVec3,
   getPinModel,
-  positionPin
+  positionPin,
+  getMonochromeShades
 } from "./modal/pin-utils";
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -23,6 +24,8 @@ const CLUSTER_RING_COLOR = "#b32c2c";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 const CLUSTER_RING_RATIO = 0.74;
 const CLUSTER_RING_ALT_OFFSET = 0.0035;
+
+const BASE_WORLD_COLOR = "#b32c2c";
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -136,6 +139,13 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }, [londonExpanded]);
 
+  // --- COLOR SHADE LOGIC ---
+  // Only for world for now
+  const worldShades = useMemo(
+    () => getMonochromeShades(BASE_WORLD_COLOR, globeLocations.length),
+    []
+  );
+
   const {
     objectsData,
     linesData,
@@ -148,7 +158,7 @@ export default function GlobeSection({ onMarkerClick }) {
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
 
-    // CHANGE: Always use marker.name for TOC titles
+    // Add color to TOC for world
     const tocList = globeLocations.map((marker, idx) => {
       let year = "";
       if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
@@ -159,6 +169,7 @@ export default function GlobeSection({ onMarkerClick }) {
         name: marker.name,
         marker,
         year,
+        color: worldShades[idx]
       }
     });
 
@@ -189,6 +200,7 @@ export default function GlobeSection({ onMarkerClick }) {
           showDotAndPin: idx === comparisonMarkerIdx,
           idx,
           altitude: DOT_ALTITUDE,
+          color: worldShades[globeLocations.findIndex(mm=>mm.name === m.name)]
         })),
       ];
 
@@ -225,17 +237,21 @@ export default function GlobeSection({ onMarkerClick }) {
 
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 8;
+          const scale = 9;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
-            if (child.isMesh) child.castShadow = false;
+            if (child.isMesh) {
+              child.castShadow = false;
+              child.material = child.material.clone();
+              child.material.color.set(obj.color || BASE_WORLD_COLOR);
+            }
           });
           pin.scale.set(scale, scale, scale);
 
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
-          positionPin(pin, 3); // Pin tip at surface
+          positionPin(pin, 4); // Pin tip at surface
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
@@ -254,6 +270,8 @@ export default function GlobeSection({ onMarkerClick }) {
         const angle = (2 * Math.PI * idx) / N;
         const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
         const lng = londonCenter.lng + wheelRadius * Math.sin(angle);
+        // Use worldShades for London pins as well (keep consistent)
+        const globalIdx = globeLocations.findIndex(m=>m.name === marker.name);
         return {
           ...marker,
           lat,
@@ -266,6 +284,7 @@ export default function GlobeSection({ onMarkerClick }) {
           isStandardPin: true,
           altitude: LONDON_WHEEL_ALTITUDE,
           pinScale,
+          color: worldShades[globalIdx]
         };
       });
 
@@ -289,7 +308,11 @@ export default function GlobeSection({ onMarkerClick }) {
           const scale = obj.pinScale ?? 7;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
-            if (child.isMesh) child.castShadow = false;
+            if (child.isMesh) {
+              child.castShadow = false;
+              child.material = child.material.clone();
+              child.material.color.set(obj.color || BASE_WORLD_COLOR);
+            }
           });
           pin.scale.set(scale, scale, scale);
 
@@ -334,7 +357,7 @@ export default function GlobeSection({ onMarkerClick }) {
       };
     }
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
-  }, [londonExpanded, pinReady]);
+  }, [londonExpanded, pinReady, worldShades]);
 
   useEffect(() => {
     function updateMarkerPositions() {
@@ -441,6 +464,26 @@ export default function GlobeSection({ onMarkerClick }) {
 
   const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
 
+  // Four-arrows expand SVG for London cluster
+  const arrowsSvg = (
+    <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: "block" }}>
+      <g stroke="#b32c2c" strokeWidth="2.5" fill="none" strokeLinecap="round">
+        {/* Top left arrow */}
+        <line x1="6" y1="16" x2="6" y2="6" />
+        <line x1="6" y1="6" x2="16" y2="6" />
+        {/* Top right arrow */}
+        <line x1="20" y1="6" x2="30" y2="6" />
+        <line x1="30" y1="6" x2="30" y2="16" />
+        {/* Bottom left arrow */}
+        <line x1="6" y1="20" x2="6" y2="30" />
+        <line x1="6" y1="30" x2="16" y2="30" />
+        {/* Bottom right arrow */}
+        <line x1="20" y1="30" x2="30" y2="30" />
+        <line x1="30" y1="30" x2="30" y2="20" />
+      </g>
+    </svg>
+  );
+
   if (!pinReady) {
     return (
       <section
@@ -538,26 +581,22 @@ export default function GlobeSection({ onMarkerClick }) {
             style={{
               position: "fixed",
               left: londonClusterScreenPos?.x ?? 0,
-              top: (londonClusterScreenPos?.y ?? 0) + 18,
+              top: (londonClusterScreenPos?.y ?? 0) - 32,
               zIndex: 9999,
-              pointerEvents: "auto",
-              background: "yellow",
-              color: "black",
-              border: "2px solid red",
+              pointerEvents: "none",
+              background: "none",
+              color: "#b32c2c",
+              border: "none",
               borderRadius: 4,
-              padding: "8px 18px",
+              padding: "0",
               fontWeight: 700,
               fontSize: 18,
               transform: "translate(-50%, 0)",
               whiteSpace: "nowrap",
             }}
+            aria-label="Expand London Cluster"
           >
-            EXPAND
-          </div>
-        )}
-        {showLondonExpandOverlay && (
-          <div style={{position:'fixed',top:0,left:0,zIndex:9999,color:'red',background:'white'}}>
-            DEBUG: showLondonExpandOverlay is TRUE. X: {londonClusterScreenPos?.x}, Y: {londonClusterScreenPos?.y}
+            {arrowsSvg}
           </div>
         )}
         {/* Overlay for regular pins (with .name) */}
@@ -628,7 +667,7 @@ export default function GlobeSection({ onMarkerClick }) {
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#b32c2c",
+                  color: item.color,
                   fontWeight: 600,
                   fontSize: 16,
                   cursor: "pointer",
@@ -663,7 +702,7 @@ export default function GlobeSection({ onMarkerClick }) {
                   minWidth: 18,
                   letterSpacing: ".03em",
                   marginRight: 2,
-                  color: "#b32c2c",
+                  color: item.color,
                   opacity: 0.93,
                   flexShrink: 0,
                 }}>{item.roman}.</span>
