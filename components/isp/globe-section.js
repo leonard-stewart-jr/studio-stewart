@@ -324,10 +324,10 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // LONDON EXPANDED LOGIC (unchanged from before)
+      // LONDON EXPANDED LOGIC (pins inside cluster 3x bigger)
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
-      const pinScale = 7 * (2 / 3);
+      const pinScale = 7 * 3; // 3x bigger pins
 
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
