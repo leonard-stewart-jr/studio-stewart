@@ -12,6 +12,9 @@ import {
   getAnalogousRedAssignments
 } from "./modal/pin-utils";
 
+// SVG expand icon as a string for the cluster marker
+const LONDON_EXPAND_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polyline points="160 48 208 48 208 96" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="152" y1="104" x2="208" y2="48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="96 208 48 208 48 160" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="104" y1="152" x2="48" y2="208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="208 160 208 208 160 208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="152" y1="152" x2="208" y2="208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="48 96 48 48 96 48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="104" y1="104" x2="48" y2="48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>`;
+
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
@@ -21,12 +24,37 @@ const LONDON_WHEEL_ALTITUDE = 0.018;
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_CENTER_COLOR = "#fff";
-const CLUSTER_RING_COLOR = "#b32c2c";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
-const CLUSTER_RING_RATIO = 0.74;
-const CLUSTER_RING_ALT_OFFSET = 0.0035;
 
-const BASE_WORLD_COLOR = "#b32c2c";
+// Offset for moving London cluster northwest (tweak as needed)
+const LONDON_CLUSTER_OFFSET = { lat: 1.1, lng: -2.5 };
+
+// Helper: SVG string to texture (returns a Promise)
+function svgStringToTexture(svgString, size = 256) {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, size, size);
+      ctx.drawImage(img, 0, 0, size, size);
+      const tex = new THREE.Texture(canvas);
+      tex.needsUpdate = true;
+      resolve(tex);
+    };
+    img.src = "data:image/svg+xml;utf8," + encodeURIComponent(svgString);
+  });
+}
+// Cache for SVG texture
+let expandSvgTexture = null;
+async function getExpandTexture() {
+  if (!expandSvgTexture) {
+    expandSvgTexture = await svgStringToTexture(LONDON_EXPAND_SVG, 256);
+  }
+  return expandSvgTexture;
+}
 
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
@@ -41,7 +69,12 @@ function getLondonClusterCenter() {
   const lng = londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
   return { lat, lng };
 }
-
+function getLondonClusterCustomCoords(center) {
+  return {
+    lat: center.lat + LONDON_CLUSTER_OFFSET.lat,
+    lng: center.lng + LONDON_CLUSTER_OFFSET.lng,
+  };
+}
 function toRoman(num) {
   const map = [
     [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
@@ -57,9 +90,8 @@ function toRoman(num) {
   }
   return result;
 }
-
 function getComparisonMarkerIdx(nonLondonMarkers) {
-  const idx = nonLondonMarkers.findIndex(m => 
+  const idx = nonLondonMarkers.findIndex(m =>
     m.name.toLowerCase().includes("eastern state") || m.name.toLowerCase().includes("united states")
   );
   return idx !== -1 ? idx : 0;
@@ -77,6 +109,7 @@ export default function GlobeSection({ onMarkerClick }) {
     loadPinModel().then(() => {
       if (mounted) setPinReady(true);
     });
+    getExpandTexture(); // Preload SVG texture
     return () => { mounted = false; };
   }, []);
 
@@ -157,8 +190,8 @@ export default function GlobeSection({ onMarkerClick }) {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
+    const customClusterCoords = getLondonClusterCustomCoords(londonCenter);
 
-    // Assign random color from palette to each marker, consistent for pin/TOC
     const tocList = globeLocations.map((marker, idx) => {
       let year = "";
       if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
@@ -185,15 +218,14 @@ export default function GlobeSection({ onMarkerClick }) {
     if (!londonExpanded) {
       objectsData = [
         {
-          ...londonCenter,
+          ...customClusterCoords, // <-- moved northwest
           markerId: "london-cluster",
           isLondonCluster: true,
           altitude: DOT_ALTITUDE,
           label: "London Cluster",
         },
         ...nonLondonMarkers.map((m, idx) => {
-          // Find the global index for color match
-          const globalIdx = globeLocations.findIndex(mm=>mm.name === m.name);
+          const globalIdx = globeLocations.findIndex(mm => mm.name === m.name);
           return {
             ...m,
             lat: m.lat,
@@ -209,36 +241,63 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
 
       customPointObject = (obj) => {
+        // LONDON CLUSTER CUSTOM OBJECT
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 2.5;
-          const dotGeom = new THREE.CircleGeometry(dotRadius, 42);
-          const dotMat = new THREE.MeshBasicMaterial({ color: CLUSTER_CENTER_COLOR, side: THREE.DoubleSide, transparent: false });
-          const dot = new THREE.Mesh(dotGeom, dotMat);
-          dot.renderOrder = 2;
-          dot.position.set(0, 0, 0);
-          dot.name = "london-cluster-dot";
-          dot.userData = { markerId: "london-cluster" };
-          group.add(dot);
-
-          const ringOuter = dotRadius * CLUSTER_RING_RATIO;
-          const ringInner = ringOuter * 0.76;
-          const ringGeom = new THREE.RingGeometry(ringInner, ringOuter, 48);
-          const ringMat = new THREE.MeshBasicMaterial({
-            color: CLUSTER_RING_COLOR,
-            side: THREE.DoubleSide,
-            transparent: false,
+          const diskThickness = 0.10;
+          // 3D white disk, sunk into globe
+          const diskGeom = new THREE.CylinderGeometry(dotRadius, dotRadius, diskThickness, 48);
+          const diskMat = new THREE.MeshPhongMaterial({
+            color: CLUSTER_CENTER_COLOR,
+            shininess: 60,
+            flatShading: true,
           });
-          const ring = new THREE.Mesh(ringGeom, ringMat);
-          ring.position.set(0, 0, CLUSTER_RING_ALT_OFFSET * 100);
-          ring.renderOrder = 3;
-          group.add(ring);
+          const disk = new THREE.Mesh(diskGeom, diskMat);
+          disk.position.set(0, 0, -diskThickness / 2); // bottom flush with globe
+          disk.castShadow = false;
+          disk.receiveShadow = false;
+          disk.name = "london-cluster-dot";
+          group.add(disk);
+
+          // SVG expand icon as plane above disk
+          const svgPlaneSize = dotRadius * 1.35;
+          const svgGeom = new THREE.PlaneGeometry(svgPlaneSize * 2, svgPlaneSize * 2);
+          const svgMat = new THREE.MeshBasicMaterial({
+            transparent: true,
+            depthTest: false,
+            color: 0xffffff
+          });
+          const svgPlane = new THREE.Mesh(svgGeom, svgMat);
+          svgPlane.position.set(0, 0, diskThickness * 0.51);
+          svgPlane.renderOrder = 10;
+          svgPlane.name = "london-expand-plane";
+          getExpandTexture().then((tex) => {
+            svgMat.map = tex;
+            svgMat.needsUpdate = true;
+          });
+          group.add(svgPlane);
+
+          // Large transparent hit area for click/hover
+          const hitGeom = new THREE.CircleGeometry(dotRadius * 2.1, 24);
+          const hitMat = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.01,
+            depthWrite: false,
+          });
+          const hitCircle = new THREE.Mesh(hitGeom, hitMat);
+          hitCircle.position.set(0, 0, diskThickness * 0.43);
+          hitCircle.userData = { markerId: "london-cluster" };
+          hitCircle.name = "london-cluster-hit";
+          group.add(hitCircle);
 
           group.userData = { markerId: "london-cluster" };
           group.name = "london-cluster-group";
           return group;
         }
 
+        // ALL OTHER PINS: with large transparent hit circle
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = 9;
@@ -247,8 +306,7 @@ export default function GlobeSection({ onMarkerClick }) {
             if (child.isMesh) {
               child.castShadow = false;
               child.material = child.material.clone();
-              // Use the assigned color
-              child.material.color.set(obj.color || BASE_WORLD_COLOR);
+              child.material.color.set(obj.color || "#b32c2c");
             }
           });
           pin.scale.set(scale, scale, scale);
@@ -256,17 +314,33 @@ export default function GlobeSection({ onMarkerClick }) {
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
-          positionPin(pin, -4); // <-- restore pin tip to globe surface
+          positionPin(pin, -4);
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
+
+          // Add large transparent circle for easier click
+          const hitGeom = new THREE.CircleGeometry(0.14, 16);
+          const hitMat = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.01,
+            depthWrite: false,
+          });
+          const hitCircle = new THREE.Mesh(hitGeom, hitMat);
+          hitCircle.position.set(0, 0, scale * 0.6);
+          hitCircle.userData = { markerId: obj.markerId };
+          hitCircle.name = "pin-hit-area";
+          group.add(hitCircle);
+
           group.userData = { markerId: obj.markerId };
           return group;
         }
+
         return null;
       };
-
     } else {
+      // LONDON EXPANDED LOGIC (unchanged from before)
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
       const pinScale = 7 * (2 / 3);
@@ -275,7 +349,7 @@ export default function GlobeSection({ onMarkerClick }) {
         const angle = (2 * Math.PI * idx) / N;
         const lat = londonCenter.lat + wheelRadius * Math.cos(angle);
         const lng = londonCenter.lng + wheelRadius * Math.sin(angle);
-        const globalIdx = globeLocations.findIndex(m=>m.name === marker.name);
+        const globalIdx = globeLocations.findIndex(m => m.name === marker.name);
         return {
           ...marker,
           lat,
@@ -315,7 +389,7 @@ export default function GlobeSection({ onMarkerClick }) {
             if (child.isMesh) {
               child.castShadow = false;
               child.material = child.material.clone();
-              child.material.color.set(obj.color || BASE_WORLD_COLOR);
+              child.material.color.set(obj.color || "#b32c2c");
             }
           });
           pin.scale.set(scale, scale, scale);
@@ -363,7 +437,7 @@ export default function GlobeSection({ onMarkerClick }) {
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
   }, [londonExpanded, pinReady, redAssignments]);
 
-   useEffect(() => {
+  useEffect(() => {
     function updateMarkerPositions() {
       if (
         !globeEl.current ||
@@ -468,20 +542,16 @@ export default function GlobeSection({ onMarkerClick }) {
 
   const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
 
-  // Four-arrows expand SVG for London cluster
+  // Four-arrows expand SVG for London cluster (for overlay, HTML only)
   const arrowsSvg = (
     <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: "block" }}>
       <g stroke="#b32c2c" strokeWidth="2.5" fill="none" strokeLinecap="round">
-        {/* Top left arrow */}
         <line x1="6" y1="16" x2="6" y2="6" />
         <line x1="6" y1="6" x2="16" y2="6" />
-        {/* Top right arrow */}
         <line x1="20" y1="6" x2="30" y2="6" />
         <line x1="30" y1="6" x2="30" y2="16" />
-        {/* Bottom left arrow */}
         <line x1="6" y1="20" x2="6" y2="30" />
         <line x1="6" y1="30" x2="16" y2="30" />
-        {/* Bottom right arrow */}
         <line x1="20" y1="30" x2="30" y2="30" />
         <line x1="30" y1="30" x2="30" y2="20" />
       </g>
@@ -603,7 +673,6 @@ export default function GlobeSection({ onMarkerClick }) {
             {arrowsSvg}
           </div>
         )}
-        {/* Overlay for regular pins (with .name) */}
         {showPinOverlay && (
           <div
             style={{
@@ -654,7 +723,7 @@ export default function GlobeSection({ onMarkerClick }) {
           position: "relative",
           zIndex: 100,
           left: isMobile ? 0 : -150,
-  }}
+        }}
       >
         <ol style={{
           listStyle: "none",
