@@ -15,7 +15,7 @@ const navItems = [
 const socialLinks = [
   { label: "Email", href: "mailto:leonard.stewart@studio-stewart.com" },
   { label: "My Code Here", href: "https://github.com/leonard-stewart-jr" },
-  { label: "UNDERGRADUATE PORTFOLIO", href: "https://github.com/leonard-stewart-jr" },
+  { label: "UNDERGRADUATE PORTFOLIO", href: "https://issuu.com/leonard.stewart/docs/architecture_portfolio" },
 ];
 
 export default function Sidebar({
