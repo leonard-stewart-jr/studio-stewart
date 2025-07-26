@@ -1,15 +1,15 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// SVGs for cursors (half-size, color=currentColor)
+// SVGs for cursors (half-size, color=#e6dbb9 hard-coded)
 const leftArrowSVG = encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-  <polyline points="16,4 4,12 16,20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="16,4 4,12 16,20" fill="none" stroke="#e6dbb9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `);
 const rightArrowSVG = encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-  <polyline points="8,4 20,12 8,20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="8,4 20,12 8,20" fill="none" stroke="#e6dbb9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `);
 const handSVG = encodeURIComponent(`
@@ -17,21 +17,21 @@ const handSVG = encodeURIComponent(`
   <rect width="256" height="256" fill="none"/>
   <path d="M64,216,34.68,166a20,20,0,0,1,34.64-20L88,176V68a20,20,0,0,1,40,0v56a20,20,0,0,1,40,0v16a20,20,0,0,1,40,0v36c0,24-8,40-8,40"
     fill="none"
-    stroke="currentColor"
+    stroke="#e6dbb9"
     stroke-linecap="round"
     stroke-linejoin="round"
     stroke-width="16"
   />
   <line x1="176" y1="56" x2="248" y2="56"
     fill="none"
-    stroke="currentColor"
+    stroke="#e6dbb9"
     stroke-linecap="round"
     stroke-linejoin="round"
     stroke-width="16"
   />
   <polyline points="208 24 176 56 208 88"
     fill="none"
-    stroke="currentColor"
+    stroke="#e6dbb9"
     stroke-linecap="round"
     stroke-linejoin="round"
     stroke-width="16"
@@ -39,7 +39,7 @@ const handSVG = encodeURIComponent(`
 </svg>
 `);
 
-// Data URIs for cursor CSS (currentColor works in most modern browsers)
+// Data URIs for cursor CSS (with accent color)
 const leftArrowCursor = `url("data:image/svg+xml,${leftArrowSVG}") 2 9, pointer`;
 const rightArrowCursor = `url("data:image/svg+xml,${rightArrowSVG}") 16 9, pointer`;
 const handCursor = `url("data:image/svg+xml,${handSVG}") 9 9, pointer`;
@@ -112,7 +112,7 @@ export default function FloatingModal({
     };
   }, [isDragging]);
 
-  // Touch drag for mobile (unchanged)
+  // Touch drag for mobile
   useEffect(() => {
     let startX = 0, startScroll = 0, dragging = false;
     function onTouchStart(e) {
@@ -290,8 +290,7 @@ export default function FloatingModal({
             <DragOverlay
               style={{
                 pointerEvents: "auto",
-                cursor: overlayCursor,
-                color: "#e6dbb9"
+                cursor: overlayCursor
               }}
               onMouseDown={handleDragStart}
               onMouseMove={handleMouseMove}
