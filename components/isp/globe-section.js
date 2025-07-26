@@ -70,12 +70,16 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
 }
 
 // SVG TEXTURE CACHE FOR CLUSTER
-let expandSvgTexture = null;
-async function getExpandTexture() {
-  if (!expandSvgTexture) {
-    expandSvgTexture = await svgStringToTexture(LONDON_EXPAND_SVG, 256);
-  }
-  return expandSvgTexture;
+function useExpandSvgTexture() {
+  const [expandSvgTex, setExpandSvgTex] = useState(null);
+  useEffect(() => {
+    let mounted = true;
+    svgStringToTexture(LONDON_EXPAND_SVG, 256).then((tex) => {
+      if (mounted) setExpandSvgTex(tex);
+    });
+    return () => { mounted = false; };
+  }, []);
+  return expandSvgTex;
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -129,9 +133,11 @@ export default function GlobeSection({ onMarkerClick }) {
     loadPinModel().then(() => {
       if (mounted) setPinReady(true);
     });
-    getExpandTexture();
     return () => { mounted = false; };
   }, []);
+
+  // Use new hook for SVG texture
+  const expandSvgTex = useExpandSvgTexture();
 
   const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
   const tocRefs = useRef([]);
@@ -208,7 +214,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         // LONDON CLUSTER: SVG PLANE IS HIT AREA, 3D SPRITE APPEARS ON HOVER (handled separately)
-        if (obj.isLondonCluster) {
+        if (obj.isLondonCluster && expandSvgTex) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 2.5 * 1.5;
           const svgPlaneSize = dotRadius * 1.35;
@@ -216,16 +222,13 @@ export default function GlobeSection({ onMarkerClick }) {
           const svgMat = new THREE.MeshBasicMaterial({
             transparent: true,
             depthTest: false,
-            color: 0xffffff
+            color: 0xffffff,
+            map: expandSvgTex
           });
           const svgPlane = new THREE.Mesh(svgGeom, svgMat);
           svgPlane.position.set(0, 0, 0);
           svgPlane.renderOrder = 10;
           svgPlane.name = "london-expand-plane";
-          getExpandTexture().then((tex) => {
-            svgMat.map = tex;
-            svgMat.needsUpdate = true;
-          });
           group.add(svgPlane);
 
           // Hit area (buffered plane, but not huge)
@@ -396,7 +399,7 @@ export default function GlobeSection({ onMarkerClick }) {
       };
     }
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
-  }, [londonExpanded, pinReady, redAssignments]);
+  }, [londonExpanded, pinReady, redAssignments, expandSvgTex]);
 
   // --- 3D Expand Sprite for cluster (shows only when hovered) ---
   function getExpandSprite() {
@@ -485,6 +488,21 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("resize", updateTocPositions);
   }, [tocList.length]);
 
+  // Collapse London cluster when clicking anywhere not on a pin or wheel
+  useEffect(() => {
+    if (!londonExpanded) return;
+
+    function handleWindowClick(e) {
+      // This is a global handler—if a pin or wheel is clicked, event will be stopped by their own handler
+      setLondonExpanded(false);
+      setHovered(null);
+    }
+
+    // Attach listener with capture so it runs before react-globe.gl's own bubbling
+    window.addEventListener("mousedown", handleWindowClick, true);
+    return () => window.removeEventListener("mousedown", handleWindowClick, true);
+  }, [londonExpanded]);
+
   const handleObjectClick = (obj) => {
     if (obj && obj.markerId === "london-cluster") {
       setLondonExpanded(true);
@@ -504,6 +522,7 @@ export default function GlobeSection({ onMarkerClick }) {
       setLondonExpanded(false);
       setHovered(null);
     }
+    // If obj is undefined and cluster is open, will be handled by window click handler
   };
 
   const handleObjectHover = (obj) => {
