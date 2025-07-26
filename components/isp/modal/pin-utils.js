@@ -70,6 +70,24 @@ export function orientPin(pin, markerVec) {
 export function positionPin(pin, offset = 0) {
   pin.position.set(0, 0, offset);
 }
+export function svgStringToTexture(svgString, size = 128) {
+  const svg = encodeURIComponent(svgString);
+  const img = new window.Image();
+  img.src = "data:image/svg+xml;utf8," + svgString;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  return new Promise((resolve) => {
+    img.onload = () => {
+      ctx.clearRect(0, 0, size, size);
+      ctx.drawImage(img, 0, 0, size, size);
+      const texture = new THREE.Texture(canvas);
+      texture.needsUpdate = true;
+      resolve(texture);
+    };
+  });
+}
 
 export function getPinModel() {
   return pinModel;
