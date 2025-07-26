@@ -108,7 +108,7 @@ export default function GlobeSection({ onMarkerClick }) {
     loadPinModel().then(() => {
       if (mounted) setPinReady(true);
     });
-    getExpandTexture(); // Preload SVG texture
+    getExpandTexture();
     return () => { mounted = false; };
   }, []);
 
@@ -217,11 +217,11 @@ export default function GlobeSection({ onMarkerClick }) {
     if (!londonExpanded) {
       objectsData = [
         {
-          ...customClusterCoords, // <-- moved northwest
+          ...customClusterCoords,
           markerId: "london-cluster",
           isLondonCluster: true,
           altitude: DOT_ALTITUDE,
-          label: "London Cluster",
+          label: "EXPAND"
         },
         ...nonLondonMarkers.map((m, idx) => {
           const globalIdx = globeLocations.findIndex(mm => mm.name === m.name);
@@ -234,17 +234,17 @@ export default function GlobeSection({ onMarkerClick }) {
             showDotAndPin: idx === comparisonMarkerIdx,
             idx,
             altitude: DOT_ALTITUDE,
-            color: redAssignments[globalIdx]
+            color: redAssignments[globalIdx],
+            label: m.name
           }
         }),
       ];
 
       customPointObject = (obj) => {
-        // LONDON CLUSTER: ONLY THE SVG PLANE, NO WHITE CIRCLE
+        // LONDON CLUSTER: SVG PLANE, NO WHITE CIRCLE, BIGGER HIT AREA
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 2.5 * 1.5;
-          // SVG expand icon as plane (NO white disk)
           const svgPlaneSize = dotRadius * 1.35;
           const svgGeom = new THREE.PlaneGeometry(svgPlaneSize * 2, svgPlaneSize * 2);
           const svgMat = new THREE.MeshBasicMaterial({
@@ -262,8 +262,8 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           group.add(svgPlane);
 
-          // Large transparent hit area for click/hover
-          const hitGeom = new THREE.CircleGeometry(dotRadius * 2.1, 24);
+          // Large transparent hit area for click/hover (make bigger)
+          const hitGeom = new THREE.CircleGeometry(svgPlaneSize * 1.1, 32);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -272,16 +272,16 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           const hitCircle = new THREE.Mesh(hitGeom, hitMat);
           hitCircle.position.set(0, 0, 0.01);
-          hitCircle.userData = { markerId: "london-cluster" };
+          hitCircle.userData = { markerId: "london-cluster", label: "EXPAND" };
           hitCircle.name = "london-cluster-hit";
           group.add(hitCircle);
 
-          group.userData = { markerId: "london-cluster" };
+          group.userData = { markerId: "london-cluster", label: "EXPAND" };
           group.name = "london-cluster-group";
           return group;
         }
 
-        // ALL OTHER PINS: with large transparent hit circle
+        // ALL OTHER PINS: large transparent hit circle matches visible pin
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = 9 * 1.5;
@@ -303,8 +303,8 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Add large transparent circle for easier click
-          const hitGeom = new THREE.CircleGeometry(0.14 * 1.5, 16);
+          // Transparent hit circle matches pin size
+          const hitGeom = new THREE.CircleGeometry(scale * 0.18, 24);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -313,21 +313,21 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           const hitCircle = new THREE.Mesh(hitGeom, hitMat);
           hitCircle.position.set(0, 0, scale * 0.6);
-          hitCircle.userData = { markerId: obj.markerId };
+          hitCircle.userData = { markerId: obj.markerId, label: obj.label };
           hitCircle.name = "pin-hit-area";
           group.add(hitCircle);
 
-          group.userData = { markerId: obj.markerId };
+          group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
 
         return null;
       };
     } else {
-      // LONDON EXPANDED LOGIC (pins inside cluster quarter of the big pin size)
+      // LONDON EXPANDED LOGIC (pins inside cluster = half of big size)
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
-      const pinScale = 9 * 1.5 * 0.5; // half of new big size
+      const pinScale = 9 * 1.5 * 0.5; // half of big pin size
 
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
@@ -385,7 +385,22 @@ export default function GlobeSection({ onMarkerClick }) {
 
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
-          group.userData = { markerId: obj.markerId };
+
+          // Transparent hit circle matches pin size
+          const hitGeom = new THREE.CircleGeometry(scale * 0.18, 24);
+          const hitMat = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.01,
+            depthWrite: false,
+          });
+          const hitCircle = new THREE.Mesh(hitGeom, hitMat);
+          hitCircle.position.set(0, 0, scale * 0.6);
+          hitCircle.userData = { markerId: obj.markerId, label: obj.label };
+          hitCircle.name = "pin-hit-area";
+          group.add(hitCircle);
+
+          group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
         return null;
@@ -518,13 +533,26 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
-  const showLondonExpandOverlay =
-    hovered &&
-    hovered.markerId === "london-cluster" &&
-    !londonExpanded &&
-    londonClusterScreenPos;
+  // Overlay for all pins and London cluster
+  const showPinOverlay = hovered && (hovered.label || hovered.name) && markerScreenPositions && markerScreenPositions.length > 0;
+  let overlayText = hovered?.label || hovered?.name;
+  // For cluster overlay, always say EXPAND
+  if (hovered && hovered.markerId === "london-cluster") overlayText = "EXPAND";
 
-  const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
+  // Get overlay position: for cluster use cluster pos, else for pins use marker positions
+  let overlayPos = null;
+  if (hovered && hovered.markerId === "london-cluster" && londonClusterScreenPos) {
+    overlayPos = { x: londonClusterScreenPos.x, y: londonClusterScreenPos.y - 32 };
+  } else if (
+    hovered &&
+    typeof hovered.idx === "number" &&
+    markerScreenPositions[hovered.idx]
+  ) {
+    overlayPos = {
+      x: markerScreenPositions[hovered.idx].x,
+      y: markerScreenPositions[hovered.idx].y + 18,
+    };
+  }
 
   const arrowsSvg = (
     <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: "block" }}>
@@ -633,41 +661,19 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
         />
-        {showLondonExpandOverlay && (
+        {/* Overlay for all pins and London cluster */}
+        {showPinOverlay && overlayPos && (
           <div
             style={{
               position: "fixed",
-              left: londonClusterScreenPos?.x ?? 0,
-              top: (londonClusterScreenPos?.y ?? 0) - 32,
+              left: overlayPos.x ?? 0,
+              top: overlayPos.y ?? 0,
               zIndex: 9999,
               pointerEvents: "none",
-              background: "none",
-              color: "#b32c2c",
-              border: "none",
+              background: hovered.markerId === "london-cluster" ? "none" : "rgba(0,0,0,0.91)",
+              color: hovered.markerId === "london-cluster" ? "#b32c2c" : "#fff",
               borderRadius: 4,
-              padding: "0",
-              fontWeight: 700,
-              fontSize: 18,
-              transform: "translate(-50%, 0)",
-              whiteSpace: "nowrap",
-            }}
-            aria-label="Expand London Cluster"
-          >
-            {arrowsSvg}
-          </div>
-        )}
-        {showPinOverlay && (
-          <div
-            style={{
-              position: "fixed",
-              left: markerScreenPositions[hovered.idx]?.x ?? 0,
-              top: (markerScreenPositions[hovered.idx]?.y ?? 0) + 18,
-              zIndex: 999,
-              pointerEvents: "none",
-              background: "rgba(0,0,0,0.91)",
-              color: "#fff",
-              borderRadius: 4,
-              padding: "8px 18px",
+              padding: hovered.markerId === "london-cluster" ? "0" : "8px 18px",
               fontFamily: "coolvetica, sans-serif",
               fontWeight: 700,
               fontSize: 18,
@@ -684,7 +690,8 @@ export default function GlobeSection({ onMarkerClick }) {
               whiteSpace: "nowrap",
             }}
           >
-            {hovered.name}
+            {hovered.markerId === "london-cluster" ? arrowsSvg : null}
+            {overlayText}
           </div>
         )}
       </div>
@@ -746,7 +753,7 @@ export default function GlobeSection({ onMarkerClick }) {
                   marginLeft: 0,
                 }}
                 onClick={() => handleTOCClick(item.marker)}
-                onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx })}
+                onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
                 onMouseLeave={e => setHovered(null)}
                 tabIndex={0}
                 aria-label={`Jump to ${item.name}`}
