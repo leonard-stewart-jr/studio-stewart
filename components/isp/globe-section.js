@@ -607,29 +607,29 @@ export default function GlobeSection({ onMarkerClick }) {
         {showPinOverlay && (
           <div
             style={{
-  position: "fixed",
-  left: markerScreenPositions[hovered.idx]?.x ?? 0,
-  top: (markerScreenPositions[hovered.idx]?.y ?? 0) + 18,
-  zIndex: 999,
-  pointerEvents: "none",
-  background: "rgba(0,0,0,0.91)",
-  color: "#fff",
-  borderRadius: 4,
-  padding: "8px 18px",
-  fontFamily: "coolvetica, sans-serif",
-  fontWeight: 700,
-  fontSize: 18,
-  letterSpacing: ".03em",
-  textTransform: "uppercase",
-  opacity: 1,
-  transition: "opacity 0.15s",
-  transform: "translate(-50%, 0)",
-  lineHeight: 1.17,
-  textAlign: "center",
-  userSelect: "none",
-  boxShadow: "none",
-  border: "none",
-  whiteSpace: "nowrap",
+            position: "fixed",
+            left: markerScreenPositions[hovered.idx]?.x ?? 0,
+            top: (markerScreenPositions[hovered.idx]?.y ?? 0) + 18,
+            zIndex: 999,
+            pointerEvents: "none",
+            background: "rgba(0,0,0,0.91)",
+            color: "#fff",
+            borderRadius: 4,
+            padding: "8px 18px",
+            fontFamily: "coolvetica, sans-serif",
+            fontWeight: 700,
+            fontSize: 18,
+            letterSpacing: ".03em",
+            textTransform: "uppercase",
+            opacity: 1,
+            transition: "opacity 0.15s",
+            transform: "translate(-50%, 0)",
+            lineHeight: 1.17,
+            textAlign: "center",
+            userSelect: "none",
+            boxShadow: "none",
+            border: "none",
+            whiteSpace: "nowrap",
             }}
           >
             {hovered.name}
@@ -675,7 +675,7 @@ export default function GlobeSection({ onMarkerClick }) {
                   fontWeight: 600,
                   fontSize: 16,
                   cursor: "pointer",
-                  font-family: "coolvetica", sans-serif,
+                  fontFamily: "coolvetica", sans-serif",
                   display: "flex",
                   alignItems: "flex-start",
                   gap: 8,
@@ -700,7 +700,7 @@ export default function GlobeSection({ onMarkerClick }) {
                 title={item.name}
               >
                 <span style={{
-                  font-family: "coolvetica", sans-serif,
+                  fontFamily: "coolvetica", sans-serif",
                   fontWeight: 700,
                   fontSize: 16,
                   minWidth: 18,
@@ -712,7 +712,7 @@ export default function GlobeSection({ onMarkerClick }) {
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
-                  font-family: "coolvetica", sans-serif,
+                  fontFamily: "coolvetica", sans-serif",
                   fontWeight: 600,
                   fontSize: 16,
                   letterSpacing: ".06em",
@@ -728,7 +728,7 @@ export default function GlobeSection({ onMarkerClick }) {
               {item.year && (
                 <div
                   style={{
-                    font-family: "coolvetica", sans-serif,
+                    fontFamily: "coolvetica", sans-serif",
                     fontWeight: 400,
                     fontSize: 12,
                     color: "#b1b1ae",
