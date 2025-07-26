@@ -8,56 +8,26 @@ import {
   latLngAltToVec3,
   getPinModel,
   positionPin,
+  bufferedBoundingGeometry,
+  svgStringToTexture,
   ANALOGOUS_REDS,
   getAnalogousRedAssignments
-} from "./modal/pin-utils";
+} from "./pin-utils";
 
-// SVG expand icon as a string for the cluster marker
+// --- CONSTANTS AND CONFIGURATION ---
 const LONDON_EXPAND_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polyline points="160 48 208 48 208 96" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="152" y1="104" x2="208" y2="48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="96 208 48 208 48 160" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="104" y1="152" x2="48" y2="208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="208 160 208 208 160 208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="152" y1="152" x2="208" y2="208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="48 96 48 48 96 48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="104" y1="104" x2="48" y2="48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>`;
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const LONDON_CLUSTER_GROUP = "london";
-const LONDON_WHEEL_RADIUS = 1.1;
-const LONDON_WHEEL_ALTITUDE = 0.018;
-
+const CLUSTER_DOT_SIZE = 0.7 * 2.2;
+const LONDON_CLUSTER_OFFSET = { lat: 1.1, lng: -2.5 };
+const NORMAL_PIN_SCALE = 9 * 1.5;
+const HITBOX_BUFFER = 1.07;
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
-const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 
-// Offset for moving London cluster northwest (tweak as needed)
-const LONDON_CLUSTER_OFFSET = { lat: 1.1, lng: -2.5 };
-
-// Pin scales
-const NORMAL_PIN_SCALE = 9 * 1.5;
-const CLUSTER_PIN_SCALE = NORMAL_PIN_SCALE * 0.5; // half as large as normal pin
-const HITBOX_BUFFER = 1.07; // 7% buffer
-
-function svgStringToTexture(svgString, size = 256) {
-  return new Promise((resolve) => {
-    const img = new window.Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, size, size);
-      ctx.drawImage(img, 0, 0, size, size);
-      const tex = new THREE.Texture(canvas);
-      tex.needsUpdate = true;
-      resolve(tex);
-    };
-    img.src = "data:image/svg+xml;utf8," + encodeURIComponent(svgString);
-  });
-}
-let expandSvgTexture = null;
-async function getExpandTexture() {
-  if (!expandSvgTexture) {
-    expandSvgTexture = await svgStringToTexture(LONDON_EXPAND_SVG, 256);
-  }
-  return expandSvgTexture;
-}
-
+// --- UTILS FOR GLOBE ---
 function getLondonMarkers() {
   return globeLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
 }
@@ -99,19 +69,13 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Helper to create a buffered hitbox geometry using the pin mesh's bounding box
-function bufferedBoundingGeometry(mesh, buffer = 1.07) {
-  // Compute bounding box
-  const box = new THREE.Box3().setFromObject(mesh);
-  const size = new THREE.Vector3();
-  box.getSize(size);
-  // Center
-  const center = new THREE.Vector3();
-  box.getCenter(center);
-  // Buffered box geometry
-  const geom = new THREE.BoxGeometry(size.x * buffer, size.y * buffer, size.z * buffer);
-  geom.translate(center.x, center.y, center.z);
-  return geom;
+// SVG TEXTURE CACHE FOR CLUSTER
+let expandSvgTexture = null;
+async function getExpandTexture() {
+  if (!expandSvgTexture) {
+    expandSvgTexture = await svgStringToTexture(LONDON_EXPAND_SVG, 256);
+  }
+  return expandSvgTexture;
 }
 
 export default function GlobeSection({ onMarkerClick }) {
@@ -132,10 +96,9 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // --- "EXPAND" SPRITE STATE ---
+  // --- "EXPAND" 3D SPRITE STATE ---
   const [expandLabelMat, setExpandLabelMat] = useState(null);
   useEffect(() => {
-    // Restore expandLabelMat logic
     function makeExpandLabelMaterial() {
       const size = 256;
       const canvas = document.createElement("canvas");
@@ -174,12 +137,6 @@ export default function GlobeSection({ onMarkerClick }) {
   const tocRefs = useRef([]);
   const [tocScreenPositions, setTocScreenPositions] = useState([]);
   const [svgDims, setSvgDims] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
-      globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
-    }
-  }, []);
 
   // --- ANALOGOUS RED PALETTE RANDOM ASSIGNMENT ---
   const redAssignments = useMemo(
@@ -290,7 +247,7 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
-        // ALL OTHER PINS: use current with buffer
+        // ALL OTHER PINS: use pin-utils helpers for hitbox etc.
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = NORMAL_PIN_SCALE;
@@ -310,7 +267,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Buffered hitbox (current code)
+          // Buffered hitbox (using helper)
           const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xff0000,
@@ -351,7 +308,7 @@ export default function GlobeSection({ onMarkerClick }) {
           actualLng: marker.lon,
           label: marker.name,
           isStandardPin: true,
-          altitude: 0.008,
+          altitude: 0, // CLUSTER PINS TOUCH GLOBE
           pinScale,
           color: redAssignments[globalIdx]
         };
@@ -361,7 +318,7 @@ export default function GlobeSection({ onMarkerClick }) {
         start: {
           lat: londonCenter.lat,
           lng: londonCenter.lng,
-          alt: LONDON_WHEEL_ALTITUDE,
+          alt: 0.018, // center altitude kept for line start
         },
         end: {
           lat: obj.actualLat,
@@ -384,7 +341,6 @@ export default function GlobeSection({ onMarkerClick }) {
             }
           });
           pin.scale.set(scale, scale, scale);
-
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
@@ -392,7 +348,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Buffered hitbox (current code)
+          // Buffered hitbox (using helper)
           const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xff0000,
@@ -411,7 +367,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return new THREE.Object3D();
       };
 
-      // Use pasted customLineObject (dashed lines)
+      // Custom dashed lines (for expanded London wheel)
       customLineObject = (lineObj) => {
         const start = latLngAltToVec3(
           lineObj.start.lat,
