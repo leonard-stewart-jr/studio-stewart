@@ -96,16 +96,12 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
-// Helper to create a buffered hitbox geometry using the pin mesh's bounding box
 function bufferedBoundingGeometry(mesh, buffer = 1.07) {
-  // Compute bounding box
   const box = new THREE.Box3().setFromObject(mesh);
   const size = new THREE.Vector3();
   box.getSize(size);
-  // Center
   const center = new THREE.Vector3();
   box.getCenter(center);
-  // Buffered box geometry
   const geom = new THREE.BoxGeometry(size.x * buffer, size.y * buffer, size.z * buffer);
   geom.translate(center.x, center.y, center.z);
   return geom;
@@ -305,7 +301,7 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        // Always return a valid THREE.Object3D
+        // Only return a dummy object for truly unknown objects
         return new THREE.Object3D();
       };
     } else {
@@ -385,7 +381,7 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        // Always return a valid THREE.Object3D
+        // Only return a dummy object for truly unknown objects
         return new THREE.Object3D();
       };
     }
@@ -463,6 +459,7 @@ export default function GlobeSection({ onMarkerClick }) {
 
   const expandSprite = getExpandSprite();
 
+  // --- LAYOUT: TOC BESIDE GLOBE ---
   return (
     <section
       className="isp-globe-section"
@@ -485,212 +482,233 @@ export default function GlobeSection({ onMarkerClick }) {
       }}
     >
       <div
-        ref={globeContainerRef}
         style={{
           width: "100%",
-          maxWidth: 1100,
+          maxWidth: 1360,
           margin: "0 auto",
           display: "flex",
+          flexDirection: "row",
           justifyContent: "center",
-          alignItems: "center",
-          position: "relative"
-        }}
-      >
-        <Globe
-          ref={globeEl}
-          globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
-          backgroundColor="rgba(0,0,0,0)"
-          width={950}
-          height={700}
-          pointsData={[]} 
-          pointLat="lat"
-          pointLng="lng"
-          pointColor="color"
-          pointRadius="size"
-          pointAltitude="altitude"
-          pointLabel="label"
-          onPointHover={handleObjectHover}
-          onPointClick={onMarkerClick}
-          objectsData={objectsData}
-          objectLat="lat"
-          objectLng="lng"
-          objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
-          objectThreeObject={customPointObject}
-          onObjectClick={handleObjectClick}
-          onObjectHover={handleObjectHover}
-          linesData={londonExpanded ? linesData : []}
-          lineStartLat={(l) => l.start.lat}
-          lineStartLng={(l) => l.start.lng}
-          lineStartAltitude={(l) => l.start.alt}
-          lineEndLat={(l) => l.end.lat}
-          lineEndLng={(l) => l.end.lng}
-          lineEndAltitude={(l) => l.end.alt}
-          lineThreeObject={londonExpanded ? customLineObject : undefined}
-          extraRenderers={
-            expandSprite
-              ? [
-                  (scene) => {
-                    if (!scene.getObjectByName("expand-sprite")) {
-                      scene.add(expandSprite);
-                    }
-                  },
-                ]
-              : [
-                  (scene) => {
-                    const obj = scene.getObjectByName("expand-sprite");
-                    if (obj) scene.remove(obj);
-                  },
-                ]
-          }
-        />
-        {showPinOverlay && overlayPos && (
-          <div
-            style={{
-              position: "fixed",
-              left: overlayPos.x ?? 0,
-              top: overlayPos.y ?? 0,
-              zIndex: 9999,
-              pointerEvents: "none",
-              background: "rgba(0,0,0,0.91)",
-              color: "#fff",
-              borderRadius: 4,
-              padding: "8px 18px",
-              fontFamily: "coolvetica, sans-serif",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: ".03em",
-              textTransform: "uppercase",
-              opacity: 1,
-              transition: "opacity 0.15s",
-              transform: "translate(-50%, 0)",
-              lineHeight: 1.17,
-              textAlign: "center",
-              userSelect: "none",
-              boxShadow: "none",
-              border: "none",
-              whiteSpace: "nowrap"
-            }}
-          >
-            {hovered.label || hovered.name}
-          </div>
-        )}
-      </div>
-      <nav
-        aria-label="Table of Contents"
-        style={{
-          marginLeft: isMobile ? 0 : 18,
-          marginRight: 0,
-          marginTop: isMobile ? 12 : 0,
-          minWidth: "fit-content",
-          maxWidth: isMobile ? "100%" : 315,
-          width: "fit-content",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: isMobile ? "center" : "flex-start",
-          justifyContent: isMobile ? "flex-start" : "center",
-          background: "none",
-          boxShadow: "none",
+          alignItems: "flex-start",
           position: "relative",
-          zIndex: 100,
-          left: isMobile ? 0 : 0,
+          gap: isMobile ? 0 : 24
         }}
       >
-        <ol style={{
-          listStyle: "none",
-          margin: 0,
-          padding: 0,
-          display: "flex",
-          flexDirection: "column",
-          gap: isMobile ? 7 : 6,
-          width: "100%",
-        }}>
-          {tocList.map((item, idx) => (
-            <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
-              <button
-                ref={el => tocRefs.current[idx] = el}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: item.color,
-                  fontWeight: 600,
-                  fontSize: 16,
-                  cursor: "pointer",
-                  fontFamily: "coolvetica, sans-serif",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 8,
-                  padding: "1.5px 0 1.5px 0",
-                  borderRadius: 4,
-                  width: "fit-content",
-                  textAlign: "left",
-                  lineHeight: 1.17,
-                  textTransform: "uppercase",
-                  letterSpacing: ".06em",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  transition: "color 0.14s",
-                  marginLeft: 0,
-                }}
-                onClick={() => onMarkerClick(item.marker)}
-                onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
-                onMouseLeave={e => setHovered(null)}
-                tabIndex={0}
-                aria-label={`Jump to ${item.name}`}
-                title={item.name}
-              >
-                <span style={{
-                  fontFamily: "coolvetica, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 16,
-                  minWidth: 18,
-                  letterSpacing: ".03em",
-                  marginRight: 2,
-                  color: item.color,
-                  opacity: 0.93,
-                  flexShrink: 0,
-                }}>{item.roman}.</span>
-                <span style={{
-                  flex: 1,
-                  fontFamily: "coolvetica, sans-serif",
-                  fontWeight: 600,
-                  fontSize: 16,
-                  letterSpacing: ".06em",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  marginRight: 0,
-                  marginBottom: 0,
-                }}>
-                  {item.name}
-                </span>
-              </button>
-              {item.year && (
-                <div
+        {/* TOC SIDE NAV */}
+        <nav
+          aria-label="Table of Contents"
+          style={{
+            marginLeft: 0,
+            marginRight: isMobile ? 0 : 12,
+            marginTop: 0,
+            minWidth: "fit-content",
+            maxWidth: isMobile ? "100%" : 315,
+            width: isMobile ? "100%" : "fit-content",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: isMobile ? "center" : "flex-start",
+            justifyContent: isMobile ? "flex-start" : "center",
+            background: "none",
+            boxShadow: "none",
+            position: "relative",
+            zIndex: 100,
+            left: 0
+          }}
+        >
+          <ol style={{
+            listStyle: "none",
+            margin: 0,
+            padding: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: isMobile ? 7 : 6,
+            width: "100%",
+          }}>
+            {tocList.map((item, idx) => (
+              <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
+                <button
+                  ref={el => tocRefs.current[idx] = el}
                   style={{
+                    background: "none",
+                    border: "none",
+                    color: item.color,
+                    fontWeight: 600,
+                    fontSize: 16,
+                    cursor: "pointer",
                     fontFamily: "coolvetica, sans-serif",
-                    fontWeight: 400,
-                    fontSize: 12,
-                    color: "#b1b1ae",
-                    letterSpacing: ".03em",
-                    marginLeft: 27,
-                    lineHeight: 1.18,
-                    marginTop: 0,
-                    marginBottom: 1,
-                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 8,
+                    padding: "1.5px 0 1.5px 0",
+                    borderRadius: 4,
+                    width: "fit-content",
+                    textAlign: "left",
+                    lineHeight: 1.17,
+                    textTransform: "uppercase",
+                    letterSpacing: ".06em",
                     overflow: "hidden",
+                    whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
-                    textTransform: "none",
-                    maxWidth: 235,
+                    transition: "color 0.14s",
+                    marginLeft: 0,
                   }}
+                  onClick={() => onMarkerClick(item.marker)}
+                  onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
+                  onMouseLeave={e => setHovered(null)}
+                  tabIndex={0}
+                  aria-label={`Jump to ${item.name}`}
+                  title={item.name}
                 >
-                  {item.year}
-                </div>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+                  <span style={{
+                    fontFamily: "coolvetica, sans-serif",
+                    fontWeight: 700,
+                    fontSize: 16,
+                    minWidth: 18,
+                    letterSpacing: ".03em",
+                    marginRight: 2,
+                    color: item.color,
+                    opacity: 0.93,
+                    flexShrink: 0,
+                  }}>{item.roman}.</span>
+                  <span style={{
+                    flex: 1,
+                    fontFamily: "coolvetica, sans-serif",
+                    fontWeight: 600,
+                    fontSize: 16,
+                    letterSpacing: ".06em",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    marginRight: 0,
+                    marginBottom: 0,
+                  }}>
+                    {item.name}
+                  </span>
+                </button>
+                {item.year && (
+                  <div
+                    style={{
+                      fontFamily: "coolvetica, sans-serif",
+                      fontWeight: 400,
+                      fontSize: 12,
+                      color: "#b1b1ae",
+                      letterSpacing: ".03em",
+                      marginLeft: 27,
+                      lineHeight: 1.18,
+                      marginTop: 0,
+                      marginBottom: 1,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      textTransform: "none",
+                      maxWidth: 235,
+                    }}
+                  >
+                    {item.year}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        {/* GLOBE */}
+        <div
+          ref={globeContainerRef}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            width: isMobile ? "100%" : 950,
+            maxWidth: 950,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative"
+          }}
+        >
+          {pinReady &&
+            <Globe
+              ref={globeEl}
+              globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
+              backgroundColor="rgba(0,0,0,0)"
+              width={950}
+              height={700}
+              pointsData={[]} 
+              pointLat="lat"
+              pointLng="lng"
+              pointColor="color"
+              pointRadius="size"
+              pointAltitude="altitude"
+              pointLabel="label"
+              onPointHover={handleObjectHover}
+              onPointClick={onMarkerClick}
+              objectsData={objectsData}
+              objectLat="lat"
+              objectLng="lng"
+              objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
+              objectThreeObject={customPointObject}
+              onObjectClick={handleObjectClick}
+              onObjectHover={handleObjectHover}
+              linesData={londonExpanded ? linesData : []}
+              lineStartLat={(l) => l.start.lat}
+              lineStartLng={(l) => l.start.lng}
+              lineStartAltitude={(l) => l.start.alt}
+              lineEndLat={(l) => l.end.lat}
+              lineEndLng={(l) => l.end.lng}
+              lineEndAltitude={(l) => l.end.alt}
+              lineThreeObject={londonExpanded ? customLineObject : undefined}
+              extraRenderers={
+                expandSprite
+                  ? [
+                      (scene) => {
+                        if (!scene.getObjectByName("expand-sprite")) {
+                          scene.add(expandSprite);
+                        }
+                      },
+                    ]
+                  : [
+                      (scene) => {
+                        const obj = scene.getObjectByName("expand-sprite");
+                        if (obj) scene.remove(obj);
+                      },
+                    ]
+              }
+            />
+          }
+          {showPinOverlay && overlayPos && (
+            <div
+              style={{
+                position: "fixed",
+                left: overlayPos.x ?? 0,
+                top: overlayPos.y ?? 0,
+                zIndex: 9999,
+                pointerEvents: "none",
+                background: "rgba(0,0,0,0.91)",
+                color: "#fff",
+                borderRadius: 4,
+                padding: "8px 18px",
+                fontFamily: "coolvetica, sans-serif",
+                fontWeight: 700,
+                fontSize: 18,
+                letterSpacing: ".03em",
+                textTransform: "uppercase",
+                opacity: 1,
+                transition: "opacity 0.15s",
+                transform: "translate(-50%, 0)",
+                lineHeight: 1.17,
+                textAlign: "center",
+                userSelect: "none",
+                boxShadow: "none",
+                border: "none",
+                whiteSpace: "nowrap"
+              }}
+            >
+              {hovered.label || hovered.name}
+            </div>
+          )}
+        </div>
+      </div>
+      {/* SVG lines -- if needed, can be positioned absolutely */}
       <div style={{
         position: 'fixed',
         left: 0,
