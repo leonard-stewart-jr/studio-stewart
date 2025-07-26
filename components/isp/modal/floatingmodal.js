@@ -1,6 +1,49 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
+// SVGs for cursors (half-size, color=currentColor)
+const leftArrowSVG = encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+  <polyline points="16,4 4,12 16,20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`);
+const rightArrowSVG = encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+  <polyline points="8,4 20,12 8,20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`);
+const handSVG = encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="none"/>
+  <path d="M64,216,34.68,166a20,20,0,0,1,34.64-20L88,176V68a20,20,0,0,1,40,0v56a20,20,0,0,1,40,0v16a20,20,0,0,1,40,0v36c0,24-8,40-8,40"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="16"
+  />
+  <line x1="176" y1="56" x2="248" y2="56"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="16"
+  />
+  <polyline points="208 24 176 56 208 88"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="16"
+  />
+</svg>
+`);
+
+// Data URIs for cursor CSS (currentColor works in most modern browsers)
+const leftArrowCursor = `url("data:image/svg+xml,${leftArrowSVG}") 2 9, pointer`;
+const rightArrowCursor = `url("data:image/svg+xml,${rightArrowSVG}") 16 9, pointer`;
+const handCursor = `url("data:image/svg+xml,${handSVG}") 9 9, pointer`;
+
 export default function FloatingModal({
   open,
   onClose,
@@ -13,7 +56,6 @@ export default function FloatingModal({
 
   // --- BUFFER LOGIC ---
   const bufferWidth = 200;
-  const totalScrollableWidth = bufferWidth + width + bufferWidth;
   const visibleWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
   const scrollAreaWidth = visibleWidth;
 
@@ -25,8 +67,8 @@ export default function FloatingModal({
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
-  // Arrow hover logic by vertical thirds of viewport
-  const [hoverSide, setHoverSide] = useState(null); // "left", "right", or null
+  // Cursor logic by vertical thirds of viewport
+  const [cursorType, setCursorType] = useState("hand"); // "left", "right", or "hand"
 
   // Ensure scroll starts at 0 on open
   useEffect(() => {
@@ -70,7 +112,7 @@ export default function FloatingModal({
     };
   }, [isDragging]);
 
-  // Touch drag for mobile
+  // Touch drag for mobile (unchanged)
   useEffect(() => {
     let startX = 0, startScroll = 0, dragging = false;
     function onTouchStart(e) {
@@ -141,16 +183,18 @@ export default function FloatingModal({
     };
   }, []);
 
-  // Arrow "side" logic by vertical thirds of viewport
+  // Cursor logic: set on mouse move over overlay
   function handleMouseMove(e) {
+    if (isDragging) return; // cursor: grabbing is set by JS while dragging
     const vw = window.innerWidth;
     const x = e.clientX;
-    if (x < vw / 3) setHoverSide("left");
-    else if (x > (2 * vw) / 3) setHoverSide("right");
-    else setHoverSide(null);
+    if (x < vw / 3) setCursorType("left");
+    else if (x > (2 * vw) / 3) setCursorType("right");
+    else setCursorType("hand");
   }
   function handleMouseLeave() {
-    setHoverSide(null);
+    if (isDragging) return;
+    setCursorType("hand");
   }
 
   // Double-click-to-shift logic (now 1000px)
@@ -166,6 +210,18 @@ export default function FloatingModal({
       scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
     }
     // If in the center third, do nothing on double click
+  }
+
+  // Pick which cursor to use for overlay
+  let overlayCursor = "grab";
+  if (isDragging) {
+    overlayCursor = "grabbing";
+  } else if (cursorType === "left") {
+    overlayCursor = leftArrowCursor;
+  } else if (cursorType === "right") {
+    overlayCursor = rightArrowCursor;
+  } else {
+    overlayCursor = handCursor;
   }
 
   if (!open) return null;
@@ -190,13 +246,6 @@ export default function FloatingModal({
             overflowY: "hidden",
             position: "relative",
             boxSizing: "border-box",
-            cursor: isDragging
-              ? "grabbing"
-              : hoverSide === "left"
-              ? "w-resize"
-              : hoverSide === "right"
-              ? "e-resize"
-              : "grab",
             background: "transparent",
             pointerEvents: "auto",
             scrollbarWidth: "none"
@@ -237,51 +286,18 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
-            {/* Transparent overlay for drag-to-scroll, double-click, and arrow hover */}
+            {/* Transparent overlay for drag-to-scroll, double-click, and cursor */}
             <DragOverlay
               style={{
                 pointerEvents: "auto",
-                cursor: isDragging
-                  ? "grabbing"
-                  : hoverSide === "left"
-                  ? "w-resize"
-                  : hoverSide === "right"
-                  ? "e-resize"
-                  : "grab"
+                cursor: overlayCursor,
+                color: "#e6dbb9"
               }}
               onMouseDown={handleDragStart}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               onDoubleClick={handleOverlayDoubleClick}
-            >
-              {!isDragging && (
-                <>
-                  {hoverSide === "left" && (
-                    <ArrowIcon
-                      direction="left"
-                      style={{
-                        left: 16,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                    />
-                  )}
-                  {hoverSide === "right" && (
-                    <ArrowIcon
-                      direction="right"
-                      style={{
-                        right: 16,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                    />
-                  )}
-                  {hoverSide === null && (
-                    <CenterIconSVG />
-                  )}
-                </>
-              )}
-            </DragOverlay>
+            />
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
           {/* RIGHT transparent buffer */}
@@ -294,78 +310,6 @@ export default function FloatingModal({
         `}</style>
       </ModalContentWrap>
     </Backdrop>
-  );
-}
-
-// Arrow icon SVG component (single chevron, left/right)
-function ArrowIcon({ direction = "left", style = {} }) {
-  return (
-    <svg
-      width={34}
-      height={34}
-      viewBox="0 0 24 24"
-      style={{
-        position: "absolute",
-        ...style,
-        pointerEvents: "none",
-        opacity: 0.92,
-        filter: "drop-shadow(0 1px 7px #e6dbb9cc)",
-      }}
-    >
-      <polyline
-        points={direction === "left" ? "16,4 4,12 16,20" : "8,4 20,12 8,20"}
-        fill="none"
-        stroke="#e6dbb9"
-        strokeWidth={3}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-// Middle center SVG (provided by user)
-function CenterIconSVG() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={38}
-      height={38}
-      viewBox="0 0 256 256"
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        pointerEvents: "none",
-        opacity: 0.96,
-        filter: "drop-shadow(0 1.5px 8px #e6dbb9cc)",
-        color: "#e6dbb9"
-      }}
-    >
-      <rect width="256" height="256" fill="none"/>
-      <path d="M64,216,34.68,166a20,20,0,0,1,34.64-20L88,176V68a20,20,0,0,1,40,0v56a20,20,0,0,1,40,0v16a20,20,0,0,1,40,0v36c0,24-8,40-8,40"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
-      <line x1="176" y1="56" x2="248" y2="56"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
-      <polyline points="208 24 176 56 208 88"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
-    </svg>
   );
 }
 
