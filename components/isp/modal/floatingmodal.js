@@ -1,36 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
-// SVGs as React components
-function ArrowLeftIcon(props) {
-  return (
-    <svg {...props} width="34" height="34" viewBox="0 0 256 256">
-      <rect width="256" height="256" fill="none"/>
-      <line x1="216" y1="128" x2="40" y2="128" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-      <polyline points="112 56 40 128 112 200" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-    </svg>
-  );
-}
-function ArrowRightIcon(props) {
-  return (
-    <svg {...props} width="34" height="34" viewBox="0 0 256 256">
-      <rect width="256" height="256" fill="none"/>
-      <line x1="40" y1="128" x2="216" y2="128" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-      <polyline points="144 56 216 128 144 200" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-    </svg>
-  );
-}
-function DragIcon(props) {
-  return (
-    <svg {...props} width="34" height="34" viewBox="0 0 256 256">
-      <rect width="256" height="256" fill="none"/>
-      <path d="M128,92a20,20,0,0,0-40,0v28" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-      <path d="M168,108V92a20,20,0,0,0-40,0v28" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-      <path d="M88,152V120H68a20,20,0,0,0-20,20v12a80,80,0,0,0,160,0V108a20,20,0,0,0-40,0v12" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"/>
-    </svg>
-  );
-}
-
 export default function FloatingModal({
   open,
   onClose,
@@ -41,18 +11,22 @@ export default function FloatingModal({
   const backdropRef = useRef(null);
   const scrollRef = useRef(null);
 
+  // --- BUFFER LOGIC ---
   const bufferWidth = 200;
+  const totalScrollableWidth = bufferWidth + width + bufferWidth;
   const visibleWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
   const scrollAreaWidth = visibleWidth;
 
+  // Track scroll position
   const [scrollX, setScrollX] = useState(0);
+
+  // Drag-to-scroll logic
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
-  const [hoverSide, setHoverSide] = useState(null); // "left", "right", or null
 
-  // For overlay pointer-events toggling
-  const [overlayPointerEvents, setOverlayPointerEvents] = useState("none");
+  // Arrow hover logic by vertical thirds of viewport
+  const [hoverSide, setHoverSide] = useState(null); // "left", "right", or null
 
   // Ensure scroll starts at 0 on open
   useEffect(() => {
@@ -62,11 +36,14 @@ export default function FloatingModal({
     }
   }, [open, width]);
 
+  // Update scrollX on scroll
   function onScroll() {
-    if (scrollRef.current) setScrollX(scrollRef.current.scrollLeft);
+    if (scrollRef.current) {
+      setScrollX(scrollRef.current.scrollLeft);
+    }
   }
 
-  // Drag-to-scroll logic for content
+  // Drag-to-scroll for content
   function handleDragStart(e) {
     if (e.button !== 0) return;
     setIsDragging(true);
@@ -93,7 +70,7 @@ export default function FloatingModal({
     };
   }, [isDragging]);
 
-  // Touch drag for mobile (unchanged)
+  // Touch drag for mobile
   useEffect(() => {
     let startX = 0, startScroll = 0, dragging = false;
     function onTouchStart(e) {
@@ -108,7 +85,9 @@ export default function FloatingModal({
       scrollRef.current.scrollLeft = startScroll - deltaX;
       e.preventDefault();
     }
-    function onTouchEnd() { dragging = false; }
+    function onTouchEnd() {
+      dragging = false;
+    }
     const node = scrollRef.current;
     if (node) {
       node.addEventListener("touchstart", onTouchStart, { passive: false });
@@ -124,7 +103,7 @@ export default function FloatingModal({
     };
   }, [scrollRef.current, width]);
 
-  // Wheel scroll (horizontal only)
+  // Wheel scroll: horizontal only
   function handleWheel(e) {
     if (!scrollRef.current) return;
     scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
@@ -146,11 +125,12 @@ export default function FloatingModal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, width, onClose]);
 
+  // Backdrop click closes
   function handleBackdropClick(e) {
     if (e.target === backdropRef.current) onClose();
   }
 
-  // Hide native scrollbar
+  // HIDE NATIVE SCROLLBAR
   useEffect(() => {
     if (!scrollRef.current) return;
     scrollRef.current.style.scrollbarWidth = "none";
@@ -161,37 +141,8 @@ export default function FloatingModal({
     };
   }, []);
 
-  // Arrow logic by vertical thirds
+  // Arrow "side" logic by vertical thirds of viewport
   function handleMouseMove(e) {
-    // 1. Detect for overlay pointer-events (using elementFromPoint)
-    const overlay = e.currentTarget;
-    // Get the iframe's bounding rect to adjust coordinates if needed
-    const iframe = overlay.parentNode.querySelector("iframe");
-    let isText = false;
-    if (iframe) {
-      // Get mouse position relative to viewport
-      const clientX = e.clientX;
-      const clientY = e.clientY;
-      // Get the element under the cursor inside the iframe
-      try {
-        const iframeRect = iframe.getBoundingClientRect();
-        const x = clientX - iframeRect.left;
-        const y = clientY - iframeRect.top;
-        if (x >= 0 && y >= 0 && x <= iframeRect.width && y <= iframeRect.height) {
-          const contentDoc = iframe.contentDocument || iframe.contentWindow.document;
-          const el = contentDoc.elementFromPoint(x, y);
-          if (el && (el.nodeName === "SPAN" || el.nodeName === "P" || el.nodeName === "DIV")) {
-            // Heuristic: check if the text is not empty and not just an image wrapper
-            if (el.textContent && el.textContent.trim().length > 0) isText = true;
-          }
-        }
-      } catch (err) {
-        // cross-origin: just ignore, fallback to always allow drag
-      }
-    }
-    setOverlayPointerEvents(isText ? "none" : "auto");
-
-    // 2. Arrow logic
     const vw = window.innerWidth;
     const x = e.clientX;
     if (x < vw / 3) setHoverSide("left");
@@ -200,10 +151,9 @@ export default function FloatingModal({
   }
   function handleMouseLeave() {
     setHoverSide(null);
-    setOverlayPointerEvents("none");
   }
 
-  // Double-click-to-shift logic (1kpx left/right)
+  // Double-click-to-shift logic (now 1000px)
   function handleOverlayDoubleClick(e) {
     if (isDragging) return;
     if (!scrollRef.current) return;
@@ -215,28 +165,10 @@ export default function FloatingModal({
     } else if (x > (2 * vw) / 3) {
       scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
     }
+    // If in the center third, do nothing on double click
   }
 
   if (!open) return null;
-
-  // Choose which icon to show
-  let OverlayIcon = null;
-  if (hoverSide === "left" && !isDragging) {
-    OverlayIcon = <ArrowLeftIcon style={{
-      position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
-      color: "#e6dbb9", opacity: 0.92, filter: "drop-shadow(0 1px 7px #e6dbb9cc)", pointerEvents: "none"
-    }}/>;
-  } else if (hoverSide === "right" && !isDragging) {
-    OverlayIcon = <ArrowRightIcon style={{
-      position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)",
-      color: "#e6dbb9", opacity: 0.92, filter: "drop-shadow(0 1px 7px #e6dbb9cc)", pointerEvents: "none"
-    }}/>;
-  } else if (!isDragging && hoverSide === null) {
-    OverlayIcon = <DragIcon style={{
-      position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)",
-      color: "#e6dbb9", opacity: 0.85, filter: "drop-shadow(0 1px 7px #e6dbb9cc)", pointerEvents: "none"
-    }}/>;
-  }
 
   return (
     <Backdrop
@@ -246,6 +178,7 @@ export default function FloatingModal({
       aria-modal="true"
     >
       <ModalContentWrap>
+        {/* Scroll area: full viewport width, no margin */}
         <HorizontalScrollArea
           ref={scrollRef}
           className="mesopotamia-scrollbar hide-native-scrollbar"
@@ -272,7 +205,7 @@ export default function FloatingModal({
           onWheel={handleWheel}
           onScroll={onScroll}
         >
-          {/* LEFT buffer */}
+          {/* LEFT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
           <ContentBlock
             style={{
@@ -304,10 +237,10 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
-            {/* Drag overlay */}
+            {/* Transparent overlay for drag-to-scroll, double-click, and arrow hover */}
             <DragOverlay
               style={{
-                pointerEvents: overlayPointerEvents,
+                pointerEvents: "auto",
                 cursor: isDragging
                   ? "grabbing"
                   : hoverSide === "left"
@@ -316,16 +249,42 @@ export default function FloatingModal({
                   ? "e-resize"
                   : "grab"
               }}
-              onMouseDown={overlayPointerEvents === "auto" ? handleDragStart : undefined}
+              onMouseDown={handleDragStart}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               onDoubleClick={handleOverlayDoubleClick}
             >
-              {OverlayIcon}
+              {!isDragging && (
+                <>
+                  {hoverSide === "left" && (
+                    <ArrowIcon
+                      direction="left"
+                      style={{
+                        left: 16,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    />
+                  )}
+                  {hoverSide === "right" && (
+                    <ArrowIcon
+                      direction="right"
+                      style={{
+                        right: 16,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    />
+                  )}
+                  {hoverSide === null && (
+                    <CenterIconSVG />
+                  )}
+                </>
+              )}
             </DragOverlay>
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
-          {/* RIGHT buffer */}
+          {/* RIGHT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
         </HorizontalScrollArea>
         {/* Hide native scrollbar for all browsers */}
@@ -338,7 +297,79 @@ export default function FloatingModal({
   );
 }
 
-// Styled components (unchanged)
+// Arrow icon SVG component (single chevron, left/right)
+function ArrowIcon({ direction = "left", style = {} }) {
+  return (
+    <svg
+      width={34}
+      height={34}
+      viewBox="0 0 24 24"
+      style={{
+        position: "absolute",
+        ...style,
+        pointerEvents: "none",
+        opacity: 0.92,
+        filter: "drop-shadow(0 1px 7px #e6dbb9cc)",
+      }}
+    >
+      <polyline
+        points={direction === "left" ? "16,4 4,12 16,20" : "8,4 20,12 8,20"}
+        fill="none"
+        stroke="#e6dbb9"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// Middle center SVG (provided by user)
+function CenterIconSVG() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={38}
+      height={38}
+      viewBox="0 0 256 256"
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        pointerEvents: "none",
+        opacity: 0.96,
+        filter: "drop-shadow(0 1.5px 8px #e6dbb9cc)",
+        color: "#e6dbb9"
+      }}
+    >
+      <rect width="256" height="256" fill="none"/>
+      <path d="M64,216,34.68,166a20,20,0,0,1,34.64-20L88,176V68a20,20,0,0,1,40,0v56a20,20,0,0,1,40,0v16a20,20,0,0,1,40,0v36c0,24-8,40-8,40"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
+      <line x1="176" y1="56" x2="248" y2="56"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
+      <polyline points="208 24 176 56 208 88"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="16"
+      />
+    </svg>
+  );
+}
+
+// Styles
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
@@ -394,6 +425,7 @@ const DragOverlay = styled.div`
   background: transparent;
   z-index: 10;
   user-select: none;
+  pointer-events: auto;
 `;
 
 const CloseButton = styled.button`
