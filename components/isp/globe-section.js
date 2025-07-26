@@ -616,7 +616,7 @@ export default function GlobeSection({ onMarkerClick }) {
               color: "#fff",
               borderRadius: 4,
               padding: "8px 18px",
-              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontFamily: "coolvetica", sans-serif;
               fontWeight: 700,
               fontSize: 18,
               letterSpacing: ".03em",
