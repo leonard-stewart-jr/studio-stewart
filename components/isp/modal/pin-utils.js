@@ -37,6 +37,10 @@ export function loadPinModel() {
   return pinModelPromise;
 }
 
+export function getPinModel() {
+  return pinModel;
+}
+
 /**
  * Converts latitude, longitude, and altitude to a THREE.Vector3 position on a sphere.
  */
@@ -70,6 +74,24 @@ export function orientPin(pin, markerVec) {
 export function positionPin(pin, offset = 0) {
   pin.position.set(0, 0, offset);
 }
+
+/**
+ * Helper: Create a buffered bounding box geometry for hitboxes around the pin mesh.
+ */
+export function bufferedBoundingGeometry(mesh, buffer = 1.07) {
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  const center = new THREE.Vector3();
+  box.getCenter(center);
+  const geom = new THREE.BoxGeometry(size.x * buffer, size.y * buffer, size.z * buffer);
+  geom.translate(center.x, center.y, center.z);
+  return geom;
+}
+
+/**
+ * Helper: Convert SVG string to a THREE.Texture.
+ */
 export function svgStringToTexture(svgString, size = 128) {
   const svg = encodeURIComponent(svgString);
   const img = new window.Image();
@@ -87,10 +109,6 @@ export function svgStringToTexture(svgString, size = 128) {
       resolve(texture);
     };
   });
-}
-
-export function getPinModel() {
-  return pinModel;
 }
 
 // --- ANALOGOUS RED PALETTE + RANDOM ASSIGN ---
