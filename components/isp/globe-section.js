@@ -20,7 +20,6 @@ const LONDON_WHEEL_RADIUS = 1.1;
 const LONDON_WHEEL_ALTITUDE = 0.018;
 
 const DOT_ALTITUDE = 0.012;
-const DOT_COLOR = "#b32c2c";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 
 // UK-centered cluster offset
@@ -118,15 +117,16 @@ export default function GlobeSection({ onMarkerClick }) {
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
   const [pinReady, setPinReady] = useState(false);
-  const isMobile = typeof window !== "undefined" ? 
- window.innerWidth < 800 : false;
+
+  // Responsive mobile state
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    let mounted = true;
-    loadPinModel().then(() => {
-      if (mounted) setPinReady(true);
-    });
-    getExpandTexture();
-    return () => { mounted = false; };
+    const handleResize = () => {
+      setIsMobile(typeof window !== "undefined" && window.innerWidth < 800);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // For the 3D "EXPAND" overlay
@@ -157,15 +157,16 @@ export default function GlobeSection({ onMarkerClick }) {
     setExpandLabelMat(makeExpandLabelMaterial());
   }, []);
 
-  // ... markerScreenPositions, tocScreenPositions, svgDims, etc, unchanged ...
+  const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
+  const tocRefs = useRef([]);
+  const [tocScreenPositions, setTocScreenPositions] = useState([]);
+  const [svgDims, setSvgDims] = useState({ width: 0, height: 0 });
 
-  // --- ANALOGOUS RED PALETTE RANDOM ASSIGNMENT ---
   const redAssignments = useMemo(
     () => getAnalogousRedAssignments(globeLocations.length, 42),
     []
   );
 
-  // --- Pin/cluster objects ---
   const {
     objectsData,
     linesData,
@@ -173,7 +174,6 @@ export default function GlobeSection({ onMarkerClick }) {
     customLineObject,
     tocList,
     comparisonMarkerIdx,
-    expandSpriteData
   } = useMemo(() => {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
@@ -308,7 +308,6 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // LONDON EXPANDED: pins = half normal size
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 0.6;
       const pinScale = CLUSTER_PIN_SCALE;
@@ -391,7 +390,6 @@ export default function GlobeSection({ onMarkerClick }) {
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
   }, [londonExpanded, pinReady, redAssignments]);
 
-  // --- 3D Expand Sprite for cluster (shows only when hovered) ---
   function getExpandSprite() {
     if (
       hovered &&
@@ -403,7 +401,7 @@ export default function GlobeSection({ onMarkerClick }) {
       const vec = latLngAltToVec3(lat, lng, DOT_ALTITUDE + 0.11);
       const expandSprite = new THREE.Sprite(expandLabelMat);
       expandSprite.position.copy(vec);
-      expandSprite.scale.set(0.38, 0.12, 1.0); // Adjust for visible size
+      expandSprite.scale.set(0.38, 0.12, 1.0);
       expandSprite.center.set(0.5, 0.5);
       expandSprite.renderOrder = 1000;
       expandSprite.material.needsUpdate = true;
@@ -413,7 +411,6 @@ export default function GlobeSection({ onMarkerClick }) {
     return null;
   }
 
-  // --- Globe events and 2D overlay for non-cluster pins only ---
   const handleObjectClick = (obj) => {
     if (obj && obj.markerId === "london-cluster") {
       setLondonExpanded(true);
@@ -443,7 +440,6 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-  // 2D overlay logic (only for non-cluster pins)
   const showPinOverlay =
     hovered &&
     hovered.markerId !== "london-cluster" &&
@@ -463,10 +459,8 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }
 
-  // 3D "expand" sprite for cluster
   const expandSprite = getExpandSprite();
 
-  // Render logic
   return (
     <section
       className="isp-globe-section"
@@ -530,7 +524,6 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndLng={(l) => l.end.lng}
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
-          // Custom renderer for the 3D expand sprite overlay
           extraRenderers={
             expandSprite
               ? [
@@ -548,7 +541,6 @@ export default function GlobeSection({ onMarkerClick }) {
                 ]
           }
         />
-        {/* 2D overlay for non-cluster pins */}
         {showPinOverlay && overlayPos && (
           <div
             style={{
@@ -638,7 +630,7 @@ export default function GlobeSection({ onMarkerClick }) {
                   transition: "color 0.14s",
                   marginLeft: 0,
                 }}
-                onClick={() => handleTOCClick(item.marker)}
+                onClick={() => onMarkerClick(item.marker)}
                 onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
                 onMouseLeave={e => setHovered(null)}
                 tabIndex={0}
