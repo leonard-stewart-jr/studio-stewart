@@ -240,7 +240,7 @@ export default function FloatingModal({
             {/* Transparent overlay for drag-to-scroll, double-click, and arrow hover */}
             <DragOverlay
               style={{
-                pointerEvents: "auto",
+                pointerEvents: "none",
                 cursor: isDragging
                   ? "grabbing"
                   : hoverSide === "left"
