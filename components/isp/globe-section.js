@@ -118,7 +118,8 @@ export default function GlobeSection({ onMarkerClick }) {
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
   const [pinReady, setPinReady] = useState(false);
-
+  const isMobile = typeof window !== "undefined" ? 
+ window.innerWidth < 800 : false;
   useEffect(() => {
     let mounted = true;
     loadPinModel().then(() => {
