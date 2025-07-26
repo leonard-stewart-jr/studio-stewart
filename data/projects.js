@@ -5,7 +5,8 @@ const projects = [
     type: "Culture",
     slug: "BPL-24",
     description: "Project description goes here.",
-    bannerSrc: "/images/BPL-24-banner.jpg"
+    bannerSrc: "/images/BPL-24-banner.jpg",
+    // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
     grade: "SPRING 25'",
@@ -13,7 +14,8 @@ const projects = [
     type: "SCHOOL + RESIDENTIAL",
     slug: "residential-loft",
     description: "Project description goes here.",
-    bannerSrc: "/images/residential-loft-banner.jpg"
+    bannerSrc: "/images/residential-loft-banner.jpg",
+    // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
     grade: "FALL 24",
@@ -21,7 +23,8 @@ const projects = [
     type: "Commercial",
     slug: "riverfront-studio-4th",
     description: "Project description goes here.",
-    bannerSrc: "/images/riverfront-studio-4th-banner.jpg"
+    bannerSrc: "/images/riverfront-studio-4th-banner.jpg",
+    // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
     grade: "6th Year",
@@ -29,7 +32,8 @@ const projects = [
     type: "Commercial",
     slug: "riverfront-studio-6th",
     description: "Project description goes here.",
-    bannerSrc: "/images/riverfront-studio-6th-banner.jpg"
+    bannerSrc: "/images/riverfront-studio-6th-banner.jpg",
+    // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
     grade: "1st Year",
@@ -37,7 +41,8 @@ const projects = [
     type: "Commercial",
     slug: "riverfront-studio-1st",
     description: "Project description goes here.",
-    bannerSrc: "/images/riverfront-studio-1st-banner.jpg"
+    bannerSrc: "/images/riverfront-studio-1st-banner.jpg",
+    // modalWidth: 2436, // <-- Add your custom width here when ready
   }
 ];
 
