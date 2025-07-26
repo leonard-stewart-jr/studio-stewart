@@ -8,9 +8,11 @@ import {
   latLngAltToVec3,
   getPinModel,
   positionPin,
+  ANALOGOUS_REDS,
   getAnalogousRedAssignments
 } from "./modal/pin-utils";
 
+// SVG expand icon as a string for the cluster marker
 const LONDON_EXPAND_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polyline points="160 48 208 48 208 96" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="152" y1="104" x2="208" y2="48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="96 208 48 208 48 160" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="104" y1="152" x2="48" y2="208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="208 160 208 208 160 208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="152" y1="152" x2="208" y2="208" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="48 96 48 48 96 48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="104" y1="104" x2="48" y2="48" fill="none" stroke="#b32c2c" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>`;
 
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
@@ -20,10 +22,11 @@ const LONDON_WHEEL_RADIUS = 1.1;
 const LONDON_WHEEL_ALTITUDE = 0.018;
 
 const DOT_ALTITUDE = 0.012;
+const DOT_COLOR = "#b32c2c";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 
-// UK-centered cluster offset
-const LONDON_CLUSTER_OFFSET = { lat: 2.1, lng: -3.2 };
+// Offset for moving London cluster northwest (tweak as needed)
+const LONDON_CLUSTER_OFFSET = { lat: 1.1, lng: -2.5 };
 
 // Pin scales
 const NORMAL_PIN_SCALE = 9 * 1.5;
@@ -96,12 +99,16 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
+// Helper to create a buffered hitbox geometry using the pin mesh's bounding box
 function bufferedBoundingGeometry(mesh, buffer = 1.07) {
+  // Compute bounding box
   const box = new THREE.Box3().setFromObject(mesh);
   const size = new THREE.Vector3();
   box.getSize(size);
+  // Center
   const center = new THREE.Vector3();
   box.getCenter(center);
+  // Buffered box geometry
   const geom = new THREE.BoxGeometry(size.x * buffer, size.y * buffer, size.z * buffer);
   geom.translate(center.x, center.y, center.z);
   return geom;
@@ -125,32 +132,13 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // For the 3D "EXPAND" overlay
-  const [expandLabelMat, setExpandLabelMat] = useState(null);
   useEffect(() => {
-    function makeExpandLabelMaterial() {
-      const size = 256;
-      const canvas = document.createElement("canvas");
-      canvas.width = canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, size, size);
-      ctx.font = "bold 64px coolvetica, Arial, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "#fff";
-      ctx.shadowColor = "#222";
-      ctx.shadowBlur = 10;
-      ctx.fillText("EXPAND", size / 2, size / 2);
-      const texture = new THREE.CanvasTexture(canvas);
-      return new THREE.SpriteMaterial({
-        map: texture,
-        transparent: true,
-        opacity: 0.97,
-        depthTest: false,
-        depthWrite: false,
-      });
-    }
-    setExpandLabelMat(makeExpandLabelMaterial());
+    let mounted = true;
+    loadPinModel().then(() => {
+      if (mounted) setPinReady(true);
+    });
+    getExpandTexture();
+    return () => { mounted = false; };
   }, []);
 
   const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
@@ -158,6 +146,13 @@ export default function GlobeSection({ onMarkerClick }) {
   const [tocScreenPositions, setTocScreenPositions] = useState([]);
   const [svgDims, setSvgDims] = useState({ width: 0, height: 0 });
 
+  useEffect(() => {
+    if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
+      globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
+    }
+  }, []);
+
+  // --- ANALOGOUS RED PALETTE RANDOM ASSIGNMENT ---
   const redAssignments = useMemo(
     () => getAnalogousRedAssignments(globeLocations.length, 42),
     []
@@ -169,7 +164,7 @@ export default function GlobeSection({ onMarkerClick }) {
     customPointObject,
     customLineObject,
     tocList,
-    comparisonMarkerIdx,
+    comparisonMarkerIdx
   } = useMemo(() => {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
@@ -226,8 +221,10 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
 
       customPointObject = (obj) => {
+        // LONDON CLUSTER: SVG PLANE CUSTOM ARROWS SVG, PLANE GEO
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
+          // pasted code for arrowsSVG overlay (custom overlay for cluster)
           const dotRadius = CLUSTER_DOT_SIZE * 2.5 * 1.5;
           const svgPlaneSize = dotRadius * 1.35;
           const svgGeom = new THREE.PlaneGeometry(svgPlaneSize * 2, svgPlaneSize * 2);
@@ -265,8 +262,8 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
+        // ALL OTHER PINS: use current with buffer
         if (obj.isStandardPin && pinModel) {
-          // Pin mesh + buffered hitbox (buffered by 7%)
           const group = new THREE.Group();
           const scale = NORMAL_PIN_SCALE;
           const pin = pinModel.clone(true);
@@ -285,7 +282,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Buffered hitbox
+          // Buffered hitbox (current code)
           const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xff0000,
@@ -301,13 +298,15 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        // Only return a dummy object for truly unknown objects
+
+        // Fix for react-globe.gl: always return Object3D
         return new THREE.Object3D();
       };
     } else {
+      // LONDON EXPANDED LOGIC (pins inside cluster = half of big size)
       const N = londonMarkers.length;
-      const wheelRadius = LONDON_WHEEL_RADIUS * 0.6;
-      const pinScale = CLUSTER_PIN_SCALE;
+      const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
+      const pinScale = NORMAL_PIN_SCALE * 0.5; // half of big pin size
 
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
@@ -346,9 +345,8 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
-          // Pin mesh + buffered hitbox (buffered by 7%)
           const group = new THREE.Group();
-          const scale = obj.pinScale ?? CLUSTER_PIN_SCALE;
+          const scale = obj.pinScale ?? 7;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -358,14 +356,15 @@ export default function GlobeSection({ onMarkerClick }) {
             }
           });
           pin.scale.set(scale, scale, scale);
+
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
           positionPin(pin, 0);
-          pin.userData = { markerId: obj.markerId, label: obj.label };
+          pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Buffered hitbox
+          // Buffered hitbox (current code)
           const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xff0000,
@@ -381,33 +380,98 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        // Only return a dummy object for truly unknown objects
         return new THREE.Object3D();
+      };
+
+      // Use pasted customLineObject (dashed lines)
+      customLineObject = (lineObj) => {
+        const start = latLngAltToVec3(
+          lineObj.start.lat,
+          lineObj.start.lng,
+          lineObj.start.alt
+        );
+        const end = latLngAltToVec3(
+          lineObj.end.lat,
+          lineObj.end.lng,
+          lineObj.end.alt
+        );
+        const points = [start, end];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const material = new THREE.LineDashedMaterial({
+          color: DOT_COLOR,
+          opacity: 0.53,
+          linewidth: 1,
+          transparent: true,
+          dashSize: 0.08,
+          gapSize: 0.065,
+        });
+        const line = new THREE.Line(geometry, material);
+        line.computeLineDistances();
+        line.renderOrder = 0;
+        return line;
       };
     }
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
   }, [londonExpanded, pinReady, redAssignments]);
 
-  function getExpandSprite() {
-    if (
-      hovered &&
-      hovered.markerId === "london-cluster" &&
-      expandLabelMat &&
-      !londonExpanded
-    ) {
-      const { lat, lng } = getLondonClusterCustomCoords(getLondonClusterCenter());
-      const vec = latLngAltToVec3(lat, lng, DOT_ALTITUDE + 0.11);
-      const expandSprite = new THREE.Sprite(expandLabelMat);
-      expandSprite.position.copy(vec);
-      expandSprite.scale.set(0.38, 0.12, 1.0);
-      expandSprite.center.set(0.5, 0.5);
-      expandSprite.renderOrder = 1000;
-      expandSprite.material.needsUpdate = true;
-      expandSprite.name = "expand-sprite";
-      return expandSprite;
+  useEffect(() => {
+    function updateMarkerPositions() {
+      if (
+        !globeEl.current ||
+        typeof globeEl.current.getScreenCoords !== "function" ||
+        !globeContainerRef.current
+      )
+        return;
+
+      const globeRect = globeContainerRef.current.getBoundingClientRect();
+
+      const positions = globeLocations.map((marker) => {
+        const { lat, lon } = marker;
+        const coords = globeEl.current.getScreenCoords(lat, lon);
+        return {
+          x: globeRect.left + coords.x,
+          y: globeRect.top + coords.y,
+        };
+      });
+      setMarkerScreenPositions(positions);
+
+      setSvgDims({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     }
-    return null;
-  }
+
+    updateMarkerPositions();
+    window.addEventListener("resize", updateMarkerPositions);
+    let animationFrame;
+    function pollCamera() {
+      updateMarkerPositions();
+      animationFrame = requestAnimationFrame(pollCamera);
+    }
+    animationFrame = requestAnimationFrame(pollCamera);
+
+    return () => {
+      window.removeEventListener("resize", updateMarkerPositions);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
+  useEffect(() => {
+    function updateTocPositions() {
+      const positions = tocRefs.current.map(ref => {
+        if (!ref) return null;
+        const rect = ref.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        };
+      });
+      setTocScreenPositions(positions);
+    }
+    updateTocPositions();
+    window.addEventListener("resize", updateTocPositions);
+    return () => window.removeEventListener("resize", updateTocPositions);
+  }, [tocList.length]);
 
   const handleObjectClick = (obj) => {
     if (obj && obj.markerId === "london-cluster") {
@@ -431,23 +495,49 @@ export default function GlobeSection({ onMarkerClick }) {
   };
 
   const handleObjectHover = (obj) => {
-    if (obj && obj.markerId === "london-cluster") {
-      setHovered({ ...obj, label: "EXPAND" });
-    } else {
-      setHovered(obj);
-    }
+    setHovered(obj);
   };
 
-  const showPinOverlay =
-    hovered &&
-    hovered.markerId !== "london-cluster" &&
-    (hovered.label || hovered.name) &&
-    markerScreenPositions &&
-    markerScreenPositions.length > 0;
+  function handleTOCClick(marker) {
+    onMarkerClick(marker);
+    setLondonExpanded(false);
+    setHovered(null);
+  }
 
+  // Overlay for all pins and London cluster
+  const showPinOverlay = hovered && (hovered.label || hovered.name) && markerScreenPositions && markerScreenPositions.length > 0;
+  let overlayText = hovered?.label || hovered?.name;
+  // For cluster overlay, always say EXPAND
+  if (hovered && hovered.markerId === "london-cluster") overlayText = "EXPAND";
+
+  // Arrows SVG for overlay
+  const arrowsSvg = (
+    <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: "block" }}>
+      <g stroke="#b32c2c" strokeWidth="2.5" fill="none" strokeLinecap="round">
+        <line x1="6" y1="16" x2="6" y2="6" />
+        <line x1="6" y1="6" x2="16" y2="6" />
+        <line x1="20" y1="6" x2="30" y2="6" />
+        <line x1="30" y1="6" x2="30" y2="16" />
+        <line x1="6" y1="20" x2="6" y2="30" />
+        <line x1="6" y1="30" x2="16" y2="30" />
+        <line x1="20" y1="30" x2="30" y2="30" />
+        <line x1="30" y1="30" x2="30" y2="20" />
+      </g>
+    </svg>
+  );
+
+  // Get overlay position: for cluster use cluster pos, else for pins use marker positions
   let overlayPos = null;
   if (
-    showPinOverlay &&
+    hovered &&
+    hovered.markerId === "london-cluster" &&
+    markerScreenPositions.length > 0
+  ) {
+    // Use the first nonLondonMarker's screen position for overlay as a proxy (or compute actual cluster pos)
+    // Or you can get the cluster's screen position from the globe if desired.
+    overlayPos = markerScreenPositions[0]; // fallback
+  } else if (
+    hovered &&
     typeof hovered.idx === "number" &&
     markerScreenPositions[hovered.idx]
   ) {
@@ -457,9 +547,27 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }
 
-  const expandSprite = getExpandSprite();
+  if (!pinReady) {
+    return (
+      <section
+        className="isp-globe-section"
+        style={{
+          width: "100vw",
+          minHeight: 500,
+          height: 500,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 24,
+          color: "#b32c2c",
+        }}
+      >
+        Loading globe...
+      </section>
+    );
+  }
 
-  // --- LAYOUT: TOC BESIDE GLOBE ---
+  // --- LAYOUT: TOC BESIDE GLOBE, TOC UNDER ON MOBILE ---
   return (
     <section
       className="isp-globe-section"
@@ -469,7 +577,7 @@ export default function GlobeSection({ onMarkerClick }) {
         height: "auto",
         background: "transparent",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: isMobile ? "column" : "row",
         alignItems: "center",
         justifyContent: "center",
         paddingTop: 0,
@@ -482,233 +590,205 @@ export default function GlobeSection({ onMarkerClick }) {
       }}
     >
       <div
+        ref={globeContainerRef}
         style={{
-          width: "100%",
-          maxWidth: 1360,
-          margin: "0 auto",
+          flex: "0 1 auto",
+          width: 950,
+          height: 700,
+          maxWidth: 950,
+          minWidth: 340,
           display: "flex",
-          flexDirection: "row",
           justifyContent: "center",
-          alignItems: "flex-start",
+          alignItems: "center",
+          margin: isMobile ? "0 auto 24px auto" : "0 0 0 0",
+          padding: 0,
+          background: "transparent",
+          overflow: "unset",
           position: "relative",
-          gap: isMobile ? 0 : 24
+          borderRadius: 0,
+          boxShadow: "none",
         }}
       >
-        {/* TOC SIDE NAV */}
-        <nav
-          aria-label="Table of Contents"
-          style={{
-            marginLeft: 0,
-            marginRight: isMobile ? 0 : 12,
-            marginTop: 0,
-            minWidth: "fit-content",
-            maxWidth: isMobile ? "100%" : 315,
-            width: isMobile ? "100%" : "fit-content",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: isMobile ? "center" : "flex-start",
-            justifyContent: isMobile ? "flex-start" : "center",
-            background: "none",
-            boxShadow: "none",
-            position: "relative",
-            zIndex: 100,
-            left: 0
-          }}
-        >
-          <ol style={{
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: isMobile ? 7 : 6,
-            width: "100%",
-          }}>
-            {tocList.map((item, idx) => (
-              <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
-                <button
-                  ref={el => tocRefs.current[idx] = el}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: item.color,
-                    fontWeight: 600,
-                    fontSize: 16,
-                    cursor: "pointer",
-                    fontFamily: "coolvetica, sans-serif",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 8,
-                    padding: "1.5px 0 1.5px 0",
-                    borderRadius: 4,
-                    width: "fit-content",
-                    textAlign: "left",
-                    lineHeight: 1.17,
-                    textTransform: "uppercase",
-                    letterSpacing: ".06em",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    transition: "color 0.14s",
-                    marginLeft: 0,
-                  }}
-                  onClick={() => onMarkerClick(item.marker)}
-                  onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
-                  onMouseLeave={e => setHovered(null)}
-                  tabIndex={0}
-                  aria-label={`Jump to ${item.name}`}
-                  title={item.name}
-                >
-                  <span style={{
-                    fontFamily: "coolvetica, sans-serif",
-                    fontWeight: 700,
-                    fontSize: 16,
-                    minWidth: 18,
-                    letterSpacing: ".03em",
-                    marginRight: 2,
-                    color: item.color,
-                    opacity: 0.93,
-                    flexShrink: 0,
-                  }}>{item.roman}.</span>
-                  <span style={{
-                    flex: 1,
-                    fontFamily: "coolvetica, sans-serif",
-                    fontWeight: 600,
-                    fontSize: 16,
-                    letterSpacing: ".06em",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    marginRight: 0,
-                    marginBottom: 0,
-                  }}>
-                    {item.name}
-                  </span>
-                </button>
-                {item.year && (
-                  <div
-                    style={{
-                      fontFamily: "coolvetica, sans-serif",
-                      fontWeight: 400,
-                      fontSize: 12,
-                      color: "#b1b1ae",
-                      letterSpacing: ".03em",
-                      marginLeft: 27,
-                      lineHeight: 1.18,
-                      marginTop: 0,
-                      marginBottom: 1,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      textTransform: "none",
-                      maxWidth: 235,
-                    }}
-                  >
-                    {item.year}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        {/* GLOBE */}
-        <div
-          ref={globeContainerRef}
-          style={{
-            flex: 1,
-            minWidth: 0,
-            width: isMobile ? "100%" : 950,
-            maxWidth: 950,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative"
-          }}
-        >
-          {pinReady &&
-            <Globe
-              ref={globeEl}
-              globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
-              backgroundColor="rgba(0,0,0,0)"
-              width={950}
-              height={700}
-              pointsData={[]} 
-              pointLat="lat"
-              pointLng="lng"
-              pointColor="color"
-              pointRadius="size"
-              pointAltitude="altitude"
-              pointLabel="label"
-              onPointHover={handleObjectHover}
-              onPointClick={onMarkerClick}
-              objectsData={objectsData}
-              objectLat="lat"
-              objectLng="lng"
-              objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
-              objectThreeObject={customPointObject}
-              onObjectClick={handleObjectClick}
-              onObjectHover={handleObjectHover}
-              linesData={londonExpanded ? linesData : []}
-              lineStartLat={(l) => l.start.lat}
-              lineStartLng={(l) => l.start.lng}
-              lineStartAltitude={(l) => l.start.alt}
-              lineEndLat={(l) => l.end.lat}
-              lineEndLng={(l) => l.end.lng}
-              lineEndAltitude={(l) => l.end.alt}
-              lineThreeObject={londonExpanded ? customLineObject : undefined}
-              extraRenderers={
-                expandSprite
-                  ? [
-                      (scene) => {
-                        if (!scene.getObjectByName("expand-sprite")) {
-                          scene.add(expandSprite);
-                        }
-                      },
-                    ]
-                  : [
-                      (scene) => {
-                        const obj = scene.getObjectByName("expand-sprite");
-                        if (obj) scene.remove(obj);
-                      },
-                    ]
-              }
-            />
-          }
-          {showPinOverlay && overlayPos && (
-            <div
-              style={{
-                position: "fixed",
-                left: overlayPos.x ?? 0,
-                top: overlayPos.y ?? 0,
-                zIndex: 9999,
-                pointerEvents: "none",
-                background: "rgba(0,0,0,0.91)",
-                color: "#fff",
-                borderRadius: 4,
-                padding: "8px 18px",
-                fontFamily: "coolvetica, sans-serif",
-                fontWeight: 700,
-                fontSize: 18,
-                letterSpacing: ".03em",
-                textTransform: "uppercase",
-                opacity: 1,
-                transition: "opacity 0.15s",
-                transform: "translate(-50%, 0)",
-                lineHeight: 1.17,
-                textAlign: "center",
-                userSelect: "none",
-                boxShadow: "none",
-                border: "none",
-                whiteSpace: "nowrap"
-              }}
-            >
-              {hovered.label || hovered.name}
-            </div>
-          )}
-        </div>
+        <Globe
+          ref={globeEl}
+          globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
+          backgroundColor="rgba(0,0,0,0)"
+          width={950}
+          height={700}
+          pointsData={[]} 
+          pointLat="lat"
+          pointLng="lng"
+          pointColor="color"
+          pointRadius="size"
+          pointAltitude="altitude"
+          pointLabel="label"
+          onPointHover={handleObjectHover}
+          onPointClick={onMarkerClick}
+          objectsData={objectsData}
+          objectLat="lat"
+          objectLng="lng"
+          objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
+          objectThreeObject={customPointObject}
+          onObjectClick={handleObjectClick}
+          onObjectHover={handleObjectHover}
+          linesData={londonExpanded ? linesData : []}
+          lineStartLat={(l) => l.start.lat}
+          lineStartLng={(l) => l.start.lng}
+          lineStartAltitude={(l) => l.start.alt}
+          lineEndLat={(l) => l.end.lat}
+          lineEndLng={(l) => l.end.lng}
+          lineEndAltitude={(l) => l.end.alt}
+          lineThreeObject={londonExpanded ? customLineObject : undefined}
+        />
+        {showPinOverlay && overlayPos && (
+          <div
+            style={{
+              position: "fixed",
+              left: overlayPos.x ?? 0,
+              top: overlayPos.y ?? 0,
+              zIndex: 9999,
+              pointerEvents: "none",
+              background: hovered.markerId === "london-cluster" ? "none" : "rgba(0,0,0,0.91)",
+              color: hovered.markerId === "london-cluster" ? "#b32c2c" : "#fff",
+              borderRadius: 4,
+              padding: hovered.markerId === "london-cluster" ? "0" : "8px 18px",
+              fontFamily: "coolvetica, sans-serif",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: ".03em",
+              textTransform: "uppercase",
+              opacity: 1,
+              transition: "opacity 0.15s",
+              transform: "translate(-50%, 0)",
+              lineHeight: 1.17,
+              textAlign: "center",
+              userSelect: "none",
+              boxShadow: "none",
+              border: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {hovered.markerId === "london-cluster" ? arrowsSvg : null}
+            {overlayText}
+          </div>
+        )}
       </div>
-      {/* SVG lines -- if needed, can be positioned absolutely */}
+      <nav
+        aria-label="Table of Contents"
+        style={{
+          marginLeft: isMobile ? 0 : 18,
+          marginRight: 0,
+          marginTop: isMobile ? 12 : 0,
+          minWidth: "fit-content",
+          maxWidth: isMobile ? "100%" : 315,
+          width: "fit-content",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: isMobile ? "center" : "flex-start",
+          justifyContent: isMobile ? "flex-start" : "center",
+          background: "none",
+          boxShadow: "none",
+          position: "relative",
+          zIndex: 100,
+          left: isMobile ? 0 : 0,
+        }}
+      >
+        <ol style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: isMobile ? 7 : 6,
+          width: "100%",
+        }}>
+          {tocList.map((item, idx) => (
+            <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
+              <button
+                ref={el => tocRefs.current[idx] = el}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: item.color,
+                  fontWeight: 600,
+                  fontSize: 16,
+                  cursor: "pointer",
+                  fontFamily: "coolvetica, sans-serif",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 8,
+                  padding: "1.5px 0 1.5px 0",
+                  borderRadius: 4,
+                  width: "fit-content",
+                  textAlign: "left",
+                  lineHeight: 1.17,
+                  textTransform: "uppercase",
+                  letterSpacing: ".06em",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  transition: "color 0.14s",
+                  marginLeft: 0,
+                }}
+                onClick={() => handleTOCClick(item.marker)}
+                onMouseEnter={e => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
+                onMouseLeave={e => setHovered(null)}
+                tabIndex={0}
+                aria-label={`Jump to ${item.name}`}
+                title={item.name}
+              >
+                <span style={{
+                  fontFamily: "coolvetica, sans-serif",
+                  fontWeight: 700,
+                  fontSize: 16,
+                  minWidth: 18,
+                  letterSpacing: ".03em",
+                  marginRight: 2,
+                  color: item.color,
+                  opacity: 0.93,
+                  flexShrink: 0,
+                }}>{item.roman}.</span>
+                <span style={{
+                  flex: 1,
+                  fontFamily: "coolvetica, sans-serif",
+                  fontWeight: 600,
+                  fontSize: 16,
+                  letterSpacing: ".06em",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  marginRight: 0,
+                  marginBottom: 0,
+                }}>
+                  {item.name}
+                </span>
+              </button>
+              {item.year && (
+                <div
+                  style={{
+                    fontFamily: "coolvetica, sans-serif",
+                    fontWeight: 400,
+                    fontSize: 12,
+                    color: "#b1b1ae",
+                    letterSpacing: ".03em",
+                    marginLeft: 27,
+                    lineHeight: 1.18,
+                    marginTop: 0,
+                    marginBottom: 1,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textTransform: "none",
+                    maxWidth: 235,
+                  }}
+                >
+                  {item.year}
+                </div>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
       <div style={{
         position: 'fixed',
         left: 0,
