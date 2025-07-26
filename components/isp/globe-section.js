@@ -23,8 +23,8 @@ const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 
-// Move cluster closer/tighter to UK
-const LONDON_CLUSTER_OFFSET = { lat: 0.1, lng: -0.8 };
+// *** Moved further northwest for a UK-centered cluster ***
+const LONDON_CLUSTER_OFFSET = { lat: 2.1, lng: -3.2 };
 
 function svgStringToTexture(svgString, size = 256) {
   return new Promise((resolve) => {
@@ -146,7 +146,7 @@ export default function GlobeSection({ onMarkerClick }) {
         setLondonClusterScreenPos(null);
         return;
       }
-      const { lat, lng } = getLondonClusterCenter();
+      const { lat, lng } = getLondonClusterCustomCoords(getLondonClusterCenter());
       const coords = globeEl.current.getScreenCoords(lat, lng);
       const globeRect = globeContainerRef.current.getBoundingClientRect();
       setLondonClusterScreenPos({
@@ -256,8 +256,8 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           group.add(svgPlane);
 
-          // EVEN LARGER hit area for click/hover
-          const hitGeom = new THREE.CircleGeometry(svgPlaneSize * 2.3, 64);
+          // Hit area (slightly smaller than before)
+          const hitGeom = new THREE.CircleGeometry(svgPlaneSize * 1.15, 48);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -296,8 +296,8 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Hit area much bigger
-          const hitGeom = new THREE.CircleGeometry(scale * 0.75, 48);
+          // Hit area
+          const hitGeom = new THREE.CircleGeometry(scale * 0.55, 48);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -317,7 +317,7 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // LONDON EXPANDED: Double previous scale, move pins tighter (wheelRadius smaller)
+      // LONDON EXPANDED: Double scale, move pins tighter
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 0.6;
       const pinScale = 9 * 1.5 * 1.0; // 13.5
@@ -379,8 +379,8 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Hit area much bigger
-          const hitGeom = new THREE.CircleGeometry(scale * 0.75, 48);
+          // Hit area
+          const hitGeom = new THREE.CircleGeometry(scale * 0.55, 48);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -482,8 +482,14 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
+  // --- ENSURE proper hover logic for cluster and pins ---
   const handleObjectHover = (obj) => {
-    setHovered(obj);
+    // If hovering over cluster (SVG or hit circle), always set label to "EXPAND"
+    if (obj && obj.markerId === "london-cluster") {
+      setHovered({ ...obj, label: "EXPAND" });
+    } else {
+      setHovered(obj);
+    }
   };
 
   const bannerHeight = 76 + 44 + 26 + 16;
@@ -499,16 +505,15 @@ export default function GlobeSection({ onMarkerClick }) {
   }
   const isMobile = vw < 800;
 
-  // Overlay for all pins and London cluster
-  const showPinOverlay = hovered && (hovered.label || hovered.name) && markerScreenPositions && markerScreenPositions.length > 0;
+  // --- Overlay for all pins and London cluster ---
+  const showPinOverlay = hovered && (hovered.label || hovered.name);
   let overlayText = hovered?.label || hovered?.name;
-  // For cluster overlay, always say EXPAND
   if (hovered && hovered.markerId === "london-cluster") overlayText = "EXPAND";
 
-  // Get overlay position: for cluster use cluster pos, else for pins use marker positions
+  // Overlay position: for cluster use cluster pos, else for pins use marker positions
   let overlayPos = null;
   if (hovered && hovered.markerId === "london-cluster" && londonClusterScreenPos) {
-    overlayPos = { x: londonClusterScreenPos.x, y: londonClusterScreenPos.y + 18 };
+    overlayPos = { x: londonClusterScreenPos.x, y: londonClusterScreenPos.y - 38 };
   } else if (
     hovered &&
     typeof hovered.idx === "number" &&
@@ -594,7 +599,7 @@ export default function GlobeSection({ onMarkerClick }) {
           pointRadius="size"
           pointAltitude="altitude"
           pointLabel="label"
-          onPointHover={setHovered}
+          onPointHover={handleObjectHover}
           onPointClick={onMarkerClick}
           objectsData={objectsData}
           objectLat="lat"
@@ -637,13 +642,7 @@ export default function GlobeSection({ onMarkerClick }) {
               userSelect: "none",
               boxShadow: "none",
               border: "none",
-              whiteSpace: "nowrap",
-              ...(hovered && hovered.markerId === "london-cluster"
-                ? {
-                    background: "rgba(0,0,0,0.91)",
-                    color: "#fff",
-                  }
-                : {}),
+              whiteSpace: "nowrap"
             }}
           >
             {overlayText}
