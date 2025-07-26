@@ -305,7 +305,8 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        return null;
+        // Always return a valid THREE.Object3D
+        return new THREE.Object3D();
       };
     } else {
       const N = londonMarkers.length;
@@ -384,7 +385,8 @@ export default function GlobeSection({ onMarkerClick }) {
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        return null;
+        // Always return a valid THREE.Object3D
+        return new THREE.Object3D();
       };
     }
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
