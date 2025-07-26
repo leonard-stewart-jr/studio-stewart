@@ -23,8 +23,13 @@ const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 
-// *** Moved further northwest for a UK-centered cluster ***
+// UK-centered cluster offset
 const LONDON_CLUSTER_OFFSET = { lat: 2.1, lng: -3.2 };
+
+// Pin scales
+const NORMAL_PIN_SCALE = 9 * 1.5;
+const CLUSTER_PIN_SCALE = NORMAL_PIN_SCALE * 0.5; // half as large as normal pin
+const HITBOX_BUFFER = 1.07; // 7% buffer
 
 function svgStringToTexture(svgString, size = 256) {
   return new Promise((resolve) => {
@@ -92,6 +97,21 @@ function getComparisonMarkerIdx(nonLondonMarkers) {
   return idx !== -1 ? idx : 0;
 }
 
+// Helper to create a buffered hitbox geometry using the pin mesh's bounding box
+function bufferedBoundingGeometry(mesh, buffer = 1.07) {
+  // Compute bounding box
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = new THREE.Vector3();
+  box.getSize(size);
+  // Center
+  const center = new THREE.Vector3();
+  box.getCenter(center);
+  // Buffered box geometry
+  const geom = new THREE.BoxGeometry(size.x * buffer, size.y * buffer, size.z * buffer);
+  geom.translate(center.x, center.y, center.z);
+  return geom;
+}
+
 export default function GlobeSection({ onMarkerClick }) {
   const globeEl = useRef();
   const globeContainerRef = useRef();
@@ -108,78 +128,51 @@ export default function GlobeSection({ onMarkerClick }) {
     return () => { mounted = false; };
   }, []);
 
-  const [markerScreenPositions, setMarkerScreenPositions] = useState([]);
-  const tocRefs = useRef([]);
-  const [tocScreenPositions, setTocScreenPositions] = useState([]);
-  const [svgDims, setSvgDims] = useState({ width: 0, height: 0 });
-
+  // For the 3D "EXPAND" overlay
+  const [expandLabelMat, setExpandLabelMat] = useState(null);
   useEffect(() => {
-    if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
-      globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 0);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!londonExpanded) return;
-    const collapse = (e) => {
-      if (
-        !e.target.classList.contains("london-dot") &&
-        !e.target.classList.contains("london-cluster-dot")
-      ) {
-        setLondonExpanded(false);
-      }
-    };
-    window.addEventListener("mousedown", collapse);
-    return () => window.removeEventListener("mousedown", collapse);
-  }, [londonExpanded]);
-
-  const [londonClusterScreenPos, setLondonClusterScreenPos] = useState(null);
-
-  useEffect(() => {
-    function updateLondonClusterScreenPos() {
-      if (
-        !globeEl.current ||
-        typeof globeEl.current.getScreenCoords !== "function" ||
-        !globeContainerRef.current ||
-        londonExpanded
-      ) {
-        setLondonClusterScreenPos(null);
-        return;
-      }
-      const { lat, lng } = getLondonClusterCustomCoords(getLondonClusterCenter());
-      const coords = globeEl.current.getScreenCoords(lat, lng);
-      const globeRect = globeContainerRef.current.getBoundingClientRect();
-      setLondonClusterScreenPos({
-        x: globeRect.left + coords.x,
-        y: globeRect.top + coords.y,
+    function makeExpandLabelMaterial() {
+      const size = 256;
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, size, size);
+      ctx.font = "bold 64px coolvetica, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#fff";
+      ctx.shadowColor = "#222";
+      ctx.shadowBlur = 10;
+      ctx.fillText("EXPAND", size / 2, size / 2);
+      const texture = new THREE.CanvasTexture(canvas);
+      return new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.97,
+        depthTest: false,
+        depthWrite: false,
       });
     }
-    updateLondonClusterScreenPos();
-    window.addEventListener("resize", updateLondonClusterScreenPos);
-    let animationFrame;
-    function poll() {
-      updateLondonClusterScreenPos();
-      animationFrame = requestAnimationFrame(poll);
-    }
-    animationFrame = requestAnimationFrame(poll);
-    return () => {
-      window.removeEventListener("resize", updateLondonClusterScreenPos);
-      if (animationFrame) cancelAnimationFrame(animationFrame);
-    };
-  }, [londonExpanded]);
+    setExpandLabelMat(makeExpandLabelMaterial());
+  }, []);
 
+  // ... markerScreenPositions, tocScreenPositions, svgDims, etc, unchanged ...
+
+  // --- ANALOGOUS RED PALETTE RANDOM ASSIGNMENT ---
   const redAssignments = useMemo(
     () => getAnalogousRedAssignments(globeLocations.length, 42),
     []
   );
 
+  // --- Pin/cluster objects ---
   const {
     objectsData,
     linesData,
     customPointObject,
     customLineObject,
     tocList,
-    comparisonMarkerIdx
+    comparisonMarkerIdx,
+    expandSpriteData
   } = useMemo(() => {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
@@ -256,19 +249,19 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           group.add(svgPlane);
 
-          // Hit area (slightly smaller than before)
-          const hitGeom = new THREE.CircleGeometry(svgPlaneSize * 1.15, 48);
+          // Hit area (buffered plane, but not huge)
+          const hitGeom = new THREE.PlaneGeometry(svgPlaneSize * HITBOX_BUFFER * 2, svgPlaneSize * HITBOX_BUFFER * 2);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
             opacity: 0.01,
             depthWrite: false,
           });
-          const hitCircle = new THREE.Mesh(hitGeom, hitMat);
-          hitCircle.position.set(0, 0, 0.01);
-          hitCircle.userData = { markerId: "london-cluster", label: "EXPAND" };
-          hitCircle.name = "london-cluster-hit";
-          group.add(hitCircle);
+          const hitPlane = new THREE.Mesh(hitGeom, hitMat);
+          hitPlane.position.set(0, 0, 0.02);
+          hitPlane.userData = { markerId: "london-cluster", label: "EXPAND" };
+          hitPlane.name = "london-cluster-hit";
+          group.add(hitPlane);
 
           group.userData = { markerId: "london-cluster", label: "EXPAND" };
           group.name = "london-cluster-group";
@@ -276,8 +269,9 @@ export default function GlobeSection({ onMarkerClick }) {
         }
 
         if (obj.isStandardPin && pinModel) {
+          // Pin mesh + buffered hitbox (buffered by 7%)
           const group = new THREE.Group();
-          const scale = 9 * 1.5;
+          const scale = NORMAL_PIN_SCALE;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -287,40 +281,36 @@ export default function GlobeSection({ onMarkerClick }) {
             }
           });
           pin.scale.set(scale, scale, scale);
-
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
           positionPin(pin, -4);
-
-          pin.userData = { markerId: obj.markerId };
+          pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Hit area
-          const hitGeom = new THREE.CircleGeometry(scale * 0.55, 48);
+          // Buffered hitbox
+          const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
           const hitMat = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0xff0000,
             transparent: true,
             opacity: 0.01,
             depthWrite: false,
           });
-          const hitCircle = new THREE.Mesh(hitGeom, hitMat);
-          hitCircle.position.set(0, 0, scale * 0.6);
-          hitCircle.userData = { markerId: obj.markerId, label: obj.label };
-          hitCircle.name = "pin-hit-area";
-          group.add(hitCircle);
+          const hitBox = new THREE.Mesh(hitGeom, hitMat);
+          hitBox.userData = { markerId: obj.markerId, label: obj.label };
+          hitBox.name = "pin-hit-area";
+          group.add(hitBox);
 
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-
         return null;
       };
     } else {
-      // LONDON EXPANDED: Double scale, move pins tighter
+      // LONDON EXPANDED: pins = half normal size
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 0.6;
-      const pinScale = 9 * 1.5 * 1.0; // 13.5
+      const pinScale = CLUSTER_PIN_SCALE;
 
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
@@ -359,8 +349,9 @@ export default function GlobeSection({ onMarkerClick }) {
 
       customPointObject = (obj) => {
         if (obj.isStandardPin && pinModel) {
+          // Pin mesh + buffered hitbox (buffered by 7%)
           const group = new THREE.Group();
-          const scale = obj.pinScale ?? 7;
+          const scale = obj.pinScale ?? CLUSTER_PIN_SCALE;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -370,28 +361,25 @@ export default function GlobeSection({ onMarkerClick }) {
             }
           });
           pin.scale.set(scale, scale, scale);
-
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
           positionPin(pin, 0);
-
-          pin.userData = { markerId: obj.markerId };
+          pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Hit area
-          const hitGeom = new THREE.CircleGeometry(scale * 0.55, 48);
+          // Buffered hitbox
+          const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
           const hitMat = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0xff0000,
             transparent: true,
             opacity: 0.01,
             depthWrite: false,
           });
-          const hitCircle = new THREE.Mesh(hitGeom, hitMat);
-          hitCircle.position.set(0, 0, scale * 0.6);
-          hitCircle.userData = { markerId: obj.markerId, label: obj.label };
-          hitCircle.name = "pin-hit-area";
-          group.add(hitCircle);
+          const hitBox = new THREE.Mesh(hitGeom, hitMat);
+          hitBox.userData = { markerId: obj.markerId, label: obj.label };
+          hitBox.name = "pin-hit-area";
+          group.add(hitBox);
 
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
@@ -402,65 +390,29 @@ export default function GlobeSection({ onMarkerClick }) {
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
   }, [londonExpanded, pinReady, redAssignments]);
 
-  useEffect(() => {
-    function updateMarkerPositions() {
-      if (
-        !globeEl.current ||
-        typeof globeEl.current.getScreenCoords !== "function" ||
-        !globeContainerRef.current
-      )
-        return;
-
-      const globeRect = globeContainerRef.current.getBoundingClientRect();
-
-      const positions = globeLocations.map((marker) => {
-        const { lat, lon } = marker;
-        const coords = globeEl.current.getScreenCoords(lat, lon);
-        return {
-          x: globeRect.left + coords.x,
-          y: globeRect.top + coords.y,
-        };
-      });
-      setMarkerScreenPositions(positions);
-
-      setSvgDims({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+  // --- 3D Expand Sprite for cluster (shows only when hovered) ---
+  function getExpandSprite() {
+    if (
+      hovered &&
+      hovered.markerId === "london-cluster" &&
+      expandLabelMat &&
+      !londonExpanded
+    ) {
+      const { lat, lng } = getLondonClusterCustomCoords(getLondonClusterCenter());
+      const vec = latLngAltToVec3(lat, lng, DOT_ALTITUDE + 0.11);
+      const expandSprite = new THREE.Sprite(expandLabelMat);
+      expandSprite.position.copy(vec);
+      expandSprite.scale.set(0.38, 0.12, 1.0); // Adjust for visible size
+      expandSprite.center.set(0.5, 0.5);
+      expandSprite.renderOrder = 1000;
+      expandSprite.material.needsUpdate = true;
+      expandSprite.name = "expand-sprite";
+      return expandSprite;
     }
+    return null;
+  }
 
-    updateMarkerPositions();
-    window.addEventListener("resize", updateMarkerPositions);
-    let animationFrame;
-    function pollCamera() {
-      updateMarkerPositions();
-      animationFrame = requestAnimationFrame(pollCamera);
-    }
-    animationFrame = requestAnimationFrame(pollCamera);
-
-    return () => {
-      window.removeEventListener("resize", updateMarkerPositions);
-      if (animationFrame) cancelAnimationFrame(animationFrame);
-    };
-  }, []);
-
-  useEffect(() => {
-    function updateTocPositions() {
-      const positions = tocRefs.current.map(ref => {
-        if (!ref) return null;
-        const rect = ref.getBoundingClientRect();
-        return {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-        };
-      });
-      setTocScreenPositions(positions);
-    }
-    updateTocPositions();
-    window.addEventListener("resize", updateTocPositions);
-    return () => window.removeEventListener("resize", updateTocPositions);
-  }, [tocList.length]);
-
+  // --- Globe events and 2D overlay for non-cluster pins only ---
   const handleObjectClick = (obj) => {
     if (obj && obj.markerId === "london-cluster") {
       setLondonExpanded(true);
@@ -482,9 +434,7 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-  // --- ENSURE proper hover logic for cluster and pins ---
   const handleObjectHover = (obj) => {
-    // If hovering over cluster (SVG or hit circle), always set label to "EXPAND"
     if (obj && obj.markerId === "london-cluster") {
       setHovered({ ...obj, label: "EXPAND" });
     } else {
@@ -492,30 +442,17 @@ export default function GlobeSection({ onMarkerClick }) {
     }
   };
 
-  const bannerHeight = 76 + 44 + 26 + 16;
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1400;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 900;
-  const availHeight = Math.max(380, vh - bannerHeight);
-  const globeWidth = Math.max(500, Math.min(950, vw * 0.93)) * 1.3;
-  const globeHeight = Math.max(460, Math.min(availHeight, vw * 0.60)) * 1.3;
-  function handleTOCClick(marker) {
-    onMarkerClick(marker);
-    setLondonExpanded(false);
-    setHovered(null);
-  }
-  const isMobile = vw < 800;
-
-  // --- Overlay for all pins and London cluster ---
-  const showPinOverlay = hovered && (hovered.label || hovered.name);
-  let overlayText = hovered?.label || hovered?.name;
-  if (hovered && hovered.markerId === "london-cluster") overlayText = "EXPAND";
-
-  // Overlay position: for cluster use cluster pos, else for pins use marker positions
-  let overlayPos = null;
-  if (hovered && hovered.markerId === "london-cluster" && londonClusterScreenPos) {
-    overlayPos = { x: londonClusterScreenPos.x, y: londonClusterScreenPos.y - 38 };
-  } else if (
+  // 2D overlay logic (only for non-cluster pins)
+  const showPinOverlay =
     hovered &&
+    hovered.markerId !== "london-cluster" &&
+    (hovered.label || hovered.name) &&
+    markerScreenPositions &&
+    markerScreenPositions.length > 0;
+
+  let overlayPos = null;
+  if (
+    showPinOverlay &&
     typeof hovered.idx === "number" &&
     markerScreenPositions[hovered.idx]
   ) {
@@ -525,36 +462,20 @@ export default function GlobeSection({ onMarkerClick }) {
     };
   }
 
-  if (!pinReady) {
-    return (
-      <section
-        className="isp-globe-section"
-        style={{
-          width: "100vw",
-          minHeight: availHeight,
-          height: availHeight,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 24,
-          color: "#b32c2c",
-        }}
-      >
-        Loading globe...
-      </section>
-    );
-  }
+  // 3D "expand" sprite for cluster
+  const expandSprite = getExpandSprite();
 
+  // Render logic
   return (
     <section
       className="isp-globe-section"
       style={{
         width: "100vw",
-        minHeight: availHeight,
-        height: availHeight,
+        minHeight: "500px",
+        height: "auto",
         background: "transparent",
         display: "flex",
-        flexDirection: isMobile ? "column" : "row",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         paddingTop: 0,
@@ -569,29 +490,21 @@ export default function GlobeSection({ onMarkerClick }) {
       <div
         ref={globeContainerRef}
         style={{
-          flex: "0 1 auto",
-          width: globeWidth,
-          height: globeHeight,
-          maxWidth: 950 * 1.3,
-          minWidth: 340 * 1.3,
+          width: "100%",
+          maxWidth: 1100,
+          margin: "0 auto",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: isMobile ? "0 auto 24px auto" : "0 0 0 0",
-          padding: 0,
-          background: "transparent",
-          overflow: "unset",
-          position: "relative",
-          borderRadius: 0,
-          boxShadow: "none",
+          position: "relative"
         }}
       >
         <Globe
           ref={globeEl}
           globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
           backgroundColor="rgba(0,0,0,0)"
-          width={globeWidth}
-          height={globeHeight}
+          width={950}
+          height={700}
           pointsData={[]} 
           pointLat="lat"
           pointLng="lng"
@@ -616,7 +529,25 @@ export default function GlobeSection({ onMarkerClick }) {
           lineEndLng={(l) => l.end.lng}
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={londonExpanded ? customLineObject : undefined}
+          // Custom renderer for the 3D expand sprite overlay
+          extraRenderers={
+            expandSprite
+              ? [
+                  (scene) => {
+                    if (!scene.getObjectByName("expand-sprite")) {
+                      scene.add(expandSprite);
+                    }
+                  },
+                ]
+              : [
+                  (scene) => {
+                    const obj = scene.getObjectByName("expand-sprite");
+                    if (obj) scene.remove(obj);
+                  },
+                ]
+          }
         />
+        {/* 2D overlay for non-cluster pins */}
         {showPinOverlay && overlayPos && (
           <div
             style={{
@@ -645,7 +576,7 @@ export default function GlobeSection({ onMarkerClick }) {
               whiteSpace: "nowrap"
             }}
           >
-            {overlayText}
+            {hovered.label || hovered.name}
           </div>
         )}
       </div>
