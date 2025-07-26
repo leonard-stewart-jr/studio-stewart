@@ -15,6 +15,7 @@ const navItems = [
 const socialLinks = [
   { label: "Email", href: "mailto:leonard.stewart@studio-stewart.com" },
   { label: "My Code Here", href: "https://github.com/leonard-stewart-jr" },
+  { label: "UNDERGRADUATE PORTFOLIO", href: "https://github.com/leonard-stewart-jr" },
 ];
 
 export default function Sidebar({
@@ -152,8 +153,8 @@ export default function Sidebar({
         </nav>
         <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
           <p>
-            <b>Studio Stewart</b> — Digital portfolio<br />
-            Student, designer, and maker.<br />
+            <b>Leonard Stewart</b> — Digital portfolio<br />
+            Architecture Student, designer, and maker.<br />
             Explore my work and reach out to connect!
           </p>
         </div>
@@ -164,7 +165,7 @@ export default function Sidebar({
             marginBottom: "100px", // Added to ensure visibility on smaller screens
           }}
         >
-          <h3>Contact & Social</h3>
+          <h3>Other Links</h3>
           <ul>
             {socialLinks.map((link) => (
               <li key={link.href}>
