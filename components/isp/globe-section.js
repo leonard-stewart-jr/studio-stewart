@@ -653,7 +653,8 @@ export default function GlobeSection({ onMarkerClick }) {
           boxShadow: "none",
           position: "relative",
           zIndex: 100,
-        }}
+          left: isMobile ? 0 : -150,
+  }}
       >
         <ol style={{
           listStyle: "none",
