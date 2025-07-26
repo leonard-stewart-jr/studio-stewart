@@ -324,10 +324,10 @@ export default function GlobeSection({ onMarkerClick }) {
         return null;
       };
     } else {
-      // LONDON EXPANDED LOGIC (pins inside cluster 3x bigger)
+      // LONDON EXPANDED LOGIC (pins inside cluster HALF size)
       const N = londonMarkers.length;
       const wheelRadius = LONDON_WHEEL_RADIUS * 1.3;
-      const pinScale = 7 * 3; // 3x bigger pins
+      const pinScale = 7 * 0.5; // half size
 
       objectsData = londonMarkers.map((marker, idx) => {
         const angle = (2 * Math.PI * idx) / N;
@@ -526,7 +526,6 @@ export default function GlobeSection({ onMarkerClick }) {
 
   const showPinOverlay = hovered && hovered.name && !londonExpanded && markerScreenPositions && markerScreenPositions.length > 0;
 
-  // Four-arrows expand SVG for London cluster (for overlay, HTML only)
   const arrowsSvg = (
     <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: "block" }}>
       <g stroke="#b32c2c" strokeWidth="2.5" fill="none" strokeLinecap="round">
