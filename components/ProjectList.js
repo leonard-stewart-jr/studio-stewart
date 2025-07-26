@@ -1,5 +1,9 @@
 import ImageSlider from "/components/ImageSlider";
 
+// This version uses the actual project's sliderImages array for the gallery preview
+// and does NOT use ScrollableBanner at all. You can remove/delete ScrollableBanner
+// if you will no longer use it in this or other components/pages.
+
 export default function ProjectList({ projects, onProjectClick }) {
   return (
     <section
@@ -15,6 +19,78 @@ export default function ProjectList({ projects, onProjectClick }) {
       {projects.map((project, idx) => (
         <div
           key={project.slug}
+          onClick={() => onProjectClick(idx)}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            cursor: "pointer",
+            width: "100%",
+            userSelect: "none",
+            gap: "56px",
+          }}
+          tabIndex={0}
+          aria-label={`Open ${project.title} project`}
+        >
+          {/* Left: Info */}
+          <div
+            style={{
+              minWidth: 220,
+              maxWidth: 240,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: 18,
+              flexShrink: 0,
+            }}
+          >
+            <div style={{ textAlign: "right" }}>
+              <div
+                style={{
+                  fontWeight: 400,
+                  fontSize: 16,
+                  marginBottom: 2,
+                  letterSpacing: 0.01,
+                  color: "#222",
+                }}
+              >
+                {project.title}
+              </div>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: "#7c7c7c",
+                  letterSpacing: ".05em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {project.grade} — {project.type}
+              </div>
+            </div>
+          </div>
+          {/* Right: Image Slider */}
+          <div
+            style={{
+              flex: 1,
+              minWidth: 0,
+              maxWidth: 700,
+              aspectRatio: "16/9",
+              background: "#eee",
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              borderRadius: 0,
+              boxShadow: "none",
+              position: "relative",
+            }}
+          >
+            <ImageSlider images={project.sliderImages} />
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
           onClick={() => onProjectClick(idx)}
           style={{
             display: "flex",
