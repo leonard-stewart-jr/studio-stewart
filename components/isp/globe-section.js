@@ -616,7 +616,7 @@ export default function GlobeSection({ onMarkerClick }) {
               color: "#fff",
               borderRadius: 4,
               padding: "8px 18px",
-              fontFamily: "coolvetica", sans-serif;
+              fontFamily: "coolvetica", sans-serif,
               fontWeight: 700,
               fontSize: 18,
               letterSpacing: ".03em",
@@ -675,7 +675,7 @@ export default function GlobeSection({ onMarkerClick }) {
                   fontWeight: 600,
                   fontSize: 16,
                   cursor: "pointer",
-                  font-family: "coolvetica", sans-serif;
+                  font-family: "coolvetica", sans-serif,
                   display: "flex",
                   alignItems: "flex-start",
                   gap: 8,
@@ -700,7 +700,7 @@ export default function GlobeSection({ onMarkerClick }) {
                 title={item.name}
               >
                 <span style={{
-                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  font-family: "coolvetica", sans-serif,
                   fontWeight: 700,
                   fontSize: 16,
                   minWidth: 18,
@@ -712,7 +712,7 @@ export default function GlobeSection({ onMarkerClick }) {
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
-                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  font-family: "coolvetica", sans-serif,
                   fontWeight: 600,
                   fontSize: 16,
                   letterSpacing: ".06em",
@@ -728,7 +728,7 @@ export default function GlobeSection({ onMarkerClick }) {
               {item.year && (
                 <div
                   style={{
-                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    font-family: "coolvetica", sans-serif,
                     fontWeight: 400,
                     fontSize: 12,
                     color: "#b1b1ae",
