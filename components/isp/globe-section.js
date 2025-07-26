@@ -241,7 +241,7 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
 
       customPointObject = (obj) => {
-        // LONDON CLUSTER: SVG PLANE, NO WHITE CIRCLE, BIGGER HIT AREA
+        // LONDON CLUSTER: SVG PLANE, NO WHITE CIRCLE, EVEN LARGER HIT AREA
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
           const dotRadius = CLUSTER_DOT_SIZE * 2.5 * 1.5;
@@ -262,8 +262,8 @@ export default function GlobeSection({ onMarkerClick }) {
           });
           group.add(svgPlane);
 
-          // Large transparent hit area for click/hover (make bigger)
-          const hitGeom = new THREE.CircleGeometry(svgPlaneSize * 1.1, 32);
+          // EVEN LARGER hit area for click/hover
+          const hitGeom = new THREE.CircleGeometry(svgPlaneSize * 1.8, 48);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -281,7 +281,7 @@ export default function GlobeSection({ onMarkerClick }) {
           return group;
         }
 
-        // ALL OTHER PINS: large transparent hit circle matches visible pin
+        // ALL OTHER PINS: even larger hit circle
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           const scale = 9 * 1.5;
@@ -303,8 +303,8 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Transparent hit circle matches pin size
-          const hitGeom = new THREE.CircleGeometry(scale * 0.18, 24);
+          // Hit area much bigger
+          const hitGeom = new THREE.CircleGeometry(scale * 0.42, 32);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -386,8 +386,8 @@ export default function GlobeSection({ onMarkerClick }) {
           pin.userData = { markerId: obj.markerId };
           group.add(pin);
 
-          // Transparent hit circle matches pin size
-          const hitGeom = new THREE.CircleGeometry(scale * 0.18, 24);
+          // Hit area much bigger
+          const hitGeom = new THREE.CircleGeometry(scale * 0.42, 32);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
