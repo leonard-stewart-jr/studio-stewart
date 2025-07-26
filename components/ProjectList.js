@@ -1,9 +1,3 @@
-import ImageSlider from "/components/ImageSlider";
-
-// This version uses the actual project's sliderImages array for the gallery preview
-// and does NOT use ScrollableBanner at all. You can remove/delete ScrollableBanner
-// if you will no longer use it in this or other components/pages.
-
 export default function ProjectList({ projects, onProjectClick }) {
   return (
     <section
@@ -19,18 +13,14 @@ export default function ProjectList({ projects, onProjectClick }) {
       {projects.map((project, idx) => (
         <div
           key={project.slug}
-          onClick={() => onProjectClick(idx)}
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            cursor: "pointer",
             width: "100%",
             userSelect: "none",
             gap: "56px",
           }}
-          tabIndex={0}
-          aria-label={`Open ${project.title} project`}
         >
           {/* Left: Info */}
           <div
@@ -68,8 +58,9 @@ export default function ProjectList({ projects, onProjectClick }) {
               </div>
             </div>
           </div>
-          {/* Right: Image Slider */}
+          {/* Right: Clickable Banner Image as Card */}
           <div
+            onClick={() => onProjectClick(idx)}
             style={{
               flex: 1,
               minWidth: 0,
@@ -79,99 +70,48 @@ export default function ProjectList({ projects, onProjectClick }) {
               overflow: "hidden",
               display: "flex",
               alignItems: "center",
-              borderRadius: 0,
-              boxShadow: "none",
+              borderRadius: 8,
               position: "relative",
+              boxShadow: "0 2px 12px rgba(32,32,32,0.12)",
+              cursor: "pointer"
+            }}
+            tabIndex={0}
+            aria-label={`Open interactive modal for ${project.title}`}
+            onKeyDown={e => {
+              if (e.key === "Enter" || e.key === " ") onProjectClick(idx);
             }}
           >
-            <ImageSlider images={project.sliderImages} />
-          </div>
-        </div>
-      ))}
-    </section>
-  );
-}
-          onClick={() => onProjectClick(idx)}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            cursor: "pointer",
-            width: "100%",
-            userSelect: "none",
-            gap: "56px",
-          }}
-          tabIndex={0}
-          aria-label={`Open ${project.title} project`}
-        >
-          {/* Left: Info */}
-          <div
-            style={{
-              minWidth: 220,
-              maxWidth: 240,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-              gap: 18,
-              flexShrink: 0,
-            }}
-          >
-            <div style={{ textAlign: "right" }}>
-              <div
+            {project.bannerSrc && (
+              <img
+                src={project.bannerSrc}
+                alt={project.title + " banner"}
                 style={{
-                  fontWeight: 400,
-                  fontSize: 16,
-                  marginBottom: 2,
-                  letterSpacing: 0.01,
-                  color: "#222",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                  filter: "none",
+                  transition: "filter 0.18s"
                 }}
-              >
-                {project.title}
-              </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "#7c7c7c",
-                  letterSpacing: ".05em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {project.grade} — {project.type}
-              </div>
+              />
+            )}
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                bottom: 0,
+                padding: "10px 0",
+                background: "rgba(32,32,32,0.64)",
+                color: "#e6dbb9",
+                fontWeight: 600,
+                fontSize: 18,
+                textAlign: "center",
+                letterSpacing: ".04em"
+              }}
+            >
+              View Interactive Model
             </div>
-          </div>
-          {/* Right: Image Slider */}
-          <div
-            style={{
-              flex: 1,
-              minWidth: 0,
-              maxWidth: 700,
-              aspectRatio: "16/9",
-              background: "#eee",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              borderRadius: 0,
-              boxShadow: "none",
-              position: "relative",
-            }}
-          >
-            <ImageSlider
-              images={[
-                { src: "/images/6am-summer.jpg", label: "6AM, Summer Solstice" },
-                { src: "/images/noon-summer.jpg", label: "Noon, Summer Solstice" },
-                { src: "/images/6pm-summer.jpg", label: "6PM, Summer Solstice" },
-                { src: "/images/midnight-summer.jpg", label: "Midnight, Summer Solstice" },
-                { src: "/images/6am-winter.jpg", label: "6AM, Winter Solstice" },
-                { src: "/images/noon-winter.jpg", label: "Noon, Winter Solstice" },
-                { src: "/images/6pm-winter.jpg", label: "6PM, Winter Solstice" },
-                { src: "/images/midnight-winter.jpg", label: "Midnight, Winter Solstice" },
-                { src: "/images/6am-equinox.jpg", label: "6AM, Spring/Fall Equinox" },
-                { src: "/images/noon-equinox.jpg", label: "Noon, Spring/Fall Equinox" },
-                { src: "/images/6pm-equinox.jpg", label: "6PM, Spring/Fall Equinox" },
-                { src: "/images/midnight-equinox.jpg", label: "Midnight, Spring/Fall Equinox" },
-              ]}
-            />
           </div>
         </div>
       ))}
