@@ -23,7 +23,6 @@ const LONDON_WHEEL_ALTITUDE = 0.018;
 
 const DOT_ALTITUDE = 0.012;
 const DOT_COLOR = "#b32c2c";
-const CLUSTER_CENTER_COLOR = "#fff";
 const CLUSTER_DOT_SIZE = 0.7 * 2.2;
 
 // Offset for moving London cluster northwest (tweak as needed)
@@ -241,26 +240,11 @@ export default function GlobeSection({ onMarkerClick }) {
       ];
 
       customPointObject = (obj) => {
-        // LONDON CLUSTER CUSTOM OBJECT
+        // LONDON CLUSTER: ONLY THE SVG PLANE, NO WHITE CIRCLE
         if (obj.isLondonCluster) {
           const group = new THREE.Group();
-          const dotRadius = CLUSTER_DOT_SIZE * 2.5;
-          const diskThickness = 0.10;
-          // 3D white disk, sunk into globe
-          const diskGeom = new THREE.CylinderGeometry(dotRadius, dotRadius, diskThickness, 48);
-          const diskMat = new THREE.MeshPhongMaterial({
-            color: CLUSTER_CENTER_COLOR,
-            shininess: 60,
-            flatShading: true,
-          });
-          const disk = new THREE.Mesh(diskGeom, diskMat);
-          disk.position.set(0, 0, -diskThickness / 2); // bottom flush with globe
-          disk.castShadow = false;
-          disk.receiveShadow = false;
-          disk.name = "london-cluster-dot";
-          group.add(disk);
-
-          // SVG expand icon as plane above disk
+          const dotRadius = CLUSTER_DOT_SIZE * 2.5 * 1.5;
+          // SVG expand icon as plane (NO white disk)
           const svgPlaneSize = dotRadius * 1.35;
           const svgGeom = new THREE.PlaneGeometry(svgPlaneSize * 2, svgPlaneSize * 2);
           const svgMat = new THREE.MeshBasicMaterial({
@@ -269,7 +253,7 @@ export default function GlobeSection({ onMarkerClick }) {
             color: 0xffffff
           });
           const svgPlane = new THREE.Mesh(svgGeom, svgMat);
-          svgPlane.position.set(0, 0, diskThickness * 0.51);
+          svgPlane.position.set(0, 0, 0);
           svgPlane.renderOrder = 10;
           svgPlane.name = "london-expand-plane";
           getExpandTexture().then((tex) => {
@@ -287,7 +271,7 @@ export default function GlobeSection({ onMarkerClick }) {
             depthWrite: false,
           });
           const hitCircle = new THREE.Mesh(hitGeom, hitMat);
-          hitCircle.position.set(0, 0, diskThickness * 0.43);
+          hitCircle.position.set(0, 0, 0.01);
           hitCircle.userData = { markerId: "london-cluster" };
           hitCircle.name = "london-cluster-hit";
           group.add(hitCircle);
@@ -300,7 +284,7 @@ export default function GlobeSection({ onMarkerClick }) {
         // ALL OTHER PINS: with large transparent hit circle
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = 9;
+          const scale = 9 * 1.5;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -320,7 +304,7 @@ export default function GlobeSection({ onMarkerClick }) {
           group.add(pin);
 
           // Add large transparent circle for easier click
-          const hitGeom = new THREE.CircleGeometry(0.14, 16);
+          const hitGeom = new THREE.CircleGeometry(0.14 * 1.5, 16);
           const hitMat = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             transparent: true,
@@ -722,7 +706,7 @@ export default function GlobeSection({ onMarkerClick }) {
           boxShadow: "none",
           position: "relative",
           zIndex: 100,
-          left: isMobile ? 0 : -150,
+          left: isMobile ? 0 : 0,
         }}
       >
         <ol style={{
