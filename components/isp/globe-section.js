@@ -208,26 +208,27 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         ];
 
         customPointObject = (obj) => {
-          // LONDON CLUSTER: TEMPORARY RED BOX
 if (obj.isLondonCluster) {
   const group = new THREE.Group();
-  // Box size (adjust as desired)
-  const boxSize = 0.13;
-  const geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+  // Tall white rectangle: width=0.13, height=0.26, depth=0.13
+  const width = 0.13;
+  const height = 0.26;
+  const depth = 0.13;
+  const geometry = new THREE.BoxGeometry(width, height, depth);
   const material = new THREE.MeshBasicMaterial({
-    color: 0xb32c2c, // Red
+    color: 0xffffff, // White
     transparent: false,
     opacity: 1,
     depthTest: false,
   });
-  const box = new THREE.Mesh(geometry, material);
-  box.position.set(0, 0, 0);
-  box.renderOrder = 10;
-  box.name = "london-expand-box";
-  group.add(box);
+  const rect = new THREE.Mesh(geometry, material);
+  rect.position.set(0, 0, 0);
+  rect.renderOrder = 10;
+  rect.name = "london-expand-rect";
+  group.add(rect);
 
   // Hit area (make it easier to click)
-  const hitGeom = new THREE.BoxGeometry(boxSize * HITBOX_BUFFER, boxSize * HITBOX_BUFFER, boxSize * HITBOX_BUFFER);
+  const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, depth * HITBOX_BUFFER);
   const hitMat = new THREE.MeshBasicMaterial({
     color: 0xffffff,
     transparent: true,
