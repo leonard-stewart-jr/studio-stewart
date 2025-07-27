@@ -208,42 +208,42 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         ];
 
         customPointObject = (obj) => {
-          // LONDON CLUSTER: SVG PLANE
-          if (obj.isLondonCluster && expandSvgTex) {
-            const group = new THREE.Group();
-            const dotRadius = CLUSTER_DOT_SIZE * 2.5 * 1.5;
-            const svgPlaneSize = dotRadius * 1.35;
-            const svgGeom = new THREE.PlaneGeometry(svgPlaneSize * 2, svgPlaneSize * 2);
-            const svgMat = new THREE.MeshBasicMaterial({
-              transparent: true,
-              depthTest: false,
-              color: 0xffffff,
-              map: expandSvgTex
-            });
-            const svgPlane = new THREE.Mesh(svgGeom, svgMat);
-            svgPlane.position.set(0, 0, 0);
-            svgPlane.renderOrder = 10;
-            svgPlane.name = "london-expand-plane";
-            group.add(svgPlane);
+          // LONDON CLUSTER: TEMPORARY RED BOX
+if (obj.isLondonCluster) {
+  const group = new THREE.Group();
+  // Box size (adjust as desired)
+  const boxSize = 0.13;
+  const geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xb32c2c, // Red
+    transparent: false,
+    opacity: 1,
+    depthTest: false,
+  });
+  const box = new THREE.Mesh(geometry, material);
+  box.position.set(0, 0, 0);
+  box.renderOrder = 10;
+  box.name = "london-expand-box";
+  group.add(box);
 
-            // Hit area (buffered plane, but not huge)
-            const hitGeom = new THREE.PlaneGeometry(svgPlaneSize * HITBOX_BUFFER * 2, svgPlaneSize * HITBOX_BUFFER * 2);
-            const hitMat = new THREE.MeshBasicMaterial({
-              color: 0xffffff,
-              transparent: true,
-              opacity: 0.01,
-              depthWrite: false,
-            });
-            const hitPlane = new THREE.Mesh(hitGeom, hitMat);
-            hitPlane.position.set(0, 0, 0.02);
-            hitPlane.userData = { markerId: "london-cluster", label: "EXPAND" };
-            hitPlane.name = "london-cluster-hit";
-            group.add(hitPlane);
+  // Hit area (make it easier to click)
+  const hitGeom = new THREE.BoxGeometry(boxSize * HITBOX_BUFFER, boxSize * HITBOX_BUFFER, boxSize * HITBOX_BUFFER);
+  const hitMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.01,
+    depthWrite: false,
+  });
+  const hitBox = new THREE.Mesh(hitGeom, hitMat);
+  hitBox.position.set(0, 0, 0.02);
+  hitBox.userData = { markerId: "london-cluster", label: "EXPAND" };
+  hitBox.name = "london-cluster-hit";
+  group.add(hitBox);
 
-            group.userData = { markerId: "london-cluster", label: "EXPAND" };
-            group.name = "london-cluster-group";
-            return group;
-          }
+  group.userData = { markerId: "london-cluster", label: "EXPAND" };
+  group.name = "london-cluster-group";
+  return group;
+}
 
           // ALL OTHER PINS: use pin-utils helpers for hitbox etc.
           if (obj.isStandardPin && pinModel) {
