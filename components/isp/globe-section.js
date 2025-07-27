@@ -677,7 +677,7 @@ if (obj.isLondonCluster) {
           ref={globeEl}
           globeImageUrl={globeImageUrl}
           atmosphereColor="#e6dbb9"
-          atmosphereAltitude: 0.35,
+          atmosphereAltitude={0.35}
           backgroundColor="rgba(0,0,0,0)"
           width={950}
           height={700}
