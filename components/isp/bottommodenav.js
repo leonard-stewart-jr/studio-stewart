@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { getNavPalette } from "./modal/pin-utils";
+import { getPinPalette } from "./modal/pin-utils";
 
 // Mode definitions
 const MODE_LABELS = {
