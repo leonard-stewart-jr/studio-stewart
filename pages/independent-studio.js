@@ -47,32 +47,6 @@ export default function IndependentStudio() {
         </div>
         <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
       </div>
-      {mainSection === "history" && (
-        <div
-          className="nav-card nav-card-bot"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            boxSizing: "border-box"
-          }}
-        >
-          <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <ISPSubNav active={activeHistory} onChange={setActiveHistory} />
-          </div>
-          <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
-        </div>
-      )}
-
       {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
       {mainSection === "history" && (
         <section className="isp-globe-section">
@@ -112,6 +86,11 @@ export default function IndependentStudio() {
         onClose={() => setModalData(null)}
         marker={modalData}
       />
+
+      {/* Bottom Mode Nav */}
+      {mainSection === "history" && (
+        <BottomModeNav active={activeHistory} onChange={setActiveHistory} />
+      )}
     </>
   );
 }
