@@ -111,40 +111,80 @@ export function svgStringToTexture(svgString, size = 128) {
   });
 }
 
-// --- ANALOGOUS RED PALETTE + RANDOM ASSIGN ---
-/**
- * Array of 12 "analogous reds" (from orangish to purpleish).
- * Generated via HSL: red hue ±20deg, full saturation, 45%-60% lightness.
- */
-export const ANALOGOUS_REDS = [
-  "#e4572e", // orange-red
-  "#ea5a47",
-  "#e94f64",
-  "#e03d7b",
-  "#b32c2c", // main red
-  "#c23b49",
-  "#c94e63",
-  "#db2f3b",
-  "#a82852", // purplish-red
-  "#c54477",
-  "#b52d36",
-  "#e13c4c"
+// --- COLOR THEMES FOR PINS/TOC ---
+// 2. Earthtones Palette (for World/Globe)
+export const EARTHTONES_PALETTE = [
+  "#A0522D", // brown
+  "#CD853F", // tan
+  "#C19A6B", // camel
+  "#F4E2D8", // sand
+  "#B6B09A", // sage
+  "#7E6651", // coffee
+  "#3B3A30", // dark olive
+  "#A3B18A", // moss
+  "#C2B280", // khaki
+  "#7C6F57", // taupe
 ];
 
+// 3. USA Theme Palette (for USA Map)
+export const USA_THEME_PALETTE = [
+  "#B22234", // red
+  "#FFFFFF", // white
+  "#3C3B6E", // navy blue
+  "#0052A5", // bright blue
+  "#C60C30", // bright red
+  "#A2AAAD", // silver/gray
+  "#FFD700", // gold
+  "#B0B7C6", // steel blue
+];
+
+// 4. SD Theme Palette (for South Dakota Map)
+export const SD_THEME_PALETTE = [
+  "#8B4513", // prairie brown
+  "#E1C699", // dry grass
+  "#B2D7E4", // sky blue
+  "#A9A583", // sage
+  "#F5EEDC", // cloud
+  "#B4654A", // badlands clay
+  "#8CA087", // prairie green
+  "#5D737E", // river blue
+  "#D0B49F", // sandstone
+  "#AAB7B8", // granite gray
+];
+
+// ---- PALETTE SELECTOR UTILITY ----
+/**
+ * Get the color palette for a given theme key.
+ * @param {string} theme "world" | "usa" | "sd" | "analogous" (default: "world")
+ * @returns {string[]} color palette array
+ */
+export function getPinPalette(theme = "world") {
+  switch (theme) {
+    case "usa":
+      return USA_THEME_PALETTE;
+    case "sd":
+      return SD_THEME_PALETTE;
+    case "world":
+    default:
+      return EARTHTONES_PALETTE;
+  }
+}
+
+// ---- RANDOM COLOR ASSIGNMENT (works for any palette) ----
 /**
  * Randomly assign a color from the palette for each marker, but keep it matched between pins and TOC.
  * Uses a seeded shuffle for consistency.
+ * @param {number} count Number of pins/markers
+ * @param {number} seed Seed for deterministic assignment
+ * @param {string[]} palette Color palette array (defaults to analogous reds)
  */
-export function getAnalogousRedAssignments(count, seed = 42) {
-  // Fisher-Yates shuffle with seed
-  let arr = [...ANALOGOUS_REDS];
-  // Repeat palette if not enough colors
+export function getPaletteAssignments(count, seed = 42, palette) {
+  let arr = [...palette];
   while (arr.length < count) arr = arr.concat(arr);
   arr = arr.slice(0, count);
 
-  // Deterministic shuffle
+  // Fisher-Yates shuffle with seed
   function seededRandom() {
-    // Simple LCG
     let x = Math.sin(seed++) * 10000;
     return x - Math.floor(x);
   }
