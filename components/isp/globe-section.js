@@ -216,7 +216,7 @@ if (obj.isLondonCluster) {
   const depth = 1.5;
   const geometry = new THREE.BoxGeometry(width, height, depth);
   const material = new THREE.MeshBasicMaterial({
-    color: 0xffffff, // White
+    color: 0x000000, // White
     transparent: false,
     opacity: 1,
     depthTest: false,
