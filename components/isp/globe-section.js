@@ -134,7 +134,9 @@ export default function GlobeSection({ onMarkerClick }) {
     const londonMarkers = getLondonMarkers();
     const nonLondonMarkers = getNonLondonMarkers();
     const londonCenter = getLondonClusterCenter();
-    const customClusterCoords = getLondonClusterCustomCoords(londonCenter);
+
+    // --- CUSTOM COORDINATE for LONDON CLUSTER BUTTON ---
+    const customClusterCoords = { lat: 53.236866, lng: -4.292616 };
 
     const tocList = globeLocations.map((marker, idx) => {
       let year = "";
