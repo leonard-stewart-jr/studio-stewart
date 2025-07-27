@@ -41,7 +41,7 @@ export default function BottomModeNav({ active, onChange }) {
         if (mode === "sd") justify = "flex-end";
         const isActive = active === mode;
         const label = MODE_LABELS[mode];
-        const palette = getNavPalette(mode); // Array of colors
+        const palette = getPinPalette(mode); // Array of colors
 
         return (
           <div
