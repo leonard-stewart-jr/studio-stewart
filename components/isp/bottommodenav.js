@@ -82,7 +82,7 @@ export default function BottomModeNav({ active, onChange }) {
                 fontFamily: "coolvetica, sans-serif",
                 color: palette[0], // fallback for accessibility
                 fontWeight: 700,
-                fontSize: isActive ? 24 : 16,
+                fontSize: isActive ? 36 : 24, // <-- FIXED FONT SIZE HERE
                 letterSpacing: ".07em",
                 textTransform: "uppercase",
                 lineHeight: 1.15,
