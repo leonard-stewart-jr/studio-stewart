@@ -19,7 +19,7 @@ export default function BottomModeNav({ active, onChange }) {
       style={{
         position: "fixed",
         left: 0,
-        bottom: 0,
+        bottom: 35,
         width: "100vw",
         height: 76,
         zIndex: 4000,
