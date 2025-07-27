@@ -39,7 +39,7 @@ const CAMERA_CONFIGS = {
   sd:    { lat: 44.5, lng: -100, altitude: 0.9 }
 };
 const GLOBE_IMAGES = {
-  world: "/images/globe/world-hd.jpg", // <-- Your world map image
+  world: "/images/globe/world-hd.png", // <-- Your world map image
   usa: "/images/globe/usa-hd.jpg",     // <-- Your USA outline 
   sd: "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
   // Swap in your higher-res or SD-outlined globe images as needed
