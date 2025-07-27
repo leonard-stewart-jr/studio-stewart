@@ -78,7 +78,7 @@ export default function BottomModeNav({ active, onChange }) {
                 fontFamily: "coolvetica, sans-serif",
                 color: theme.fill,
                 fontWeight: 700,
-                fontSize: 16,
+                fontSize: 24,
                 letterSpacing: ".07em",
                 textTransform: "uppercase",
                 lineHeight: 1.15,
@@ -95,7 +95,7 @@ export default function BottomModeNav({ active, onChange }) {
                 boxShadow: "none",
                 userSelect: "none",
                 whiteSpace: "nowrap",
-                fontSize: isActive ? 24 : 16,
+                fontSize: isActive ? 36 : 24,
               }}
             >
               {theme.label}
