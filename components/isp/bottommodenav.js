@@ -1,25 +1,29 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { getNavPalette } from "./modal/pin-utils";
 
-// Theme fill colors for each mode (from your pin file or palette)
-const MODE_THEMES = {
-  world: { fill: "#b38c4d", label: "WORLD" },               // earthtone
-  usa: { fill: "#b32c2c", label: "UNITED STATES" },         // usa red
-  sd: { fill: "#3e6c4b", label: "SOUTH DAKOTA" },           // sd green
+// Mode definitions
+const MODE_LABELS = {
+  world: "WORLD",
+  usa: "UNITED STATES",
+  sd: "SOUTH DAKOTA",
 };
 
-// Stroke color (always #181818)
+const MODES = ["world", "usa", "sd"];
 const STROKE_COLOR = "#181818";
 
+// Util: Split label into array of letters, including spaces
+function splitLabel(label) {
+  return label.split(""); // includes spaces
+}
+
 export default function BottomModeNav({ active, onChange }) {
-  // Layout: left, center, right
-  const modes = ["world", "usa", "sd"];
   return (
     <nav
       aria-label="Mode selector"
       style={{
         position: "fixed",
         left: 0,
-        bottom: 35,
+        bottom: 35, // Shift up 35px from bottom
         width: "100vw",
         height: 76,
         zIndex: 4000,
@@ -30,14 +34,14 @@ export default function BottomModeNav({ active, onChange }) {
         userSelect: "none",
       }}
     >
-      {modes.map((mode, idx) => {
-        // Spread the buttons: left, center, right
+      {MODES.map((mode) => {
+        // Button alignment
         let justify = "flex-start";
         if (mode === "usa") justify = "center";
         if (mode === "sd") justify = "flex-end";
         const isActive = active === mode;
-        // Label
-        const theme = MODE_THEMES[mode];
+        const label = MODE_LABELS[mode];
+        const palette = getNavPalette(mode); // Array of colors
 
         return (
           <div
@@ -58,7 +62,7 @@ export default function BottomModeNav({ active, onChange }) {
             <motion.button
               type="button"
               aria-pressed={isActive}
-              aria-label={theme.label}
+              aria-label={label}
               onClick={() => !isActive && onChange(mode)}
               disabled={isActive}
               whileTap={{ scale: 1.15 }}
@@ -76,13 +80,12 @@ export default function BottomModeNav({ active, onChange }) {
                 border: "none",
                 outline: "none",
                 fontFamily: "coolvetica, sans-serif",
-                color: theme.fill,
+                color: palette[0], // fallback for accessibility
                 fontWeight: 700,
-                fontSize: 24,
+                fontSize: isActive ? 24 : 16,
                 letterSpacing: ".07em",
                 textTransform: "uppercase",
                 lineHeight: 1.15,
-                textShadow: `-1px -1px 0 ${STROKE_COLOR}, 1px -1px 0 ${STROKE_COLOR}, -1px 1px 0 ${STROKE_COLOR}, 1px 1px 0 ${STROKE_COLOR}`,
                 WebkitTextStroke: `1.5px ${STROKE_COLOR}`,
                 cursor: isActive ? "default" : "pointer",
                 opacity: isActive ? 1 : 0.4,
@@ -95,10 +98,36 @@ export default function BottomModeNav({ active, onChange }) {
                 boxShadow: "none",
                 userSelect: "none",
                 whiteSpace: "nowrap",
-                fontSize: isActive ? 36 : 24,
+                display: "flex",
+                alignItems: "flex-end",
+                gap: 0,
               }}
             >
-              {theme.label}
+              {splitLabel(label).map((char, i) => (
+                <span
+                  key={i}
+                  style={{
+                    color: char === " " ? "transparent" : palette[i % palette.length],
+                    WebkitTextStroke: char === " " ? "none" : `1.5px ${STROKE_COLOR}`,
+                    textShadow:
+                      char === " "
+                        ? "none"
+                        : `-1px -1px 0 ${STROKE_COLOR}, 1px -1px 0 ${STROKE_COLOR}, -1px 1px 0 ${STROKE_COLOR}, 1px 1px 0 ${STROKE_COLOR}`,
+                    fontFamily: "coolvetica, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "inherit",
+                    letterSpacing: ".07em",
+                    lineHeight: 1.15,
+                    textTransform: "uppercase",
+                    display: "inline-block",
+                    userSelect: "none",
+                    marginRight: 0,
+                  }}
+                  aria-hidden={char === " "}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
             </motion.button>
           </div>
         );
