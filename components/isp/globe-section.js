@@ -210,23 +210,26 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 customPointObject = (obj) => {
   if (obj.isLondonCluster && expandSvgTex) {
     const group = new THREE.Group();
-    // Size: width 1.8, height 3.5 (plane is always facing camera)
+    // Desired plane size
     const width = 1.8;
     const height = 3.5;
     const geometry = new THREE.PlaneGeometry(width, height);
+
     const material = new THREE.MeshBasicMaterial({
       map: expandSvgTex,
-      transparent: true, // Plane is transparent except for the SVG lines
+      transparent: true, // Transparent plane, icon only
       opacity: 1,
       depthTest: false,
+      side: THREE.DoubleSide, // Show from any angle
     });
+
     const plane = new THREE.Mesh(geometry, material);
     plane.position.set(0, 0, 0);
     plane.renderOrder = 10;
     plane.name = "london-expand-plane";
     group.add(plane);
 
-    // Hit area (make it easier to click)
+    // Hitbox for easy clicking
     const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, 0.25);
     const hitMat = new THREE.MeshBasicMaterial({
       color: 0xffffff,
