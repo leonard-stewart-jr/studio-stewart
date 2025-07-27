@@ -52,8 +52,8 @@ export default [
   {
     name: "MAISON DE FORCE: LABOR, REFORM, AND THE MODERN PRISON",
     modalWidth: 3810,
-    lat: 51.0543,
-    lon: 3.7215,
+    lat: 50.850346,
+    lon: 4.351721,
     timeline: [
       {
         year: "c. 1772-1860 CE",
