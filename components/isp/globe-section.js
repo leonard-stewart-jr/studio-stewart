@@ -10,8 +10,8 @@ import {
   positionPin,
   bufferedBoundingGeometry,
   svgStringToTexture,
-  ANALOGOUS_REDS,
-  getAnalogousRedAssignments
+  getPinPalette,
+  getPaletteAssignments
 } from "./modal/pin-utils";
 
 // --- CONSTANTS AND CONFIGURATION ---
@@ -116,10 +116,11 @@ export default function GlobeSection({ onMarkerClick }) {
   const [tocScreenPositions, setTocScreenPositions] = useState([]);
   const [svgDims, setSvgDims] = useState({ width: 0, height: 0 });
 
-  // --- ANALOGOUS RED PALETTE RANDOM ASSIGNMENT ---
-  const redAssignments = useMemo(
-    () => getAnalogousRedAssignments(globeLocations.length, 42),
-    []
+  // --- THEME-BASED PALETTE ASSIGNMENT ---
+  const earthtonePalette = useMemo(() => getPinPalette("world"), []);
+  const colorAssignments = useMemo(
+    () => getPaletteAssignments(globeLocations.length, 42, earthtonePalette),
+    [earthtonePalette]
   );
 
   const {
@@ -145,7 +146,7 @@ export default function GlobeSection({ onMarkerClick }) {
         name: marker.name,
         marker,
         year,
-        color: redAssignments[idx]
+        color: colorAssignments[idx]
       }
     });
 
@@ -178,7 +179,7 @@ export default function GlobeSection({ onMarkerClick }) {
             showDotAndPin: idx === comparisonMarkerIdx,
             idx,
             altitude: DOT_ALTITUDE,
-            color: redAssignments[globalIdx],
+            color: colorAssignments[globalIdx],
             label: m.name
           }
         }),
@@ -285,7 +286,7 @@ export default function GlobeSection({ onMarkerClick }) {
           isStandardPin: true,
           altitude: 0,
           pinScale,
-          color: redAssignments[globalIdx]
+          color: colorAssignments[globalIdx]
         };
       });
 
@@ -370,7 +371,7 @@ export default function GlobeSection({ onMarkerClick }) {
       };
     }
     return { objectsData, linesData, customPointObject, customLineObject, tocList, comparisonMarkerIdx };
-  }, [londonExpanded, pinReady, redAssignments, expandSvgTex]);
+  }, [londonExpanded, pinReady, colorAssignments, expandSvgTex]);
 
   useEffect(() => {
     if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
