@@ -407,6 +407,13 @@ customPointObject = (obj) => {
           color: colorAssignments[idx]
         }
       });
+      // Pin scaling for USA and SD
+      const pinScale =
+        mode === "usa"
+          ? NORMAL_PIN_SCALE * 0.5
+          : mode === "sd"
+          ? NORMAL_PIN_SCALE * 0.25
+          : NORMAL_PIN_SCALE;
       const objectsData = data.map((marker, idx) => ({
         ...marker,
         lat: marker.lat,
@@ -416,13 +423,14 @@ customPointObject = (obj) => {
         idx,
         altitude: DOT_ALTITUDE,
         color: colorAssignments[idx],
-        label: marker.name
+        label: marker.name,
+        pinScale // <-- Pass the scale for each pin
       }));
       const customPointObject = (obj) => {
         const pinModel = getPinModel();
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = NORMAL_PIN_SCALE;
+          const scale = obj.pinScale || NORMAL_PIN_SCALE;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
