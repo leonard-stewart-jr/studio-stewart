@@ -16,7 +16,7 @@ export default function InfoModal({ open, onClose, marker }) {
     let width = marker.modalWidth || 2436;
     let height = marker.modalHeight || 720;
 
-    // World modals: exact names from your screenshot
+    // World modals: exact names from your screenshot/folder list
     if (marker.name.toLowerCase().includes("british penal colonies")) {
       src = "/models/world/british_penal_colonies/index.html";
     } else if (marker.name.toLowerCase().includes("eastern state")) {
@@ -40,6 +40,9 @@ export default function InfoModal({ open, onClose, marker }) {
     } else if (marker.name.toLowerCase().includes("the tower of london")) {
       src = "/models/world/the_tower_of_london/index.html";
     }
+
+    // Debug: log the resolved src and marker
+    console.log({ src, marker });
 
     return (
       <FloatingModal
