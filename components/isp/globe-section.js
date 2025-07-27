@@ -219,7 +219,6 @@ customPointObject = (obj) => {
       color: 0x000000,
       transparent: true,
       opacity: 0.89, // You can tweak this for more/less transparency
-      depthTest: false,
     });
     const box = new THREE.Mesh(geometry, material);
     box.position.set(0, 0, 0);
