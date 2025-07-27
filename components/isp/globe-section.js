@@ -211,9 +211,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 if (obj.isLondonCluster) {
   const group = new THREE.Group();
   // Tall white rectangle: width=0.13, height=0.26, depth=0.13
-  const width = 0.13;
-  const height = 0.26;
-  const depth = 0.13;
+  const width = 1.5;
+  const height = 3.0;
+  const depth = 1.5;
   const geometry = new THREE.BoxGeometry(width, height, depth);
   const material = new THREE.MeshBasicMaterial({
     color: 0xffffff, // White
@@ -676,6 +676,8 @@ if (obj.isLondonCluster) {
         <Globe
           ref={globeEl}
           globeImageUrl={globeImageUrl}
+          atmosphereColor="#e6dbb9"
+          atmosphereAltitude: 0.35,
           backgroundColor="rgba(0,0,0,0)"
           width={950}
           height={700}
