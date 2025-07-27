@@ -7,7 +7,7 @@ export default [
     timeline: [
       {
         year: "c. 3200–1600 BCE",
-        title: "THE FIRST KNOWN PRISONS"
+        title: "MESOPOTAMIA"
       }
     ]
   },
@@ -19,7 +19,7 @@ export default [
     timeline: [
       {
         year: "c. 600-300 BCE",
-        title: "POLITICAL DETENTION AND EXECUTION"
+        title: "THE MAMERTINE PRISON"
       }
     ]
   },
@@ -32,7 +32,7 @@ export default [
     timeline: [
       {
         year: "c. 1078–1952 CE",
-        title: "FORTRESS, PALACE, PRISON"
+        title: "THE TOWER OF LONDON"
       }
     ]
   },
@@ -45,7 +45,7 @@ export default [
     timeline: [
       {
         year: "c. 1188–1902 CE",
-        title: "FEAR, SPECTACLE, AND REFORM"
+        title: "NEWGATE PRISON"
       }
     ]
   },
@@ -57,7 +57,7 @@ export default [
     timeline: [
       {
         year: "c. 1772-1860 CE",
-        title: "LABOR, REFORM, AND THE MODERN PRISON"
+        title: "MAISON DE FORCE"
       }
     ]
   },
@@ -70,7 +70,7 @@ export default [
     timeline: [
       {
         year: "c. 1785-1850 CE",
-        title: "PANOPTICON THEORY BY JEREMY BENTHAM"
+        title: "PANOPTICON THEORY"
       }
     ]
   },
@@ -131,7 +131,7 @@ export default [
     timeline: [
       {
         year: "1960s–1970s",
-        title: ""
+        title: "SCANDINAVIAN PRISON"
       }
     ]
   }
