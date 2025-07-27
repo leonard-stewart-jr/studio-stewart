@@ -25,15 +25,15 @@ export default function InfoModal({ open, onClose, marker }) {
       src = "/models/world/maison_de_force/index.html";
     } else if (marker.name.toLowerCase().includes("mesopotamia")) {
       src = "/models/world/mesopotamia-1/index.html";
-    } else if (marker.name.toLowerCase().includes("militarized prison architecture")) {
+    } else if (marker.name.toLowerCase().includes("militarized architecture: control, order, and state power")) {
       src = "/models/world/militarized_prison_architecture/index.html";
-    } else if (marker.name.toLowerCase().includes("nazi camp system")) {
+    } else if (marker.name.toLowerCase().includes("nazi camps: slavery, terror, and genocide")) {
       src = "/models/world/nazi_camp_system/index.html";
     } else if (marker.name.toLowerCase().includes("newgate prison")) {
       src = "/models/world/newgate_prison/index.html";
     } else if (marker.name.toLowerCase().includes("panopticon")) {
       src = "/models/world/panopticon/index.html";
-    } else if (marker.name.toLowerCase().includes("scandinavian prison reform")) {
+    } else if (marker.name.toLowerCase().includes("scandinavian prison: dignity, rehabilitation, and social justice")) {
       src = "/models/world/scandinavian_prison_reform/index.html";
     } else if (marker.name.toLowerCase().includes("the mamertine prison")) {
       src = "/models/world/the_mamertine_prison/index.html";
