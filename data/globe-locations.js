@@ -90,8 +90,8 @@ export default [
   {
     name: "EASTERN STATE: SOLITUDE, REPENTANCE, AND PENAL IDEALISM",
     modalWidth: 7620,
-    lat: 39.9721,
-    lon: -75.1720,
+    lat: 40.423625,
+    lon: -75.711900,
     timeline: [
       {
         year: "c. 1821-1971 CE",
