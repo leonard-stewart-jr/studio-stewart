@@ -207,44 +207,43 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }),
         ];
 
-        customPointObject = (obj) => {
-if (obj.isLondonCluster) {
-  const group = new THREE.Group();
-  // Tall white rectangle: width=0.13, height=0.26, depth=0.13
-  const width = 1.5;
-  const height = 3.0;
-  const depth = 1.5;
-  const geometry = new THREE.BoxGeometry(width, height, depth);
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x000000, //BLACK
-    transparent: false,
-    opacity: 1,
-    depthTest: false,
-  });
-  const rect = new THREE.Mesh(geometry, material);
-  rect.position.set(0, 0, 0);
-  rect.renderOrder = 10;
-  rect.name = "london-expand-rect";
-  group.add(rect);
+customPointObject = (obj) => {
+  if (obj.isLondonCluster && expandSvgTex) {
+    const group = new THREE.Group();
+    // Size: width 1.8, height 3.5 (plane is always facing camera)
+    const width = 1.8;
+    const height = 3.5;
+    const geometry = new THREE.PlaneGeometry(width, height);
+    const material = new THREE.MeshBasicMaterial({
+      map: expandSvgTex,
+      transparent: true, // Plane is transparent except for the SVG lines
+      opacity: 1,
+      depthTest: false,
+    });
+    const plane = new THREE.Mesh(geometry, material);
+    plane.position.set(0, 0, 0);
+    plane.renderOrder = 10;
+    plane.name = "london-expand-plane";
+    group.add(plane);
 
-  // Hit area (make it easier to click)
-  const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, depth * HITBOX_BUFFER);
-  const hitMat = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.01,
-    depthWrite: false,
-  });
-  const hitBox = new THREE.Mesh(hitGeom, hitMat);
-  hitBox.position.set(0, 0, 0.02);
-  hitBox.userData = { markerId: "london-cluster", label: "EXPAND" };
-  hitBox.name = "london-cluster-hit";
-  group.add(hitBox);
+    // Hit area (make it easier to click)
+    const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, 0.25);
+    const hitMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.01,
+      depthWrite: false,
+    });
+    const hitBox = new THREE.Mesh(hitGeom, hitMat);
+    hitBox.position.set(0, 0, 0.02);
+    hitBox.userData = { markerId: "london-cluster", label: "EXPAND" };
+    hitBox.name = "london-cluster-hit";
+    group.add(hitBox);
 
-  group.userData = { markerId: "london-cluster", label: "EXPAND" };
-  group.name = "london-cluster-group";
-  return group;
-}
+    group.userData = { markerId: "london-cluster", label: "EXPAND" };
+    group.name = "london-cluster-group";
+    return group;
+  }
 
           // ALL OTHER PINS: use pin-utils helpers for hitbox etc.
           if (obj.isStandardPin && pinModel) {
