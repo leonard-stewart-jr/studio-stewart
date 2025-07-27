@@ -106,6 +106,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false); // Only for world
   const [pinReady, setPinReady] = useState(false);
+  const [globeReady, setGlobeReady] = useState(false);
 
   // Responsive
   const [isMobile, setIsMobile] = useState(false);
@@ -471,12 +472,17 @@ customPointObject = (obj) => {
 
   // --- GLOBE CAMERA: ZOOM TO MODE ---
   useEffect(() => {
-    if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
+    if (
+      globeReady &&
+      pinReady &&
+      globeEl.current &&
+      typeof globeEl.current.pointOfView === "function"
+    ) {
       const cam = CAMERA_CONFIGS[mode] || CAMERA_CONFIGS.world;
       globeEl.current.pointOfView(cam, 1200);
     }
     setLondonExpanded(false); // Reset cluster state on mode switch
-  }, [mode]);
+  }, [mode, globeReady, pinReady]);
 
   // --- MARKER SCREEN POSITIONS (for SVG lines, overlays) ---
   useEffect(() => {
@@ -711,6 +717,7 @@ customPointObject = (obj) => {
           lineEndLng={(l) => l.end.lng}
           lineEndAltitude={(l) => l.end.alt}
           lineThreeObject={linesData && linesData.length > 0 ? customLineObject : undefined}
+          onGlobeReady={() => setGlobeReady(true)}
         />
         {showPinOverlay && overlayPos && (
           <div
