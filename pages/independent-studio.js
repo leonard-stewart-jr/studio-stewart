@@ -4,10 +4,8 @@ import SectionTabs from "../components/isp/section-tabs";
 import BottomModeNav from "../components/isp/bottommodenav";
 import InfoModal from "../components/isp/info-modal";
 
-// DYNAMICALLY import these so they only render on the client!
-const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false }); 
-const USAMapSection = dynamic(() => import("../components/isp/usamap-section"), { ssr: false });
-const SDMapSection = dynamic(() => import("../components/isp/sdmap-section"), { ssr: false });
+// Only GlobeSection is needed now
+const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false });
 
 export default function IndependentStudio() {
   // Tabs: "history" or "future"
@@ -50,15 +48,7 @@ export default function IndependentStudio() {
       {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
       {mainSection === "history" && (
         <section className="isp-globe-section">
-          {activeHistory === "world" && (
-            <GlobeSection onMarkerClick={setModalData} />
-          )}
-          {activeHistory === "usa" && (
-            <USAMapSection onMarkerClick={setModalData} />
-          )}
-          {activeHistory === "sd" && (
-            <SDMapSection onMarkerClick={setModalData} />
-          )}
+          <GlobeSection mode={activeHistory} onMarkerClick={setModalData} />
         </section>
       )}
       {mainSection === "future" && (
