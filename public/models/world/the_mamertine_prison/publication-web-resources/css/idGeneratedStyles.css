@@ -5,6 +5,18 @@ body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure 
 	font-family:"coolvetica", sans-serif;
 	text-rendering:optimizeSpeed;
 }
+body {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 720px;
+  min-width: 3818px;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
 div > svg {
 	position:absolute;
 }
