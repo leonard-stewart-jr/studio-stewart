@@ -1,24 +1,30 @@
-<svg viewBox="0 0 100 100" width="100" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Main I-beam web (vertical) -->
-  <polygon points="40,20 60,30 60,80 40,70" fill="#fff" stroke="#181818" stroke-width="2"/>
-  <!-- Top flange -->
-  <polygon points="35,17 65,27 60,30 40,20" fill="#181818" stroke="#181818" stroke-width="2"/>
-  <!-- Bottom flange -->
-  <polygon points="35,67 65,77 60,80 40,70" fill="#181818" stroke="#181818" stroke-width="2"/>
-  <!-- Top flange top surface -->
-  <polygon points="35,17 65,27 70,25 40,15" fill="#fff" stroke="#181818" stroke-width="2"/>
-  <!-- Bottom flange bottom surface -->
-  <polygon points="35,67 65,77 70,75 40,65" fill="#fff" stroke="#181818" stroke-width="2"/>
-  <!-- Right web shadow for depth -->
-  <polygon points="60,30 65,27 65,77 60,80" fill="#e6e6e6" stroke="#181818" stroke-width="0.7"/>
-  <!-- Extra lines for detail (top) -->
-  <line x1="40" y1="20" x2="60" y2="30" stroke="#181818" stroke-width="1"/>
-  <line x1="35" y1="17" x2="65" y2="27" stroke="#181818" stroke-width="1"/>
-  <line x1="40" y1="15" x2="70" y2="25" stroke="#181818" stroke-width="1"/>
-  <!-- Extra lines for detail (bottom) -->
-  <line x1="40" y1="70" x2="60" y2="80" stroke="#181818" stroke-width="1"/>
-  <line x1="35" y1="67" x2="65" y2="77" stroke="#181818" stroke-width="1"/>
-  <line x1="40" y1="65" x2="70" y2="75" stroke="#181818" stroke-width="1"/>
-  <!-- Web vertical lines for depth -->
-  <line x1="50" y1="25" x2="50" y2="75" stroke="#181818" stroke-width="0.8" stroke-dasharray="2 2"/>
+<svg viewBox="0 0 100 100" width="100" height="100" fill="none" stroke="#181818" stroke-width="2.2" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top flange (isometric) -->
+  <polygon points="25,25 75,15 75,28 25,38" fill="#fff" />
+  <polygon points="25,25 75,15 75,28 25,38" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Bottom flange (isometric) -->
+  <polygon points="25,65 75,55 75,68 25,78" fill="#fff" />
+  <polygon points="25,65 75,55 75,68 25,78" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Web sides -->
+  <polygon points="34,36.5 66,30.5 66,60.5 34,66.5" fill="#fff" />
+  <polygon points="34,36.5 66,30.5 66,60.5 34,66.5" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Left flange depth (side) -->
+  <polygon points="25,25 25,38 25,78 25,65" fill="#fff" />
+  <polygon points="25,25 25,38 25,78 25,65" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Right flange depth (side) -->
+  <polygon points="75,15 75,28 75,68 75,55" fill="#fff" />
+  <polygon points="75,15 75,28 75,68 75,55" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Top flange face -->
+  <polygon points="25,25 34,36.5 66,30.5 75,15" fill="#fff" />
+  <polygon points="25,25 34,36.5 66,30.5 75,15" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Bottom flange face -->
+  <polygon points="25,65 34,66.5 66,60.5 75,55" fill="#fff" />
+  <polygon points="25,65 34,66.5 66,60.5 75,55" stroke="#181818" stroke-width="2.2" fill="none" />
+  <!-- Web interior lines -->
+  <line x1="34" y1="36.5" x2="34" y2="66.5" stroke="#181818" stroke-width="1.5"/>
+  <line x1="66" y1="30.5" x2="66" y2="60.5" stroke="#181818" stroke-width="1.5"/>
+  <!-- Top flange thickness lines -->
+  <line x1="25" y1="38" x2="75" y2="28" stroke="#181818" stroke-width="1.1"/>
+  <!-- Bottom flange thickness lines -->
+  <line x1="25" y1="78" x2="75" y2="68" stroke="#181818" stroke-width="1.1"/>
 </svg>
