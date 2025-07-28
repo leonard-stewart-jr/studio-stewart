@@ -1,14 +1,24 @@
 <svg viewBox="0 0 100 100" width="100" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Bottom I-beam -->
-  <rect x="13" y="60" width="74" height="10" fill="#181818"/>
-  <rect x="28" y="50" width="44" height="10" fill="#181818"/>
-  <rect x="38" y="40" width="24" height="10" fill="#181818"/>
-  <!-- Middle I-beam (slightly above and left) -->
-  <rect x="19" y="37" width="62" height="8" fill="#181818"/>
-  <rect x="31" y="29" width="38" height="8" fill="#181818"/>
-  <rect x="38" y="21" width="24" height="8" fill="#181818"/>
-  <!-- Top I-beam (slightly above and right) -->
-  <rect x="25" y="15" width="50" height="7" fill="#181818"/>
-  <rect x="34" y="8" width="32" height="7" fill="#181818"/>
-  <rect x="40" y="1" width="20" height="7" fill="#181818"/>
+  <!-- Main I-beam web (vertical) -->
+  <polygon points="40,20 60,30 60,80 40,70" fill="#fff" stroke="#181818" stroke-width="2"/>
+  <!-- Top flange -->
+  <polygon points="35,17 65,27 60,30 40,20" fill="#181818" stroke="#181818" stroke-width="2"/>
+  <!-- Bottom flange -->
+  <polygon points="35,67 65,77 60,80 40,70" fill="#181818" stroke="#181818" stroke-width="2"/>
+  <!-- Top flange top surface -->
+  <polygon points="35,17 65,27 70,25 40,15" fill="#fff" stroke="#181818" stroke-width="2"/>
+  <!-- Bottom flange bottom surface -->
+  <polygon points="35,67 65,77 70,75 40,65" fill="#fff" stroke="#181818" stroke-width="2"/>
+  <!-- Right web shadow for depth -->
+  <polygon points="60,30 65,27 65,77 60,80" fill="#e6e6e6" stroke="#181818" stroke-width="0.7"/>
+  <!-- Extra lines for detail (top) -->
+  <line x1="40" y1="20" x2="60" y2="30" stroke="#181818" stroke-width="1"/>
+  <line x1="35" y1="17" x2="65" y2="27" stroke="#181818" stroke-width="1"/>
+  <line x1="40" y1="15" x2="70" y2="25" stroke="#181818" stroke-width="1"/>
+  <!-- Extra lines for detail (bottom) -->
+  <line x1="40" y1="70" x2="60" y2="80" stroke="#181818" stroke-width="1"/>
+  <line x1="35" y1="67" x2="65" y2="77" stroke="#181818" stroke-width="1"/>
+  <line x1="40" y1="65" x2="70" y2="75" stroke="#181818" stroke-width="1"/>
+  <!-- Web vertical lines for depth -->
+  <line x1="50" y1="25" x2="50" y2="75" stroke="#181818" stroke-width="0.8" stroke-dasharray="2 2"/>
 </svg>
