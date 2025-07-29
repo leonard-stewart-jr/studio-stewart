@@ -3,7 +3,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: "coolvetica", sans-serif;
+  font-family: "coolvetica", "Open Sans", sans-serif;
   background: #f9f9f7;
   color: #181818;
   overflow-y: auto;
