@@ -4,7 +4,7 @@ import LogoHamburger from "./LogoHamburger";
 import NavBar from "./NavBar";
 import Sidebar from "./Sidebar";
 
-export default function HeaderBar() {
+export default function HeaderBar({ fixedNav = false }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Consistent sizing
@@ -15,10 +15,25 @@ export default function HeaderBar() {
   // Animation speed for hamburger fade
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
+    const navBarStyle = {
+    position: fixedNav ? "fixed" : "sticky",
+    top: 0,
+    zIndex: 1200,
+    width: "100vw", // fixed needs 100vw, sticky can use 100%
+    paddingLeft: 0,
+    paddingRight: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    minHeight: headerHeight,
+    height: headerHeight,
+    background: "#fff",
+    left: 0, // only matters for fixed
+  };
   return (
     <>
       {/* Card nav for header */}
-      <div className="nav-card nav-card-top" style={{
+      <div className="nav-card nav-card-top" style={navBarStyle}>
         position: "sticky",
         top: 0,
         zIndex: 1200,
