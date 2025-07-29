@@ -1,47 +1,35 @@
 import React, { useRef, useEffect, useState } from "react";
 
-const EXPORT_WIDTH = 1366; // Set this to your InDesign export's pixel width
+const EXPORT_WIDTH = 1366; // Your publication's pixel width
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
-  const [iframeHeight, setIframeHeight] = useState("800px"); // fallback
-  const [isMobile, setIsMobile] = useState(false);
+  const [iframeHeight, setIframeHeight] = useState("800px");
 
-  // Detect mobile for responsive behavior
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < EXPORT_WIDTH);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Dynamically set iframe height to match content
-  useEffect(() => {
-    function handleResize() {
+    function setHeight() {
       const iframe = iframeRef.current;
       if (iframe && iframe.contentWindow && iframe.contentDocument) {
         try {
           const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+          // The body height includes all content
           const newHeight = innerDoc.body.scrollHeight + "px";
           setIframeHeight(newHeight);
-        } catch (err) {
-          // Cross-origin issue shouldn't happen for local/public files
-        }
+        } catch (err) {}
       }
     }
 
     const iframe = iframeRef.current;
     if (iframe) {
-      iframe.addEventListener("load", handleResize);
+      iframe.addEventListener("load", setHeight);
     }
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", setHeight);
 
-    // Cleanup
     return () => {
       if (iframe) {
-        iframe.removeEventListener("load", handleResize);
+        iframe.removeEventListener("load", setHeight);
       }
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", setHeight);
     };
   }, []);
 
@@ -53,38 +41,53 @@ export default function MatterMatters() {
         background: "#fff",
         margin: 0,
         padding: 0,
-        overflowX: isMobile ? "auto" : "hidden",
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
+        overflowX: "hidden", // Prevents horizontal scroll on the page
+        overflowY: "auto"
       }}
     >
-      {/* Centered horizontally, scrollable on mobile if needed */}
       <div
         style={{
-          width: isMobile ? "100vw" : "100%",
-          display: "flex",
-          justifyContent: "center",
-          overflowX: isMobile ? "auto" : "visible"
+          width: "100vw",
+          margin: 0,
+          padding: 0,
+          background: "#fff",
+          overflowX: "hidden",
+          overflowY: "visible"
         }}
       >
-        <iframe
-          ref={iframeRef}
-          src="/static/matter-matters/index.html"
+        <div
           style={{
-            width: isMobile ? "100vw" : `${EXPORT_WIDTH}px`,
-            maxWidth: "100vw",
-            height: iframeHeight,
-            border: "none",
-            display: "block",
-            background: "#fff",
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "flex-start",
             margin: 0,
-            padding: 0
+            padding: 0,
+            overflow: "visible"
           }}
-          title="Matter Matters — Studio Stewart"
-          scrolling="no"
-        />
+        >
+          <iframe
+            ref={iframeRef}
+            src="/static/matter-matters/index.html"
+            style={{
+              width: `${EXPORT_WIDTH}px`,
+              minWidth: `${EXPORT_WIDTH}px`,
+              maxWidth: `${EXPORT_WIDTH}px`,
+              height: iframeHeight,
+              border: "none",
+              display: "block",
+              margin: 0,
+              padding: 0,
+              overflow: "hidden",
+              background: "#fff",
+              boxSizing: "border-box"
+            }}
+            title="Matter Matters — Studio Stewart"
+            scrolling="no"
+            allow="fullscreen"
+          />
+        </div>
       </div>
       {/* Placeholder for Human Capital Index React component */}
       <div
