@@ -21,7 +21,6 @@ export default function MatterMatters() {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 76, // <-- add this!
   }}
 >
       {/* ======================= */}
