@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 304.05 218.97">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c39c82;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-5, .cls-6 {
+        stroke: #000;
+      }
+
+      .cls-1, .cls-4, .cls-5, .cls-6 {
+        stroke-width: .25px;
+      }
+
+      .cls-2, .cls-3 {
+        font-size: 16px;
+        stroke-width: .5px;
+      }
+
+      .cls-2, .cls-3, .cls-7 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-3 {
+        stroke: #fff;
+      }
+
+      .cls-3, .cls-6 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        fill: #212f56;
+      }
+
+      .cls-7 {
+        font-size: 14px;
+      }
+
+      .cls-5 {
+        fill: #c9cac8;
+      }
+    </style>
+  </defs>
+  <g id="PIECHART">
+    <path class="cls-1" d="M76.46,47.59c-14.15,16.86-22.6,37.78-24.14,59.74-1.54,21.96,3.92,43.85,15.59,62.52,11.66,18.67,28.95,33.17,49.36,41.41s42.91,9.82,64.27,4.49l-25.22-101.15L76.46,47.59Z"/>
+    <path class="cls-5" d="M181.54,215.75c26.82-6.69,49.9-23.77,64.14-47.46,14.23-23.69,18.48-52.1,11.79-78.91l-101.15,25.22,25.22,101.15Z"/>
+    <path class="cls-4" d="M257.47,89.38c-5.33-21.36-17.28-40.49-34.14-54.64-16.86-14.15-37.78-22.6-59.74-24.14l-7.27,103.99,101.15-25.22Z"/>
+    <path class="cls-6" d="M163.59,10.6c-16.41-1.15-32.86,1.61-48.01,8.03-15.14,6.43-28.55,16.35-39.13,28.95l79.86,67.01,7.27-103.99Z"/>
+  </g>
+  <g id="COUNTRIES">
+    <text class="cls-7" transform="translate(2.67 170.96)"><tspan x="0" y="0">FINLAND</tspan></text>
+    <text class="cls-7" transform="translate(246.33 180.96)"><tspan x="0" y="0">CANADA</tspan></text>
+    <text class="cls-7" transform="translate(222.77 30.48)"><tspan x="0" y="0">MEXICO</tspan></text>
+    <text class="cls-7" transform="translate(74.78 14.32)"><tspan x="0" y="0">OTHER</tspan></text>
+  </g>
+  <g id="_" data-name="%">
+    <text class="cls-2" transform="translate(107.9 39.67)"><tspan x="0" y="0">15%</tspan></text>
+    <text class="cls-2" transform="translate(69.26 158.56)"><tspan x="0" y="0">40%</tspan></text>
+    <text class="cls-2" transform="translate(211.58 159.66)"><tspan x="0" y="0">25%</tspan></text>
+    <text class="cls-3" transform="translate(191.82 53.38)"><tspan x="0" y="0">20%</tspan></text>
+  </g>
+</svg>

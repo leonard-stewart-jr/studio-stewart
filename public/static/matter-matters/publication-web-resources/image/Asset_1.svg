@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 223.44 243.4">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c39c82;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-5 {
+        stroke: #000;
+      }
+
+      .cls-1, .cls-4, .cls-5 {
+        stroke-width: .25px;
+      }
+
+      .cls-2, .cls-3 {
+        font-size: 16px;
+        stroke-width: .5px;
+      }
+
+      .cls-2, .cls-3, .cls-6 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-3 {
+        fill: #fff;
+        stroke: #fff;
+      }
+
+      .cls-4 {
+        fill: #212f56;
+      }
+
+      .cls-6 {
+        font-size: 14px;
+      }
+
+      .cls-5 {
+        fill: #c9cac8;
+      }
+    </style>
+  </defs>
+  <g id="PIECHART">
+    <path class="cls-1" d="M39.21,54.42c-6.86,8.17-12.42,17.34-16.49,27.2-4.07,9.86-6.61,20.28-7.52,30.91s-.19,21.33,2.15,31.73,6.25,20.39,11.62,29.61c5.36,9.22,12.11,17.56,20.01,24.73,7.89,7.17,16.84,13.09,26.53,17.54,9.69,4.46,20,7.4,30.59,8.73s21.3,1.02,31.79-.9,20.62-5.45,30.04-10.45c9.42-5,18.02-11.41,25.49-19.02s13.74-16.32,18.57-25.82,8.18-19.7,9.92-30.22c1.74-10.52,1.86-21.25.35-31.81-1.51-10.56-4.63-20.82-9.26-30.43-4.62-9.61-10.7-18.45-18-26.22-7.31-7.77-15.76-14.37-25.07-19.57l-50.86,91L39.21,54.42Z"/>
+    <path class="cls-5" d="M169.93,30.43c-14.36-8.03-30.42-12.54-46.86-13.17-16.44-.63-32.8,2.64-47.73,9.54l43.73,94.63,50.86-91Z"/>
+    <path class="cls-4" d="M75.34,26.79c-6.94,3.21-13.51,7.17-19.59,11.82-6.08,4.65-11.62,9.95-16.54,15.81l79.86,67.01L75.34,26.79Z"/>
+  </g>
+  <g id="COUNTRIES">
+    <text class="cls-6" transform="translate(134.05 239.64)"><tspan x="0" y="0">CHINA</tspan></text>
+    <text class="cls-6" transform="translate(89.24 14.32)"><tspan x="0" y="0">MALAYSIA</tspan></text>
+    <text class="cls-6" transform="translate(8.7 37.56)"><tspan x="0" y="0">OTHER</tspan></text>
+  </g>
+  <g id="_" data-name="%">
+    <text class="cls-3" transform="translate(55.64 58.34)"><tspan x="0" y="0">7%</tspan></text>
+    <text class="cls-2" transform="translate(122.61 210.48)"><tspan x="0" y="0">78%</tspan></text>
+    <text class="cls-2" transform="translate(105.47 41.41)"><tspan x="0" y="0">15%</tspan></text>
+  </g>
+</svg>

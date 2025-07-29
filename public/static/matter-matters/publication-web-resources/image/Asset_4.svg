@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 257.53 238.43">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c39c82;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-5, .cls-6, .cls-7 {
+        stroke: #000;
+      }
+
+      .cls-1, .cls-3, .cls-5, .cls-6, .cls-7 {
+        stroke-width: .25px;
+      }
+
+      .cls-2, .cls-4 {
+        font-size: 16px;
+        stroke-width: .5px;
+      }
+
+      .cls-2, .cls-4, .cls-8 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-4 {
+        stroke: #fff;
+      }
+
+      .cls-4, .cls-7 {
+        fill: #fff;
+      }
+
+      .cls-5 {
+        fill: #212f56;
+      }
+
+      .cls-8 {
+        font-size: 14px;
+      }
+
+      .cls-6 {
+        fill: #c9cac8;
+      }
+    </style>
+  </defs>
+  <g id="PIECHART">
+    <path class="cls-1" d="M26.6,58.59c-10.93,13.03-18.51,28.53-22.07,45.16-3.56,16.63-3.01,33.88,1.62,50.24,4.63,16.36,13.19,31.35,24.94,43.64,11.75,12.29,26.33,21.53,42.46,26.9,16.14,5.37,33.34,6.71,50.11,3.9,16.77-2.81,32.6-9.67,46.11-20,13.51-10.33,24.29-23.81,31.39-39.25,7.11-15.45,10.32-32.4,9.38-49.38l-104.09,5.82L26.6,58.59Z"/>
+    <path class="cls-6" d="M210.55,119.78c-.79-14.22-4.5-28.13-10.87-40.86-6.38-12.73-15.3-24.03-26.2-33.18l-67.01,79.86,104.09-5.82Z"/>
+    <path class="cls-5" d="M173.47,45.74c-6.7-5.62-14.08-10.38-21.97-14.16-7.89-3.78-16.22-6.55-24.8-8.25l-20.25,102.26,67.01-79.86Z"/>
+    <path class="cls-7" d="M126.71,23.34c-6.43-1.27-12.97-1.94-19.52-1.98-6.55-.05-13.1.53-19.55,1.71l18.82,102.54,20.25-102.26Z"/>
+    <path class="cls-3" d="M87.64,23.07c-11.84,2.17-23.22,6.38-33.62,12.44s-19.68,13.87-27.42,23.09l79.86,67.01-18.82-102.54Z"/>
+  </g>
+  <g id="COUNTRIES">
+    <text class="cls-8" transform="translate(9.48 234.67)"><tspan x="0" y="0">JAMAICA</tspan></text>
+    <text class="cls-8" transform="translate(204.61 86.3)"><tspan x="0" y="0">BRAZIL</tspan></text>
+    <text class="cls-8" transform="translate(153.76 33.67)"><tspan x="0" y="0">GUYANA</tspan></text>
+    <text class="cls-8" transform="translate(8.7 29.95)"><tspan x="0" y="0">OTHER</tspan></text>
+    <text class="cls-8" transform="translate(72.92 14.32)"><tspan x="0" y="0">AUSTRALIA</tspan></text>
+  </g>
+  <g id="_" data-name="%">
+    <text class="cls-4" transform="translate(45.27 56.79)"><tspan x="0" y="0">11%</tspan></text>
+    <text class="cls-2" transform="translate(49.84 207)"><tspan x="0" y="0">62%</tspan></text>
+    <text class="cls-4" transform="translate(134.14 53.51)"><tspan x="0" y="0">8%</tspan></text>
+    <text class="cls-2" transform="translate(95.19 38.68)"><tspan x="0" y="0">6%</tspan></text>
+    <text class="cls-2" transform="translate(167.74 96.05)"><tspan x="0" y="0">13%</tspan></text>
+  </g>
+</svg>

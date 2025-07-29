@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.16 226.57">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c39c82;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-5, .cls-6, .cls-7 {
+        stroke: #000;
+      }
+
+      .cls-1, .cls-3, .cls-5, .cls-6, .cls-7 {
+        stroke-width: .25px;
+      }
+
+      .cls-2, .cls-4 {
+        font-size: 16px;
+        stroke-width: .5px;
+      }
+
+      .cls-2, .cls-4, .cls-8 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-4 {
+        stroke: #fff;
+      }
+
+      .cls-4, .cls-7 {
+        fill: #fff;
+      }
+
+      .cls-5 {
+        fill: #212f56;
+      }
+
+      .cls-8 {
+        font-size: 14px;
+      }
+
+      .cls-6 {
+        fill: #c9cac8;
+      }
+    </style>
+  </defs>
+  <g id="PIECHART">
+    <path class="cls-1" d="M29.94,55.18c-9.69,11.54-16.76,25.05-20.72,39.59-3.96,14.54-4.73,29.76-2.24,44.63,2.49,14.86,8.17,29.01,16.65,41.47s19.56,22.93,32.48,30.69c12.92,7.76,27.36,12.63,42.34,14.27,14.98,1.64,30.14.01,44.43-4.77,14.29-4.78,27.38-12.6,38.35-22.93,10.98-10.32,19.58-22.91,25.23-36.88l-96.66-39.05L29.94,55.18Z"/>
+    <path class="cls-6" d="M206.46,161.25c6.16-15.25,8.63-31.75,7.19-48.14-1.43-16.39-6.73-32.21-15.44-46.16l-88.41,55.24,96.66,39.05Z"/>
+    <path class="cls-5" d="M198.21,66.95c-5.8-9.28-13.02-17.58-21.4-24.62-8.38-7.03-17.81-12.7-27.96-16.8l-39.05,96.66,88.41-55.24Z"/>
+    <path class="cls-7" d="M148.85,25.54c-10.14-4.1-20.87-6.57-31.78-7.34-10.91-.76-21.88.2-32.49,2.84l25.22,101.15,39.05-96.66Z"/>
+    <path class="cls-3" d="M84.58,21.04c-10.61,2.65-20.75,6.95-30.02,12.74-9.28,5.8-17.58,13.02-24.62,21.4l79.86,67.01-25.22-101.15Z"/>
+  </g>
+  <g id="COUNTRIES">
+    <text class="cls-8" transform="translate(13.63 222.22)"><tspan x="0" y="0">PERU</tspan></text>
+    <text class="cls-8" transform="translate(219.99 114.3)"><tspan x="0" y="0">CHINA</tspan></text>
+    <text class="cls-8" transform="translate(181.7 42.78)"><tspan x="0" y="0">CANADA</tspan></text>
+    <text class="cls-8" transform="translate(13.45 29.51)"><tspan x="0" y="0">OTHER</tspan></text>
+    <text class="cls-8" transform="translate(96.86 14.32)"><tspan x="0" y="0">MEXICO</tspan></text>
+  </g>
+  <g id="_" data-name="%">
+    <text class="cls-4" transform="translate(49.27 55.31)"><tspan x="0" y="0">10%</tspan></text>
+    <text class="cls-2" transform="translate(51.03 202.26)"><tspan x="0" y="0">55%</tspan></text>
+    <text class="cls-4" transform="translate(148.84 62.99)"><tspan x="0" y="0">10%</tspan></text>
+    <text class="cls-2" transform="translate(100.41 39.87)"><tspan x="0" y="0">10%</tspan></text>
+    <text class="cls-2" transform="translate(178.12 118.42)"><tspan x="0" y="0">15%</tspan></text>
+  </g>
+</svg>

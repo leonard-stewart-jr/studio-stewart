@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 325.53 231.92">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c39c82;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-5, .cls-6, .cls-7 {
+        stroke: #000;
+      }
+
+      .cls-1, .cls-3, .cls-5, .cls-6, .cls-7 {
+        stroke-width: .25px;
+      }
+
+      .cls-2, .cls-4 {
+        font-size: 16px;
+        stroke-width: .5px;
+      }
+
+      .cls-2, .cls-4, .cls-8 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-4 {
+        stroke: #fff;
+      }
+
+      .cls-4, .cls-7 {
+        fill: #fff;
+      }
+
+      .cls-5 {
+        fill: #212f56;
+      }
+
+      .cls-8 {
+        font-size: 14px;
+      }
+
+      .cls-6 {
+        fill: #c9cac8;
+      }
+    </style>
+  </defs>
+  <g id="PIECHART">
+    <path class="cls-1" d="M85.23,55.43c-10.57,12.6-18.02,27.53-21.72,43.56-3.7,16.03-3.56,32.71.42,48.67s11.68,30.76,22.47,43.17,24.37,22.1,39.63,28.26l39.05-96.66L85.23,55.43Z"/>
+    <path class="cls-6" d="M126.03,219.1c12.69,5.13,26.27,7.71,39.96,7.59,13.69-.12,27.22-2.93,39.82-8.28,12.6-5.35,24.03-13.13,33.62-22.89,9.6-9.76,17.17-21.32,22.3-34.02l-96.66-39.05-39.05,96.66Z"/>
+    <path class="cls-5" d="M261.74,161.49c6.16-15.25,8.63-31.75,7.19-48.14-1.43-16.39-6.73-32.21-15.44-46.16l-88.41,55.24,96.66,39.05Z"/>
+    <path class="cls-7" d="M253.49,67.2c-3.47-5.56-7.46-10.78-11.92-15.59s-9.35-9.19-14.63-13.08l-61.86,83.91,88.41-55.24Z"/>
+    <path class="cls-3" d="M226.95,38.53c-21.34-15.73-47.89-22.74-74.21-19.61-26.32,3.14-50.48,16.2-67.52,36.51l79.86,67.01,61.86-83.91Z"/>
+  </g>
+  <g id="COUNTRIES">
+    <text class="cls-8" transform="translate(213.91 228.15)"><tspan x="0" y="0">CANADA</tspan></text>
+    <text class="cls-8" transform="translate(275.48 116.67)"><tspan x="0" y="0">JAPAN</tspan></text>
+    <text class="cls-8" transform="translate(246.45 48.71)"><tspan x="0" y="0">FINLAND</tspan></text>
+    <text class="cls-8" transform="translate(2.08 152.03)"><tspan x="0" y="0">NORWAY</tspan></text>
+    <text class="cls-8" transform="translate(130.28 14.32)"><tspan x="0" y="0">OTHER</tspan></text>
+  </g>
+  <g id="_" data-name="%">
+    <text class="cls-2" transform="translate(68.82 146.57)"><tspan x="0" y="0">30%</tspan></text>
+    <text class="cls-2" transform="translate(184.36 205.08)"><tspan x="0" y="0">25%</tspan></text>
+    <text class="cls-4" transform="translate(229.72 120.18)"><tspan x="0" y="0">15%</tspan></text>
+    <text class="cls-2" transform="translate(218.45 68.93)"><tspan x="0" y="0">6%</tspan></text>
+    <text class="cls-4" transform="translate(141.59 39.13)"><tspan x="0" y="0">24%</tspan></text>
+  </g>
+</svg>
