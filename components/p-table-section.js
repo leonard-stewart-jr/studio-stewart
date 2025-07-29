@@ -66,6 +66,30 @@ const materialIcons = [
   },
 ];
 
+// --- CONSTANTS for periodic table grid ---
+const SVG_VIEWBOX_WIDTH = 1344;
+const SVG_VIEWBOX_HEIGHT = 512;
+const SVG_RENDERED_WIDTH = 1160;
+const SVG_RENDERED_HEIGHT = 441.89;
+const BOX_SIZE = 64; // Each box in the SVG is 64x64 units
+
+// Scaling factors
+const scaleX = SVG_RENDERED_WIDTH / SVG_VIEWBOX_WIDTH;
+const scaleY = SVG_RENDERED_HEIGHT / SVG_VIEWBOX_HEIGHT;
+
+// --- Overlay positions (column/row for table elements) ---
+// W (Tungsten) is in column 7, row 5
+const colW = 7, rowW = 5;
+const leftW = colW * BOX_SIZE * scaleX;
+const topW = rowW * BOX_SIZE * scaleY;
+const boxWidth = BOX_SIZE * scaleX;
+const boxHeight = BOX_SIZE * scaleY;
+
+// Sn (Tin) is in column 13, row 5 (adjust if needed)
+const colSn = 13, rowSn = 5;
+const leftSn = colSn * BOX_SIZE * scaleX;
+const topSn = rowSn * BOX_SIZE * scaleY;
+
 export default function PTableSection() {
   // State for active material icons
   const [activeIcons, setActiveIcons] = useState({
@@ -130,7 +154,7 @@ export default function PTableSection() {
         style={{
           position: "relative",
           width: "100%",
-          maxWidth: 1160,
+          maxWidth: SVG_RENDERED_WIDTH,
           minHeight: 470,
           margin: "0 auto",
           display: "flex",
@@ -139,18 +163,23 @@ export default function PTableSection() {
         }}
       >
         {/* Full Periodic Table */}
-        <FullTable style={{ width: "100%", height: "auto", maxHeight: 480, minWidth: 320, zIndex: 1 }} />
-        {/* Tin and Tungsten overlays in correct spots */}
-        {/* You may need to adjust positioning below for pixel-perfect overlay */}
+        <FullTable
+          style={{
+            width: "100%",
+            height: "auto",
+            maxHeight: 480,
+            minWidth: 320,
+            zIndex: 1,
+          }}
+        />
+        {/* Tin and Tungsten overlays in exact calculated spots */}
         <TinSnSingle
           style={{
             position: "absolute",
-            left: "56.8%",
-            top: "79.5%",
-            width: "3.3%",
-            height: "10%",
-            minWidth: 42,
-            minHeight: 42,
+            left: leftSn,
+            top: topSn,
+            width: boxWidth,
+            height: boxHeight,
             zIndex: 2,
             pointerEvents: "auto",
             cursor: "pointer",
@@ -160,12 +189,10 @@ export default function PTableSection() {
         <TungstenTSingle
           style={{
             position: "absolute",
-            left: "50.6%",
-            top: "63.3%",
-            width: "3.3%",
-            height: "10%",
-            minWidth: 42,
-            minHeight: 42,
+            left: leftW,
+            top: topW,
+            width: boxWidth,
+            height: boxHeight,
             zIndex: 2,
             pointerEvents: "auto",
             cursor: "pointer",
@@ -202,7 +229,9 @@ export default function PTableSection() {
               style={{
                 background: "none",
                 border: "none",
-                outline: isActive ? "2.5px solid #e6dbb9" : "2px solid transparent",
+                outline: isActive
+                  ? "2.5px solid #e6dbb9"
+                  : "2px solid transparent",
                 borderRadius: 13,
                 padding: "4px 12px 0 12px",
                 margin: "0 6px",
