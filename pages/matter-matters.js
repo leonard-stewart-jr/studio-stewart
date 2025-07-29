@@ -15,7 +15,6 @@ export default function MatterMatters() {
           setIframeHeight(newHeight);
         } catch (err) {
           // Likely a cross-origin issue (shouldn't happen in your case)
-          // console.error("Cannot access iframe contents", err);
         }
       }
     }
@@ -35,7 +34,6 @@ export default function MatterMatters() {
     };
   }, []);
 
-  // Recalculate height if iframe ref changes
   useEffect(() => {
     if (iframeRef.current) {
       iframeRef.current.onload = () => {
@@ -48,22 +46,34 @@ export default function MatterMatters() {
   }, [iframeRef.current]);
 
   return (
-    <main style={{ width: "100%", minHeight: "100vh", background: "#fff" }}>
+    <main style={{
+      width: "100vw",
+      minHeight: "100vh",
+      background: "#fff",
+      margin: 0,
+      padding: 0,
+      overflow: "hidden"
+    }}>
       <iframe
         ref={iframeRef}
         src="/static/matter-matters/index.html"
         style={{
-          width: "100%",
+          width: "100vw",
           height: iframeHeight,
           border: "none",
           display: "block",
           background: "#fff",
-          transition: "height 0.2s"
+          margin: 0,
+          padding: 0
         }}
         title="Matter Matters — Studio Stewart"
+        scrolling="no"
       />
       {/* Placeholder for Human Capital Index React component */}
-      <div id="hc-periodic-table-root" style={{ margin: "64px 0 0 0", width: "100%" }}>
+      <div id="hc-periodic-table-root" style={{
+        margin: "64px 0 0 0",
+        width: "100vw"
+      }}>
         {/* Your <HcPeriodicTable /> React component will go here later */}
       </div>
     </main>
