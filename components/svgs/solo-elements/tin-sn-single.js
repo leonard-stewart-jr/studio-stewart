@@ -3,11 +3,14 @@ const SvgTinSnSingle = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     data-name="Layer 2"
-    viewBox="0 0 63.59 63.59"
+    viewBox="0 0 64 64"
     {...props}
   >
-    <path
-      d="M1.5 1.5h60.59v60.59H1.5z"
+    <rect
+      x="1.5"
+      y="1.5"
+      width="61"
+      height="61"
       style={{
         fill: "rgba(192,57,43,.35)",
         stroke: "#54b948",
