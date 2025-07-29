@@ -1,83 +1,65 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 
-const EXPORT_WIDTH = 1366; // Match your export!
+const EXPORT_WIDTH = 1366; // Your static publication width in px
+const HEADER_HEIGHT = 76; // Your fixed header/nav height in px
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
-  const [iframeHeight, setIframeHeight] = useState("800px");
 
+  // Ensure iframe is scrolled to top on page change
   useEffect(() => {
-    function setHeight() {
-      const iframe = iframeRef.current;
-      if (iframe && iframe.contentWindow && iframe.contentDocument) {
-        try {
-          const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-          // Use the height of the main div if possible
-          const wrapper = innerDoc.body.firstElementChild;
-          const newHeight = wrapper ? wrapper.scrollHeight : innerDoc.body.scrollHeight;
-          setIframeHeight(newHeight + "px");
-        } catch (err) {}
-      }
-    }
     const iframe = iframeRef.current;
-    if (iframe) iframe.addEventListener("load", setHeight);
-    window.addEventListener("resize", setHeight);
-    return () => {
-      if (iframe) iframe.removeEventListener("load", setHeight);
-      window.removeEventListener("resize", setHeight);
-    };
+    if (iframe) {
+      iframe.scrollTop = 0;
+    }
   }, []);
 
   return (
     <main
       style={{
         width: "100vw",
-        minHeight: "100vh",
+        height: "100vh",
         margin: 0,
         padding: 0,
         background: "#fff",
-        overflowX: "hidden", // Prevent horizontal scroll
-        overflowY: "auto"
+        overflow: "hidden", // No scroll on the page itself
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
       }}
     >
       <div
         style={{
+          flex: 1,
           width: "100vw",
-          overflowX: "hidden",
-          margin: 0,
-          padding: 0,
-          background: "#fff"
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
-        <div
+        <iframe
+          ref={iframeRef}
+          src="/static/matter-matters/index.html"
+          title="Matter Matters — Studio Stewart"
+          width={EXPORT_WIDTH}
+          height={`calc(100vh - ${HEADER_HEIGHT}px)`}
           style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
-            margin: 0,
-            padding: 0
+            width: EXPORT_WIDTH,
+            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            minHeight: 0,
+            border: "none",
+            display: "block",
+            background: "#fff",
+            overflowY: "auto",
+            overflowX: "hidden",
+            boxSizing: "border-box",
           }}
-        >
-          <iframe
-            ref={iframeRef}
-            src="/static/matter-matters/index.html"
-            style={{
-              width: `${EXPORT_WIDTH}px`,
-              minWidth: `${EXPORT_WIDTH}px`,
-              maxWidth: `${EXPORT_WIDTH}px`,
-              height: iframeHeight,
-              border: "none",
-              display: "block",
-              margin: 0,
-              padding: 0,
-              background: "#fff",
-              boxSizing: "border-box"
-            }}
-            title="Matter Matters — Studio Stewart"
-            scrolling="no"
-          />
-        </div>
+          scrolling="yes"
+        />
+      </div>
       </div>
       <div
         id="hc-periodic-table-root"
