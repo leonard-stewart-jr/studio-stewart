@@ -1,11 +1,8 @@
 import React, { useRef } from "react";
 import PTableSection from "../components/p-table-section";
 
-const EXPORT_WIDTH = 1366;
-const IFRAME_EXTRA_WIDTH = 16; // fudge factor for scrollbar
-const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH;
-// You may tune PAGE_OFFSET if you want the iFrame not to overlap with any nav/header
-const PAGE_OFFSET = 76; // Try subtracting 36px if you want less offset
+const IFRAME_WIDTH = 1366 + 16; // 16px fudge for scrollbar
+const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
@@ -44,7 +41,7 @@ export default function MatterMatters() {
         <div
           style={{
             width: IFRAME_WIDTH,
-            minHeight: "8000px", // allow your HTML to fill height
+            height: IFRAME_HEIGHT,
             position: "relative",
             background: "#fff",
             margin: 0,
@@ -59,10 +56,10 @@ export default function MatterMatters() {
             src="/static/matter-matters/index.html"
             title="Matter Matters — Studio Stewart"
             width={IFRAME_WIDTH}
-            height="8000px" // This allows the iFrame to be as tall as your HTML content
+            height={IFRAME_HEIGHT}
             style={{
               width: IFRAME_WIDTH,
-              height: "8000px", // Same as above, so the content is fully visible
+              height: IFRAME_HEIGHT,
               border: "none",
               background: "#fff",
               display: "block",
