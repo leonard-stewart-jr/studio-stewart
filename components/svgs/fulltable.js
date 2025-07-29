@@ -4,7 +4,7 @@ const SvgFullTable = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     id="full-table_svg__Layer_2"
     data-name="Layer 2"
-    viewBox="0 0 1316.61 480.82"
+    viewBox="0 0 1344 512"
     {...props}
   >
     <defs>
