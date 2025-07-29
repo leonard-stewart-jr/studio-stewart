@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 const EXPORT_WIDTH = 1366;
 const IFRAME_EXTRA_WIDTH = 16; // fudge factor for scrollbar
 const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH;
-const PAGE_OFFSET = 36; // Try subtracting 36px instead of 76px
+const PAGE_OFFSET = 74; // Try subtracting 36px instead of 76px
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
