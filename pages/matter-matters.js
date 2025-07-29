@@ -7,8 +7,6 @@ const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
-
-export default function MatterMatters() {
   return (
     <>
       {/* Fixed nav bar, only for this page */}
