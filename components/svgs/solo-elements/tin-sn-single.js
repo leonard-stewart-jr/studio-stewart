@@ -1,12 +1,12 @@
 import * as React from "react";
 
-export default function TinSnSingle({ style, title }) {
+export default function TinSnSingle(props) {
   return (
     <svg
-      viewBox="0 0 52.65 52.65"
-      style={style}
-      aria-label={title}
-      role="img"
+      viewBox="0 0 61 61"
+      width="100%"
+      height="100%"
+      {...props}
     >
       <rect
         x="0"
