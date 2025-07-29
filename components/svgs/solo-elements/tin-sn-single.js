@@ -11,8 +11,8 @@ export default function TinSnSingle(props) {
       <rect
         x="0"
         y="0"
-        width="52.65"
-        height="52.65"
+        width="61"
+        height="61"
         rx="8"
         fill="rgba(192,57,43,.35)"
         stroke="#54b948"
