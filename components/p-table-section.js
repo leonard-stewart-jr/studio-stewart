@@ -109,7 +109,7 @@ export default function PTableSection() {
         boxShadow: "0 1.5px 24px rgba(32,32,32,0.08)",
         padding: "32px 0 28px 0",
         minHeight: sectionMaxHeight,
-        maxHeight: sectionMaxHeight + 60,
+        maxHeight: "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
