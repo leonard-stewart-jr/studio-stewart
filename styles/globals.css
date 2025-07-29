@@ -8,8 +8,22 @@ body {
   color: #181818;
   overflow-y: auto;
   overflow-x: hidden;
-}
 
+  /* Custom scrollbar for entire page */
+  scrollbar-width: thin;
+  scrollbar-color: #e6dbb9 #f0f0ed;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  width: 14px;
+  background: transparent;
+}
+html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+  background: #e6dbb9;
+  border-radius: 0;
+}
+html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
+  background: #d6c08e;
+}
 /* ====== CARD NAV STYLES ====== */
 .nav-card {
   margin: 0 auto;
