@@ -2,8 +2,7 @@ import * as React from "react";
 
 export default function TinSnSingle({ style, title }) {
   return (
-    <svg
-      viewBox="0 0 52.65 52.65"
+<svg viewBox="0 0 52.65 52.65" width={52.65} height={52.65}>
       style={style}
       aria-label={title}
       role="img"
@@ -11,8 +10,8 @@ export default function TinSnSingle({ style, title }) {
       <rect
         x="0"
         y="0"
-        width="64"
-        height="64"
+        width="52.65"
+        height="52.65"
         rx="8"
         fill="rgba(192,57,43,.35)"
         stroke="#54b948"
