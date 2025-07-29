@@ -17,12 +17,12 @@ const SvgFullTable = (props) => (
     <g id="full-table_svg__periodic-table-of-elements">
       <path
         id="full-table_svg__rect4"
-        d="M1.5 1.5h60.59v60.59H1.5z"
+        d="M1.5 1.5h61v61H1.5z"
         className="full-table_svg__cls-2"
       />
       <path
         id="full-table_svg__rect10"
-        d="M1.5 71.15h60.59v60.59H1.5z"
+        d="M1.5 71.15h61v61H1.5z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -32,22 +32,22 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect16"
-        d="M1.5 140.74h60.59v60.59H1.5z"
+        d="M1.5 140.74h61v61H1.5z"
         className="full-table_svg__cls-14"
       />
       <path
         id="full-table_svg__rect22"
-        d="M1.5 210.23h60.59v60.59H1.5z"
+        d="M1.5 210.23h61v61H1.5z"
         className="full-table_svg__cls-14"
       />
       <path
         id="full-table_svg__rect28"
-        d="M1.5 279.82h60.59v60.59H1.5z"
+        d="M1.5 279.82h61v61H1.5z"
         className="full-table_svg__cls-14"
       />
       <path
         id="full-table_svg__rect34"
-        d="M1.5 349.29h60.59v60.59H1.5z"
+        d="M1.5 349.29h61v61H1.5z"
         className="full-table_svg__cls-14"
       />
       <path
@@ -57,17 +57,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect42"
-        d="M71.66 71.15h60.59v60.59H71.66z"
+        d="M71.66 71.15h61v61H71.66z"
         className="full-table_svg__cls-20"
       />
       <path
         id="full-table_svg__rect48"
-        d="M71.66 140.74h60.59v60.59H71.66z"
+        d="M71.66 140.74h61v61H71.66z"
         className="full-table_svg__cls-20"
       />
       <path
         id="full-table_svg__rect54"
-        d="M71.66 210.23h60.59v60.59H71.66z"
+        d="M71.66 210.23h61v61H71.66z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -77,12 +77,12 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect60"
-        d="M71.66 279.82h60.59v60.59H71.66z"
+        d="M71.66 279.82h61v61H71.66z"
         className="full-table_svg__cls-24"
       />
       <path
         id="full-table_svg__rect62"
-        d="M71.66 349.29h60.59v60.59H71.66z"
+        d="M71.66 349.29h61v61H71.66z"
         className="full-table_svg__cls-20"
       />
       <path
@@ -97,37 +97,37 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect666"
-        d="M210.34 349.29h60.59v60.59h-60.59z"
+        d="M210.34 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect714"
-        d="M906.55 71.15h60.59v60.59h-60.59z"
+        d="M906.55 71.15h61v61h-60.59z"
         className="full-table_svg__cls-21"
       />
       <path
         id="full-table_svg__rect720"
-        d="M906.55 140.74h60.59v60.59h-60.59z"
+        d="M906.55 140.74h61v61h-60.59z"
         className="full-table_svg__cls-16"
       />
       <path
         id="full-table_svg__rect726"
-        d="M906.55 210.23h60.59v60.59h-60.59z"
+        d="M906.55 210.23h61v61h-60.59z"
         className="full-table_svg__cls-18"
       />
       <path
         id="full-table_svg__rect732"
-        d="M906.55 279.82h60.59v60.59h-60.59z"
+        d="M906.55 279.82h61v61h-60.59z"
         className="full-table_svg__cls-18"
       />
       <path
         id="full-table_svg__rect738"
-        d="M906.55 349.3h60.59v60.59h-60.59z"
+        d="M906.55 349.3h61v61h-60.59z"
         className="full-table_svg__cls-18"
       />
       <path
         id="full-table_svg__rect744"
-        d="M976.14 71.15h60.59v60.59h-60.59z"
+        d="M976.14 71.15h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -137,17 +137,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect750"
-        d="M976.14 140.74h60.59v60.59h-60.59z"
+        d="M976.14 140.74h61v61h-60.59z"
         className="full-table_svg__cls-21"
       />
       <path
         id="full-table_svg__rect756"
-        d="M976.14 210.23h60.59v60.59h-60.59z"
+        d="M976.14 210.23h61v61h-60.59z"
         className="full-table_svg__cls-15"
       />
       <path
         id="full-table_svg__rect768"
-        d="M976.14 349.3h60.59v60.59h-60.59z"
+        d="M976.14 349.3h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -162,17 +162,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect776"
-        d="M1045.74 71.15h60.59v60.59h-60.59z"
+        d="M1045.74 71.15h61v61h-60.59z"
         className="full-table_svg__cls-2"
       />
       <path
         id="full-table_svg__rect782"
-        d="M1045.74 140.74h60.59v60.59h-60.59z"
+        d="M1045.74 140.74h61v61h-60.59z"
         className="full-table_svg__cls-2"
       />
       <path
         id="full-table_svg__rect788"
-        d="M1045.74 210.23h60.59v60.59h-60.59z"
+        d="M1045.74 210.23h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -182,7 +182,7 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect794"
-        d="M1045.74 279.82h60.59v60.59h-60.59z"
+        d="M1045.74 279.82h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -192,17 +192,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect800"
-        d="M1045.74 349.3h60.59v60.59h-60.59z"
+        d="M1045.74 349.3h61v61h-60.59z"
         className="full-table_svg__cls-16"
       />
       <path
         id="full-table_svg__rect806"
-        d="M1115.33 71.15h60.59v60.59h-60.59z"
+        d="M1115.33 71.15h61v61h-60.59z"
         className="full-table_svg__cls-2"
       />
       <path
         id="full-table_svg__rect808"
-        d="M1184.92 71.15h60.59v60.59h-60.59z"
+        d="M1184.92 71.15h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -212,17 +212,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect810"
-        d="M1254.52 71.15h60.59v60.59h-60.59z"
+        d="M1254.52 71.15h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
         id="full-table_svg__rect812"
-        d="M1254.52 1.5h60.59v60.59h-60.59z"
+        d="M1254.52 1.5h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
         id="full-table_svg__rect818"
-        d="M1115.33 140.74h60.59v60.59h-60.59z"
+        d="M1115.33 140.74h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -232,7 +232,7 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect824"
-        d="M1115.33 210.23h60.59v60.59h-60.59z"
+        d="M1115.33 210.23h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -242,67 +242,67 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect830"
-        d="M1115.33 279.82h60.59v60.59h-60.59z"
+        d="M1115.33 279.82h61v61h-60.59z"
         className="full-table_svg__cls-15"
       />
       <path
         id="full-table_svg__rect836"
-        d="M1115.33 349.3h60.59v60.59h-60.59z"
+        d="M1115.33 349.3h61v61h-60.59z"
         className="full-table_svg__cls-15"
       />
       <path
         id="full-table_svg__rect846"
-        d="M1184.92 140.74h60.59v60.59h-60.59z"
+        d="M1184.92 140.74h61v61h-60.59z"
         className="full-table_svg__cls-5"
       />
       <path
         id="full-table_svg__rect848"
-        d="M1254.52 140.74h60.59v60.59h-60.59z"
+        d="M1254.52 140.74h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
         id="full-table_svg__rect854"
-        d="M1184.92 210.23h60.59v60.59h-60.59z"
+        d="M1184.92 210.23h61v61h-60.59z"
         className="full-table_svg__cls-5"
       />
       <path
         id="full-table_svg__rect860"
-        d="M1184.92 279.82h60.59v60.59h-60.59z"
+        d="M1184.92 279.82h61v61h-60.59z"
         className="full-table_svg__cls-5"
       />
       <path
         id="full-table_svg__rect866"
-        d="M1184.92 349.3h60.59v60.59h-60.59z"
+        d="M1184.92 349.3h61v61h-60.59z"
         className="full-table_svg__cls-5"
       />
       <path
         id="full-table_svg__rect884"
-        d="M1254.52 210.23h60.59v60.59h-60.59z"
+        d="M1254.52 210.23h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
         id="full-table_svg__rect890"
-        d="M1254.52 279.82h60.59v60.59h-60.59z"
+        d="M1254.52 279.82h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
         id="full-table_svg__rect896"
-        d="M1254.52 349.3h60.59v60.59h-60.59z"
+        d="M1254.52 349.3h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
         id="full-table_svg__rect902"
-        d="M210.34 210.23h60.59v60.59h-60.59z"
+        d="M210.34 210.23h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect908"
-        d="M210.34 279.82h60.59v60.59h-60.59z"
+        d="M210.34 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect914"
-        d="M279.94 349.29h60.59v60.59h-60.59z"
+        d="M279.94 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -312,17 +312,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect922"
-        d="M349.53 210.23h60.59v60.59h-60.59z"
+        d="M349.53 210.23h61v61h-60.59z"
         className="full-table_svg__cls-22"
       />
       <path
         id="full-table_svg__rect928"
-        d="M349.53 279.82h60.59v60.59h-60.59z"
+        d="M349.53 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect934"
-        d="M349.53 349.29h60.59v60.59h-60.59z"
+        d="M349.53 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -332,12 +332,12 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect942"
-        d="M419.13 210.23h60.59v60.59h-60.59z"
+        d="M419.13 210.23h61v61h-60.59z"
         className="full-table_svg__cls-22"
       />
       <path
         id="full-table_svg__rect948"
-        d="M419.13 279.82h60.59v60.59h-60.59z"
+        d="M419.13 279.82h61v61h-60.59z"
         className="full-table_svg__cls-1"
       />
       <path
@@ -347,17 +347,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect962"
-        d="M488.72 210.23h60.59v60.59h-60.59z"
+        d="M488.72 210.23h61v61h-60.59z"
         className="full-table_svg__cls-22"
       />
       <path
         id="full-table_svg__rect968"
-        d="M488.72 279.82h60.59v60.59h-60.59z"
+        d="M488.72 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect974"
-        d="M488.72 349.29h60.59v60.59h-60.59z"
+        d="M488.72 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -367,17 +367,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect982"
-        d="M558.31 210.23h60.59v60.59h-60.59z"
+        d="M558.31 210.23h61v61h-60.59z"
         className="full-table_svg__cls-22"
       />
       <path
         id="full-table_svg__rect988"
-        d="M558.31 279.82h60.59v60.59h-60.59z"
+        d="M558.31 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect994"
-        d="M558.31 349.29h60.59v60.59h-60.59z"
+        d="M558.31 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -387,7 +387,7 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1002"
-        d="M628.17 210.23h60.59v60.59h-60.59z"
+        d="M628.17 210.23h61v61h-60.59z"
         style={{
           strokeLinejoin: "bevel",
           strokeWidth: 3,
@@ -397,12 +397,12 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1008"
-        d="M628.17 279.82h60.59v60.59h-60.59z"
+        d="M628.17 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect1014"
-        d="M628.17 349.29h60.59v60.59h-60.59z"
+        d="M628.17 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -412,17 +412,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1022"
-        d="M697.77 210.23h60.59v60.59h-60.59z"
+        d="M697.77 210.23h61v61h-60.59z"
         className="full-table_svg__cls-1"
       />
       <path
         id="full-table_svg__rect1028"
-        d="M697.77 279.82h60.59v60.59h-60.59z"
+        d="M697.77 279.82h61v61h-60.59z"
         className="full-table_svg__cls-4"
       />
       <path
         id="full-table_svg__rect1034"
-        d="M697.77 349.29h60.59v60.59h-60.59z"
+        d="M697.77 349.29h61v61h-60.59z"
         className="full-table_svg__cls-4"
       />
       <path
@@ -432,17 +432,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1042"
-        d="M767.36 210.23h60.59v60.59h-60.59z"
+        d="M767.36 210.23h61v61h-60.59z"
         className="full-table_svg__cls-22"
       />
       <path
         id="full-table_svg__rect1048"
-        d="M767.36 279.82h60.59v60.59h-60.59z"
+        d="M767.36 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect1054"
-        d="M767.36 349.29h60.59v60.59h-60.59z"
+        d="M767.36 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -452,17 +452,17 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1062"
-        d="M836.95 210.23h60.59v60.59h-60.59z"
+        d="M836.95 210.23h61v61h-60.59z"
         className="full-table_svg__cls-22"
       />
       <path
         id="full-table_svg__rect1068"
-        d="M836.95 279.82h60.59v60.59h-60.59z"
+        d="M836.95 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
         id="full-table_svg__rect1074"
-        d="M836.95 349.29h60.59v60.59h-60.59z"
+        d="M836.95 349.29h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -472,12 +472,12 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1082"
-        d="M279.94 210.23h60.59v60.59h-60.59z"
+        d="M279.94 210.23h61v61h-60.59z"
         className="full-table_svg__cls-4"
       />
       <path
         id="full-table_svg__rect1088"
-        d="M279.94 279.82h60.59v60.59h-60.59z"
+        d="M279.94 279.82h61v61h-60.59z"
         className="full-table_svg__cls-3"
       />
       <path
@@ -497,7 +497,7 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect1680"
-        d="M1254.52 418.73h60.59v60.59h-60.59z"
+        d="M1254.52 418.73h61v61h-60.59z"
         className="full-table_svg__cls-26"
       />
       <path
@@ -518,7 +518,7 @@ const SvgFullTable = (props) => (
       />
       <path
         id="full-table_svg__rect666-2"
-        d="M141.01 349.29h60.59v60.59h-60.59z"
+        d="M141.01 349.29h61v61h-60.59z"
         data-name="rect666"
         style={{
           strokeLinejoin: "bevel",
