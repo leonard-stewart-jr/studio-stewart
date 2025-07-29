@@ -8,21 +8,22 @@ export default function MatterMatters() {
   const iframeRef = useRef(null);
 
   return (
-    <main
-      className="matter-matters-page"
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        margin: 0,
-        padding: 0,
-        background: "#fff",
-        overflow: "visible",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-    >
+<main
+  className="matter-matters-page"
+  style={{
+    width: "100vw",
+    minHeight: "100vh",
+    margin: 0,
+    padding: 0,
+    background: "#fff",
+    overflow: "visible",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 76, // <-- add this!
+  }}
+>
       {/* ======================= */}
       {/* 1. Main Tall iFrame     */}
       {/* ======================= */}
