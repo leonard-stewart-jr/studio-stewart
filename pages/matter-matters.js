@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 
-const EXPORT_WIDTH = 1366; // Your publication's pixel width
+const EXPORT_WIDTH = 1366; // Match your export!
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
@@ -12,23 +12,18 @@ export default function MatterMatters() {
       if (iframe && iframe.contentWindow && iframe.contentDocument) {
         try {
           const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-          // The body height includes all content
-          const newHeight = innerDoc.body.scrollHeight + "px";
-          setIframeHeight(newHeight);
+          // Use the height of the main div if possible
+          const wrapper = innerDoc.body.firstElementChild;
+          const newHeight = wrapper ? wrapper.scrollHeight : innerDoc.body.scrollHeight;
+          setIframeHeight(newHeight + "px");
         } catch (err) {}
       }
     }
-
     const iframe = iframeRef.current;
-    if (iframe) {
-      iframe.addEventListener("load", setHeight);
-    }
+    if (iframe) iframe.addEventListener("load", setHeight);
     window.addEventListener("resize", setHeight);
-
     return () => {
-      if (iframe) {
-        iframe.removeEventListener("load", setHeight);
-      }
+      if (iframe) iframe.removeEventListener("load", setHeight);
       window.removeEventListener("resize", setHeight);
     };
   }, []);
@@ -38,33 +33,30 @@ export default function MatterMatters() {
       style={{
         width: "100vw",
         minHeight: "100vh",
-        background: "#fff",
         margin: 0,
         padding: 0,
-        overflowX: "hidden", // Prevents horizontal scroll on the page
+        background: "#fff",
+        overflowX: "hidden", // Prevent horizontal scroll
         overflowY: "auto"
       }}
     >
       <div
         style={{
           width: "100vw",
+          overflowX: "hidden",
           margin: 0,
           padding: 0,
-          background: "#fff",
-          overflowX: "hidden",
-          overflowY: "visible"
+          background: "#fff"
         }}
       >
         <div
           style={{
             width: "100%",
             display: "flex",
-            flexDirection: "row",
             justifyContent: "center",
             alignItems: "flex-start",
             margin: 0,
-            padding: 0,
-            overflow: "visible"
+            padding: 0
           }}
         >
           <iframe
@@ -79,17 +71,14 @@ export default function MatterMatters() {
               display: "block",
               margin: 0,
               padding: 0,
-              overflow: "hidden",
               background: "#fff",
               boxSizing: "border-box"
             }}
             title="Matter Matters — Studio Stewart"
             scrolling="no"
-            allow="fullscreen"
           />
         </div>
       </div>
-      {/* Placeholder for Human Capital Index React component */}
       <div
         id="hc-periodic-table-root"
         style={{
@@ -97,7 +86,7 @@ export default function MatterMatters() {
           width: "100vw"
         }}
       >
-        {/* Your <HcPeriodicTable /> React component will go here later */}
+        {/* <HcPeriodicTable /> goes here */}
       </div>
     </main>
   );
