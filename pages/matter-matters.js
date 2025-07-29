@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import PTableSection from "../components/p-table-section";
 
 const EXPORT_WIDTH = 1366;
 const IFRAME_EXTRA_WIDTH = 16; // fudge factor for scrollbar
@@ -81,7 +82,7 @@ export default function MatterMatters() {
           width: "100vw"
         }}
       >
-        {/* <HcPeriodicTable /> goes here */}
+        <PTableSection />
       </div>
     </main>
   );
