@@ -13,7 +13,7 @@ export default function MatterMatters() {
       className="matter-matters-page"
       style={{
         width: "100vw",
-        height: "100vh",
+        height: `calc(100vh - ${HEADER_HEIGHT}px)`, // <-- KEY CHANGE!
         margin: 0,
         padding: 0,
         background: "#fff",
