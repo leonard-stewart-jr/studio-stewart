@@ -69,13 +69,17 @@ const materialIcons = [
 // SVG GRID CONSTANTS
 const SVG_WIDTH = 1344;
 const SVG_HEIGHT = 512;
-const COLS = 22; // Confirm this matches your SVG's actual grid!
-const ROWS = 8;  // Confirm this matches your SVG's actual grid!
-const BOX_SIZE = 61; // Each SVG cell is 61 x 61
 
-// W and Sn positions (zero-indexed, from left/top)
-const tungstenCol = 5, tungstenRow = 4;
-const snCol = 13, snRow = 4;
+// --- USE EXACT SVG COORDINATES FOR OVERLAYS ---
+// Ta (element 73): x=488.72, y=349.29, width=61, height=61 (from SVG path)
+// W (element 74, right of Ta): x=549.72, y=349.29, width=61, height=61 (Ta.x + Ta.width)
+
+const taBox = { x: 488.72, y: 349.29, w: 61, h: 61 };
+const tungstenBox = { x: taBox.x + taBox.w, y: taBox.y, w: 61, h: 61 };
+
+// TODO: For Sn, find its SVG box in the same way and update snBox below
+// Example values, update with your real Sn path x/y if needed
+const snBox = { x: 610.72, y: 349.29, w: 61, h: 61 }; // <-- Update x/y for Sn as needed
 
 export default function PTableSection() {
   const [activeIcons, setActiveIcons] = useState({
@@ -109,9 +113,15 @@ export default function PTableSection() {
     return () => window.removeEventListener("resize", updateDims);
   }, []);
 
-  // Overlay box size (scales with container)
-  const boxWidth = containerDims.width / COLS;
-  const boxHeight = containerDims.height / ROWS;
+  // Utility for scaling SVG coords to container
+  function svgToContainer(x, y, w, h) {
+    return {
+      left: (x / SVG_WIDTH) * containerDims.width,
+      top: (y / SVG_HEIGHT) * containerDims.height,
+      width: (w / SVG_WIDTH) * containerDims.width,
+      height: (h / SVG_HEIGHT) * containerDims.height,
+    };
+  }
 
   // Responsive scroll wrapper min width
   const minTableWidth = 700; // Optional, tweak as you like
@@ -190,28 +200,22 @@ export default function PTableSection() {
               pointerEvents: "none"
             }}
           />
-          {/* Tungsten overlay */}
+          {/* Tungsten overlay - uses exact SVG position! */}
           <TungstenTSingle
             style={{
               position: "absolute",
-              left: tungstenCol * boxWidth,
-              top: tungstenRow * boxHeight,
-              width: boxWidth,
-              height: boxHeight,
+              ...svgToContainer(tungstenBox.x, tungstenBox.y, tungstenBox.w, tungstenBox.h),
               zIndex: 2,
               pointerEvents: "auto",
               cursor: "pointer",
             }}
             title="Tungsten (W)"
           />
-          {/* Tin overlay */}
+          {/* Tin overlay - update snBox with the real SVG coordinates for Sn! */}
           <TinSnSingle
             style={{
               position: "absolute",
-              left: snCol * boxWidth,
-              top: snRow * boxHeight,
-              width: boxWidth,
-              height: boxHeight,
+              ...svgToContainer(snBox.x, snBox.y, snBox.w, snBox.h),
               zIndex: 2,
               pointerEvents: "auto",
               cursor: "pointer",
