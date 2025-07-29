@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 
-const EXPORT_WIDTH = 1366; // Your static publication width
-const HEADER_HEIGHT = 76;  // Height of your sticky header/nav
-const SCROLLBAR_WIDTH = 16; // Typical browser scrollbar width (adjust as needed)
+const EXPORT_WIDTH = 1366;   // Your publication HTML width in px
+const IFRAME_EXTRA_WIDTH = 16; // Add this to avoid horizontal scrollbar (browser scrollbar width)
+const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH; // 1382px
+const HEADER_HEIGHT = 76;    // Your header height
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
@@ -21,8 +22,6 @@ export default function MatterMatters() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
-        boxShadow: "none", // Remove any box-shadow for this page
-        border: "none",
       }}
     >
       <div
@@ -41,7 +40,7 @@ export default function MatterMatters() {
       >
         <div
           style={{
-            width: EXPORT_WIDTH,
+            width: IFRAME_WIDTH,
             height: `calc(100vh - ${HEADER_HEIGHT}px)`,
             position: "relative",
             background: "#fff",
@@ -56,19 +55,16 @@ export default function MatterMatters() {
             ref={iframeRef}
             src="/static/matter-matters/index.html"
             title="Matter Matters — Studio Stewart"
-            width={EXPORT_WIDTH}
+            width={IFRAME_WIDTH}
             height={`calc(100vh - ${HEADER_HEIGHT}px)`}
             style={{
-              width: EXPORT_WIDTH,
+              width: IFRAME_WIDTH,
               height: `calc(100vh - ${HEADER_HEIGHT}px)`,
               border: "none",
               background: "#fff",
               display: "block",
               overflowY: "auto",
               overflowX: "hidden",
-              // Scrollbar offset trick:
-              paddingRight: SCROLLBAR_WIDTH,
-              marginRight: -SCROLLBAR_WIDTH,
               boxSizing: "content-box",
               boxShadow: "none",
               outline: "none",
