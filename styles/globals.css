@@ -326,3 +326,9 @@ nav.main-nav a[aria-current="page"]:hover {
   box-shadow: none !important;
   border: none !important;
 }
+/* Sticky nav only for matter-matters page */
+.matter-matters-page .nav-card-top {
+  position: sticky;
+  top: 0;
+  z-index: 1200;
+}
