@@ -15,7 +15,7 @@ export default function HeaderBar({ fixedNav = false }) {
   // Animation speed for hamburger fade
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
-    const navBarStyle = {
+  const navBarStyle = {
     position: fixedNav ? "fixed" : "sticky",
     top: 0,
     zIndex: 1200,
@@ -30,23 +30,11 @@ export default function HeaderBar({ fixedNav = false }) {
     background: "#fff",
     left: 0, // only matters for fixed
   };
+
   return (
     <>
       {/* Card nav for header */}
       <div className="nav-card nav-card-top" style={navBarStyle}>
-        position: "sticky",
-        top: 0,
-        zIndex: 1200,
-        width: "100%",
-        paddingLeft: 0,
-        paddingRight: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        minHeight: headerHeight,
-        height: headerHeight,
-        background: "#fff",
-      }}>
         {/* Left: Hamburger/Logo */}
         <div
           style={{
