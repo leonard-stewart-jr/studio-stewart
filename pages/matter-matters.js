@@ -27,72 +27,73 @@ export default function MatterMatters() {
           paddingTop: 76, // Prevents content from hiding under the fixed nav!
         }}
       >
-      {/* ======================= */}
-      {/* 1. Main Tall iFrame     */}
-      {/* ======================= */}
-      <div
-        style={{
-          width: "100vw",
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "center",
-          background: "#fff",
-          margin: 0,
-          padding: 0,
-          boxShadow: "none",
-        }}
-      >
+        {/* ======================= */}
+        {/* 1. Main Tall iFrame     */}
+        {/* ======================= */}
         <div
           style={{
-            width: IFRAME_WIDTH,
-            height: IFRAME_HEIGHT,
-            position: "relative",
+            width: "100vw",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "center",
             background: "#fff",
             margin: 0,
             padding: 0,
             boxShadow: "none",
-            overflow: "visible",
-            border: "none",
           }}
         >
-          <iframe
-            ref={iframeRef}
-            src="/static/matter-matters/index.html"
-            title="Matter Matters — Studio Stewart"
-            width={IFRAME_WIDTH}
-            height={IFRAME_HEIGHT}
+          <div
             style={{
               width: IFRAME_WIDTH,
               height: IFRAME_HEIGHT,
-              border: "none",
+              position: "relative",
               background: "#fff",
-              display: "block",
-              boxSizing: "content-box",
+              margin: 0,
+              padding: 0,
               boxShadow: "none",
-              outline: "none",
               overflow: "visible",
+              border: "none",
             }}
-            scrolling="yes"
-            allowFullScreen
-          />
+          >
+            <iframe
+              ref={iframeRef}
+              src="/static/matter-matters/index.html"
+              title="Matter Matters — Studio Stewart"
+              width={IFRAME_WIDTH}
+              height={IFRAME_HEIGHT}
+              style={{
+                width: IFRAME_WIDTH,
+                height: IFRAME_HEIGHT,
+                border: "none",
+                background: "#fff",
+                display: "block",
+                boxSizing: "content-box",
+                boxShadow: "none",
+                outline: "none",
+                overflow: "visible",
+              }}
+              scrolling="yes"
+              allowFullScreen
+            />
+          </div>
         </div>
-      </div>
-      {/* ======================= */}
-      {/* 2. Periodic Table Section (React) */}
-      {/* ======================= */}
-      <div
-        id="hc-periodic-table-root"
-        style={{
-          margin: "0px 0 0 0",
-          width: "100vw",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#fff",
-        }}
-      >
-        <PTableSection />
-      </div>
-    </main>
+        {/* ======================= */}
+        {/* 2. Periodic Table Section (React) */}
+        {/* ======================= */}
+        <div
+          id="hc-periodic-table-root"
+          style={{
+            margin: "0px 0 0 0",
+            width: "100vw",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#fff",
+          }}
+        >
+          <PTableSection />
+        </div>
+      </main>
+    </>
   );
 }
