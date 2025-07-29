@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         {/* Adobe Fonts: Coolvetica Typekit */}
         <link rel="stylesheet" href="https://use.typekit.net/mzk5snr.css" />
-        <linkhref="https://fonts.googleapis.com/css?family=Bungee+Shade&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Bungee+Shade&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet" 
 />
         {/* Favicon: PNG fallback and SVG */}
