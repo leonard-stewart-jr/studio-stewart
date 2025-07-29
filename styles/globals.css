@@ -307,3 +307,8 @@ nav.main-nav a[aria-current="page"]:hover {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
 }
+.matter-matters-page {
+  background: #fff !important;
+  box-shadow: none !important;
+  border: none !important;
+}
