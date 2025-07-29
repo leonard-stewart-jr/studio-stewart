@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 
-const EXPORT_WIDTH = 1366;   // Your publication HTML width in px
-const IFRAME_EXTRA_WIDTH = 16; // Add this to avoid horizontal scrollbar (browser scrollbar width)
-const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH; // 1382px
-const HEADER_HEIGHT = 76;    // Your header height
+const EXPORT_WIDTH = 1366;
+const IFRAME_EXTRA_WIDTH = 16; // fudge factor so iframe's scrollbar doesn't cover content
+const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH;
+const HEADER_HEIGHT = 76;
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
@@ -13,11 +13,11 @@ export default function MatterMatters() {
       className="matter-matters-page"
       style={{
         width: "100vw",
-        height: `calc(100vh - ${HEADER_HEIGHT}px)`, // <-- KEY CHANGE!
+        height: "100vh", // fill full viewport height
         margin: 0,
         padding: 0,
         background: "#fff",
-        overflow: "hidden", // Only the iframe scrolls!
+        overflow: "hidden", // only iframe scrolls
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -41,7 +41,7 @@ export default function MatterMatters() {
         <div
           style={{
             width: IFRAME_WIDTH,
-            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            height: `calc(100vh - ${HEADER_HEIGHT}px)`, // fills the rest below header
             position: "relative",
             background: "#fff",
             margin: 0,
@@ -74,6 +74,7 @@ export default function MatterMatters() {
           />
         </div>
       </div>
+      {/* If you want to keep this, it should not force page height */}
       <div
         id="hc-periodic-table-root"
         style={{
