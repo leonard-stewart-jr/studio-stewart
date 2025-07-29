@@ -78,8 +78,8 @@ const taBox = { x: 488.72, y: 349.29, w: 61, h: 61 };
 const tungstenBox = { x: taBox.x + taBox.w, y: taBox.y, w: 61, h: 61 };
 
 // TODO: For Sn, find its SVG box in the same way and update snBox below
-// Example values, update with your real Sn path x/y if needed
-const snBox = { x: 610.72, y: 349.29, w: 61, h: 61 }; // <-- Update x/y for Sn as needed
+// Correct Sn box
+const snBox = { x: 976.14, y: 279.82, w: 61, h: 61 };
 
 export default function PTableSection() {
   const [activeIcons, setActiveIcons] = useState({
