@@ -328,7 +328,12 @@ nav.main-nav a[aria-current="page"]:hover {
 }
 /* Sticky nav only for matter-matters page */
 .matter-matters-page .nav-card-top {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100vw;
   z-index: 1200;
+  /* If you want a subtle shadow for separation, you can add:
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  */
 }
