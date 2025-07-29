@@ -75,7 +75,7 @@ const SVG_HEIGHT = 512;
 // W (element 74, right of Ta): x=549.72, y=349.29, width=61, height=61 (Ta.x + Ta.width)
 
 const taBox = { x: 488.72, y: 349.29, w: 61, h: 61 };
-const tungstenBox = { x: taBox.x + taBox.w, y: taBox.y, w: 61, h: 61 };
+const tungstenBox = { x: 419.13, y: 349.32, w: 61, h: 61 };
 
 // TODO: For Sn, find its SVG box in the same way and update snBox below
 // Correct Sn box
