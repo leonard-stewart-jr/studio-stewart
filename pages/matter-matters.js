@@ -4,7 +4,8 @@ import PTableSection from "../components/p-table-section";
 const EXPORT_WIDTH = 1366;
 const IFRAME_EXTRA_WIDTH = 16; // fudge factor for scrollbar
 const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH;
-const PAGE_OFFSET = 76; // Try subtracting 36px instead of 76px
+// You may tune PAGE_OFFSET if you want the iFrame not to overlap with any nav/header
+const PAGE_OFFSET = 76; // Try subtracting 36px if you want less offset
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
@@ -14,25 +15,26 @@ export default function MatterMatters() {
       className="matter-matters-page"
       style={{
         width: "100vw",
-        height: `calc(100vh - ${PAGE_OFFSET}px)`, // now subtracts 36px
+        minHeight: "100vh",
         margin: 0,
         padding: 0,
         background: "#fff",
-        overflow: "hidden",
+        overflow: "visible",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
       }}
     >
+      {/* ======================= */}
+      {/* 1. Main Tall iFrame     */}
+      {/* ======================= */}
       <div
         style={{
-          flex: 1,
           width: "100vw",
           display: "flex",
           alignItems: "flex-start",
           justifyContent: "center",
-          overflow: "hidden",
           background: "#fff",
           margin: 0,
           padding: 0,
@@ -42,14 +44,14 @@ export default function MatterMatters() {
         <div
           style={{
             width: IFRAME_WIDTH,
-            height: `calc(100vh - 76px)`, // keep iframe perfect as you said!
+            minHeight: "8000px", // allow your HTML to fill height
             position: "relative",
             background: "#fff",
             margin: 0,
             padding: 0,
             boxShadow: "none",
             overflow: "visible",
-            border: "none"
+            border: "none",
           }}
         >
           <iframe
@@ -57,29 +59,35 @@ export default function MatterMatters() {
             src="/static/matter-matters/index.html"
             title="Matter Matters — Studio Stewart"
             width={IFRAME_WIDTH}
-            height={`calc(100vh - 76px)`}
+            height="8000px" // This allows the iFrame to be as tall as your HTML content
             style={{
               width: IFRAME_WIDTH,
-              height: `calc(100vh - 76px)`,
+              height: "8000px", // Same as above, so the content is fully visible
               border: "none",
               background: "#fff",
               display: "block",
-              overflowY: "auto",
-              overflowX: "hidden",
               boxSizing: "content-box",
               boxShadow: "none",
               outline: "none",
+              overflow: "visible",
             }}
             scrolling="yes"
             allowFullScreen
           />
         </div>
       </div>
+      {/* ======================= */}
+      {/* 2. Periodic Table Section (React) */}
+      {/* ======================= */}
       <div
         id="hc-periodic-table-root"
         style={{
           margin: "0px 0 0 0",
-          width: "100vw"
+          width: "100vw",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#fff",
         }}
       >
         <PTableSection />
