@@ -8,7 +8,7 @@ import TableKey from "./svgs/keys/tablekey";
 // FULL TABLE
 import FullTable from "./svgs/fulltable";
 
-// TIN & TUNGSTEN SINGLE ELEMENT ICONS
+// SOLO ELEMENT ICONS
 import TinSnSingle from "./svgs/solo-elements/tin-sn-single";
 import TungstenTSingle from "./svgs/solo-elements/tungsten-t-single";
 
@@ -66,32 +66,19 @@ const materialIcons = [
   },
 ];
 
-// --- CONSTANTS for periodic table grid ---
-const SVG_VIEWBOX_WIDTH = 1344;
-const SVG_VIEWBOX_HEIGHT = 512;
-const SVG_RENDERED_WIDTH = 1160;
-const SVG_RENDERED_HEIGHT = 441.89;
-const BOX_SIZE = 64; // Each box in the SVG is 64x64 units
+// --- GRID CONSTANTS ---
+const DIV_WIDTH = 1160;
+const DIV_HEIGHT = 470;
+const COLS = 18;
+const ROWS = 7;
+const boxWidth = DIV_WIDTH / COLS;
+const boxHeight = DIV_HEIGHT / ROWS;
 
-// Scaling factors
-const scaleX = SVG_RENDERED_WIDTH / SVG_VIEWBOX_WIDTH;
-const scaleY = SVG_RENDERED_HEIGHT / SVG_VIEWBOX_HEIGHT;
-
-// --- Overlay positions (column/row for table elements) ---
-// W (Tungsten) is in column 7, row 5
-const colW = 7, rowW = 5;
-const leftW = colW * BOX_SIZE * scaleX;
-const topW = rowW * BOX_SIZE * scaleY;
-const boxWidth = BOX_SIZE * scaleX;
-const boxHeight = BOX_SIZE * scaleY;
-
-// Sn (Tin) is in column 13, row 5 (adjust if needed)
-const colSn = 13, rowSn = 5;
-const leftSn = colSn * BOX_SIZE * scaleX;
-const topSn = rowSn * BOX_SIZE * scaleY;
+// W and Sn positions (zero-indexed, from left/top)
+const tungstenCol = 5, tungstenRow = 4;
+const snCol = 13, snRow = 4;
 
 export default function PTableSection() {
-  // State for active material icons
   const [activeIcons, setActiveIcons] = useState({
     solarpanel: true,
     steel: true,
@@ -101,12 +88,10 @@ export default function PTableSection() {
     paint: true,
   });
 
-  // Toggle icon color/bw
   function toggleIcon(key) {
     setActiveIcons((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  // --- LAYOUT CONSTANTS ---
   const sectionMaxHeight = 880;
   const keyRowHeight = 70;
   const iconRowHeight = 120;
@@ -153,9 +138,8 @@ export default function PTableSection() {
       <div
         style={{
           position: "relative",
-          width: "100%",
-          maxWidth: SVG_RENDERED_WIDTH,
-          minHeight: 470,
+          width: DIV_WIDTH,
+          height: DIV_HEIGHT,
           margin: "0 auto",
           display: "flex",
           justifyContent: "center",
@@ -166,31 +150,20 @@ export default function PTableSection() {
         <FullTable
           style={{
             width: "100%",
-            height: "auto",
-            maxHeight: 480,
-            minWidth: 320,
+            height: "100%",
+            display: "block",
+            position: "absolute",
+            left: 0,
+            top: 0,
             zIndex: 1,
           }}
         />
-        {/* Tin and Tungsten overlays in exact calculated spots */}
-        <TinSnSingle
-          style={{
-            position: "absolute",
-            left: leftSn,
-            top: topSn,
-            width: boxWidth,
-            height: boxHeight,
-            zIndex: 2,
-            pointerEvents: "auto",
-            cursor: "pointer",
-          }}
-          title="Tin (Sn)"
-        />
+        {/* Tungsten overlay */}
         <TungstenTSingle
           style={{
             position: "absolute",
-            left: leftW,
-            top: topW,
+            left: tungstenCol * boxWidth,
+            top: tungstenRow * boxHeight,
             width: boxWidth,
             height: boxHeight,
             zIndex: 2,
@@ -198,6 +171,20 @@ export default function PTableSection() {
             cursor: "pointer",
           }}
           title="Tungsten (W)"
+        />
+        {/* Tin overlay */}
+        <TinSnSingle
+          style={{
+            position: "absolute",
+            left: snCol * boxWidth,
+            top: snRow * boxHeight,
+            width: boxWidth,
+            height: boxHeight,
+            zIndex: 2,
+            pointerEvents: "auto",
+            cursor: "pointer",
+          }}
+          title="Tin (Sn)"
         />
       </div>
 
