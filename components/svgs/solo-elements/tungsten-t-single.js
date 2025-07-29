@@ -1,76 +1,68 @@
 import * as React from "react";
-const SvgTungstenWSingle = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    data-name="Layer 2"
-    viewBox="0 0 64 64"
-    {...props}
-  >
-    <rect
-      x="1.5"
-      y="1.5"
-      width="61"
-      height="61"
-      style={{
-        fill: "rgba(192,57,43,.35)",
-        stroke: "#f5db12",
-        strokeLinejoin: "bevel",
-        strokeWidth: 3,
-      }}
-    />
-    <text
-      data-name="ATOMIC NUMBER"
-      style={{
-        fontSize: 11,
-        fontFamily: "OpenSans-Light,&quot",
-        fontWeight: 300,
-        isolation: "isolate",
-      }}
-      transform="translate(3.59 12.76)"
+
+export default function TungstenTSingle({ style, title }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      style={style}
+      aria-label={title}
+      role="img"
     >
-      <tspan x={0} y={0}>
-        {"74"}
-      </tspan>
-    </text>
-    <text
-      style={{
-        fontFamily: "OpenSans-Light,&quot",
-        fontWeight: 300,
-        isolation: "isolate",
-        fontSize: 9,
-      }}
-      transform="translate(12.91 45.82)"
-    >
-      <tspan x={0} y={0}>
-        {"Tungsten"}
-      </tspan>
-    </text>
-    <text
-      style={{
-        isolation: "isolate",
-        fontFamily: "OpenSans-Bold,&quot",
-        fontSize: 24,
-        fontWeight: 700,
-      }}
-      transform="translate(20.21 35.49)"
-    >
-      <tspan x={0} y={0}>
-        {"W"}
-      </tspan>
-    </text>
-    <text
-      style={{
-        fontFamily: "OpenSans-Light,&quot",
-        fontWeight: 300,
-        isolation: "isolate",
-        fontSize: 8,
-      }}
-      transform="translate(19.57 57.29)"
-    >
-      <tspan x={0} y={0}>
-        {"183.84"}
-      </tspan>
-    </text>
-  </svg>
-);
-export default SvgTungstenWSingle;
+      <rect
+        x="0"
+        y="0"
+        width="64"
+        height="64"
+        rx="8"
+        fill="rgba(192,57,43,.35)"
+        stroke="#f5db12"
+        strokeWidth="3"
+        strokeLinejoin="bevel"
+      />
+      <text
+        x="50%"
+        y="24%"
+        dominantBaseline="middle"
+        textAnchor="middle"
+        fontSize="11"
+        fontWeight="300"
+        fill="#181818"
+      >
+        74
+      </text>
+      <text
+        x="50%"
+        y="56%"
+        dominantBaseline="middle"
+        textAnchor="middle"
+        fontSize="24"
+        fontWeight="700"
+        fill="#181818"
+      >
+        W
+      </text>
+      <text
+        x="50%"
+        y="72%"
+        dominantBaseline="middle"
+        textAnchor="middle"
+        fontSize="9"
+        fontWeight="300"
+        fill="#181818"
+      >
+        Tungsten
+      </text>
+      <text
+        x="50%"
+        y="88%"
+        dominantBaseline="middle"
+        textAnchor="middle"
+        fontSize="8"
+        fontWeight="300"
+        fill="#181818"
+      >
+        183.84
+      </text>
+    </svg>
+  );
+}
