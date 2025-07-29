@@ -14,9 +14,10 @@ export default function TinSnSingle({ style, title }) {
         width="64"
         height="64"
         rx="8"
-        fill="#fff"
+        fill="rgba(192,57,43,.35)"
         stroke="#54b948"
         strokeWidth="3"
+        strokeLinejoin="bevel"
       />
       <text
         x="50%"
