@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useLayoutEffect } from "react";
 
 // KEYS
 import RiskKey from "./svgs/keys/riskkey";
@@ -66,13 +66,12 @@ const materialIcons = [
   },
 ];
 
-// --- GRID CONSTANTS ---
-const DIV_WIDTH = 1160;
-const DIV_HEIGHT = 470;
-const COLS = 18;
-const ROWS = 7;
-const boxWidth = DIV_WIDTH / COLS;
-const boxHeight = DIV_HEIGHT / ROWS;
+// SVG GRID CONSTANTS
+const SVG_WIDTH = 1344;
+const SVG_HEIGHT = 512;
+const COLS = 22; // Confirm this matches your SVG's actual grid!
+const ROWS = 8;  // Confirm this matches your SVG's actual grid!
+const BOX_SIZE = 61; // Each SVG cell is 61 x 61
 
 // W and Sn positions (zero-indexed, from left/top)
 const tungstenCol = 5, tungstenRow = 4;
@@ -92,10 +91,30 @@ export default function PTableSection() {
     setActiveIcons((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  const sectionMaxHeight = 880;
-  const keyRowHeight = 70;
-  const iconRowHeight = 120;
-  const gap = 22;
+  // Responsive: measure rendered width/height for overlays
+  const tableRef = useRef();
+  const [containerDims, setContainerDims] = useState({ width: SVG_WIDTH, height: SVG_HEIGHT });
+
+  useLayoutEffect(() => {
+    function updateDims() {
+      if (tableRef.current) {
+        setContainerDims({
+          width: tableRef.current.offsetWidth,
+          height: tableRef.current.offsetHeight,
+        });
+      }
+    }
+    updateDims();
+    window.addEventListener("resize", updateDims);
+    return () => window.removeEventListener("resize", updateDims);
+  }, []);
+
+  // Overlay box size (scales with container)
+  const boxWidth = containerDims.width / COLS;
+  const boxHeight = containerDims.height / ROWS;
+
+  // Responsive scroll wrapper min width
+  const minTableWidth = 700; // Optional, tweak as you like
 
   return (
     <section
@@ -108,8 +127,6 @@ export default function PTableSection() {
         borderRadius: 16,
         boxShadow: "0 1.5px 24px rgba(32,32,32,0.08)",
         padding: "32px 0 28px 0",
-        minHeight: sectionMaxHeight,
-        maxHeight: "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -125,8 +142,8 @@ export default function PTableSection() {
           justifyContent: "center",
           gap: 68,
           width: "100%",
-          minHeight: keyRowHeight,
-          marginBottom: gap,
+          minHeight: 70,
+          marginBottom: 22,
         }}
       >
         <TableKey style={{ height: 64, width: "auto" }} />
@@ -134,67 +151,83 @@ export default function PTableSection() {
         <TypeKey style={{ height: 64, width: "auto" }} />
       </div>
 
-      {/* PERIODIC TABLE + TIN/TUNGSTEN OVERLAYS */}
+      {/* --- SCROLL WRAPPER --- */}
       <div
         style={{
-          position: "relative",
-          width: DIV_WIDTH,
-          height: DIV_HEIGHT,
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          width: "100vw",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+          paddingBottom: 18,
         }}
       >
-        {/* Full Periodic Table */}
-        <FullTable
+        {/* --- TABLE CONTAINER (responsive, aspect-ratio) --- */}
+        <div
+          ref={tableRef}
           style={{
             width: "100%",
-            height: "100%",
+            minWidth: minTableWidth,
+            maxWidth: 1344,
+            aspectRatio: `${SVG_WIDTH}/${SVG_HEIGHT}`,
+            position: "relative",
+            margin: "0 auto",
+            background: "#f9f9f7",
+            borderRadius: 12,
+            boxShadow: "0 2px 18px rgba(32,32,32,0.08)",
+            overflow: "visible",
             display: "block",
-            position: "absolute",
-            left: 0,
-            top: 0,
-            zIndex: 1,
           }}
-        />
-        {/* Tungsten overlay */}
-        <TungstenTSingle
-          style={{
-            position: "absolute",
-            left: tungstenCol * boxWidth,
-            top: tungstenRow * boxHeight,
-            width: boxWidth,
-            height: boxHeight,
-            zIndex: 2,
-            pointerEvents: "auto",
-            cursor: "pointer",
-          }}
-          title="Tungsten (W)"
-        />
-        {/* Tin overlay */}
-        <TinSnSingle
-          style={{
-            position: "absolute",
-            left: snCol * boxWidth,
-            top: snRow * boxHeight,
-            width: boxWidth,
-            height: boxHeight,
-            zIndex: 2,
-            pointerEvents: "auto",
-            cursor: "pointer",
-          }}
-          title="Tin (Sn)"
-        />
+        >
+          {/* Full Periodic Table SVG */}
+          <FullTable
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "block",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              zIndex: 1,
+              pointerEvents: "none"
+            }}
+          />
+          {/* Tungsten overlay */}
+          <TungstenTSingle
+            style={{
+              position: "absolute",
+              left: tungstenCol * boxWidth,
+              top: tungstenRow * boxHeight,
+              width: boxWidth,
+              height: boxHeight,
+              zIndex: 2,
+              pointerEvents: "auto",
+              cursor: "pointer",
+            }}
+            title="Tungsten (W)"
+          />
+          {/* Tin overlay */}
+          <TinSnSingle
+            style={{
+              position: "absolute",
+              left: snCol * boxWidth,
+              top: snRow * boxHeight,
+              width: boxWidth,
+              height: boxHeight,
+              zIndex: 2,
+              pointerEvents: "auto",
+              cursor: "pointer",
+            }}
+            title="Tin (Sn)"
+          />
+        </div>
       </div>
 
       {/* MATERIAL ICONS ROW */}
       <div
         style={{
-          marginTop: gap * 1.1,
+          marginTop: 24,
           width: "100%",
           maxWidth: 1160,
-          height: iconRowHeight,
+          height: 120,
           display: "flex",
           flexDirection: "row",
           alignItems: "flex-end",
