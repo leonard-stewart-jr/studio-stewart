@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 const EXPORT_WIDTH = 1366;
 const IFRAME_EXTRA_WIDTH = 16; // fudge factor for scrollbar
 const IFRAME_WIDTH = EXPORT_WIDTH + IFRAME_EXTRA_WIDTH;
-const HEADER_HEIGHT = 76;
+const PAGE_OFFSET = 36; // Try subtracting 36px instead of 76px
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
@@ -13,7 +13,7 @@ export default function MatterMatters() {
       className="matter-matters-page"
       style={{
         width: "100vw",
-        height: `calc(100vh - ${HEADER_HEIGHT}px)`, // <-- ONLY CHANGE HERE
+        height: `calc(100vh - ${PAGE_OFFSET}px)`, // now subtracts 36px
         margin: 0,
         padding: 0,
         background: "#fff",
@@ -41,7 +41,7 @@ export default function MatterMatters() {
         <div
           style={{
             width: IFRAME_WIDTH,
-            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            height: `calc(100vh - 76px)`, // keep iframe perfect as you said!
             position: "relative",
             background: "#fff",
             margin: 0,
@@ -56,10 +56,10 @@ export default function MatterMatters() {
             src="/static/matter-matters/index.html"
             title="Matter Matters — Studio Stewart"
             width={IFRAME_WIDTH}
-            height={`calc(100vh - ${HEADER_HEIGHT}px)`}
+            height={`calc(100vh - 76px)`}
             style={{
               width: IFRAME_WIDTH,
-              height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+              height: `calc(100vh - 76px)`,
               border: "none",
               background: "#fff",
               display: "block",
