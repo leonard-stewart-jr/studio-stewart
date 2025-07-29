@@ -1,18 +1,18 @@
 import * as React from "react";
 
-export default function TungstenTSingle({ style, title }) {
+export default function TungstenTSingle(props) {
   return (
     <svg
-      viewBox="0 0 52.65 52.65"
-      style={style}
-      aria-label={title}
-      role="img"
+      viewBox="0 0 61 61"
+      width="100%"
+      height="100%"
+      {...props}
     >
       <rect
         x="0"
         y="0"
-        width="52.65"
-        height="52.65"
+        width="61"
+        height="61"
         rx="7"
         fill="rgba(192,57,43,.35)"
         stroke="#f5db12"
@@ -25,7 +25,7 @@ export default function TungstenTSingle({ style, title }) {
         fontSize="8"
         fontWeight="300"
         fill="#181818"
-        fontFamily="Open Sans, Arial, sans-serif"
+        fontFamily="coolvetica, sans-serif"
       >
         74
       </text>
@@ -36,7 +36,7 @@ export default function TungstenTSingle({ style, title }) {
         fontSize="18"
         fontWeight="700"
         fill="#181818"
-        fontFamily="Open Sans, Arial, sans-serif"
+        fontFamily="coolvetica, sans-serif"
       >
         W
       </text>
@@ -47,7 +47,7 @@ export default function TungstenTSingle({ style, title }) {
         fontSize="8"
         fontWeight="300"
         fill="#181818"
-        fontFamily="Open Sans, Arial, sans-serif"
+        fontFamily="coolvetica, sans-serif"
       >
         Tungsten
       </text>
@@ -57,7 +57,7 @@ export default function TungstenTSingle({ style, title }) {
         fontSize="7"
         fontWeight="300"
         fill="#181818"
-        fontFamily="Open Sans, Arial, sans-serif"
+        fontFamily="coolvetica, sans-serif"
       >
         183.84
       </text>
