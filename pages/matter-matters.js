@@ -77,7 +77,7 @@ export default function MatterMatters() {
       <div
         id="hc-periodic-table-root"
         style={{
-          margin: "64px 0 0 0",
+          margin: "0px 0 0 0",
           width: "100vw"
         }}
       >
