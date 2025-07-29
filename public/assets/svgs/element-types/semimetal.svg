@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272.38 341.74">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 11px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        isolation: isolate;
+      }
+
+      .cls-5 {
+        fill: rgba(192, 57, 43, .35);
+      }
+
+      .cls-5, .cls-6, .cls-7, .cls-8 {
+        stroke: #39bced;
+        stroke-linejoin: bevel;
+        stroke-width: 3px;
+      }
+
+      .cls-2 {
+        font-size: 9px;
+      }
+
+      .cls-3 {
+        font-size: 8px;
+      }
+
+      .cls-6 {
+        fill: rgba(179, 38, 42, .35);
+      }
+
+      .cls-7 {
+        fill: rgba(213, 216, 220, .5);
+      }
+
+      .cls-4 {
+        font-family: OpenSans-Bold, 'Open Sans';
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .cls-8 {
+        fill: rgba(241, 196, 15, .35);
+      }
+    </style>
+  </defs>
+  <g id="periodic-table-of-elements">
+    <rect id="rect714" class="cls-8" x="1.5" y="1.5" width="60.59" height="60.59"/>
+    <rect id="rect750" class="cls-8" x="71.09" y="71.09" width="60.59" height="60.59"/>
+    <rect id="rect756" class="cls-7" x="71.09" y="140.58" width="60.59" height="60.59"/>
+    <rect id="rect788" class="cls-5" x="140.69" y="140.58" width="60.59" height="60.59"/>
+    <rect id="rect794" class="cls-6" x="140.69" y="210.17" width="60.59" height="60.59"/>
+    <rect id="rect830" class="cls-7" x="210.28" y="210.17" width="60.59" height="60.59"/>
+    <rect id="rect836" class="cls-7" x="210.28" y="279.65" width="60.59" height="60.59"/>
+  </g>
+  <g id="ATOMIC_NUMBER" data-name="ATOMIC NUMBER">
+    <g id="g1356">
+      <text id="text1354" class="cls-1" transform="translate(213.06 221.04)"><tspan x="0" y="0">52</tspan></text>
+    </g>
+    <g id="g1356-2" data-name="g1356">
+      <text id="text1354-2" data-name="text1354" class="cls-1" transform="translate(213.06 290.71)"><tspan x="0" y="0">84</tspan></text>
+    </g>
+    <g id="g1356-3" data-name="g1356">
+      <text id="text1354-3" data-name="text1354" class="cls-1" transform="translate(143.61 151.82)"><tspan x="0" y="0">33</tspan></text>
+    </g>
+    <g id="g1356-4" data-name="g1356">
+      <text id="text1354-4" data-name="text1354" class="cls-1" transform="translate(143.61 221.43)"><tspan x="0" y="0">51</tspan></text>
+    </g>
+    <g id="g1356-5" data-name="g1356">
+      <text id="text1354-5" data-name="text1354" class="cls-1" transform="translate(74.06 82.71)"><tspan x="0" y="0">14</tspan></text>
+    </g>
+    <g id="g1356-6" data-name="g1356">
+      <text id="text1354-6" data-name="text1354" class="cls-1" transform="translate(74.06 151.71)"><tspan x="0" y="0">32</tspan></text>
+    </g>
+    <g id="g1356-7" data-name="g1356">
+      <text id="text1354-7" data-name="text1354" class="cls-1" transform="translate(3.95 12.43)"><tspan x="0" y="0">5</tspan></text>
+    </g>
+  </g>
+  <g id="NAME">
+    <text id="text1156" class="cls-2" transform="translate(222.21 254.1)"><tspan x="0" y="0">Tellurium</tspan></text>
+    <text id="text1156-2" data-name="text1156" class="cls-2" transform="translate(221.9 323.77)"><tspan x="0" y="0">Polonium</tspan></text>
+    <text id="text1156-3" data-name="text1156" class="cls-2" transform="translate(156.85 184.88)"><tspan x="0" y="0">Arsenic</tspan></text>
+    <text id="text1156-4" data-name="text1156" class="cls-2" transform="translate(152.47 254.49)"><tspan x="0" y="0">Antimony</tspan></text>
+    <text id="text1156-5" data-name="text1156" class="cls-2" transform="translate(89.19 115.77)"><tspan x="0" y="0">Silicon</tspan></text>
+    <text id="text1156-6" data-name="text1156" class="cls-2" transform="translate(77.99 184.77)"><tspan x="0" y="0">Germanium</tspan></text>
+    <text id="text1156-7" data-name="text1156" class="cls-2" transform="translate(19.51 45.49)"><tspan x="0" y="0">Boron</tspan></text>
+  </g>
+  <g id="SYMBOL">
+    <g id="g1644">
+      <text id="text1642" class="cls-4" transform="translate(156.59 174.55)"><tspan x="0" y="0">As</tspan></text>
+    </g>
+    <g id="g1644-2" data-name="g1644">
+      <text id="text1642-2" data-name="text1642" class="cls-4" transform="translate(156.63 244.16)"><tspan x="0" y="0">Sb</tspan></text>
+    </g>
+    <g id="g1644-3" data-name="g1644">
+      <text id="text1642-3" data-name="text1642" class="cls-4" transform="translate(24.11 35.16)"><tspan x="0" y="0">B</tspan></text>
+    </g>
+    <g id="g1644-4" data-name="g1644">
+      <text id="text1642-4" data-name="text1642" class="cls-4" transform="translate(91.01 105.43)"><tspan x="0" y="0">Si</tspan></text>
+    </g>
+    <g id="g1644-5" data-name="g1644">
+      <text id="text1642-5" data-name="text1642" class="cls-4" transform="translate(85.5 174.43)"><tspan x="0" y="0">Ge</tspan></text>
+    </g>
+    <g id="g1644-6" data-name="g1644">
+      <text id="text1642-6" data-name="text1642" class="cls-4" transform="translate(226.24 243.77)"><tspan x="0" y="0">Te</tspan></text>
+    </g>
+    <g id="g1644-7" data-name="g1644">
+      <text id="text1642-7" data-name="text1642" class="cls-4" transform="translate(225.32 313.43)"><tspan x="0" y="0">Po</tspan></text>
+    </g>
+  </g>
+  <g id="MASS">
+    <g id="g878">
+      <text id="text876" class="cls-3" transform="translate(231.32 265.57)"><tspan x="0" y="0">127.6</tspan></text>
+    </g>
+    <g id="g878-2" data-name="g878">
+      <text id="text876-2" data-name="text876" class="cls-3" transform="translate(224.21 335.24)"><tspan x="0" y="0">[208.982]</tspan></text>
+    </g>
+    <g id="g878-3" data-name="g878">
+      <text id="text876-3" data-name="text876" class="cls-3" transform="translate(159.6 196.35)"><tspan x="0" y="0">74.922</tspan></text>
+    </g>
+    <g id="g878-4" data-name="g878">
+      <text id="text876-4" data-name="text876" class="cls-3" transform="translate(157.31 265.96)"><tspan x="0" y="0">121.760</tspan></text>
+    </g>
+    <g id="g878-5" data-name="g878">
+      <text id="text876-5" data-name="text876" class="cls-3" transform="translate(90.04 127.23)"><tspan x="0" y="0">28.086</tspan></text>
+    </g>
+    <g id="g878-6" data-name="g878">
+      <text id="text876-6" data-name="text876" class="cls-3" transform="translate(90.04 196.23)"><tspan x="0" y="0">72.631</tspan></text>
+    </g>
+    <g id="g878-7" data-name="g878">
+      <text id="text876-7" data-name="text876" class="cls-3" transform="translate(19.93 56.96)"><tspan x="0" y="0">10.811</tspan></text>
+    </g>
+  </g>
+</svg>

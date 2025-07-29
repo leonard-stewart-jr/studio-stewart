@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133.79 94.22">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+        stroke: #000;
+        stroke-width: .5px;
+      }
+
+      .cls-2 {
+        stroke-linejoin: bevel;
+      }
+    </style>
+  </defs>
+  <g id="MATERIAL_ICONS" data-name="MATERIAL ICONS">
+    <g id="CONCRETE">
+      <g>
+        <path class="cls-2" d="M.25,37.59l62.28,29.67M91.59,79.78l-23.41,11.09-5.51,2.78-.68.35L.16,63.01M112.07,66.18l-20.84,9.95M133.79,13.1h0M13.55,9.75l62.68,27M100.27,26.04l-23.81,10.55-.31.48-.2,28.95,24.47-11.74v-28.16l-.16-.07ZM15.11,37.61l-4.44,1.35,20.24,9.35,3.87-1.54M70.97,63.65l-8.44,3.61-.54,26.65M75.9,65.85L13.84,36.83l-.39-25.88v-1.27S39.25.24,39.25.24"/>
+        <path class="cls-2" d="M46.56,19.61l-22.33-9.54,16.22-5.7,22.32,8.94-16.21,6.31Z"/>
+        <line class="cls-2" x1="39.07" y1=".23" x2="100.63" y2="25.97"/>
+        <polyline class="cls-2" points="13.75 33.14 .25 37.59 .25 63.18"/>
+        <polyline class="cls-2" points="41.11 49.72 37.06 51.11 60.52 62.26 64.6 60.6"/>
+      </g>
+      <line class="cls-1" x1="91.44" y1="79.98" x2="91.44" y2="58.31"/>
+      <polygon class="cls-2" points="75.31 31.75 51.53 21.61 66.23 15.35 89.86 25.2 75.31 31.75"/>
+      <polyline class="cls-1" points="111.98 66.21 111.85 38.6 100.54 43.21"/>
+      <line class="cls-1" x1="111.98" y1="38.49" x2="100.48" y2="33.17"/>
+      <polyline class="cls-1" points="100.5 39.4 103.72 38.07 100.53 36.55"/>
+      <line class="cls-2" x1="40.4" y1="4.29" x2="40.4" y2="16.85"/>
+      <line class="cls-2" x1="66.23" y1="15.35" x2="66.23" y2="27.93"/>
+      <line class="cls-2" x1="51.84" y1="54.73" x2="51.84" y2="58.13"/>
+      <line class="cls-2" x1="25.79" y1="42.58" x2="25.79" y2="45.99"/>
+    </g>
+  </g>
+</svg>

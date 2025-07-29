@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 179.04 128.38">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #8967ac;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10 {
+        stroke-miterlimit: 16.04;
+        stroke-width: 1.35px;
+      }
+
+      .cls-1, .cls-2, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10 {
+        fill: rgba(213, 216, 220, .5);
+      }
+
+      .cls-2 {
+        stroke: #e5018c;
+      }
+
+      .cls-3 {
+        stroke: #b3262a;
+      }
+
+      .cls-3, .cls-4, .cls-5 {
+        fill: rgba(213, 216, 220, .55);
+      }
+
+      .cls-4 {
+        stroke: #39bced;
+      }
+
+      .cls-11 {
+        font-family: OpenSans-Bold, 'Open Sans';
+        font-size: 15.75px;
+        font-weight: 700;
+      }
+
+      .cls-5 {
+        stroke: #736357;
+      }
+
+      .cls-6 {
+        stroke: #c69c6d;
+      }
+
+      .cls-12 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-size: 7.5px;
+        font-weight: 300;
+      }
+
+      .cls-7 {
+        stroke: #54b948;
+      }
+
+      .cls-8 {
+        stroke: #f58235;
+      }
+
+      .cls-9 {
+        stroke: #0067b4;
+      }
+
+      .cls-10 {
+        stroke: #f5db12;
+      }
+    </style>
+  </defs>
+  <g id="EXTRA">
+    <rect id="rect2006" class="cls-3" x="61.17" y="24.46" width="27.87" height="11"/>
+    <rect id="rect2008" class="cls-8" x="61.17" y="46.51" width="27.87" height="11"/>
+    <rect id="rect2010" class="cls-10" x="61.17" y="68.55" width="27.87" height="11"/>
+    <text class="cls-12" transform="translate(30.05 28.11)"><tspan x="0" y="0">ALKALI</tspan><tspan x=".06" y="9">METAL</tspan></text>
+    <rect id="rect2010-2" data-name="rect2010" class="cls-7" x="61.17" y="90.63" width="27.87" height="11"/>
+    <text class="cls-12" transform="translate(18.59 50.6)"><tspan x="0" y="0">ALKALINE</tspan><tspan x="10.07" y="9">EARTH</tspan></text>
+    <text class="cls-12" transform="translate(12.1 72.35)"><tspan x="0" y="0">TRANSITION </tspan><tspan x="18.34" y="9">METAL</tspan></text>
+    <text class="cls-12" transform="translate(33.5 94.1)"><tspan x="0" y="0">BASIC</tspan><tspan x="-3.05" y="9">METAL</tspan></text>
+    <rect id="rect2006-2" data-name="rect2006" class="cls-4" x="150.49" y="25.79" width="27.87" height="11"/>
+    <rect id="rect2008-2" data-name="rect2008" class="cls-9" x="150.49" y="47.84" width="27.87" height="11"/>
+    <rect id="rect2010-3" data-name="rect2010" class="cls-2" x="150.49" y="69.88" width="27.87" height="11"/>
+    <text class="cls-12" transform="translate(102.85 33.94)"><tspan x="0" y="0">SEMIMETAL</tspan></text>
+    <rect id="rect2010-4" data-name="rect2010" class="cls-1" x="150.49" y="91.96" width="27.87" height="11"/>
+    <text class="cls-12" transform="translate(100.97 56.43)"><tspan x="0" y="0">NONMETAL</tspan></text>
+    <text class="cls-12" transform="translate(108.21 78.18)"><tspan x="0" y="0">HALOGEN</tspan></text>
+    <text class="cls-12" transform="translate(102.87 99.93)"><tspan x="0" y="0">NOBLE GAS</tspan></text>
+    <rect id="rect2006-3" data-name="rect2006" class="cls-5" x="150.49" y="113.25" width="27.87" height="11"/>
+    <rect id="rect2008-3" data-name="rect2008" class="cls-6" x="61.24" y="112.8" width="27.87" height="11"/>
+    <text class="cls-12" transform="translate(98 121.4)"><tspan x="0" y="0">LANTHANIDE</tspan></text>
+    <text class="cls-12" transform="translate(19.45 121.39)"><tspan x="0" y="0">ACTINIDE</tspan></text>
+    <text class="cls-11" transform="translate(33.43 15.82)"><tspan x="0" y="0">ELEMENT TYPES</tspan></text>
+  </g>
+</svg>

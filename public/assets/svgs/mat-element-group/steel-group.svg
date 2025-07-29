@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1177.42 411.39">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15, .cls-16 {
+        stroke-linejoin: bevel;
+        stroke-width: 3px;
+      }
+
+      .cls-1, .cls-3, .cls-4, .cls-10, .cls-16 {
+        stroke: #f5db12;
+      }
+
+      .cls-1, .cls-6, .cls-13 {
+        fill: rgba(39, 174, 96, .35);
+      }
+
+      .cls-2 {
+        stroke: #0067b4;
+      }
+
+      .cls-2, .cls-3 {
+        fill: rgba(213, 216, 220, .5);
+      }
+
+      .cls-17 {
+        font-size: 11px;
+      }
+
+      .cls-17, .cls-18, .cls-19 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-17, .cls-18, .cls-19, .cls-20 {
+        isolation: isolate;
+      }
+
+      .cls-4 {
+        fill: rgba(241, 196, 15, .35);
+      }
+
+      .cls-5 {
+        fill: rgba(192, 57, 43, .35);
+      }
+
+      .cls-5, .cls-11, .cls-14 {
+        stroke: #54b948;
+      }
+
+      .cls-6 {
+        stroke: #f58235;
+      }
+
+      .cls-7, .cls-8, .cls-10, .cls-14 {
+        fill: rgba(192, 57, 43, .35);
+      }
+
+      .cls-7, .cls-12, .cls-13 {
+        stroke: #0067b4;
+      }
+
+      .cls-8, .cls-9, .cls-15 {
+        stroke: #39bced;
+      }
+
+      .cls-18 {
+        font-size: 9px;
+      }
+
+      .cls-19 {
+        font-size: 8px;
+      }
+
+      .cls-9 {
+        fill: rgba(179, 38, 42, .35);
+      }
+
+      .cls-11, .cls-12, .cls-15, .cls-16 {
+        fill: rgba(241, 196, 15, .35);
+      }
+
+      .cls-20 {
+        font-family: OpenSans-Bold, 'Open Sans';
+        font-size: 24px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <g id="periodic-table-of-elements">
+    <rect id="rect4" class="cls-2" x="1.5" y="1.5" width="60.59" height="60.59"/>
+    <rect id="rect54" class="cls-6" x="71.66" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect714" class="cls-15" x="906.55" y="71.15" width="60.59" height="60.59"/>
+    <rect id="rect720" class="cls-11" x="906.55" y="140.74" width="60.59" height="60.59"/>
+    <rect id="rect744" class="cls-7" x="976.14" y="71.15" width="60.59" height="60.59"/>
+    <rect id="rect750" class="cls-15" x="976.14" y="140.74" width="60.59" height="60.59"/>
+    <rect id="rect762" class="cls-14" x="976.14" y="279.82" width="60.59" height="60.59"/>
+    <rect id="rect768" class="cls-5" x="976.14" y="349.3" width="60.59" height="60.59"/>
+    <rect id="rect776" class="cls-2" x="1045.74" y="71.15" width="60.59" height="60.59"/>
+    <rect id="rect782" class="cls-2" x="1045.74" y="140.74" width="60.59" height="60.59"/>
+    <rect id="rect788" class="cls-8" x="1045.74" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect794" class="cls-9" x="1045.74" y="279.82" width="60.59" height="60.59"/>
+    <rect id="rect800" class="cls-11" x="1045.74" y="349.3" width="60.59" height="60.59"/>
+    <rect id="rect806" class="cls-2" x="1115.33" y="71.15" width="60.59" height="60.59"/>
+    <rect id="rect818" class="cls-12" x="1115.33" y="140.74" width="60.59" height="60.59"/>
+    <rect id="rect824" class="cls-13" x="1115.33" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect922" class="cls-16" x="349.53" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect928" class="cls-3" x="349.53" y="279.82" width="60.59" height="60.59"/>
+    <rect id="rect942" class="cls-16" x="419.13" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect948" class="cls-1" x="419.13" y="279.82" width="60.59" height="60.59"/>
+    <rect id="rect954" class="cls-10" x="419.13" y="349.29" width="60.59" height="60.59"/>
+    <rect id="rect962" class="cls-16" x="488.72" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect982" class="cls-16" x="558.31" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect1002" class="cls-10" x="628.17" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect1022" class="cls-1" x="697.77" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect1042" class="cls-16" x="767.36" y="210.23" width="60.59" height="60.59"/>
+    <rect id="rect1082" class="cls-4" x="279.94" y="210.23" width="60.59" height="60.59"/>
+  </g>
+  <g id="ATOMIC_NUMBER" data-name="ATOMIC NUMBER">
+    <g id="g1356">
+      <text id="text1354" class="cls-17" transform="translate(1118.11 82.41)"><tspan x="0" y="0">8</tspan></text>
+    </g>
+    <g id="g1356-2" data-name="g1356">
+      <text id="text1354-2" data-name="text1354" class="cls-17" transform="translate(1118.11 152.08)"><tspan x="0" y="0">16</tspan></text>
+    </g>
+    <g id="g1356-3" data-name="g1356">
+      <text id="text1354-3" data-name="text1354" class="cls-17" transform="translate(1118.11 221.08)"><tspan x="0" y="0">34</tspan></text>
+    </g>
+    <g id="g1356-4" data-name="g1356">
+      <text id="text1354-4" data-name="text1354" class="cls-17" transform="translate(1048.66 82.8)"><tspan x="0" y="0">7</tspan></text>
+    </g>
+    <g id="g1356-5" data-name="g1356">
+      <text id="text1354-5" data-name="text1354" class="cls-17" transform="translate(1048.66 152.47)"><tspan x="0" y="0">15</tspan></text>
+    </g>
+    <g id="g1356-6" data-name="g1356">
+      <text id="text1354-6" data-name="text1354" class="cls-17" transform="translate(1048.66 221.47)"><tspan x="0" y="0">33</tspan></text>
+    </g>
+    <g id="g1356-7" data-name="g1356">
+      <text id="text1354-7" data-name="text1354" class="cls-17" transform="translate(1048.66 291.08)"><tspan x="0" y="0">51</tspan></text>
+    </g>
+    <g id="g1356-8" data-name="g1356">
+      <text id="text1354-8" data-name="text1354" class="cls-17" transform="translate(1048.66 360.74)"><tspan x="0" y="0">83</tspan></text>
+    </g>
+    <g id="g1356-9" data-name="g1356">
+      <text id="text1354-9" data-name="text1354" class="cls-17" transform="translate(979.11 82.69)"><tspan x="0" y="0">6</tspan></text>
+    </g>
+    <g id="g1356-10" data-name="g1356">
+      <text id="text1354-10" data-name="text1354" class="cls-17" transform="translate(979.11 152.36)"><tspan x="0" y="0">14</tspan></text>
+    </g>
+    <g id="g1356-11" data-name="g1356">
+      <text id="text1354-11" data-name="text1354" class="cls-17" transform="translate(979.11 290.97)"><tspan x="0" y="0">50</tspan></text>
+    </g>
+    <g id="g1356-12" data-name="g1356">
+      <text id="text1354-12" data-name="text1354" class="cls-17" transform="translate(979.11 360.63)"><tspan x="0" y="0">82</tspan></text>
+    </g>
+    <g id="g1356-13" data-name="g1356">
+      <text id="text1354-13" data-name="text1354" class="cls-17" transform="translate(909 82.08)"><tspan x="0" y="0">5</tspan></text>
+    </g>
+    <g id="g1356-14" data-name="g1356">
+      <text id="text1354-14" data-name="text1354" class="cls-17" transform="translate(909 151.74)"><tspan x="0" y="0">13</tspan></text>
+    </g>
+    <g id="g1356-15" data-name="g1356">
+      <text id="text1354-15" data-name="text1354" class="cls-17" transform="translate(769.9 221.29)"><tspan x="0" y="0">29</tspan></text>
+    </g>
+    <g id="g1356-16" data-name="g1356">
+      <text id="text1354-16" data-name="text1354" class="cls-17" transform="translate(700.34 221.18)"><tspan x="0" y="0">28</tspan></text>
+    </g>
+    <g id="g1356-17" data-name="g1356">
+      <text id="text1354-17" data-name="text1354" class="cls-17" transform="translate(630.9 221.56)"><tspan x="0" y="0">27</tspan></text>
+    </g>
+    <g id="g1356-18" data-name="g1356">
+      <text id="text1354-18" data-name="text1354" class="cls-17" transform="translate(561.34 221.45)"><tspan x="0" y="0">26</tspan></text>
+    </g>
+    <g id="g1356-19" data-name="g1356">
+      <text id="text1354-19" data-name="text1354" class="cls-17" transform="translate(491.23 220.84)"><tspan x="0" y="0">25</tspan></text>
+    </g>
+    <g id="g1356-20" data-name="g1356">
+      <text id="text1354-20" data-name="text1354" class="cls-17" transform="translate(421.22 221.27)"><tspan x="0" y="0">24</tspan></text>
+    </g>
+    <g id="g1356-21" data-name="g1356">
+      <text id="text1354-21" data-name="text1354" class="cls-17" transform="translate(421.22 290.88)"><tspan x="0" y="0">42</tspan></text>
+    </g>
+    <g id="g1356-22" data-name="g1356">
+      <text id="text1354-22" data-name="text1354" class="cls-17" transform="translate(421.22 360.55)"><tspan x="0" y="0">74</tspan></text>
+    </g>
+    <g id="g1356-23" data-name="g1356">
+      <text id="text1354-23" data-name="text1354" class="cls-17" transform="translate(351.77 221.66)"><tspan x="0" y="0">23</tspan></text>
+    </g>
+    <g id="g1356-24" data-name="g1356">
+      <text id="text1354-24" data-name="text1354" class="cls-17" transform="translate(351.77 291.27)"><tspan x="0" y="0">41</tspan></text>
+    </g>
+    <g id="g1356-25" data-name="g1356">
+      <text id="text1354-25" data-name="text1354" class="cls-17" transform="translate(282.22 221.55)"><tspan x="0" y="0">22</tspan></text>
+    </g>
+    <g id="g1356-26" data-name="g1356">
+      <text id="text1354-26" data-name="text1354" class="cls-17" transform="translate(6.21 13.77)"><tspan x="0" y="0">1</tspan></text>
+    </g>
+    <g id="g1356-27" data-name="g1356">
+      <text id="text1354-27" data-name="text1354" class="cls-17" transform="translate(74.36 221.19)"><tspan x="0" y="0">20</tspan></text>
+    </g>
+  </g>
+  <g id="NAME">
+    <text id="text1156" class="cls-18" transform="translate(1130.95 115.48)"><tspan x="0" y="0">Oxygen</tspan></text>
+    <text id="text1156-2" data-name="text1156" class="cls-18" transform="translate(1134.29 185.14)"><tspan x="0" y="0">Sulfur</tspan></text>
+    <text id="text1156-3" data-name="text1156" class="cls-18" transform="translate(1127.47 254.14)"><tspan x="0" y="0">Selenium</tspan></text>
+    <text id="text1156-4" data-name="text1156" class="cls-18" transform="translate(1059.09 115.86)"><tspan x="0" y="0">Nitrogen</tspan></text>
+    <text id="text1156-5" data-name="text1156" class="cls-18" transform="translate(1052.24 185.53)"><tspan x="0" y="0">Phosphorus</tspan></text>
+    <text id="text1156-6" data-name="text1156" class="cls-18" transform="translate(1061.9 254.53)"><tspan x="0" y="0">Arsenic</tspan></text>
+    <text id="text1156-7" data-name="text1156" class="cls-18" transform="translate(1057.52 324.14)"><tspan x="0" y="0">Antimony</tspan></text>
+    <text id="text1156-8" data-name="text1156" class="cls-18" transform="translate(1060 393.81)"><tspan x="0" y="0">Bismuth</tspan></text>
+    <text id="text1156-9" data-name="text1156" class="cls-18" transform="translate(992.27 115.75)"><tspan x="0" y="0">Carbon</tspan></text>
+    <text id="text1156-10" data-name="text1156" class="cls-18" transform="translate(994.24 185.42)"><tspan x="0" y="0">Silicon</tspan></text>
+    <text id="text1156-11" data-name="text1156" class="cls-18" transform="translate(1001.14 324.03)"><tspan x="0" y="0">Tin</tspan></text>
+    <text id="text1156-12" data-name="text1156" class="cls-18" transform="translate(997.33 393.7)"><tspan x="0" y="0">Lead</tspan></text>
+    <text id="text1156-13" data-name="text1156" class="cls-18" transform="translate(924.81 115.14)"><tspan x="0" y="0">Baron</tspan></text>
+    <text id="text1156-14" data-name="text1156" class="cls-18" transform="translate(915.4 184.81)"><tspan x="0" y="0">Aluminium</tspan></text>
+    <text id="text1156-15" data-name="text1156" class="cls-18" transform="translate(782.95 254.35)"><tspan x="0" y="0">Copper</tspan></text>
+    <text id="text1156-16" data-name="text1156" class="cls-18" transform="translate(716.34 254.24)"><tspan x="0" y="0">Nickel</tspan></text>
+    <text id="text1156-17" data-name="text1156" class="cls-18" transform="translate(645.94 254.63)"><tspan x="0" y="0">Cobalt</tspan></text>
+    <text id="text1156-18" data-name="text1156" class="cls-18" transform="translate(581.23 254.52)"><tspan x="0" y="0">Iron</tspan></text>
+    <text id="text1156-19" data-name="text1156" class="cls-18" transform="translate(495.95 253.91)"><tspan x="0" y="0">Manganese</tspan></text>
+    <text id="text1156-20" data-name="text1156" class="cls-18" transform="translate(427.83 254.34)"><tspan x="0" y="0">Chromium</tspan></text>
+    <text id="text1156-21" data-name="text1156" class="cls-18" transform="translate(422.57 323.95)"><tspan x="0" y="0">Molybdenum</tspan></text>
+    <text id="text1156-22" data-name="text1156" class="cls-18" transform="translate(430.54 393.61)"><tspan x="0" y="0">Tungsten</tspan></text>
+    <text id="text1156-23" data-name="text1156" class="cls-18" transform="translate(359.5 254.73)"><tspan x="0" y="0">Vanadium</tspan></text>
+    <text id="text1156-24" data-name="text1156" class="cls-18" transform="translate(362.62 324.34)"><tspan x="0" y="0">Niobium</tspan></text>
+    <text id="text1156-25" data-name="text1156" class="cls-18" transform="translate(292.72 254.61)"><tspan x="0" y="0">Titanium</tspan></text>
+    <text id="text1156-26" data-name="text1156" class="cls-18" transform="translate(12.07 45.83)"><tspan x="0" y="0">Hydrogen</tspan></text>
+    <text id="text1156-27" data-name="text1156" class="cls-18" transform="translate(85.45 253.25)"><tspan x="0" y="0">Calcium</tspan></text>
+  </g>
+  <g id="SYMBOL">
+    <g id="g1644">
+      <text id="text1642" class="cls-20" transform="translate(1066.13 105.53)"><tspan x="0" y="0">N</tspan></text>
+    </g>
+    <g id="g1644-2" data-name="g1644">
+      <text id="text1642-2" data-name="text1642" class="cls-20" transform="translate(1068.35 175.2)"><tspan x="0" y="0">P</tspan></text>
+    </g>
+    <g id="g1644-3" data-name="g1644">
+      <text id="text1642-3" data-name="text1642" class="cls-20" transform="translate(1061.64 244.2)"><tspan x="0" y="0">As</tspan></text>
+    </g>
+    <g id="g1644-4" data-name="g1644">
+      <text id="text1642-4" data-name="text1642" class="cls-20" transform="translate(1061.68 313.81)"><tspan x="0" y="0">Sb</tspan></text>
+    </g>
+    <g id="g1644-5" data-name="g1644">
+      <text id="text1642-5" data-name="text1642" class="cls-20" transform="translate(1064.16 383.47)"><tspan x="0" y="0">Bi</tspan></text>
+    </g>
+    <g id="g1644-6" data-name="g1644">
+      <text id="text1642-6" data-name="text1642" class="cls-20" transform="translate(929.15 104.81)"><tspan x="0" y="0">B</tspan></text>
+    </g>
+    <g id="g1644-7" data-name="g1644">
+      <text id="text1642-7" data-name="text1642" class="cls-20" transform="translate(925.28 174.47)"><tspan x="0" y="0">Al</tspan></text>
+    </g>
+    <g id="g1644-8" data-name="g1644">
+      <text id="text1642-8" data-name="text1642" class="cls-20" transform="translate(998.68 105.42)"><tspan x="0" y="0">C</tspan></text>
+    </g>
+    <g id="g1644-9" data-name="g1644">
+      <text id="text1642-9" data-name="text1642" class="cls-20" transform="translate(996.06 175.08)"><tspan x="0" y="0">Si</tspan></text>
+    </g>
+    <g id="g1644-10" data-name="g1644">
+      <text id="text1642-10" data-name="text1642" class="cls-20" transform="translate(991.83 313.7)"><tspan x="0" y="0">Sn</tspan></text>
+    </g>
+    <g id="g1644-11" data-name="g1644">
+      <text id="text1642-11" data-name="text1642" class="cls-20" transform="translate(991.2 383.36)"><tspan x="0" y="0">Pb</tspan></text>
+    </g>
+    <g id="g1644-12" data-name="g1644">
+      <text id="text1642-12" data-name="text1642" class="cls-20" transform="translate(1135.78 105.14)"><tspan x="0" y="0">O</tspan></text>
+    </g>
+    <g id="g1644-13" data-name="g1644">
+      <text id="text1642-13" data-name="text1642" class="cls-20" transform="translate(1138.72 174.81)"><tspan x="0" y="0">S</tspan></text>
+    </g>
+    <g id="g1644-14" data-name="g1644">
+      <text id="text1642-14" data-name="text1642" class="cls-20" transform="translate(1131.63 243.81)"><tspan x="0" y="0">Se</tspan></text>
+    </g>
+    <g id="g1644-15" data-name="g1644">
+      <text id="text1642-15" data-name="text1642" class="cls-20" transform="translate(782.58 244.02)"><tspan x="0" y="0">Cu</tspan></text>
+    </g>
+    <g id="g1644-16" data-name="g1644">
+      <text id="text1642-16" data-name="text1642" class="cls-20" transform="translate(715.14 243.9)"><tspan x="0" y="0">Ni</tspan></text>
+    </g>
+    <g id="g1644-17" data-name="g1644">
+      <text id="text1642-17" data-name="text1642" class="cls-20" transform="translate(643.04 244.29)"><tspan x="0" y="0">Co</tspan></text>
+    </g>
+    <g id="g1644-18" data-name="g1644">
+      <text id="text1642-18" data-name="text1642" class="cls-20" transform="translate(574.89 244.18)"><tspan x="0" y="0">Fe</tspan></text>
+    </g>
+    <g id="g1644-19" data-name="g1644">
+      <text id="text1642-19" data-name="text1642" class="cls-20" transform="translate(500.25 243.57)"><tspan x="0" y="0">Mn</tspan></text>
+    </g>
+    <g id="g1644-20" data-name="g1644">
+      <text id="text1642-20" data-name="text1642" class="cls-20" transform="translate(436.34 244)"><tspan x="0" y="0">Cr</tspan></text>
+    </g>
+    <g id="g1644-21" data-name="g1644">
+      <text id="text1642-21" data-name="text1642" class="cls-20" transform="translate(430.69 313.61)"><tspan x="0" y="0">Mo</tspan></text>
+    </g>
+    <g id="g1644-22" data-name="g1644">
+      <text id="text1642-22" data-name="text1642" class="cls-20" transform="translate(437.84 383.28)"><tspan x="0" y="0">W</tspan></text>
+    </g>
+    <g id="g1644-23" data-name="g1644">
+      <text id="text1642-23" data-name="text1642" class="cls-20" transform="translate(372.2 244.39)"><tspan x="0" y="0">V</tspan></text>
+    </g>
+    <g id="g1644-24" data-name="g1644">
+      <text id="text1642-24" data-name="text1642" class="cls-20" transform="translate(362.64 314)"><tspan x="0" y="0">Nb</tspan></text>
+    </g>
+    <g id="g1644-25" data-name="g1644">
+      <text id="text1642-25" data-name="text1642" class="cls-20" transform="translate(299.83 244.28)"><tspan x="0" y="0">Ti</tspan></text>
+    </g>
+    <g id="g1644-26" data-name="g1644">
+      <text id="text1642-26" data-name="text1642" class="cls-20" transform="translate(22.67 35.5)"><tspan x="0" y="0">H</tspan></text>
+    </g>
+    <g id="g1644-27" data-name="g1644">
+      <text id="text1642-27" data-name="text1642" class="cls-20" transform="translate(86.69 242.92)"><tspan x="0" y="0">Ca</tspan></text>
+    </g>
+  </g>
+  <g id="MASS">
+    <g id="g878">
+      <text id="text876" class="cls-19" transform="translate(1134.09 126.94)"><tspan x="0" y="0">15.999</tspan></text>
+    </g>
+    <g id="g878-2" data-name="g878">
+      <text id="text876-2" data-name="text876" class="cls-19" transform="translate(1134.09 196.61)"><tspan x="0" y="0">32.066</tspan></text>
+    </g>
+    <g id="g878-3" data-name="g878">
+      <text id="text876-3" data-name="text876" class="cls-19" transform="translate(1134.09 265.61)"><tspan x="0" y="0">78.972</tspan></text>
+    </g>
+    <g id="g878-4" data-name="g878">
+      <text id="text876-4" data-name="text876" class="cls-19" transform="translate(1064.64 127.33)"><tspan x="0" y="0">14.007</tspan></text>
+    </g>
+    <g id="g878-5" data-name="g878">
+      <text id="text876-5" data-name="text876" class="cls-19" transform="translate(1064.64 197)"><tspan x="0" y="0">30.974</tspan></text>
+    </g>
+    <g id="g878-6" data-name="g878">
+      <text id="text876-6" data-name="text876" class="cls-19" transform="translate(1064.64 266)"><tspan x="0" y="0">74.922</tspan></text>
+    </g>
+    <g id="g878-7" data-name="g878">
+      <text id="text876-7" data-name="text876" class="cls-19" transform="translate(1062.36 335.61)"><tspan x="0" y="0">121.760</tspan></text>
+    </g>
+    <g id="g878-8" data-name="g878">
+      <text id="text876-8" data-name="text876" class="cls-19" transform="translate(1062.36 405.27)"><tspan x="0" y="0">208.980</tspan></text>
+    </g>
+    <g id="g878-9" data-name="g878">
+      <text id="text876-9" data-name="text876" class="cls-19" transform="translate(995.09 127.22)"><tspan x="0" y="0">12.011</tspan></text>
+    </g>
+    <g id="g878-10" data-name="g878">
+      <text id="text876-10" data-name="text876" class="cls-19" transform="translate(995.09 196.89)"><tspan x="0" y="0">28.086</tspan></text>
+    </g>
+    <g id="g878-11" data-name="g878">
+      <text id="text876-11" data-name="text876" class="cls-19" transform="translate(992.81 335.5)"><tspan x="0" y="0">118.711</tspan></text>
+    </g>
+    <g id="g878-12" data-name="g878">
+      <text id="text876-12" data-name="text876" class="cls-19" transform="translate(997.37 405.16)"><tspan x="0" y="0">207.2</tspan></text>
+    </g>
+    <g id="g878-13" data-name="g878">
+      <text id="text876-13" data-name="text876" class="cls-19" transform="translate(924.98 126.61)"><tspan x="0" y="0">10.811</tspan></text>
+    </g>
+    <g id="g878-14" data-name="g878">
+      <text id="text876-14" data-name="text876" class="cls-19" transform="translate(924.98 196.27)"><tspan x="0" y="0">26.982</tspan></text>
+    </g>
+    <g id="g878-15" data-name="g878">
+      <text id="text876-15" data-name="text876" class="cls-19" transform="translate(785.88 265.82)"><tspan x="0" y="0">63.546</tspan></text>
+    </g>
+    <g id="g878-16" data-name="g878">
+      <text id="text876-16" data-name="text876" class="cls-19" transform="translate(716.32 265.7)"><tspan x="0" y="0">58.693</tspan></text>
+    </g>
+    <g id="g878-17" data-name="g878">
+      <text id="text876-17" data-name="text876" class="cls-19" transform="translate(646.88 266.09)"><tspan x="0" y="0">58.933</tspan></text>
+    </g>
+    <g id="g878-18" data-name="g878">
+      <text id="text876-18" data-name="text876" class="cls-19" transform="translate(577.32 265.98)"><tspan x="0" y="0">55.845</tspan></text>
+    </g>
+    <g id="g878-19" data-name="g878">
+      <text id="text876-19" data-name="text876" class="cls-19" transform="translate(507.21 265.37)"><tspan x="0" y="0">54.938</tspan></text>
+    </g>
+    <g id="g878-20" data-name="g878">
+      <text id="text876-20" data-name="text876" class="cls-19" transform="translate(437.2 265.8)"><tspan x="0" y="0">51.996</tspan></text>
+    </g>
+    <g id="g878-21" data-name="g878">
+      <text id="text876-21" data-name="text876" class="cls-19" transform="translate(439.48 335.41)"><tspan x="0" y="0">95.95</tspan></text>
+    </g>
+    <g id="g878-22" data-name="g878">
+      <text id="text876-22" data-name="text876" class="cls-19" transform="translate(437.2 405.08)"><tspan x="0" y="0">183.84</tspan></text>
+    </g>
+    <g id="g878-23" data-name="g878">
+      <text id="text876-23" data-name="text876" class="cls-19" transform="translate(367.76 266.19)"><tspan x="0" y="0">50.942</tspan></text>
+    </g>
+    <g id="g878-24" data-name="g878">
+      <text id="text876-24" data-name="text876" class="cls-19" transform="translate(367.76 335.8)"><tspan x="0" y="0">92.906</tspan></text>
+    </g>
+    <g id="g878-25" data-name="g878">
+      <text id="text876-25" data-name="text876" class="cls-19" transform="translate(298.2 266.08)"><tspan x="0" y="0">47.867</tspan></text>
+    </g>
+    <g id="g878-26" data-name="g878">
+      <text id="text876-26" data-name="text876" class="cls-19" transform="translate(21.85 57.3)"><tspan x="0" y="0">1.008</tspan></text>
+    </g>
+    <g id="g878-27" data-name="g878">
+      <text id="text876-27" data-name="text876" class="cls-19" transform="translate(89.34 264.72)"><tspan x="0" y="0">40.078</tspan></text>
+    </g>
+  </g>
+</svg>

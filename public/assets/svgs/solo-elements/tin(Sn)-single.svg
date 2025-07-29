@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 63.59 63.59">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 11px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        isolation: isolate;
+      }
+
+      .cls-2 {
+        font-size: 9px;
+      }
+
+      .cls-3 {
+        font-size: 8px;
+      }
+
+      .cls-4 {
+        font-family: OpenSans-Bold, 'Open Sans';
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .cls-5 {
+        fill: rgba(192, 57, 43, .35);
+        stroke: #54b948;
+        stroke-linejoin: bevel;
+        stroke-width: 3px;
+      }
+    </style>
+  </defs>
+  <g id="periodic-table-of-elements">
+    <rect id="rect762" class="cls-5" x="1.5" y="1.5" width="60.59" height="60.59"/>
+  </g>
+  <g id="ATOMIC_NUMBER" data-name="ATOMIC NUMBER">
+    <g id="g1356">
+      <text id="text1354" class="cls-1" transform="translate(4.46 12.64)"><tspan x="0" y="0">50</tspan></text>
+    </g>
+  </g>
+  <g id="NAME">
+    <text id="text1156" class="cls-2" transform="translate(26.5 45.71)"><tspan x="0" y="0">Tin</tspan></text>
+  </g>
+  <g id="SYMBOL">
+    <g id="g1644">
+      <text id="text1642" class="cls-4" transform="translate(17.19 35.37)"><tspan x="0" y="0">Sn</tspan></text>
+    </g>
+  </g>
+  <g id="MASS">
+    <g id="g878">
+      <text id="text876" class="cls-3" transform="translate(18.16 57.17)"><tspan x="0" y="0">118.711</tspan></text>
+    </g>
+  </g>
+</svg>

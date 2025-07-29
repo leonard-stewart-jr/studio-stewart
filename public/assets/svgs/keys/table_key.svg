@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.23 125.01">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 15.18px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+        isolation: isolate;
+      }
+
+      .cls-6 {
+        font-family: OpenSans-Bold, 'Open Sans';
+        font-size: 15.75px;
+        font-weight: 700;
+      }
+
+      .cls-7 {
+        fill: #d5d8dc;
+        stroke-width: 3px;
+      }
+
+      .cls-7, .cls-8 {
+        stroke: #000;
+        stroke-miterlimit: 16.04;
+      }
+
+      .cls-2 {
+        font-size: 30.68px;
+      }
+
+      .cls-3 {
+        font-size: 9.58px;
+      }
+
+      .cls-4 {
+        font-size: 10px;
+      }
+
+      .cls-8 {
+        fill: none;
+        stroke-width: 1.1px;
+      }
+
+      .cls-5 {
+        font-size: 10.1px;
+      }
+    </style>
+  </defs>
+  <g id="EXTRA">
+    <rect id="rect204" class="cls-7" x="117.72" y="46.86" width="65.99" height="76.65"/>
+    <g id="g208">
+      <text id="text206" class="cls-4" transform="translate(135.26 119.25)"><tspan x="0" y="0">12.011</tspan></text>
+    </g>
+    <text id="text210" class="cls-5" transform="translate(134.01 105.05)"><tspan x="0" y="0">Carbon</tspan></text>
+    <g id="g214">
+      <text id="text212" class="cls-1" transform="translate(146.39 62.77)"><tspan x="0" y="0">6</tspan></text>
+    </g>
+    <g id="g218">
+      <text id="text216" class="cls-2" transform="translate(141.2 92.32)"><tspan x="0" y="0">C</tspan></text>
+    </g>
+    <g id="g690">
+      <text id="text688" class="cls-3" transform="translate(28.1 60.5)"><tspan x="0" y="0">ATOMIC NUMBER</tspan></text>
+    </g>
+    <g id="g694">
+      <text id="text692" class="cls-3" transform="translate(67.55 84.59)"><tspan x="0" y="0">SYMBOL</tspan></text>
+    </g>
+    <g id="g698">
+      <text id="text696" class="cls-3" transform="translate(78.12 104.3)"><tspan x="0" y="0">NAME</tspan></text>
+    </g>
+    <g id="g704">
+      <g id="a702">
+        <text id="text700" class="cls-3" transform="translate(0 117.73)"><tspan x="0" y="0">AVERAGE ATOMIC MASS</tspan></text>
+      </g>
+    </g>
+    <line id="line706" class="cls-8" x1="137.04" y1="81.59" x2="108.39" y2="81.65"/>
+    <line id="line708" class="cls-8" x1="141.16" y1="58.5" x2="108.38" y2="58.5"/>
+    <line id="line710" class="cls-8" x1="133.29" y1="101.72" x2="108.54" y2="101.72"/>
+    <line id="line712" class="cls-8" x1="129.16" y1="115.08" x2="108.54" y2="115.08"/>
+    <line id="line712-2" data-name="line712" class="cls-8" x1="208.29" y1="86.83" x2="187.27" y2="86.83"/>
+    <g id="g704-2" data-name="g704">
+      <g id="a702-2" data-name="a702">
+        <text id="text700-2" data-name="text700" class="cls-3" transform="translate(210.44 89.7)"><tspan x="0" y="0">ELEMENT TYPE</tspan></text>
+      </g>
+    </g>
+    <line id="line712-3" data-name="line712" class="cls-8" x1="208.14" y1="61.83" x2="175.36" y2="61.83"/>
+    <g id="g704-3" data-name="g704">
+      <g id="a702-3" data-name="a702">
+        <text id="text700-3" data-name="text700" class="cls-3" transform="translate(210.67 61.7)"><tspan x="0" y="0">HUMAN CAPITAL</tspan><tspan x="0" y="7.5">RISK LEVEL</tspan></text>
+      </g>
+    </g>
+    <text class="cls-6" transform="translate(90.41 15.82)"><tspan x="0" y="0">ELEMENT KEY</tspan></text>
+  </g>
+</svg>

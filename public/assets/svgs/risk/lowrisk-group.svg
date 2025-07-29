@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1107.27 133.19">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #f5db12;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: rgba(39, 174, 96, .35);
+        stroke-linejoin: bevel;
+        stroke-width: 3px;
+      }
+
+      .cls-4 {
+        font-size: 11px;
+      }
+
+      .cls-4, .cls-5, .cls-6 {
+        font-family: OpenSans-Light, 'Open Sans';
+        font-weight: 300;
+      }
+
+      .cls-4, .cls-5, .cls-6, .cls-7 {
+        isolation: isolate;
+      }
+
+      .cls-2 {
+        stroke: #f58235;
+      }
+
+      .cls-5 {
+        font-size: 9px;
+      }
+
+      .cls-6 {
+        font-size: 8px;
+      }
+
+      .cls-7 {
+        font-family: OpenSans-Bold, 'Open Sans';
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        stroke: #0067b4;
+      }
+    </style>
+  </defs>
+  <g id="periodic-table-of-elements">
+    <rect id="rect54" class="cls-2" x="1.5" y="1.5" width="60.59" height="60.59"/>
+    <rect id="rect824" class="cls-3" x="1045.17" y="1.5" width="60.59" height="60.59"/>
+    <rect id="rect948" class="cls-1" x="348.97" y="71.09" width="60.59" height="60.59"/>
+    <rect id="rect1022" class="cls-1" x="627.61" y="1.5" width="60.59" height="60.59"/>
+  </g>
+  <g id="ATOMIC_NUMBER" data-name="ATOMIC NUMBER">
+    <g id="g1356">
+      <text id="text1354" class="cls-4" transform="translate(1047.95 12.35)"><tspan x="0" y="0">34</tspan></text>
+    </g>
+    <g id="g1356-2" data-name="g1356">
+      <text id="text1354-2" data-name="text1354" class="cls-4" transform="translate(630.18 12.45)"><tspan x="0" y="0">28</tspan></text>
+    </g>
+    <g id="g1356-3" data-name="g1356">
+      <text id="text1354-3" data-name="text1354" class="cls-4" transform="translate(351.06 82.16)"><tspan x="0" y="0">42</tspan></text>
+    </g>
+    <g id="g1356-4" data-name="g1356">
+      <text id="text1354-4" data-name="text1354" class="cls-4" transform="translate(4.21 12.46)"><tspan x="0" y="0">20</tspan></text>
+    </g>
+  </g>
+  <g id="NAME">
+    <text id="text1156" class="cls-5" transform="translate(1057.31 45.41)"><tspan x="0" y="0">Selenium</tspan></text>
+    <text id="text1156-2" data-name="text1156" class="cls-5" transform="translate(646.19 45.51)"><tspan x="0" y="0">Nickel</tspan></text>
+    <text id="text1156-3" data-name="text1156" class="cls-5" transform="translate(352.42 115.22)"><tspan x="0" y="0">Molybdenum</tspan></text>
+    <text id="text1156-4" data-name="text1156" class="cls-5" transform="translate(15.29 44.52)"><tspan x="0" y="0">Calcium</tspan></text>
+  </g>
+  <g id="SYMBOL">
+    <g id="g1644">
+      <text id="text1642" class="cls-7" transform="translate(1061.47 35.08)"><tspan x="0" y="0">Se</tspan></text>
+    </g>
+    <g id="g1644-2" data-name="g1644">
+      <text id="text1642-2" data-name="text1642" class="cls-7" transform="translate(644.99 35.18)"><tspan x="0" y="0">Ni</tspan></text>
+    </g>
+    <g id="g1644-3" data-name="g1644">
+      <text id="text1642-3" data-name="text1642" class="cls-7" transform="translate(360.54 104.89)"><tspan x="0" y="0">Mo</tspan></text>
+    </g>
+    <g id="g1644-4" data-name="g1644">
+      <text id="text1642-4" data-name="text1642" class="cls-7" transform="translate(16.53 34.19)"><tspan x="0" y="0">Ca</tspan></text>
+    </g>
+  </g>
+  <g id="MASS">
+    <g id="g878">
+      <text id="text876" class="cls-6" transform="translate(1063.93 56.88)"><tspan x="0" y="0">78.972</tspan></text>
+    </g>
+    <g id="g878-2" data-name="g878">
+      <text id="text876-2" data-name="text876" class="cls-6" transform="translate(646.17 56.98)"><tspan x="0" y="0">58.693</tspan></text>
+    </g>
+    <g id="g878-3" data-name="g878">
+      <text id="text876-3" data-name="text876" class="cls-6" transform="translate(369.33 126.69)"><tspan x="0" y="0">95.95</tspan></text>
+    </g>
+    <g id="g878-4" data-name="g878">
+      <text id="text876-4" data-name="text876" class="cls-6" transform="translate(19.19 55.99)"><tspan x="0" y="0">40.078</tspan></text>
+    </g>
+  </g>
+</svg>
