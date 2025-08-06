@@ -421,8 +421,6 @@ export default function ThreeDPrinting() {
         {renderCenteredLogo()}
         {/* Conference/Division filter row - styled text/buttons, not nav */}
         {renderFilterRow()}
-        {/* Division label above grid */}
-        {activeCategory === "hueforge" && showFilterBar && renderDivisionLabel()}
         <div
           ref={gridRef}
           style={{
