@@ -381,24 +381,33 @@ export default function ThreeDPrinting() {
       )}
       {/* Division Subnav: Only if AFC/NFC selected */}
       {renderDivisionSubnav()}
-      {/* Print Grid */}
+      {/* Print Grid Section */}
       <section style={{
         maxWidth: 1200,
-        margin: showAfcNfcLogos ? "166px auto 0 auto" : "42px auto 0 auto",
+        margin: showAfcNfcLogos ? "92px auto 0 auto" : "42px auto 0 auto",
         width: "100%",
         padding: "0 24px",
         position: "relative"
       }}>
-        {/* AFC/NFC logo absolutely positioned between columns for ALL NFL view */}
+        {/* AFC/NFC logo absolutely positioned above grid for ALL NFL view */}
         {activeCategory === "hueforge" && showAfcNfcLogos && columns === 4 && (
-          <>
+          <div style={{
+            position: "absolute",
+            top: -100, // Move up into the gap between nav and grid
+            left: 0,
+            width: "100%",
+            height: 0,
+            pointerEvents: "none",
+            zIndex: 10,
+          }}>
             <ConferenceLogo
               logo={AFC_LOGO}
               style={{
                 position: "absolute",
-                top: 4,
+                top: 0,
                 ...logoPos.afc,
                 zIndex: 10,
+                pointerEvents: "auto",
               }}
               rotate={-90}
               onClick={() => {
@@ -410,16 +419,17 @@ export default function ThreeDPrinting() {
               logo={NFC_LOGO}
               style={{
                 position: "absolute",
-                top: 4,
+                top: 0,
                 ...logoPos.nfc,
                 zIndex: 10,
+                pointerEvents: "auto",
               }}
               onClick={() => {
                 setNflConference("NFC");
                 setNflDivision("ALL");
               }}
             />
-          </>
+          </div>
         )}
         {/* AFC/NFC logo centered above grid for filtered view */}
         {activeCategory === "hueforge" && showCenteredLogo && (
