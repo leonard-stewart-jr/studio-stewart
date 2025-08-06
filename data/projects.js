@@ -5,7 +5,6 @@ const projects = [
     type: "EDUCATION, SPORTS, RESIDENTIAL",
     slug: "DMA-25",
     description: "ARCH 650 // COMPREHENSIVE BUILDING STUDIO // SOLO",
-    bannerSrc: "/images/BPL-24-banner.jpg",
     // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
@@ -14,7 +13,6 @@ const projects = [
     type: "CULTURE, HEALTH",
     slug: "MPSC-24",
     description: "ARCH 654 // RESEARCH STUDIO // SOLO",
-    bannerSrc: "/images/riverfront-studio-4th-banner.jpg",
     // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
@@ -23,7 +21,6 @@ const projects = [
     type: "EDUCATION, CULTURE",
     slug: "BPL-24",
     description: "ARCH 555 // BUILDING STUDIO // GROUP.",
-    bannerSrc: "/images/residential-loft-banner.jpg",
     // modalWidth: 2436, // <-- Add your custom width here when ready
   }
 ];
