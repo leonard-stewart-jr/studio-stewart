@@ -419,7 +419,7 @@ export default function ThreeDPrinting() {
                 margin: "0 auto",
                 display: "block"
               }}
-              rotate={showCenteredLogo === AFC_LOGO ? -90 : 0}
+              rotate={showCenteredLogo === AFC_LOGO ? 0 : 0}
               onClick={() => {
                 setConference("ALL");
                 setDivision("ALL");
