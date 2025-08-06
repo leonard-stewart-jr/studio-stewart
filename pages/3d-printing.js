@@ -381,7 +381,7 @@ export default function ThreeDPrinting() {
                 zIndex: 10,
                 pointerEvents: "auto",
               }}
-              rotate={-90}
+              rotate={0}
               onClick={() => {
                 setConference("AFC");
                 setDivision("ALL");
