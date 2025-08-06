@@ -132,7 +132,7 @@ export default function ThreeDPrinting() {
   let gridData = [];
   let showAfcNfcLogos = false;
   let showCenteredLogo = null;
-  let showDivisionText = null;
+  // let showDivisionText = null; // REMOVED: No division label rendering
 
   if (activeCategory === "hueforge") {
     if (conference === "ALL" && division === "ALL") {
@@ -156,11 +156,11 @@ export default function ThreeDPrinting() {
         ...DIVISIONS.AFC[division],
         ...DIVISIONS.NFC[division]
       ];
-      showDivisionText = division;
+      // showDivisionText = division; // REMOVED
     } else if (conference !== "ALL" && division !== "ALL") {
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
       gridData = DIVISIONS[conference][division];
-      showDivisionText = division;
+      // showDivisionText = division; // REMOVED
     }
   }
 
@@ -182,7 +182,7 @@ export default function ThreeDPrinting() {
           gap: 16,
           margin: "0 auto",
           marginTop: "20px",
-          marginBottom: "20px", // <-- changed from "0px" to "20px"
+          marginBottom: "20px",
         }}
       >
         {FILTER_BUTTONS.map(btn => {
@@ -245,27 +245,8 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Division label for division filter
-  function renderDivisionLabel() {
-    if (!showDivisionText) return null;
-    return (
-      <div
-        style={{
-          fontFamily: "coolvetica, sans-serif",
-          fontWeight: 700,
-          fontSize: "11px",
-          letterSpacing: ".07em",
-          textTransform: "uppercase",
-          color: "#888",
-          margin: "0 auto 18px auto",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        {showDivisionText}
-      </div>
-    );
-  }
+  // --- REMOVED: Division label for division filter ---
+  // function renderDivisionLabel() { ... }
 
   // AFC/NFC logo row above filter/text
   function renderLogoRow() {
@@ -421,6 +402,7 @@ export default function ThreeDPrinting() {
         {renderCenteredLogo()}
         {/* Conference/Division filter row - styled text/buttons, not nav */}
         {renderFilterRow()}
+        {/* Division label above grid REMOVED */}
         <div
           ref={gridRef}
           style={{
@@ -444,7 +426,7 @@ export default function ThreeDPrinting() {
                 print={{
                   ...item,
                   image: `/images/prints/nfl/${item.id}.png`,
-                  name: `${item.name} NFL Circle Logo`
+                  name: `${item.name} Set` // <-- CHANGED: Short overlay text
                 }}
               />
             );
@@ -542,7 +524,7 @@ function PrintCard({ print }) {
           objectFit: "contain",
           display: "block",
           margin: "0 auto",
-          opacity: hovered ? 0.22 : 1,
+          opacity: hovered ? 0.12 : 1, // <-- LOWER opacity on hover
           transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
           pointerEvents: "none",
           userSelect: "none",
@@ -569,8 +551,10 @@ function PrintCard({ print }) {
           opacity: 1,
           pointerEvents: "none",
           userSelect: "none",
-          background: "none",
-          textTransform: "uppercase"
+          background: "rgba(255,255,255,0.68)", // <-- dimmer, lighter overlay
+          textTransform: "uppercase",
+          margin: 20, // <-- overlay 20px margin from all edges
+          borderRadius: 10,
         }}>
           {print.name}
         </div>
