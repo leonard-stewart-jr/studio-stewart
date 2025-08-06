@@ -58,7 +58,7 @@ const DIVISIONS = {
 
 const divisionNames = ["EAST", "WEST", "SOUTH", "NORTH"];
 const CATEGORIES = [
-  { label: "HUEFORGE", value: "hueforge" },
+  { label: "NFL LOGOS", value: "hueforge" },
   { label: "LITHOPHANES", value: "lithophanes" },
   { label: "CUSTOM CAD", value: "custom cad" },
   { label: "MORE", value: "more" }
