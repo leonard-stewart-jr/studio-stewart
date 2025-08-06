@@ -393,7 +393,7 @@ export default function ThreeDPrinting() {
         maxWidth: 1200,
         margin: "0 auto",
         width: "100%",
-        padding: "0 24px",
+        padding: "0 24px 80px 24px",
         position: "relative",
       }}>
         {/* AFC/NFC logo row */}
