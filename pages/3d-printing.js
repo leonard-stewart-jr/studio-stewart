@@ -182,7 +182,7 @@ export default function ThreeDPrinting() {
           gap: 16,
           margin: "0 auto",
           marginTop: "40px",
-          marginBottom: "0px",
+          marginBottom: "20px", // <-- changed from "0px" to "20px"
         }}
       >
         {FILTER_BUTTONS.map(btn => {
