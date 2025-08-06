@@ -1,109 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-
-// --- NFL DIVISION DATA ---
-const DIVISIONS = {
-  AFC: {
-    EAST: [
-      { id: "bills", name: "Buffalo Bills" },
-      { id: "dolphins", name: "Miami Dolphins" },
-      { id: "patriots", name: "New England Patriots" },
-      { id: "jets", name: "New York Jets" }
-    ],
-    NORTH: [
-      { id: "ravens", name: "Baltimore Ravens" },
-      { id: "bengals", name: "Cincinnati Bengals" },
-      { id: "browns", name: "Cleveland Browns" },
-      { id: "steelers", name: "Pittsburgh Steelers" }
-    ],
-    SOUTH: [
-      { id: "texans", name: "Houston Texans" },
-      { id: "colts", name: "Indianapolis Colts" },
-      { id: "jaguars", name: "Jacksonville Jaguars" },
-      { id: "titans", name: "Tennessee Titans" }
-    ],
-    WEST: [
-      { id: "broncos", name: "Denver Broncos" },
-      { id: "chiefs", name: "Kansas City Chiefs" },
-      { id: "raiders", name: "Las Vegas Raiders" },
-      { id: "chargers", name: "Los Angeles Chargers" }
-    ]
-  },
-  NFC: {
-    EAST: [
-      { id: "cowboys", name: "Dallas Cowboys" },
-      { id: "giants", name: "New York Giants" },
-      { id: "eagles", name: "Philadelphia Eagles" },
-      { id: "commanders", name: "Washington Commanders" }
-    ],
-    NORTH: [
-      { id: "bears", name: "Chicago Bears" },
-      { id: "lions", name: "Detroit Lions" },
-      { id: "packers", name: "Green Bay Packers" },
-      { id: "vikings", name: "Minnesota Vikings" }
-    ],
-    SOUTH: [
-      { id: "buccaneers", name: "Tampa Bay Buccaneers" },
-      { id: "falcons", name: "Atlanta Falcons" },
-      { id: "panthers", name: "Carolina Panthers" },
-      { id: "saints", name: "New Orleans Saints" }
-    ],
-    WEST: [
-      { id: "49ers", name: "San Francisco 49ers" },
-      { id: "seahawks", name: "Seattle Seahawks" },
-      { id: "rams", name: "Los Angeles Rams" },
-      { id: "cardinals", name: "Arizona Cardinals" }
-    ]
-  }
-};
-
-const divisionNames = ["EAST", "WEST", "SOUTH", "NORTH"];
-const CATEGORIES = [
-  { label: "NFL LOGOS", value: "hueforge" },
-  { label: "LITHOPHANES", value: "lithophanes" },
-  { label: "CUSTOM CAD", value: "custom cad" },
-  { label: "MORE", value: "more" }
-];
-
-const AFC_LOGO = {
-  id: "afc-logo",
-  image: "/images/prints/nfl/afc.png",
-  name: "AFC Conference"
-};
-const NFC_LOGO = {
-  id: "nfc-logo",
-  image: "/images/prints/nfl/nfc.png",
-  name: "NFC Conference"
-};
-
-const LITHOPHANE = {
-  id: "litho-family",
-  image: "/images/prints/litho-family.png",
-  name: "Family Portrait Lithophane",
-  category: "lithophanes"
-};
-const CUSTOM_CAD = {
-  id: "chessboard",
-  image: "/images/prints/chessboard.png",
-  name: "Custom Chessboard",
-  category: "custom cad"
-};
-const MORE_SAMPLE = {
-  id: "misc-keychain",
-  image: "/images/prints/keychain.png",
-  name: "Studio Keychain",
-  category: "more"
-};
-
-// --- FILTER BUTTONS ---
-const FILTER_BUTTONS = [
-  { label: "ALL", value: "ALL", type: "conference" },
-  { label: "AFC", value: "AFC", type: "conference" },
-  { label: "NFC", value: "NFC", type: "conference" },
-  { label: "EAST", value: "EAST", type: "division" },
-  { label: "WEST", value: "WEST", type: "division" },
-  { label: "SOUTH", value: "SOUTH", type: "division" },
-  { label: "NORTH", value: "NORTH", type: "division" },
-];
+import {
+  DIVISIONS,
+  divisionNames,
+  CATEGORIES,
+  AFC_LOGO,
+  NFC_LOGO,
+  LITHOPHANE,
+  CUSTOM_CAD,
+  MORE_SAMPLE,
+  FILTER_BUTTONS
+} from "../data/nfl-logos";
 
 export default function ThreeDPrinting() {
   // Category tab ("hueforge", ...)
@@ -132,7 +38,6 @@ export default function ThreeDPrinting() {
   let gridData = [];
   let showAfcNfcLogos = false;
   let showCenteredLogo = null;
-  // let showDivisionText = null; // REMOVED: No division label rendering
 
   if (activeCategory === "hueforge") {
     if (conference === "ALL" && division === "ALL") {
@@ -156,11 +61,9 @@ export default function ThreeDPrinting() {
         ...DIVISIONS.AFC[division],
         ...DIVISIONS.NFC[division]
       ];
-      // showDivisionText = division; // REMOVED
     } else if (conference !== "ALL" && division !== "ALL") {
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
       gridData = DIVISIONS[conference][division];
-      // showDivisionText = division; // REMOVED
     }
   }
 
@@ -244,9 +147,6 @@ export default function ThreeDPrinting() {
       </div>
     );
   }
-
-  // --- REMOVED: Division label for division filter ---
-  // function renderDivisionLabel() { ... }
 
   // AFC/NFC logo row above filter/text
   function renderLogoRow() {
@@ -402,7 +302,6 @@ export default function ThreeDPrinting() {
         {renderCenteredLogo()}
         {/* Conference/Division filter row - styled text/buttons, not nav */}
         {renderFilterRow()}
-        {/* Division label above grid REMOVED */}
         <div
           ref={gridRef}
           style={{
@@ -426,7 +325,7 @@ export default function ThreeDPrinting() {
                 print={{
                   ...item,
                   image: `/images/prints/nfl/${item.id}.png`,
-                  name: `${item.name} Set` // <-- CHANGED: Short overlay text
+                  name: `${item.name} Set`
                 }}
               />
             );
@@ -524,7 +423,7 @@ function PrintCard({ print }) {
           objectFit: "contain",
           display: "block",
           margin: "0 auto",
-          opacity: hovered ? 0.12 : 1, // <-- LOWER opacity on hover
+          opacity: hovered ? 0.12 : 1,
           transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
           pointerEvents: "none",
           userSelect: "none",
@@ -552,8 +451,7 @@ function PrintCard({ print }) {
           pointerEvents: "none",
           userSelect: "none",
           textTransform: "uppercase",
-          margin: 20, // <-- overlay 20px margin from all edges
-          borderRadius: 10,
+          margin: 20,
         }}>
           {print.name}
         </div>
