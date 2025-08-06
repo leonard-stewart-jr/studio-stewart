@@ -543,7 +543,7 @@ function PrintCard({ print }) {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          color: "#bcbcb6",
+          color: "#888",
           fontWeight: 700,
           fontSize: 21,
           fontFamily: "coolvetica, sans-serif",
