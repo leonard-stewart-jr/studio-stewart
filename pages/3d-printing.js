@@ -181,7 +181,7 @@ export default function ThreeDPrinting() {
           alignItems: "center",
           gap: 16,
           margin: "0 auto",
-          marginTop: "40px",
+          marginTop: "20px",
           marginBottom: "20px", // <-- changed from "0px" to "20px"
         }}
       >
