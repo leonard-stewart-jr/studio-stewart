@@ -94,8 +94,8 @@ const MORE_SAMPLE = {
   category: "more"
 };
 
-// --- NEW NAV BAR BUTTONS ---
-const NAV_BUTTONS = [
+// --- FILTER BUTTONS ---
+const FILTER_BUTTONS = [
   { label: "ALL", value: "ALL", type: "conference" },
   { label: "AFC", value: "AFC", type: "conference" },
   { label: "NFC", value: "NFC", type: "conference" },
@@ -113,14 +113,12 @@ export default function ThreeDPrinting() {
   // Division filter: "ALL", "EAST", "WEST", "SOUTH", "NORTH"
   const [division, setDivision] = useState("ALL");
   const gridRef = useRef(null);
-  const [gridWidth, setGridWidth] = useState(0);
   const [columns, setColumns] = useState(4);
 
   useEffect(() => {
     function handleResize() {
       const win = typeof window !== "undefined" ? window : {};
       setColumns(win.innerWidth < 700 ? 1 : win.innerWidth < 1100 ? 2 : 4);
-      setGridWidth(gridRef.current ? gridRef.current.offsetWidth : 0);
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -134,7 +132,6 @@ export default function ThreeDPrinting() {
   let showDivisionText = null;
 
   if (activeCategory === "hueforge") {
-    // ALL conference & ALL division: show all teams
     if (conference === "ALL" && division === "ALL") {
       showAfcNfcLogos = true;
       gridData = [];
@@ -146,114 +143,101 @@ export default function ThreeDPrinting() {
           );
         }
       }
-    }
-    // Conference ONLY (AFC/NFC), ALL division: show all teams in that conference
-    else if (conference !== "ALL" && division === "ALL") {
+    } else if (conference !== "ALL" && division === "ALL") {
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
       gridData = divisionNames.flatMap(div =>
         DIVISIONS[conference][div]
       );
-    }
-    // Division ONLY (ALL conference): show AFC+NFC for that division
-    else if (conference === "ALL" && division !== "ALL") {
+    } else if (conference === "ALL" && division !== "ALL") {
       gridData = [
         ...DIVISIONS.AFC[division],
         ...DIVISIONS.NFC[division]
       ];
       showDivisionText = division;
-    }
-    // Conference + Division: show only that conference/division
-    else if (conference !== "ALL" && division !== "ALL") {
+    } else if (conference !== "ALL" && division !== "ALL") {
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
       gridData = DIVISIONS[conference][division];
       showDivisionText = division;
     }
   }
 
-  // Filtering for other categories
   let filteredPrints = [];
   if (activeCategory === "lithophanes") filteredPrints = [LITHOPHANE];
   if (activeCategory === "custom cad") filteredPrints = [CUSTOM_CAD];
   if (activeCategory === "more") filteredPrints = [MORE_SAMPLE];
 
-  // --- AFC/NFC Logo Horizontal Position ---
-  function getLogoPos(gridWidth, columns) {
-    if (!gridWidth || columns < 2) return { afc: { left: "30%" }, nfc: { left: "70%" } };
-    const colWidth = gridWidth / columns;
-    // Between col 1&2 for AFC, 3&4 for NFC, with small offsets
-    const afcLeft = colWidth * 0.5 + colWidth * 0.5 + 20;
-    const nfcLeft = colWidth * 2.5 + colWidth * 0.5 + 32;
-    return {
-      afc: { left: afcLeft, transform: "translate(-50%,0)" },
-      nfc: { left: nfcLeft, transform: "translate(-50%,0)" }
-    };
-  }
-  const logoPos = getLogoPos(gridWidth, columns);
-
-  // --- Single NAV ROW ---
-  function renderNavRow() {
+  // --- Conference/Division Filter Row ---
+  function renderFilterRow() {
     if (activeCategory !== "hueforge") return null;
     return (
-      <div className="nav-card nav-card-bot" style={{
-        position: "sticky",
-        top: 120,
-        zIndex: 1200,
-        width: "100vw",
-        background: "#fff",
-        boxShadow: "0 2px 6px 0 rgba(0,0,0,0.08)",
-        minHeight: 40,
-        height: 40,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
-        <nav className="isp-subnav-row" style={{
+      <div
+        style={{
           width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: 14,
-          background: "transparent",
-          padding: 0,
-          minHeight: 40,
-          height: 40,
-        }}>
-          {NAV_BUTTONS.map(btn => {
-            const isActive =
-              btn.type === "conference"
-                ? conference === btn.value
-                : division === btn.value;
-            return (
-              <button
-                key={btn.value}
-                className={`isp-subnav-btn${isActive ? " active" : ""}`}
-                onClick={() => {
+          gap: 16,
+          margin: "0 auto",
+          marginTop: "40px",
+          marginBottom: "0px",
+        }}
+      >
+        {FILTER_BUTTONS.map(btn => {
+          const isActive =
+            btn.type === "conference"
+              ? conference === btn.value
+              : division === btn.value;
+          return (
+            <span
+              key={btn.value}
+              role="button"
+              tabIndex={0}
+              aria-label={btn.label}
+              onClick={() => {
+                if (btn.type === "conference") {
+                  setConference(btn.value);
+                  if (btn.value === "ALL") setDivision("ALL");
+                } else {
+                  setDivision(btn.value);
+                }
+              }}
+              onKeyDown={e => {
+                if (e.key === "Enter" || e.key === " ") {
                   if (btn.type === "conference") {
                     setConference(btn.value);
-                    // If switching conference, reset division to ALL unless ALL is selected
-                    if (btn.value === "ALL") {
-                      setDivision("ALL");
-                    }
+                    if (btn.value === "ALL") setDivision("ALL");
                   } else {
                     setDivision(btn.value);
                   }
-                }}
-                style={{
-                  fontFamily: "coolvetica, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "10px",
-                  letterSpacing: ".04em",
-                  textTransform: "uppercase",
-                  color: isActive ? "#e6dbb9" : "#d4d4ce"
-                }}
-                onMouseEnter={e => e.target.style.color = "#191919"}
-                onMouseLeave={e => e.target.style.color = isActive ? "#e6dbb9" : "#d4d4ce"}
-              >
-                {btn.label}
-              </button>
-            );
-          })}
-        </nav>
+                }
+              }}
+              style={{
+                fontFamily: "coolvetica, sans-serif",
+                fontWeight: 700,
+                fontSize: "13px",
+                letterSpacing: ".08em",
+                textTransform: "uppercase",
+                color: isActive ? "#e6dbb9" : "#bcbcb6",
+                background: "none",
+                border: "none",
+                boxShadow: "none",
+                padding: "4px 18px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                outline: "none",
+                transition: "color 0.17s, background 0.17s",
+                userSelect: "none",
+                textDecoration: isActive ? "underline" : "none",
+                textUnderlineOffset: "3px",
+                textDecorationThickness: "1.3px",
+                opacity: isActive ? 1 : 0.8,
+                position: "relative"
+              }}
+            >
+              {btn.label}
+            </span>
+          );
+        })}
       </div>
     );
   }
@@ -266,8 +250,8 @@ export default function ThreeDPrinting() {
         style={{
           fontFamily: "coolvetica, sans-serif",
           fontWeight: 700,
-          fontSize: "10px",
-          letterSpacing: ".04em",
+          fontSize: "11px",
+          letterSpacing: ".07em",
           textTransform: "uppercase",
           color: "#888",
           margin: "0 auto 18px auto",
@@ -276,6 +260,74 @@ export default function ThreeDPrinting() {
         }}
       >
         {showDivisionText}
+      </div>
+    );
+  }
+
+  // AFC/NFC logo row above filter/text
+  function renderLogoRow() {
+    if (activeCategory !== "hueforge" || !showAfcNfcLogos) return null;
+    return (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "120px",
+          margin: "40px auto 0 auto",
+        }}
+      >
+        <ConferenceLogo
+          logo={AFC_LOGO}
+          style={{
+            position: "static"
+          }}
+          rotate={0}
+          onClick={() => {
+            setConference("AFC");
+            setDivision("ALL");
+          }}
+        />
+        <ConferenceLogo
+          logo={NFC_LOGO}
+          style={{
+            position: "static"
+          }}
+          rotate={0}
+          onClick={() => {
+            setConference("NFC");
+            setDivision("ALL");
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Centered logo above grid for single conference/division view
+  function renderCenteredLogo() {
+    if (activeCategory !== "hueforge" || !showCenteredLogo) return null;
+    return (
+      <div style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "40px",
+        marginBottom: "0px",
+      }}>
+        <ConferenceLogo
+          logo={showCenteredLogo}
+          style={{
+            position: "static",
+            margin: "0 auto",
+            display: "block"
+          }}
+          rotate={0}
+          onClick={() => {
+            setConference("ALL");
+            setDivision("ALL");
+          }}
+        />
       </div>
     );
   }
@@ -349,9 +401,6 @@ export default function ThreeDPrinting() {
           ))}
         </nav>
       </div>
-      {/* SINGLE NAV ROW */}
-      {renderNavRow()}
-      {/* Print Grid Section */}
       <section style={{
         maxWidth: 1200,
         margin: "0 auto",
@@ -359,74 +408,12 @@ export default function ThreeDPrinting() {
         padding: "0 24px",
         position: "relative",
       }}>
-        {/* AFC/NFC logo absolutely positioned between columns for ALL NFL view */}
-        {activeCategory === "hueforge" && showAfcNfcLogos && columns === 4 && (
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              height: 0,
-              marginTop: "40px", // 40px below nav
-              marginBottom: "40px", // 40px above grid
-              pointerEvents: "none",
-              zIndex: 10,
-            }}
-          >
-            <ConferenceLogo
-              logo={AFC_LOGO}
-              style={{
-                position: "absolute",
-                top: 0,
-                ...logoPos.afc,
-                zIndex: 10,
-                pointerEvents: "auto",
-              }}
-              rotate={0}
-              onClick={() => {
-                setConference("AFC");
-                setDivision("ALL");
-              }}
-            />
-            <ConferenceLogo
-              logo={NFC_LOGO}
-              style={{
-                position: "absolute",
-                top: 0,
-                ...logoPos.nfc,
-                zIndex: 10,
-                pointerEvents: "auto",
-              }}
-              onClick={() => {
-                setConference("NFC");
-                setDivision("ALL");
-              }}
-            />
-          </div>
-        )}
-        {/* AFC/NFC logo centered above grid for filtered view */}
-        {activeCategory === "hueforge" && showCenteredLogo && (
-          <div style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "40px",
-            marginBottom: "40px",
-          }}>
-            <ConferenceLogo
-              logo={showCenteredLogo}
-              style={{
-                position: "static",
-                margin: "0 auto",
-                display: "block"
-              }}
-              rotate={showCenteredLogo === AFC_LOGO ? 0 : 0}
-              onClick={() => {
-                setConference("ALL");
-                setDivision("ALL");
-              }}
-            />
-          </div>
-        )}
+        {/* AFC/NFC logo row */}
+        {renderLogoRow()}
+        {/* Centered logo for filtered view */}
+        {renderCenteredLogo()}
+        {/* Conference/Division filter row - styled text/buttons, not nav */}
+        {renderFilterRow()}
         {/* Division label above grid */}
         {activeCategory === "hueforge" && renderDivisionLabel()}
         <div
@@ -439,7 +426,7 @@ export default function ThreeDPrinting() {
             alignItems: "center",
             width: "100%",
             minHeight: 320,
-            margin: "0 auto",
+            margin: "40px auto 0 auto",
             position: "relative"
           }}
         >
@@ -482,7 +469,7 @@ export default function ThreeDPrinting() {
   );
 }
 
-// --- Conference Logo as Image Only, Absolutely Positioned ---
+// --- Conference Logo as Image ---
 function ConferenceLogo({ logo, style, onClick, rotate }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -542,21 +529,21 @@ function PrintCard({ print }) {
     >
       {/* Print Image */}
       <img
-  src={print.image}
-  alt={print.name}
-  style={{
-    maxWidth: hovered ? "100%" : "90%",
-    maxHeight: hovered ? "100%" : "90%",
-    objectFit: "contain",
-    display: "block",
-    margin: "0 auto",
-    opacity: hovered ? 0.22 : 1,
-    transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
-    pointerEvents: "none",
-    userSelect: "none",
-  }}
-  draggable={false}
-/>
+        src={print.image}
+        alt={print.name}
+        style={{
+          maxWidth: hovered ? "100%" : "90%",
+          maxHeight: hovered ? "100%" : "90%",
+          objectFit: "contain",
+          display: "block",
+          margin: "0 auto",
+          opacity: hovered ? 0.22 : 1,
+          transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
+        draggable={false}
+      />
       {/* Hover text overlay, centered */}
       {hovered && (
         <div style={{
