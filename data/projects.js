@@ -1,47 +1,29 @@
 const projects = [
   {
-    grade: "SPRING 24'",
-    title: "BROOKINGS PUBLIC LIBRARY",
-    type: "Culture",
-    slug: "BPL-24",
-    description: "Project description goes here.",
+    grade: "SPRING 25'",
+    title: "DES MOINES ACADAMY OF ARTS AND ATHLETICS",
+    type: "EDUCATION, SPORTS, RESIDENTIAL",
+    slug: "DMA-25",
+    description: "ARCH 650 // COMPREHENSIVE BUILDING STUDIO // SOLO",
     bannerSrc: "/images/BPL-24-banner.jpg",
     // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
-    grade: "SPRING 25'",
-    title: "DES MOINES ACADAMY",
-    type: "SCHOOL + RESIDENTIAL",
-    slug: "residential-loft",
-    description: "Project description goes here.",
-    bannerSrc: "/images/residential-loft-banner.jpg",
-    // modalWidth: 2436, // <-- Add your custom width here when ready
-  },
-  {
     grade: "FALL 24",
-    title: "Riverfront Studio",
-    type: "Commercial",
-    slug: "riverfront-studio-4th",
-    description: "Project description goes here.",
+    title: "MONTERREY PLANT SCIENCE CENTER",
+    type: "CULTURE, HEALTH",
+    slug: "MPSC-24",
+    description: "ARCH 654 // RESEARCH STUDIO // SOLO",
     bannerSrc: "/images/riverfront-studio-4th-banner.jpg",
     // modalWidth: 2436, // <-- Add your custom width here when ready
   },
   {
-    grade: "6th Year",
-    title: "Riverfront Studio",
-    type: "Commercial",
-    slug: "riverfront-studio-6th",
-    description: "Project description goes here.",
-    bannerSrc: "/images/riverfront-studio-6th-banner.jpg",
-    // modalWidth: 2436, // <-- Add your custom width here when ready
-  },
-  {
-    grade: "1st Year",
-    title: "Riverfront Studio",
-    type: "Commercial",
-    slug: "riverfront-studio-1st",
-    description: "Project description goes here.",
-    bannerSrc: "/images/riverfront-studio-1st-banner.jpg",
+    grade: "SPRING 24'",
+    title: "BROOKINGS PUBLIC LIBRARY",
+    type: "EDUCATION, CULTURE",
+    slug: "BPL-24",
+    description: "ARCH 555 // BUILDING STUDIO // GROUP.",
+    bannerSrc: "/images/residential-loft-banner.jpg",
     // modalWidth: 2436, // <-- Add your custom width here when ready
   }
 ];
