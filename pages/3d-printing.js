@@ -542,21 +542,21 @@ function PrintCard({ print }) {
     >
       {/* Print Image */}
       <img
-        src={print.image}
-        alt={print.name}
-        style={{
-          maxWidth: hovered ? "102%" : "92%",
-          maxHeight: hovered ? "102%" : "92%",
-          objectFit: "contain",
-          display: "block",
-          margin: "0 auto",
-          opacity: hovered ? 0.22 : 1,
-          transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-        draggable={false}
-      />
+  src={print.image}
+  alt={print.name}
+  style={{
+    maxWidth: hovered ? "100%" : "90%",
+    maxHeight: hovered ? "100%" : "90%",
+    objectFit: "contain",
+    display: "block",
+    margin: "0 auto",
+    opacity: hovered ? 0.22 : 1,
+    transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
+    pointerEvents: "none",
+    userSelect: "none",
+  }}
+  draggable={false}
+/>
       {/* Hover text overlay, centered */}
       {hovered && (
         <div style={{
