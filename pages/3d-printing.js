@@ -112,6 +112,9 @@ export default function ThreeDPrinting() {
   const [conference, setConference] = useState("ALL");
   // Division filter: "ALL", "EAST", "WEST", "SOUTH", "NORTH"
   const [division, setDivision] = useState("ALL");
+  // Show filter bar after logo click
+  const [showFilterBar, setShowFilterBar] = useState(false);
+
   const gridRef = useRef(null);
   const [columns, setColumns] = useState(4);
 
@@ -168,7 +171,7 @@ export default function ThreeDPrinting() {
 
   // --- Conference/Division Filter Row ---
   function renderFilterRow() {
-    if (activeCategory !== "hueforge") return null;
+    if (activeCategory !== "hueforge" || !showFilterBar) return null;
     return (
       <div
         style={{
@@ -287,6 +290,7 @@ export default function ThreeDPrinting() {
           onClick={() => {
             setConference("AFC");
             setDivision("ALL");
+            setShowFilterBar(true);
           }}
         />
         <ConferenceLogo
@@ -298,6 +302,7 @@ export default function ThreeDPrinting() {
           onClick={() => {
             setConference("NFC");
             setDivision("ALL");
+            setShowFilterBar(true);
           }}
         />
       </div>
@@ -326,6 +331,7 @@ export default function ThreeDPrinting() {
           onClick={() => {
             setConference("ALL");
             setDivision("ALL");
+            setShowFilterBar(false);
           }}
         />
       </div>
@@ -372,6 +378,7 @@ export default function ThreeDPrinting() {
                 setActiveCategory(cat.value);
                 setConference("ALL");
                 setDivision("ALL");
+                setShowFilterBar(false);
               }}
               style={{
                 background: "none",
@@ -415,7 +422,7 @@ export default function ThreeDPrinting() {
         {/* Conference/Division filter row - styled text/buttons, not nav */}
         {renderFilterRow()}
         {/* Division label above grid */}
-        {activeCategory === "hueforge" && renderDivisionLabel()}
+        {activeCategory === "hueforge" && showFilterBar && renderDivisionLabel()}
         <div
           ref={gridRef}
           style={{
@@ -426,7 +433,7 @@ export default function ThreeDPrinting() {
             alignItems: "center",
             width: "100%",
             minHeight: 320,
-            margin: "40px auto 0 auto",
+            margin: showAfcNfcLogos && !showFilterBar ? "40px auto 0 auto" : "0px auto 0 auto",
             position: "relative"
           }}
         >
