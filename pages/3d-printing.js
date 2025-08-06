@@ -551,7 +551,6 @@ function PrintCard({ print }) {
           opacity: 1,
           pointerEvents: "none",
           userSelect: "none",
-          background: "rgba(255,255,255,0.68)", // <-- dimmer, lighter overlay
           textTransform: "uppercase",
           margin: 20, // <-- overlay 20px margin from all edges
           borderRadius: 10,
