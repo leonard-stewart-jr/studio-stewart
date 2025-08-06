@@ -3,25 +3,25 @@ import { useState, useEffect, useRef } from "react";
 // --- NFL DIVISION DATA ---
 const DIVISIONS = {
   AFC: {
-    East: [
+    EAST: [
       { id: "bills", name: "Buffalo Bills" },
       { id: "dolphins", name: "Miami Dolphins" },
       { id: "patriots", name: "New England Patriots" },
       { id: "jets", name: "New York Jets" }
     ],
-    North: [
+    NORTH: [
       { id: "ravens", name: "Baltimore Ravens" },
       { id: "bengals", name: "Cincinnati Bengals" },
       { id: "browns", name: "Cleveland Browns" },
       { id: "steelers", name: "Pittsburgh Steelers" }
     ],
-    South: [
+    SOUTH: [
       { id: "texans", name: "Houston Texans" },
       { id: "colts", name: "Indianapolis Colts" },
       { id: "jaguars", name: "Jacksonville Jaguars" },
       { id: "titans", name: "Tennessee Titans" }
     ],
-    West: [
+    WEST: [
       { id: "broncos", name: "Denver Broncos" },
       { id: "chiefs", name: "Kansas City Chiefs" },
       { id: "raiders", name: "Las Vegas Raiders" },
@@ -29,25 +29,25 @@ const DIVISIONS = {
     ]
   },
   NFC: {
-    East: [
+    EAST: [
       { id: "cowboys", name: "Dallas Cowboys" },
       { id: "giants", name: "New York Giants" },
       { id: "eagles", name: "Philadelphia Eagles" },
       { id: "commanders", name: "Washington Commanders" }
     ],
-    North: [
+    NORTH: [
       { id: "bears", name: "Chicago Bears" },
       { id: "lions", name: "Detroit Lions" },
       { id: "packers", name: "Green Bay Packers" },
       { id: "vikings", name: "Minnesota Vikings" }
     ],
-    South: [
+    SOUTH: [
       { id: "buccaneers", name: "Tampa Bay Buccaneers" },
       { id: "falcons", name: "Atlanta Falcons" },
       { id: "panthers", name: "Carolina Panthers" },
       { id: "saints", name: "New Orleans Saints" }
     ],
-    West: [
+    WEST: [
       { id: "49ers", name: "San Francisco 49ers" },
       { id: "seahawks", name: "Seattle Seahawks" },
       { id: "rams", name: "Los Angeles Rams" },
@@ -56,7 +56,7 @@ const DIVISIONS = {
   }
 };
 
-const divisionNames = ["East", "North", "South", "West"];
+const divisionNames = ["EAST", "WEST", "SOUTH", "NORTH"];
 const CATEGORIES = [
   { label: "HUEFORGE", value: "hueforge" },
   { label: "LITHOPHANES", value: "lithophanes" },
@@ -94,12 +94,18 @@ const MORE_SAMPLE = {
   category: "more"
 };
 
+const FILTERS = [
+  { label: "ALL", value: "ALL" },
+  { label: "AFC", value: "AFC" },
+  { label: "NFC", value: "NFC" },
+  ...divisionNames.map(d => ({ label: d, value: d }))
+];
+
 export default function ThreeDPrinting() {
   const [activeCategory, setActiveCategory] = useState("hueforge");
-  const [conference, setConference] = useState(null); // "AFC", "NFC" or null
-  const [division, setDivision] = useState("All"); // "All" or division name
+  // "ALL", "AFC", "NFC", "EAST", etc
+  const [nflFilter, setNflFilter] = useState("ALL");
   const [gridWidth, setGridWidth] = useState(0);
-
   const gridRef = useRef(null);
 
   // Responsive columns
@@ -115,53 +121,41 @@ export default function ThreeDPrinting() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // --- Build filtered team list based on conference/division ---
+  // Build grid data
   let gridData = [];
+  let showAfcNfcLogos = false;
+  let showCenteredLogo = null;
+  let showDivisionText = null;
+
   if (activeCategory === "hueforge") {
-    let teams = [];
-    if (!conference) {
-      teams = {
-        AFC: divisionNames.map(div => DIVISIONS.AFC[div]),
-        NFC: divisionNames.map(div => DIVISIONS.NFC[div])
-      };
-    } else {
-      if (division === "All") {
-        teams = {
-          [conference]: divisionNames.map(div => DIVISIONS[conference][div])
-        };
-      } else {
-        teams = {
-          [conference]: [DIVISIONS[conference][division]]
-        };
+    // ALL NFL: 4x4 grid, AFC left, NFC right, logos between columns
+    if (nflFilter === "ALL") {
+      showAfcNfcLogos = true;
+      gridData = [];
+      for (let divIdx = 0; divIdx < 4; divIdx++) {
+        for (let teamIdx = 0; teamIdx < 4; teamIdx++) {
+          gridData.push(
+            DIVISIONS.AFC[divisionNames[divIdx]][teamIdx],
+            DIVISIONS.NFC[divisionNames[divIdx]][teamIdx]
+          );
+        }
       }
     }
-
-    // Compose grid: 4 columns desktop
-    gridData = [];
-    if (!conference) {
-      // Fill teams, 2 columns AFC, 2 columns NFC, each 2x2 block = division
-      for (let divIdx = 0; divIdx < 4; divIdx++) {
-        // AFC division: fills cols 0/1, NFC division: fills cols 2/3
-        for (let teamIdx = 0; teamIdx < 4; teamIdx++) {
-          if (teamIdx < 2) {
-            gridData.push(
-              teams.AFC[divIdx][teamIdx],
-              teams.AFC[divIdx][teamIdx + 2],
-              teams.NFC[divIdx][teamIdx],
-              teams.NFC[divIdx][teamIdx + 2]
-            );
-          }
-        }
-      }
-    } else {
-      // Fill teams for selected division(s)
-      const divs = division === "All" ? divisionNames : [division];
-      for (let divName of divs) {
-        const divTeams = DIVISIONS[conference][divName];
-        for (let team of divTeams) {
-          gridData.push(team);
-        }
-      }
+    // AFC/NFC: 16 teams, 4 columns, logo centered above grid
+    else if (nflFilter === "AFC" || nflFilter === "NFC") {
+      showCenteredLogo = nflFilter === "AFC" ? AFC_LOGO : NFC_LOGO;
+      gridData = divisionNames.flatMap(div =>
+        DIVISIONS[nflFilter][div]
+      );
+    }
+    // Division: 4 teams, division name centered above grid
+    else if (divisionNames.includes(nflFilter)) {
+      // Show division text centered above grid
+      showDivisionText = nflFilter;
+      gridData = [
+        ...DIVISIONS.AFC[nflFilter],
+        ...DIVISIONS.NFC[nflFilter]
+      ];
     }
   }
 
@@ -171,9 +165,23 @@ export default function ThreeDPrinting() {
   if (activeCategory === "custom cad") filteredPrints = [CUSTOM_CAD];
   if (activeCategory === "more") filteredPrints = [MORE_SAMPLE];
 
-  // Division Subnav for AFC/NFC
-  function renderDivisionSubnav() {
-    if (!conference) return null;
+  // AFC/NFC logo absolute positioning between columns
+  function getLogoPos(col, gridWidth, columns) {
+    if (!gridWidth || columns < 2) return { left: "50%", transform: "translate(-50%,0)" };
+    const colWidth = gridWidth / columns;
+    const afcLeft = colWidth * 0.5 + colWidth * 0.5; // between col 1&2
+    const nfcLeft = colWidth * 2.5 + colWidth * 0.5; // between col 3&4
+    // Top margin for grid so logos don't overlap
+    return {
+      afc: { left: afcLeft, transform: "translate(-50%,0)" },
+      nfc: { left: nfcLeft, transform: "translate(-50%,0)" }
+    };
+  }
+  const logoPos = getLogoPos(1.5, gridWidth, columns);
+
+  // Subnav filter bar
+  function renderSubnav() {
+    if (activeCategory !== "hueforge") return null;
     return (
       <div className="nav-card nav-card-bot" style={{
         position: "sticky",
@@ -197,19 +205,20 @@ export default function ThreeDPrinting() {
           padding: 0,
           minHeight: 26,
         }}>
-          <button
-            className={`isp-subnav-btn${division === "All" ? " active" : ""}`}
-            onClick={() => setDivision("All")}
-            style={{ fontFamily: "coolvetica, sans-serif", fontWeight: 700 }}
-          >All</button>
-          {divisionNames.map(div => (
+          {FILTERS.map(f => (
             <button
-              key={div}
-              className={`isp-subnav-btn${division === div ? " active" : ""}`}
-              onClick={() => setDivision(div)}
-              style={{ fontFamily: "coolvetica, sans-serif", fontWeight: 700 }}
+              key={f.value}
+              className={`isp-subnav-btn${nflFilter === f.value ? " active" : ""}`}
+              onClick={() => setNflFilter(f.value)}
+              style={{
+                fontFamily: "coolvetica, sans-serif",
+                fontWeight: 700,
+                fontSize: "10px",
+                letterSpacing: ".04em",
+                textTransform: "uppercase"
+              }}
             >
-              {div}
+              {f.label}
             </button>
           ))}
         </nav>
@@ -217,19 +226,27 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Conference Logos absolute position calculation
-  function getLogoPos(col, gridWidth, columns) {
-    // col 1.5: AFC, col 3.5: NFC
-    if (!gridWidth || columns < 2) return { left: "50%", transform: "translate(-50%,0)" };
-    const colWidth = gridWidth / columns;
-    const afcLeft = colWidth * 1.5;
-    const nfcLeft = colWidth * 3.5;
-    return {
-      afc: { left: afcLeft, transform: "translate(-50%,0)" },
-      nfc: { left: nfcLeft, transform: "translate(-50%,0)" }
-    };
+  // Division label for division filter
+  function renderDivisionLabel() {
+    if (!showDivisionText) return null;
+    return (
+      <div
+        style={{
+          fontFamily: "coolvetica, sans-serif",
+          fontWeight: 700,
+          fontSize: "10px",
+          letterSpacing: ".04em",
+          textTransform: "uppercase",
+          color: "#888",
+          margin: "0 auto 18px auto",
+          textAlign: "center",
+          width: "100%",
+        }}
+      >
+        {showDivisionText}
+      </div>
+    );
   }
-  const logoPos = getLogoPos(1.5, gridWidth, columns);
 
   // Main Render
   return (
@@ -269,8 +286,7 @@ export default function ThreeDPrinting() {
               className={`isp-tab-btn${activeCategory === cat.value ? " active" : ""}`}
               onClick={() => {
                 setActiveCategory(cat.value);
-                setConference(null);
-                setDivision("All");
+                setNflFilter("ALL");
               }}
               style={{
                 background: "none",
@@ -300,21 +316,64 @@ export default function ThreeDPrinting() {
           ))}
         </nav>
       </div>
-      {/* Division Subnav: Only for Hueforge/AFC/NFC */}
-      {activeCategory === "hueforge" && renderDivisionSubnav()}
+      {/* Subnav Filter */}
+      {renderSubnav()}
       {/* Print Grid */}
       <section style={{
         maxWidth: 1200,
-        margin: "42px auto 0 auto",
+        margin: showAfcNfcLogos ? "92px auto 0 auto" : "42px auto 0 auto",
         width: "100%",
         padding: "0 24px",
         position: "relative"
       }}>
+        {/* AFC/NFC logo absolutely positioned between columns for ALL NFL view */}
+        {activeCategory === "hueforge" && showAfcNfcLogos && columns === 4 && (
+          <>
+            <ConferenceLogo
+              logo={AFC_LOGO}
+              style={{
+                position: "absolute",
+                top: -70,
+                ...logoPos.afc,
+                zIndex: 10,
+              }}
+              rotate={-90}
+              onClick={() => setNflFilter("AFC")}
+            />
+            <ConferenceLogo
+              logo={NFC_LOGO}
+              style={{
+                position: "absolute",
+                top: -70,
+                ...logoPos.nfc,
+                zIndex: 10,
+              }}
+              onClick={() => setNflFilter("NFC")}
+            />
+          </>
+        )}
+        {/* AFC/NFC logo centered above grid for filtered view */}
+        {activeCategory === "hueforge" && showCenteredLogo && (
+          <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: 16 }}>
+            <ConferenceLogo
+              logo={showCenteredLogo}
+              style={{
+                position: "static",
+                margin: "0 auto",
+                display: "block"
+              }}
+              rotate={showCenteredLogo === AFC_LOGO ? -90 : 0}
+              onClick={() => setNflFilter("ALL")}
+            />
+          </div>
+        )}
+        {/* Division label above grid */}
+        {activeCategory === "hueforge" && renderDivisionLabel()}
         <div
           ref={gridRef}
           style={{
             display: "grid",
-            gridTemplateColumns: `repeat(${columns}, minmax(220px, 1fr))`,
+            gridTemplateColumns: `repeat(${Math.min(columns, gridData.length)}, minmax(220px, 1fr))`,
             gap: "38px",
             justifyItems: "center",
             alignItems: "center",
@@ -324,72 +383,6 @@ export default function ThreeDPrinting() {
             position: "relative"
           }}
         >
-          {/* Absolutely positioned AFC/NFC logos at top row */}
-          {activeCategory === "hueforge" && !conference && columns === 4 && (
-            <>
-              <ConferenceLogo
-                logo={AFC_LOGO}
-                style={{
-                  position: "absolute",
-                  top: -24,
-                  ...logoPos.afc,
-                  zIndex: 10,
-                }}
-                onClick={() => {
-                  setConference("AFC");
-                  setDivision("All");
-                }}
-                rotate={-90}
-              />
-              <ConferenceLogo
-                logo={NFC_LOGO}
-                style={{
-                  position: "absolute",
-                  top: -24,
-                  ...logoPos.nfc,
-                  zIndex: 10,
-                }}
-                onClick={() => {
-                  setConference("NFC");
-                  setDivision("All");
-                }}
-              />
-            </>
-          )}
-          {/* On mobile, both logos centered at top */}
-          {activeCategory === "hueforge" && !conference && columns < 4 && (
-            <>
-              <ConferenceLogo
-                logo={AFC_LOGO}
-                style={{
-                  position: "absolute",
-                  top: -24,
-                  left: "50%",
-                  transform: "translate(-70%,0)",
-                  zIndex: 10,
-                }}
-                onClick={() => {
-                  setConference("AFC");
-                  setDivision("All");
-                }}
-                rotate={-90}
-              />
-              <ConferenceLogo
-                logo={NFC_LOGO}
-                style={{
-                  position: "absolute",
-                  top: -24,
-                  left: "50%",
-                  transform: "translate(20%,0)",
-                  zIndex: 10,
-                }}
-                onClick={() => {
-                  setConference("NFC");
-                  setDivision("All");
-                }}
-              />
-            </>
-          )}
           {/* HUEFORGE GRID */}
           {activeCategory === "hueforge" && gridData.map((item, idx) => {
             if (!item) return <div key={`empty-${idx}`} />;
@@ -438,10 +431,10 @@ function ConferenceLogo({ logo, style, onClick, rotate }) {
       alt={logo.name}
       draggable={false}
       style={{
-        width: hovered ? 124 : 112, // 10% bigger on hover
-        height: hovered ? 124 : 112,
+        width: hovered ? 136 : 124,
+        height: hovered ? 136 : 124,
         objectFit: "contain",
-        opacity: hovered ? 0.34 : 1,
+        opacity: hovered ? 0.19 : 1,
         cursor: "pointer",
         userSelect: "none",
         transition: "all 0.18s",
@@ -469,7 +462,7 @@ function PrintCard({ print }) {
       className="print-card"
       style={{
         width: "100%",
-        maxWidth: hovered ? 300 : 272, // 10% bigger
+        maxWidth: hovered ? 320 : 288,
         aspectRatio: "1 / 1",
         background: "#fcfcfa",
         borderRadius: 0,
@@ -492,12 +485,12 @@ function PrintCard({ print }) {
         src={print.image}
         alt={print.name}
         style={{
-          maxWidth: hovered ? "92%" : "82%",
-          maxHeight: hovered ? "92%" : "82%",
+          maxWidth: hovered ? "102%" : "92%",
+          maxHeight: hovered ? "102%" : "92%",
           objectFit: "contain",
           display: "block",
           margin: "0 auto",
-          opacity: hovered ? 0.44 : 1, // Reduce opacity further
+          opacity: hovered ? 0.22 : 1,
           transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
           pointerEvents: "none",
           userSelect: "none",
@@ -524,7 +517,8 @@ function PrintCard({ print }) {
           opacity: 1,
           pointerEvents: "none",
           userSelect: "none",
-          background: "none"
+          background: "none",
+          textTransform: "uppercase"
         }}>
           {print.name}
         </div>
