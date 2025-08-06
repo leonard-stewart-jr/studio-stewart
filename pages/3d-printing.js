@@ -97,14 +97,15 @@ const MORE_SAMPLE = {
 const FILTERS = [
   { label: "ALL", value: "ALL" },
   { label: "AFC", value: "AFC" },
-  { label: "NFC", value: "NFC" },
-  ...divisionNames.map(d => ({ label: d, value: d }))
+  { label: "NFC", value: "NFC" }
 ];
 
 export default function ThreeDPrinting() {
   const [activeCategory, setActiveCategory] = useState("hueforge");
-  // "ALL", "AFC", "NFC", "EAST", etc
-  const [nflFilter, setNflFilter] = useState("ALL");
+  // nflConference: "ALL", "AFC", "NFC"
+  const [nflConference, setNflConference] = useState("ALL");
+  // nflDivision: "ALL", or one of divisionNames
+  const [nflDivision, setNflDivision] = useState("ALL");
   const [gridWidth, setGridWidth] = useState(0);
   const gridRef = useRef(null);
 
@@ -128,8 +129,7 @@ export default function ThreeDPrinting() {
   let showDivisionText = null;
 
   if (activeCategory === "hueforge") {
-    // ALL NFL: 4x4 grid, AFC left, NFC right, logos between columns
-    if (nflFilter === "ALL") {
+    if (nflConference === "ALL") {
       showAfcNfcLogos = true;
       gridData = [];
       for (let divIdx = 0; divIdx < 4; divIdx++) {
@@ -140,22 +140,15 @@ export default function ThreeDPrinting() {
           );
         }
       }
-    }
-    // AFC/NFC: 16 teams, 4 columns, logo centered above grid
-    else if (nflFilter === "AFC" || nflFilter === "NFC") {
-      showCenteredLogo = nflFilter === "AFC" ? AFC_LOGO : NFC_LOGO;
+    } else if (nflDivision === "ALL") {
+      showCenteredLogo = nflConference === "AFC" ? AFC_LOGO : NFC_LOGO;
       gridData = divisionNames.flatMap(div =>
-        DIVISIONS[nflFilter][div]
+        DIVISIONS[nflConference][div]
       );
-    }
-    // Division: 4 teams, division name centered above grid
-    else if (divisionNames.includes(nflFilter)) {
-      // Show division text centered above grid
-      showDivisionText = nflFilter;
-      gridData = [
-        ...DIVISIONS.AFC[nflFilter],
-        ...DIVISIONS.NFC[nflFilter]
-      ];
+    } else {
+      showCenteredLogo = nflConference === "AFC" ? AFC_LOGO : NFC_LOGO;
+      showDivisionText = nflDivision;
+      gridData = DIVISIONS[nflConference][nflDivision];
     }
   }
 
@@ -169,9 +162,9 @@ export default function ThreeDPrinting() {
   function getLogoPos(col, gridWidth, columns) {
     if (!gridWidth || columns < 2) return { left: "50%", transform: "translate(-50%,0)" };
     const colWidth = gridWidth / columns;
-    const afcLeft = colWidth * 0.5 + colWidth * 0.5; // between col 1&2
-    const nfcLeft = colWidth * 2.5 + colWidth * 0.5; // between col 3&4
-    // Top margin for grid so logos don't overlap
+    // Column 1.5 for AFC, 3.5 for NFC, then shift right as requested
+    const afcLeft = colWidth * 0.5 + colWidth * 0.5 + 20;
+    const nfcLeft = colWidth * 2.5 + colWidth * 0.5 + 32;
     return {
       afc: { left: afcLeft, transform: "translate(-50%,0)" },
       nfc: { left: nfcLeft, transform: "translate(-50%,0)" }
@@ -179,9 +172,10 @@ export default function ThreeDPrinting() {
   }
   const logoPos = getLogoPos(1.5, gridWidth, columns);
 
-  // Subnav filter bar
-  function renderSubnav() {
+  // Subnav filter bar (only AFC/NFC selected)
+  function renderDivisionSubnav() {
     if (activeCategory !== "hueforge") return null;
+    if (nflConference !== "AFC" && nflConference !== "NFC") return null;
     return (
       <div className="nav-card nav-card-bot" style={{
         position: "sticky",
@@ -205,20 +199,39 @@ export default function ThreeDPrinting() {
           padding: 0,
           minHeight: 26,
         }}>
-          {FILTERS.map(f => (
+          <button
+            className={`isp-subnav-btn${nflDivision === "ALL" ? " active" : ""}`}
+            onClick={() => setNflDivision("ALL")}
+            style={{
+              fontFamily: "coolvetica, sans-serif",
+              fontWeight: 700,
+              fontSize: "10px",
+              letterSpacing: ".04em",
+              textTransform: "uppercase",
+              color: nflDivision === "ALL" ? "#e6dbb9" : "#d4d4ce"
+            }}
+            onMouseEnter={e => e.target.style.color = "#191919"}
+            onMouseLeave={e => e.target.style.color = nflDivision === "ALL" ? "#e6dbb9" : "#d4d4ce"}
+          >
+            ALL
+          </button>
+          {divisionNames.map(div => (
             <button
-              key={f.value}
-              className={`isp-subnav-btn${nflFilter === f.value ? " active" : ""}`}
-              onClick={() => setNflFilter(f.value)}
+              key={div}
+              className={`isp-subnav-btn${nflDivision === div ? " active" : ""}`}
+              onClick={() => setNflDivision(div)}
               style={{
                 fontFamily: "coolvetica, sans-serif",
                 fontWeight: 700,
                 fontSize: "10px",
                 letterSpacing: ".04em",
-                textTransform: "uppercase"
+                textTransform: "uppercase",
+                color: nflDivision === div ? "#e6dbb9" : "#d4d4ce"
               }}
+              onMouseEnter={e => e.target.style.color = "#191919"}
+              onMouseLeave={e => e.target.style.color = nflDivision === div ? "#e6dbb9" : "#d4d4ce"}
             >
-              {f.label}
+              {div}
             </button>
           ))}
         </nav>
@@ -286,7 +299,8 @@ export default function ThreeDPrinting() {
               className={`isp-tab-btn${activeCategory === cat.value ? " active" : ""}`}
               onClick={() => {
                 setActiveCategory(cat.value);
-                setNflFilter("ALL");
+                setNflConference("ALL");
+                setNflDivision("ALL");
               }}
               style={{
                 background: "none",
@@ -316,12 +330,61 @@ export default function ThreeDPrinting() {
           ))}
         </nav>
       </div>
-      {/* Subnav Filter */}
-      {renderSubnav()}
+      {/* Conference Filter */}
+      {activeCategory === "hueforge" && (
+        <div className="nav-card nav-card-bot" style={{
+          position: "sticky",
+          top: 120,
+          zIndex: 1200,
+          width: "100vw",
+          background: "#fff",
+          boxShadow: "0 2px 6px 0 rgba(0,0,0,0.08)",
+          minHeight: 26,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+          <nav className="isp-subnav-row" style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 14,
+            background: "transparent",
+            padding: 0,
+            minHeight: 26,
+          }}>
+            {FILTERS.map(f => (
+              <button
+                key={f.value}
+                className={`isp-subnav-btn${nflConference === f.value ? " active" : ""}`}
+                onClick={() => {
+                  setNflConference(f.value);
+                  setNflDivision("ALL");
+                }}
+                style={{
+                  fontFamily: "coolvetica, sans-serif",
+                  fontWeight: 700,
+                  fontSize: "10px",
+                  letterSpacing: ".04em",
+                  textTransform: "uppercase",
+                  color: nflConference === f.value ? "#e6dbb9" : "#d4d4ce"
+                }}
+                onMouseEnter={e => e.target.style.color = "#191919"}
+                onMouseLeave={e => e.target.style.color = nflConference === f.value ? "#e6dbb9" : "#d4d4ce"}
+              >
+                {f.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
+      {/* Division Subnav: Only if AFC/NFC selected */}
+      {renderDivisionSubnav()}
       {/* Print Grid */}
       <section style={{
         maxWidth: 1200,
-        margin: showAfcNfcLogos ? "92px auto 0 auto" : "42px auto 0 auto",
+        margin: showAfcNfcLogos ? "166px auto 0 auto" : "42px auto 0 auto",
         width: "100%",
         padding: "0 24px",
         position: "relative"
@@ -333,22 +396,28 @@ export default function ThreeDPrinting() {
               logo={AFC_LOGO}
               style={{
                 position: "absolute",
-                top: -70,
+                top: 4,
                 ...logoPos.afc,
                 zIndex: 10,
               }}
               rotate={-90}
-              onClick={() => setNflFilter("AFC")}
+              onClick={() => {
+                setNflConference("AFC");
+                setNflDivision("ALL");
+              }}
             />
             <ConferenceLogo
               logo={NFC_LOGO}
               style={{
                 position: "absolute",
-                top: -70,
+                top: 4,
                 ...logoPos.nfc,
                 zIndex: 10,
               }}
-              onClick={() => setNflFilter("NFC")}
+              onClick={() => {
+                setNflConference("NFC");
+                setNflDivision("ALL");
+              }}
             />
           </>
         )}
@@ -363,7 +432,10 @@ export default function ThreeDPrinting() {
                 display: "block"
               }}
               rotate={showCenteredLogo === AFC_LOGO ? -90 : 0}
-              onClick={() => setNflFilter("ALL")}
+              onClick={() => {
+                setNflConference("ALL");
+                setNflDivision("ALL");
+              }}
             />
           </div>
         )}
@@ -509,7 +581,7 @@ function PrintCard({ print }) {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          color: "#888",
+          color: "#191919",
           fontWeight: 700,
           fontSize: 21,
           fontFamily: "coolvetica, sans-serif",
