@@ -24,10 +24,13 @@ export default function ThreeDPrinting() {
   const gridRef = useRef(null);
   const [columns, setColumns] = useState(4);
 
+  // Mobile check
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     function handleResize() {
       const win = typeof window !== "undefined" ? window : {};
       setColumns(win.innerWidth < 700 ? 1 : win.innerWidth < 1100 ? 2 : 4);
+      setIsMobile(win.innerWidth < 700);
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -327,12 +330,13 @@ export default function ThreeDPrinting() {
                   image: `/images/prints/nfl/${item.id}.png`,
                   name: `${item.name} Set`
                 }}
+                isMobile={isMobile}
               />
             );
           })}
           {/* Other categories */}
           {activeCategory !== "hueforge" && filteredPrints.map(print => (
-            <PrintCard key={print.id} print={print} />
+            <PrintCard key={print.id} print={print} isMobile={isMobile} />
           ))}
           {activeCategory !== "hueforge" && filteredPrints.length === 0 && (
             <div
@@ -387,15 +391,19 @@ function ConferenceLogo({ logo, style, onClick, rotate }) {
 }
 
 // --- Print Card Component ---
-function PrintCard({ print }) {
+function PrintCard({ print, isMobile }) {
   const [hovered, setHovered] = useState(false);
+
+  // Use smaller card size for mobile
+  const cardSize = isMobile ? 180 : hovered ? 320 : 288;
+  const imageSize = isMobile ? "80%" : hovered ? "100%" : "90%";
 
   return (
     <div
       className="print-card"
       style={{
         width: "100%",
-        maxWidth: hovered ? 320 : 288,
+        maxWidth: cardSize,
         aspectRatio: "1 / 1",
         background: "#fcfcfa",
         borderRadius: 0,
@@ -418,8 +426,8 @@ function PrintCard({ print }) {
         src={print.image}
         alt={print.name}
         style={{
-          maxWidth: hovered ? "100%" : "90%",
-          maxHeight: hovered ? "100%" : "90%",
+          maxWidth: imageSize,
+          maxHeight: imageSize,
           objectFit: "contain",
           display: "block",
           margin: "0 auto",
@@ -444,14 +452,14 @@ function PrintCard({ print }) {
           textAlign: "center",
           color: "#888",
           fontWeight: 700,
-          fontSize: 21,
+          fontSize: isMobile ? 15 : 21,
           fontFamily: "coolvetica, sans-serif",
           letterSpacing: ".04em",
           opacity: 1,
           pointerEvents: "none",
           userSelect: "none",
           textTransform: "uppercase",
-          margin: 20,
+          margin: isMobile ? 14 : 20,
         }}>
           {print.name}
         </div>
