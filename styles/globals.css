@@ -107,8 +107,8 @@ nav.main-nav a[aria-current="page"]:hover {
 nav.main-nav a:not(.active):not([aria-current="page"]):hover,
 nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   font-weight: 500;
-  color: #bcbcb6;
-  text-decoration: none; /* No underline on hover for non-active */
+  color: #e6dbb9;
+  text-decoration: none;
 }
 
 /* ====== ISP PAGE NAV HIERARCHY ====== */
@@ -172,7 +172,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
   font-weight: 500;
-  color: #bcbcb6;
+  color: #e6dbb9;
   text-decoration: none; /* No underline on hover for non-active */
 }
 
@@ -237,7 +237,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
   font-weight: 500;
-  color: #d4d4ce;
+  color: #e6dbb9;
   text-decoration: none; /* No underline on hover for non-active */
 }
 
