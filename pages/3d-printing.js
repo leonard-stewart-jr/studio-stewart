@@ -315,8 +315,7 @@ export default function ThreeDPrinting() {
                 </>
               ))
             : activeCategory === "hueforge" && gridData.map((item, idx) => {
-                // Defensive: skip undefined
-                if (!item || !item.id || !item.name) return null;
+                if (!item) return <div key={`empty-${idx}`} />;
                 return (
                   <PrintCard
                     key={item.id}
