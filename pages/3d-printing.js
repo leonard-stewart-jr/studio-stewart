@@ -314,6 +314,25 @@ export default function ThreeDPrinting() {
                   )}
                 </>
               ))
+            : activeCategory === "hueforge" &&
+              conference === "ALL" &&
+              division === "ALL" &&
+              !isMobile
+              // Fix: flatten the gridData for desktop ALL view!
+              ? gridData.flat().map((item, idx) => {
+                  if (!item) return <div key={`empty-${idx}`} />;
+                  return (
+                    <PrintCard
+                      key={item.id}
+                      print={{
+                        ...item,
+                        image: `/images/prints/nfl/${item.id}.png`,
+                        name: `${item.name} Set`
+                      }}
+                      isMobile={isMobile}
+                    />
+                  );
+                })
             : activeCategory === "hueforge" && gridData.map((item, idx) => {
                 if (!item) return <div key={`empty-${idx}`} />;
                 return (
