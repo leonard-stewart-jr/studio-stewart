@@ -120,37 +120,49 @@ nav.sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "coolvetica", sans-serif;
 }
 
 /* Use this class for sidebar nav links to match navbar style */
 .sidebarNavLink {
   color: #b1b1ae;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 700;
-  font-size: 16px;
+  font-family: "coolvetica", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.5px;
   text-decoration: none;
   background: none;
   border: none;
   padding: 4px 0;
   margin: 0;
-  transition: color 0.2s;
+  transition: color 0.2s, font-size 0.16s, font-weight 0.16s;
   display: block;
+  cursor: pointer;
 }
 
+/* Active: underline, grow font size, active color, bold */
 .active {
   color: #e6dbb9;
   background: none;
   text-decoration: underline;
   cursor: default;
+  font-size: 16px;
+  font-weight: 700;
 }
 
-.sidebarNavLink:hover,
-.sidebarNavLink:focus {
+/* Hover/focus non-active: bold, active color, grow font size, no underline */
+.sidebarNavLink:not(.active):hover,
+.sidebarNavLink:not(.active):focus {
   color: #e6dbb9;
+  font-weight: 500;
+  font-size: 16px;
   text-decoration: none;
+}
+
+/* Optionally, keep focus visible outline for accessibility */
+.sidebarNavLink:focus-visible {
+  outline: 2px solid #e6dbb9;
 }
 
 /* ====== CONTENT/FOOTER/SOCIAL ====== */
