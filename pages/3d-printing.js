@@ -30,7 +30,7 @@ export default function ThreeDPrinting() {
   useEffect(() => {
     function handleResize() {
       const win = typeof window !== "undefined" ? window : {};
-      setColumns(win.innerWidth < 700 ? 2 : win.innerWidth < 1100 ? 2 : 4); // <-- 2 columns for mobile
+      setColumns(win.innerWidth < 700 ? 2 : win.innerWidth < 1100 ? 2 : 4); // 2 columns for mobile
       setIsMobile(win.innerWidth < 700);
     }
     handleResize();
@@ -290,28 +290,33 @@ export default function ThreeDPrinting() {
           {activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
             ? gridData.map(([afc, nfc], idx) => (
                 <>
-                  <PrintCard
-                    key={afc.id}
-                    print={{
-                      ...afc,
-                      image: `/images/prints/nfl/${afc.id}.png`,
-                      name: `${afc.name} Set`
-                    }}
-                    isMobile={isMobile}
-                  />
-                  <PrintCard
-                    key={nfc.id}
-                    print={{
-                      ...nfc,
-                      image: `/images/prints/nfl/${nfc.id}.png`,
-                      name: `${nfc.name} Set`
-                    }}
-                    isMobile={isMobile}
-                  />
+                  {afc && (
+                    <PrintCard
+                      key={afc.id}
+                      print={{
+                        ...afc,
+                        image: `/images/prints/nfl/${afc.id}.png`,
+                        name: `${afc.name} Set`
+                      }}
+                      isMobile={isMobile}
+                    />
+                  )}
+                  {nfc && (
+                    <PrintCard
+                      key={nfc.id}
+                      print={{
+                        ...nfc,
+                        image: `/images/prints/nfl/${nfc.id}.png`,
+                        name: `${nfc.name} Set`
+                      }}
+                      isMobile={isMobile}
+                    />
+                  )}
                 </>
               ))
             : activeCategory === "hueforge" && gridData.map((item, idx) => {
-                if (!item) return <div key={`empty-${idx}`} />;
+                // Defensive: skip undefined
+                if (!item || !item.id || !item.name) return null;
                 return (
                   <PrintCard
                     key={item.id}
@@ -385,7 +390,7 @@ function PrintCard({ print, isMobile }) {
   const [hovered, setHovered] = useState(false);
 
   // Use smaller card size for mobile
-  const cardSize = isMobile ? 120 : hovered ? 320 : 288; // <-- shrink image for mobile
+  const cardSize = isMobile ? 120 : hovered ? 320 : 288; // shrink image for mobile
   const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
 
   return (
