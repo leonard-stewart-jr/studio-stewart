@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import "../styles/globals.css"; // Explicit import for clarity; already loaded in _app.js
+
 import {
   DIVISIONS,
   divisionNames,
@@ -231,29 +233,8 @@ export default function ThreeDPrinting() {
       paddingTop: 0,
     }}>
       {/* Sticky Main Category Nav */}
-      <div className="nav-card nav-card-mid" style={{
-        position: "sticky",
-        top: 76,
-        zIndex: 1200,
-        width: "100vw",
-        background: "#fff",
-        boxShadow: "0 3px 14px 0 rgba(0,0,0,0.10)",
-        minHeight: 44,
-        height: 44,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
-        <nav className="isp-section-tabs" style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 22,
-          background: "transparent",
-          padding: 0,
-          minHeight: 44,
-        }}>
+      <div className="nav-card nav-card-mid">
+        <nav className="isp-section-tabs">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.value}
@@ -263,26 +244,6 @@ export default function ThreeDPrinting() {
                 setConference("ALL");
                 setDivision("ALL");
                 setShowFilterBar(false);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: activeCategory === cat.value ? "#e6dbb9" : "#dededb",
-                fontWeight: 600,
-                fontSize: 12,
-                letterSpacing: "0.5px",
-                textTransform: "uppercase",
-                padding: "9px 20px 6px 20px",
-                margin: "0 12px",
-                cursor: activeCategory === cat.value ? "default" : "pointer",
-                textDecoration: activeCategory === cat.value ? "underline" : "none",
-                textUnderlineOffset: "3px",
-                textDecorationThickness: "1.5px",
-                outline: "none",
-                borderRadius: 0,
-                transition: "color 0.18s, text-decoration 0.18s",
-                boxShadow: "none",
-                fontFamily: "coolvetica, sans-serif",
               }}
               aria-current={activeCategory === cat.value ? "page" : undefined}
               tabIndex={0}
