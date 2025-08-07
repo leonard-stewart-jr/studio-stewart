@@ -95,11 +95,20 @@ nav.main-nav a[aria-current="page"] {
   color: #e6dbb9;
   text-decoration: underline;
   cursor: default;
+  font-size: 16px; /* Increase font size when active */
 }
 
 nav.main-nav a.active:hover,
 nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
+}
+
+/* New: hover non-active main nav link: bold, no underline */
+nav.main-nav a:not(.active):not([aria-current="page"]):hover,
+nav.main-nav a:not(.active):not([aria-current="page"]):focus {
+  font-weight: 500;
+  color: #bcbcb6;
+  text-decoration: none; /* No underline on hover for non-active */
 }
 
 /* ====== ISP PAGE NAV HIERARCHY ====== */
@@ -149,6 +158,7 @@ nav.main-nav a[aria-current="page"]:hover {
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
   cursor: default;
+  font-size: 14px; /* Increase font size when active */
 }
 
 .isp-tab-btn.active:hover,
@@ -158,12 +168,12 @@ nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
 }
 
+/* New: hover non-active section tab: bold, no underline */
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1.5px;
+  font-weight: 500;
   color: #bcbcb6;
+  text-decoration: none; /* No underline on hover for non-active */
 }
 
 .isp-subnav-row {
@@ -213,6 +223,7 @@ nav.main-nav a[aria-current="page"]:hover {
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
   cursor: default;
+  font-size: 12px; /* Increase font size when active */
 }
 
 .isp-subnav-btn.active:hover,
@@ -222,12 +233,12 @@ nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
 }
 
+/* New: hover non-active subnav: bold, no underline */
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1.5px;
+  font-weight: 500;
   color: #d4d4ce;
+  text-decoration: none; /* No underline on hover for non-active */
 }
 
 .isp-tab-btn:focus-visible,
