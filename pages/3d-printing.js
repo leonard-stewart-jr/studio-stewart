@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import "../styles/globals.css"; // Explicit import for clarity; already loaded in _app.js
 
 import {
   DIVISIONS,
