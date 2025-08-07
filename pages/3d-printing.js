@@ -30,7 +30,7 @@ export default function ThreeDPrinting() {
   useEffect(() => {
     function handleResize() {
       const win = typeof window !== "undefined" ? window : {};
-      setColumns(win.innerWidth < 700 ? 1 : win.innerWidth < 1100 ? 2 : 4);
+      setColumns(win.innerWidth < 700 ? 2 : win.innerWidth < 1100 ? 2 : 4); // <-- 2 columns for mobile
       setIsMobile(win.innerWidth < 700);
     }
     handleResize();
@@ -46,14 +46,19 @@ export default function ThreeDPrinting() {
   if (activeCategory === "hueforge") {
     if (conference === "ALL" && division === "ALL") {
       showAfcNfcLogos = true;
-      gridData = [];
+      // Build AFC and NFC arrays
+      const afcTeams = [];
+      const nfcTeams = [];
       for (let divIdx = 0; divIdx < 4; divIdx++) {
         for (let teamIdx = 0; teamIdx < 4; teamIdx++) {
-          gridData.push(
-            DIVISIONS.AFC[divisionNames[divIdx]][teamIdx],
-            DIVISIONS.NFC[divisionNames[divIdx]][teamIdx]
-          );
+          afcTeams.push(DIVISIONS.AFC[divisionNames[divIdx]][teamIdx]);
+          nfcTeams.push(DIVISIONS.NFC[divisionNames[divIdx]][teamIdx]);
         }
+      }
+      // For 2-column display, zip teams as rows of [AFC, NFC]
+      gridData = [];
+      for (let i = 0; i < afcTeams.length; i++) {
+        gridData.push([afcTeams[i], nfcTeams[i]]);
       }
     } else if (conference !== "ALL" && division === "ALL") {
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
@@ -269,8 +274,10 @@ export default function ThreeDPrinting() {
           ref={gridRef}
           style={{
             display: "grid",
-            gridTemplateColumns: `repeat(${Math.min(columns, gridData.length)}, minmax(220px, 1fr))`,
-            gap: "38px",
+            gridTemplateColumns: activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
+              ? "repeat(2, minmax(0, 1fr))"
+              : `repeat(${Math.min(columns, gridData.length)}, minmax(220px, 1fr))`,
+            gap: "30px",
             justifyItems: "center",
             alignItems: "center",
             width: "100%",
@@ -279,21 +286,44 @@ export default function ThreeDPrinting() {
             position: "relative"
           }}
         >
-          {/* HUEFORGE GRID */}
-          {activeCategory === "hueforge" && gridData.map((item, idx) => {
-            if (!item) return <div key={`empty-${idx}`} />;
-            return (
-              <PrintCard
-                key={item.id}
-                print={{
-                  ...item,
-                  image: `/images/prints/nfl/${item.id}.png`,
-                  name: `${item.name} Set`
-                }}
-                isMobile={isMobile}
-              />
-            );
-          })}
+          {/* HUEFORGE GRID - 2 columns (AFC/NFC) on mobile */}
+          {activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
+            ? gridData.map(([afc, nfc], idx) => (
+                <>
+                  <PrintCard
+                    key={afc.id}
+                    print={{
+                      ...afc,
+                      image: `/images/prints/nfl/${afc.id}.png`,
+                      name: `${afc.name} Set`
+                    }}
+                    isMobile={isMobile}
+                  />
+                  <PrintCard
+                    key={nfc.id}
+                    print={{
+                      ...nfc,
+                      image: `/images/prints/nfl/${nfc.id}.png`,
+                      name: `${nfc.name} Set`
+                    }}
+                    isMobile={isMobile}
+                  />
+                </>
+              ))
+            : activeCategory === "hueforge" && gridData.map((item, idx) => {
+                if (!item) return <div key={`empty-${idx}`} />;
+                return (
+                  <PrintCard
+                    key={item.id}
+                    print={{
+                      ...item,
+                      image: `/images/prints/nfl/${item.id}.png`,
+                      name: `${item.name} Set`
+                    }}
+                    isMobile={isMobile}
+                  />
+                );
+              })}
           {/* Other categories */}
           {activeCategory !== "hueforge" && filteredPrints.map(print => (
             <PrintCard key={print.id} print={print} isMobile={isMobile} />
@@ -355,8 +385,8 @@ function PrintCard({ print, isMobile }) {
   const [hovered, setHovered] = useState(false);
 
   // Use smaller card size for mobile
-  const cardSize = isMobile ? 180 : hovered ? 320 : 288;
-  const imageSize = isMobile ? "80%" : hovered ? "100%" : "90%";
+  const cardSize = isMobile ? 120 : hovered ? 320 : 288; // <-- shrink image for mobile
+  const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
 
   return (
     <div
@@ -412,14 +442,14 @@ function PrintCard({ print, isMobile }) {
           textAlign: "center",
           color: "#888",
           fontWeight: 700,
-          fontSize: isMobile ? 15 : 21,
+          fontSize: isMobile ? 13 : 21,
           fontFamily: "coolvetica, sans-serif",
           letterSpacing: ".04em",
           opacity: 1,
           pointerEvents: "none",
           userSelect: "none",
           textTransform: "uppercase",
-          margin: isMobile ? 14 : 20,
+          margin: isMobile ? 8 : 20,
         }}>
           {print.name}
         </div>
