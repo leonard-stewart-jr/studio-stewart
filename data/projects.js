@@ -6,7 +6,7 @@ const projects = [
     slug: "DMA-25",
     description: "ARCH 650 // COMPREHENSIVE BUILDING STUDIO // SOLO",
     modalWidth: 4000,
-    bannerSrc: "/images/portfolio/dma25.jpg", // <-- updated path
+    bannerSrc: "/images/portfolio/dma25.png", // <-- updated path
   },
   {
     grade: "FALL 24",
