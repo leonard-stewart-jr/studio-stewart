@@ -1,21 +1,23 @@
-import React from "react";
+import RibbonTab from "./ribbontab";
 
 export default function PortfolioOverlay({ project, onReveal }) {
-  // Frame size
-  const frameW = 736;
-  const frameH = 414;
+  // Frame size matches SVG and image
+  const frameW = 700;
+  const frameH = 412;
 
   return (
-    <div style={{
-      position: "relative",
-      width: frameW,
-      height: frameH,
-      maxWidth: "100%",
-      margin: "0 auto",
-      userSelect: "none",
-      zIndex: 1,
-      overflow: "visible"
-    }}>
+    <div
+      style={{
+        position: "relative",
+        width: frameW,
+        height: frameH,
+        maxWidth: "100%",
+        margin: "0 auto",
+        userSelect: "none",
+        zIndex: 1,
+        overflow: "visible",
+      }}
+    >
       {/* Hero image below the frame */}
       <img
         src={project.bannerSrc}
@@ -48,23 +50,11 @@ export default function PortfolioOverlay({ project, onReveal }) {
         }}
         draggable={false}
       />
-      {/* Interactive tab (right) */}
-      <button
-        style={{
-          position: "absolute",
-          left: frameW - 36,
-          top: frameH / 2 - 42,
-          width: 46,
-          height: 84,
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          zIndex: 10,
-        }}
-        title="Open Modal"
-        aria-label="Open project modal"
+      {/* Interactive RibbonTab (right edge, vertical center) */}
+      <RibbonTab
+        label="More"
         onClick={onReveal}
-        tabIndex={0}
+        top="50%"
       />
     </div>
   );
