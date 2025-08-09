@@ -13,24 +13,19 @@ import {
 } from "../data/nfl-logos";
 
 export default function ThreeDPrinting() {
-  // Category tab ("hueforge", ...)
   const [activeCategory, setActiveCategory] = useState("hueforge");
-  // Conference filter: "ALL", "AFC", "NFC"
   const [conference, setConference] = useState("ALL");
-  // Division filter: "ALL", "EAST", "WEST", "SOUTH", "NORTH"
   const [division, setDivision] = useState("ALL");
-  // Show filter bar after logo click
   const [showFilterBar, setShowFilterBar] = useState(false);
 
   const gridRef = useRef(null);
   const [columns, setColumns] = useState(4);
 
-  // Mobile check
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     function handleResize() {
       const win = typeof window !== "undefined" ? window : {};
-      setColumns(win.innerWidth < 700 ? 2 : win.innerWidth < 1100 ? 2 : 4); // 2 columns for mobile
+      setColumns(win.innerWidth < 700 ? 2 : win.innerWidth < 1100 ? 2 : 4);
       setIsMobile(win.innerWidth < 700);
     }
     handleResize();
@@ -38,7 +33,6 @@ export default function ThreeDPrinting() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // --- Filtering Logic ---
   let gridData = [];
   let showAfcNfcLogos = false;
   let showCenteredLogo = null;
@@ -46,7 +40,6 @@ export default function ThreeDPrinting() {
   if (activeCategory === "hueforge") {
     if (conference === "ALL" && division === "ALL") {
       showAfcNfcLogos = true;
-      // Build AFC and NFC arrays
       const afcTeams = [];
       const nfcTeams = [];
       for (let divIdx = 0; divIdx < 4; divIdx++) {
@@ -55,7 +48,6 @@ export default function ThreeDPrinting() {
           nfcTeams.push(DIVISIONS.NFC[divisionNames[divIdx]][teamIdx]);
         }
       }
-      // For 2-column display, zip teams as rows of [AFC, NFC]
       gridData = [];
       for (let i = 0; i < afcTeams.length; i++) {
         gridData.push([afcTeams[i], nfcTeams[i]]);
@@ -81,18 +73,18 @@ export default function ThreeDPrinting() {
   if (activeCategory === "custom cad") filteredPrints = [CUSTOM_CAD];
   if (activeCategory === "more") filteredPrints = [MORE_SAMPLE];
 
-  // --- Conference/Division Filter Row ---
   function renderFilterRow() {
     if (activeCategory !== "hueforge" || !showFilterBar) return null;
     return (
       <div
         style={{
           width: "100%",
+          maxWidth: isMobile ? 320 : 700,
+          margin: "0 auto",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: 16,
-          margin: "0 auto",
+          gap: isMobile ? 10 : 16,
           marginTop: "20px",
           marginBottom: "20px",
         }}
@@ -157,18 +149,20 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // AFC/NFC logo row above filter/text
   function renderLogoRow() {
     if (activeCategory !== "hueforge" || !showAfcNfcLogos) return null;
     return (
       <div
         style={{
           width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "120px",
+          maxWidth: isMobile ? 320 : 700,
           margin: "40px auto 0 auto",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: isMobile ? "18px" : "120px",
+          paddingLeft: 0,
+          paddingRight: 0,
         }}
       >
         <ConferenceLogo
@@ -199,7 +193,6 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Centered logo above grid for single conference/division view
   function renderCenteredLogo() {
     if (activeCategory !== "hueforge" || !showCenteredLogo) return null;
     return (
@@ -228,7 +221,6 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Main Render
   return (
     <main style={{
       width: "100%",
@@ -236,7 +228,6 @@ export default function ThreeDPrinting() {
       background: "#f9f9f7",
       paddingTop: 0,
     }}>
-      {/* Sticky Main Category Nav */}
       <div className="nav-card nav-card-mid">
         <nav className="isp-section-tabs">
           {CATEGORIES.map((cat) => (
@@ -264,11 +255,8 @@ export default function ThreeDPrinting() {
         padding: "0 24px 80px 24px",
         position: "relative",
       }}>
-        {/* AFC/NFC logo row */}
         {renderLogoRow()}
-        {/* Centered logo for filtered view */}
         {renderCenteredLogo()}
-        {/* Conference/Division filter row - styled text/buttons, not nav */}
         {renderFilterRow()}
         <div
           ref={gridRef}
@@ -281,12 +269,12 @@ export default function ThreeDPrinting() {
             justifyItems: "center",
             alignItems: "center",
             width: "100%",
+            maxWidth: isMobile ? 320 : 1200,
+            margin: "0 auto",
             minHeight: 320,
-            margin: showAfcNfcLogos && !showFilterBar ? "40px auto 0 auto" : "0px auto 0 auto",
             position: "relative"
           }}
         >
-          {/* HUEFORGE GRID - 2 columns (AFC/NFC) on mobile */}
           {activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
             ? gridData.map(([afc, nfc], idx) => (
                 <>
@@ -318,7 +306,6 @@ export default function ThreeDPrinting() {
               conference === "ALL" &&
               division === "ALL" &&
               !isMobile
-              // Fix: flatten the gridData for desktop ALL view!
               ? gridData.flat().map((item, idx) => {
                   if (!item) return <div key={`empty-${idx}`} />;
                   return (
@@ -347,7 +334,6 @@ export default function ThreeDPrinting() {
                   />
                 );
               })}
-          {/* Other categories */}
           {activeCategory !== "hueforge" && filteredPrints.map(print => (
             <PrintCard key={print.id} print={print} isMobile={isMobile} />
           ))}
@@ -372,7 +358,6 @@ export default function ThreeDPrinting() {
   );
 }
 
-// --- Conference Logo as Image ---
 function ConferenceLogo({ logo, style, onClick, rotate }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -403,12 +388,9 @@ function ConferenceLogo({ logo, style, onClick, rotate }) {
   );
 }
 
-// --- Print Card Component ---
 function PrintCard({ print, isMobile }) {
   const [hovered, setHovered] = useState(false);
-
-  // Use smaller card size for mobile
-  const cardSize = isMobile ? 120 : hovered ? 320 : 288; // shrink image for mobile
+  const cardSize = isMobile ? 120 : hovered ? 320 : 288;
   const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
 
   return (
@@ -434,7 +416,6 @@ function PrintCard({ print, isMobile }) {
       tabIndex={0}
       aria-label={print.name}
     >
-      {/* Print Image */}
       <img
         src={print.image}
         alt={print.name}
@@ -451,7 +432,6 @@ function PrintCard({ print, isMobile }) {
         }}
         draggable={false}
       />
-      {/* Hover text overlay, centered */}
       {hovered && (
         <div style={{
           position: "absolute",
