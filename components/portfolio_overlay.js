@@ -1,151 +1,171 @@
-import { useState, useRef } from "react";
-import PropTypes from "prop-types";
+import React, { useRef, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
+
+const TORN_MASK_SVG = (tabX = 690, tabWidth = 46, frameW = 736, frameH = 414) => (
+  // The SVG mask is a rectangle with torn edges and a "tab" on the right.
+  <svg
+    width={frameW}
+    height={frameH}
+    viewBox={`0 0 ${frameW} ${frameH}`}
+    style={{
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+      pointerEvents: "none",
+      userSelect: "none",
+      zIndex: 1,
+    }}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <clipPath id="tornMask">
+        {/* Top torn edge */}
+        <path d={`
+          M0,18 Q18,2 60,12 Q120,2 200,18 Q320,6 420,20 Q540,0 660,18 Q${tabX},12 ${tabX},24
+          Q${tabX},32 ${tabX},36
+          Q${tabX},40 ${tabX + tabWidth},36
+          Q${tabX + tabWidth},80 ${tabX},90
+          Q${tabX + tabWidth},130 ${tabX},140
+          Q${tabX + tabWidth},190 ${tabX},200
+          Q${tabX + tabWidth},300 ${tabX},314
+          Q${tabX + tabWidth},${frameH-45} ${tabX},${frameH-24}
+          Q${tabX},${frameH-16} ${tabX},${frameH-12}
+          Q660,${frameH-8} 540,${frameH-18} Q420,${frameH-4} 320,${frameH-18} Q200,${frameH-6} 120,${frameH-18} Q60,${frameH-2} 18,${frameH-16} Q0,${frameH-8} 0,${frameH-18}
+          Z
+        `}
+        />
+      </clipPath>
+      <filter id="paperShadow" x="-25%" y="-25%" width="150%" height="150%">
+        <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="#d6c08e" floodOpacity="0.17"/>
+        <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#222" floodOpacity="0.13"/>
+      </filter>
+    </defs>
+    {/* Optional: white torn paper frame */}
+    <path
+      d={`
+        M0,18 Q18,2 60,12 Q120,2 200,18 Q320,6 420,20 Q540,0 660,18 Q${tabX},12 ${tabX},24
+        Q${tabX},32 ${tabX},36
+        Q${tabX},40 ${tabX + tabWidth},36
+        Q${tabX + tabWidth},80 ${tabX},90
+        Q${tabX + tabWidth},130 ${tabX},140
+        Q${tabX + tabWidth},190 ${tabX},200
+        Q${tabX + tabWidth},300 ${tabX},314
+        Q${tabX + tabWidth},${frameH-45} ${tabX},${frameH-24}
+        Q${tabX},${frameH-16} ${tabX},${frameH-12}
+        Q660,${frameH-8} 540,${frameH-18} Q420,${frameH-4} 320,${frameH-18} Q200,${frameH-6} 120,${frameH-18} Q60,${frameH-2} 18,${frameH-16} Q0,${frameH-8} 0,${frameH-18}
+        Z
+      `}
+      fill="#fff"
+      filter="url(#paperShadow)"
+    />
+    {/* The interactive tab (right side) */}
+    <rect
+      x={tabX + tabWidth - 4}
+      y={36}
+      width={tabWidth}
+      height={frameH - 72}
+      rx={13}
+      fill="#b32c2c"
+      filter="url(#paperShadow)"
+      style={{
+        stroke: "#fff",
+        strokeWidth: 4,
+      }}
+    />
+  </svg>
+);
 
 export default function PortfolioOverlay({
   project,
-  onReveal,
   showCaptionOnce,
+  onReveal,
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [showCaption, setShowCaption] = useState(false);
-  const [isTearing, setIsTearing] = useState(false);
-  const tabRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragX, setDragX] = useState(0);
+  const [tabHover, setTabHover] = useState(false);
+  const controls = useAnimation();
 
-  // Caption logic (show once per session)
-  function handleTabHover() {
-    if (!showCaptionOnce.current) {
-      setShowCaption(true);
-      showCaptionOnce.current = true;
-      setTimeout(() => setShowCaption(false), 1600);
-    }
-    setIsHovered(true);
-  }
+  const frameW = 736; // Max width for hero frame
+  const frameH = 414; // 16:9 ratio
+  const tabX = 690;
+  const tabWidth = 46;
 
   // Drag logic
-  function handleDragStart(e) {
-    if (isTearing) return;
-    setIsTearing(true);
-    setTimeout(() => {
-      setIsTearing(false);
-      onReveal();
-    }, 750); // Simulate tear duration
+  const dragRef = useRef();
+
+  function handleTabMouseDown(e) {
+    setIsDragging(true);
+    setDragX(0);
+    dragRef.current = { startX: e.clientX };
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
   }
-  function handleDoubleClick() {
-    if (isTearing) return;
-    setIsTearing(true);
-    setTimeout(() => {
-      setIsTearing(false);
-      onReveal();
-    }, 750);
+  function handleMouseMove(e) {
+    if (!isDragging || !dragRef.current) return;
+    const delta = Math.max(0, e.clientX - dragRef.current.startX);
+    setDragX(delta);
+    controls.set({ x: delta });
+    if (delta >= 100) {
+      // Auto-complete animation
+      controls.start({
+        x: frameW,
+        transition: { type: "spring", stiffness: 140, damping: 16, duration: 0.5 },
+      });
+      setTimeout(() => {
+        setIsDragging(false);
+        setDragX(0);
+        controls.set({ x: 0 });
+        onReveal?.();
+      }, 420);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    }
+  }
+  function handleMouseUp(e) {
+    if (!isDragging) return;
+    if (dragX < 100) {
+      // Snap back
+      controls.start({ x: 0, transition: { type: "spring", stiffness: 160, damping: 20, duration: 0.38 } });
+    }
+    setIsDragging(false);
+    setDragX(0);
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
   }
 
-  // SVG torn overlay path (static for now, can be animated in future)
-  // Right edge jagged path with drop shadow filter
-  const tornSvg = (
-    <svg
-      viewBox="0 0 700 400"
-      width="100%"
-      height="100%"
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        pointerEvents: "none",
-        zIndex: 3,
-        mixBlendMode: "multiply",
-      }}
-    >
-      <defs>
-        <filter id="paperShadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="-8" dy="0" stdDeviation="6" floodColor="#222" floodOpacity="0.22"/>
-        </filter>
-      </defs>
-      <path
-        d="
-          M0,0
-          L690,0
-          Q695,40 699,70
-          Q695,110 699,140
-          Q695,180 699,220
-          Q695,270 699,320
-          Q695,370 690,400
-          L0,400
-          Z
-        "
-        fill="rgba(232,228,198,0.93)"
-        stroke="#e6dbb9"
-        strokeWidth="1.5"
-        filter="url(#paperShadow)"
-      />
-    </svg>
-  );
+  // Double-click to open modal (anywhere inside frame)
+  function handleDoubleClick(e) {
+    controls.start({
+      x: frameW,
+      transition: { type: "spring", stiffness: 140, damping: 16, duration: 0.5 },
+    });
+    setTimeout(() => {
+      controls.set({ x: 0 });
+      onReveal?.();
+    }, 420);
+  }
 
-  // Scroll tab curl
-  const scrollTab = (
-    <div
-      ref={tabRef}
-      tabIndex={0}
-      aria-label="Open project; drag right or double-click"
-      style={{
-        position: "absolute",
-        right: -38,
-        top: "50%",
-        transform: "translateY(-50%)",
-        width: 64,
-        height: 74,
-        background: "linear-gradient(120deg, #e6dbb9 80%, #d6c08e 100%)",
-        borderRadius: "0 38px 38px 0",
-        boxShadow: isHovered
-          ? "0 2px 22px rgba(32,32,32,0.22)"
-          : "0 2px 12px rgba(32,32,32,0.13)",
-        cursor: "pointer",
-        zIndex: 8,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        transition: "box-shadow 0.18s, transform 0.18s",
-        outline: "none",
-        rotate: isHovered ? "5deg" : "0deg",
-        borderLeft: "3px solid #e6dbb9",
-      }}
-      onMouseEnter={handleTabHover}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseDown={handleDragStart}
-      onDoubleClick={handleDoubleClick}
-      onTouchStart={handleDragStart}
-      onFocus={handleTabHover}
-      onBlur={() => setIsHovered(false)}
-    >
-      <span style={{
-        fontWeight: 700,
-        color: "#b1b1ae",
-        fontSize: 17,
-        letterSpacing: ".08em",
-        pointerEvents: "none"
-      }}>
-        &#8677;
-      </span>
-      {showCaption && (
-        <span style={{
-          position: "absolute",
-          top: "100%",
-          left: "50%",
-          transform: "translate(-50%, 6px)",
-          background: "#222",
-          color: "#e6dbb9",
-          padding: "6px 18px",
-          borderRadius: 12,
-          fontSize: 15,
-          fontWeight: 500,
-          boxShadow: "0 3px 12px rgba(32,32,32,0.17)",
-          zIndex: 12,
-          whiteSpace: "nowrap"
-        }}>
-          Drag right or double-click to open
-        </span>
-      )}
-    </div>
-  );
+  // Tab hover animation
+  function handleTabMouseEnter() {
+    setTabHover(true);
+    controls.start({
+      scale: 1.13,
+      x: tabWidth * 0.6,
+      boxShadow: "0 0 32px #b32c2c33",
+      transition: { type: "spring", stiffness: 240, damping: 18, duration: 0.36 },
+    });
+  }
+  function handleTabMouseLeave() {
+    setTabHover(false);
+    controls.start({
+      scale: 1,
+      x: 0,
+      boxShadow: "0 0 0px #b32c2c00",
+      transition: { type: "spring", stiffness: 240, damping: 18, duration: 0.32 },
+    });
+  }
 
   return (
     <div
@@ -153,22 +173,47 @@ export default function PortfolioOverlay({
         position: "relative",
         width: "100%",
         aspectRatio: "16/9",
-        maxWidth: 700,
+        maxWidth: frameW,
         minHeight: 220,
-        overflow: "hidden",
-        borderRadius: 8,
-        boxShadow: "0 2px 12px rgba(32,32,32,0.12)",
-        cursor: isTearing ? "progress" : "pointer",
-        background: "#eee",
+        margin: "0 auto",
+        userSelect: isDragging ? "none" : "auto",
+        cursor: isDragging ? "grabbing" : "default",
+        zIndex: 10,
+        background: "transparent",
+        overflow: "visible",
       }}
       tabIndex={0}
-      aria-label={`Reveal project ${project.title}`}
-      onKeyDown={e => {
-        if ((e.key === "Enter" || e.key === " ") && !isTearing) handleDragStart(e);
-      }}
+      aria-label={`Portfolio image for ${project.title}`}
+      onDoubleClick={handleDoubleClick}
     >
-      {/* Underlay: Hero image */}
-      {project.bannerSrc && (
+      {/* Torn mask and frame */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 2,
+          pointerEvents: "none",
+        }}
+      >
+        {TORN_MASK_SVG(tabX, tabWidth, frameW, frameH)}
+      </div>
+      {/* Clipped image */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
+          overflow: "hidden",
+          clipPath: "url(#tornMask)",
+          WebkitClipPath: "url(#tornMask)",
+        }}
+      >
         <img
           src={project.bannerSrc}
           alt={project.title + " banner"}
@@ -176,68 +221,65 @@ export default function PortfolioOverlay({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            objectPosition: "center",
             display: "block",
-            filter: isTearing ? "brightness(0.77)" : "none",
-            transition: "filter 0.18s"
+            filter: "none",
+            border: "none",
+            pointerEvents: "auto",
+            userSelect: "none",
+            transition: "filter 0.13s",
           }}
+          draggable={false}
         />
-      )}
-
-      {/* Paper torn overlay */}
-      {tornSvg}
-
-      {/* Scroll tab curl */}
-      {scrollTab}
-
-      {/* "View Interactive Model" overlay */}
-      <div
+      </div>
+      {/* Interactive tab (right edge) */}
+      <motion.div
         style={{
           position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          padding: "10px 0",
-          background: "rgba(32,32,32,0.64)",
-          color: "#e6dbb9",
-          fontWeight: 600,
-          fontSize: 18,
-          textAlign: "center",
-          letterSpacing: ".04em",
-          zIndex: 7
+          top: 36,
+          left: tabX + tabWidth - 4,
+          width: tabWidth,
+          height: frameH - 72,
+          background: "#b32c2c",
+          borderRadius: 13,
+          boxShadow: tabHover ? "0 0 32px #b32c2c33" : "0 2px 8px #b32c2c22",
+          border: "4px solid #fff",
+          cursor: isDragging ? "grabbing" : "pointer",
+          zIndex: 9,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "box-shadow 0.13s",
+          willChange: "transform",
         }}
+        initial={{ scale: 1, x: 0, boxShadow: "0 0 0px #b32c2c00" }}
+        animate={controls}
+        whileHover={{ scale: 1.13, x: tabWidth * 0.6, boxShadow: "0 0 32px #b32c2c33" }}
+        onMouseDown={handleTabMouseDown}
+        onMouseEnter={handleTabMouseEnter}
+        onMouseLeave={handleTabMouseLeave}
+        tabIndex={0}
+        aria-label="Reveal project modal"
+        role="button"
       >
-        View Interactive Model
-      </div>
-
-      {/* Tear animation overlay (simulated for now) */}
-      {isTearing && (
-        <div
+        {/* Optional: add icon or text */}
+        <span
           style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: 44,
-            height: "100%",
-            background: "linear-gradient(to left, #fff 65%, transparent 100%)",
-            zIndex: 10,
-            opacity: 0.88,
+            fontWeight: 700,
+            fontSize: 22,
+            color: "#fff",
+            letterSpacing: ".09em",
+            writingMode: "vertical-rl",
+            textTransform: "uppercase",
+            transform: "translateY(-6px)",
+            opacity: 0.92,
             pointerEvents: "none",
-            animation: "tearAnim 0.7s cubic-bezier(.5,1.2,.7,1) forwards"
+            userSelect: "none",
           }}
-        />
-      )}
-      <style>{`
-        @keyframes tearAnim {
-          from { height: 0%; opacity: 1; }
-          to { height: 100%; opacity: 0.1; }
-        }
-      `}</style>
+        >
+          {/* You can add a chevron or "View" label here */}
+        </span>
+      </motion.div>
     </div>
   );
 }
-
-PortfolioOverlay.propTypes = {
-  project: PropTypes.object.isRequired,
-  onReveal: PropTypes.func.isRequired,
-  showCaptionOnce: PropTypes.object.isRequired,
-};
