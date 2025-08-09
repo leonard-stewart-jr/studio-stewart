@@ -5,10 +5,21 @@ import projects from "../data/projects";
 
 // Helper: Derive the HTML5 export path and width from project (add these in your data if not present)
 function getProjectModalProps(project) {
-  // EXAMPLES -- customize for your actual file structure!
-  const slug = project.slug?.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-  const src = `/models/projects/${slug}/index.html`; // Adjust path as needed!
-  const width = project.modalWidth || 2436; // Add modalWidth to your project data for each project!
+  // Use your desired file structure:
+  // For DMA-25: /portfolio/dma/25/index
+  // For other projects, adjust as needed!
+  let src = "";
+  if (project.slug === "DMA-25") {
+    src = "/portfolio/dma/25/index";
+  } else if (project.slug === "MPSC-24") {
+    src = "/portfolio/mpsc/24/index";
+  } else if (project.slug === "BPL-24") {
+    src = "/portfolio/bpl/24/index";
+  } else {
+    // fallback: use slug-lower
+    src = `/portfolio/${project.slug.toLowerCase()}/index`;
+  }
+  const width = project.modalWidth || 2436;
   return { src, width };
 }
 
