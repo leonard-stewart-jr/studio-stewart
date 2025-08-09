@@ -5,7 +5,7 @@
       <feOffset dx="0" dy="0" result="offOut"/>
       <feGaussianBlur in="offOut" stdDeviation="3" result="blurOut"/>
       <feComposite in="SourceGraphic" in2="blurOut" operator="out" result="inverse"/>
-      <feFlood flood-color="#e6dbb9" flood-opacity="0.32" result="color"/>
+      <feFlood flood-color="#e6dbb9" flood-opacity="0.29" result="color"/>
       <feComposite in="color" in2="inverse" operator="in" result="shadow"/>
       <feComposite in="shadow" in2="SourceGraphic" operator="over"/>
     </filter>
@@ -33,17 +33,5 @@
     stroke="#fff"
     stroke-width="18"
     filter="url(#innerShadow)"
-  />
-  <!-- Placeholder tab/ribbon (right edge, vertically centered) -->
-  <rect
-    x="670"
-    y="156"
-    width="22"
-    height="100"
-    rx="10"
-    fill="#bcbcbc"
-    fill-opacity="0.52"
-    stroke="#e6dbb9"
-    stroke-width="3"
   />
 </svg>
