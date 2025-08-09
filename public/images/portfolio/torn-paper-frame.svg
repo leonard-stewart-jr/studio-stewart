@@ -1,9 +1,5 @@
 <svg width="736" height="414" viewBox="0 0 736 414" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Torn paper edge path: white fill, shadow, transparent center -->
-  <filter id="paperShadow" x="-20%" y="-20%" width="140%" height="140%">
-    <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#d6c08e" flood-opacity="0.17"/>
-    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#222" flood-opacity="0.13"/>
-  </filter>
+  <!-- Torn paper border: white stroke, no fill -->
   <path
     d="
       M40,20
@@ -23,18 +19,17 @@
       Q100,410 40,394
       Q12,350 6,200
       Q12,60 40,20
-      Z
-      M690,60
-      Q734,100 734,200
-      Q734,300 690,354
-      L690,60
-      Z
-    "
-    fill="#fff"
-    filter="url(#paperShadow)"
-    stroke="#e6dbb9"
-    stroke-width="4"
-    />
-  <!-- Right tab: dramatic, bold, red rectangle -->
-  <rect x="710" y="140" width="26" height="134" rx="7" fill="#b32c2c" stroke="#fff" stroke-width="4" />
+      Z"
+    fill="none"
+    stroke="#fff"
+    stroke-width="28"
+    filter="url(#shadow1)"
+  />
+  <!-- Dramatic tab on right: bold red rectangle with white border -->
+  <rect x="698" y="140" width="32" height="134" rx="8" fill="#b32c2c" stroke="#fff" stroke-width="6" />
+  <defs>
+    <filter id="shadow1" x="-40" y="-40" width="820" height="494">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#d6c08e" flood-opacity="0.19"/>
+    </filter>
+  </defs>
 </svg>
