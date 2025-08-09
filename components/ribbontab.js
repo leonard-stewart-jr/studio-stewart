@@ -49,7 +49,7 @@ export default function RibbonTab({
           fontSize: "1.2em",
           letterSpacing: "0.12em",
           fontWeight: "bold",
-          // REMOVED textTransform: "uppercase"
+          // No textTransform, so not caps
         }}
       >
         {label}
