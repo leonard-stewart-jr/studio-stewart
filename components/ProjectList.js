@@ -1,4 +1,10 @@
+import { useRef } from "react";
+import PortfolioOverlay from "./portfolio_overlay";
+
 export default function ProjectList({ projects, onProjectClick }) {
+  // For caption logic: only show once per session (across cards)
+  const showCaptionOnce = useRef(false);
+
   return (
     <section
       style={{
@@ -58,60 +64,13 @@ export default function ProjectList({ projects, onProjectClick }) {
               </div>
             </div>
           </div>
-          {/* Right: Clickable Banner Image as Card */}
-          <div
-            onClick={() => onProjectClick(idx)}
-            style={{
-              flex: 1,
-              minWidth: 0,
-              maxWidth: 700,
-              aspectRatio: "16/9",
-              background: "#eee",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              borderRadius: 8,
-              position: "relative",
-              boxShadow: "0 2px 12px rgba(32,32,32,0.12)",
-              cursor: "pointer"
-            }}
-            tabIndex={0}
-            aria-label={`Open interactive modal for ${project.title}`}
-            onKeyDown={e => {
-              if (e.key === "Enter" || e.key === " ") onProjectClick(idx);
-            }}
-          >
-            {project.bannerSrc && (
-              <img
-                src={project.bannerSrc}
-                alt={project.title + " banner"}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                  filter: "none",
-                  transition: "filter 0.18s"
-                }}
-              />
-            )}
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                bottom: 0,
-                padding: "10px 0",
-                background: "rgba(32,32,32,0.64)",
-                color: "#e6dbb9",
-                fontWeight: 600,
-                fontSize: 18,
-                textAlign: "center",
-                letterSpacing: ".04em"
-              }}
-            >
-              View Interactive Model
-            </div>
+          {/* Right: PortfolioOverlay with torn overlay logic */}
+          <div style={{ flex: 1, minWidth: 0, maxWidth: 700 }}>
+            <PortfolioOverlay
+              project={project}
+              showCaptionOnce={showCaptionOnce}
+              onReveal={() => onProjectClick(idx)}
+            />
           </div>
         </div>
       ))}
