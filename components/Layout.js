@@ -1,7 +1,6 @@
 import { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import Sidebar from "./Sidebar";
-import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
   // Keep sidebar state here so both HeaderBar and Sidebar can access it.
@@ -9,9 +8,6 @@ export default function Layout({ children }) {
 
   const logoSize = 66;
   const sidebarPaddingLeft = 22;
-
-  // Use Next.js router to determine current route
-  const router = useRouter();
 
   // Header height
   const HEADER_HEIGHT = 76;
