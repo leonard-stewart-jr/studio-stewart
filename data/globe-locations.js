@@ -134,11 +134,11 @@ export default [
         title: "SCANDINAVIAN PRISON"
       }
     ]
-  }
-    {
-  name: "EXPAND",
-  lat: 51.512,      // Use the computed London cluster center
-  lon: -0.097,      // Use the computed London cluster center
-  clusterExpand: true // Custom property to identify it
   },
+  {
+    name: "EXPAND",
+    lat: 51.512,      // Use the computed London cluster center
+    lon: -0.097,      // Use the computed London cluster center
+    clusterExpand: true // Custom property to identify it
+  }
 ];
