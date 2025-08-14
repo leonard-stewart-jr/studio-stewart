@@ -56,7 +56,7 @@ function getLondonMarkers(allLocations) {
   return allLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
 }
 function getNonLondonMarkers(allLocations) {
-  return allLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
+  return allLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP && !m.clusterExpand);
 }
 
 export default function GlobeSection({ onMarkerClick, mode = "world" }) {
@@ -107,9 +107,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (mode === "world") {
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
-      const clusterMode = !londonExpanded;
+
       let entries = [];
-      if (clusterMode) {
+      if (!londonExpanded) {
+        // Cluster mode: only nonLondonMarkers and the expand marker (flag)
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
@@ -123,6 +124,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }))
         ];
       } else {
+        // Expanded mode: show all nonLondonMarkers and all London markers as pins
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
@@ -138,6 +140,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         ];
       }
 
+      // TOC: Remove expand marker (clusterExpand)
       const tocList = data
         .map((marker, idx) => {
           let year = "";
@@ -157,86 +160,87 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const pinModel = getPinModel();
       const flagModel = getFlagModel();
 
-const objectsData = entries.map(obj => {
-  if (obj.isExpandPin) {
-    return {
-      ...obj,
-      lat: obj.lat,
-      lng: obj.lon,
-      markerId: obj.name,
-      isExpandPin: true,
-      altitude: DOT_ALTITUDE,
-      color: colorAssignments[obj.idx],
-      label: obj.name
-    };
-  }
-  // Only standard pins get isStandardPin
-  return {
-    ...obj,
-    lat: obj.lat,
-    lng: obj.lon,
-    markerId: obj.name,
-    isStandardPin: true,
-    isLondon: !!obj.isLondon,
-    altitude: DOT_ALTITUDE,
-    color: colorAssignments[obj.idx],
-    label: obj.name
-  };
-});
+      const objectsData = entries.map(obj => {
+        if (obj.isExpandPin) {
+          // Only the flag, never a pin
+          return {
+            ...obj,
+            lat: obj.lat,
+            lng: obj.lon,
+            markerId: obj.name,
+            isExpandPin: true,
+            altitude: DOT_ALTITUDE,
+            color: colorAssignments[obj.idx],
+            label: obj.name
+          };
+        }
+        // Only standard pins get isStandardPin
+        return {
+          ...obj,
+          lat: obj.lat,
+          lng: obj.lon,
+          markerId: obj.name,
+          isStandardPin: true,
+          isLondon: !!obj.isLondon,
+          altitude: DOT_ALTITUDE,
+          color: colorAssignments[obj.idx],
+          label: obj.name
+        };
+      });
 
-const customPointObject = (obj) => {
-  // Only render flag for expand pin, never a pin
-  if (obj.isExpandPin) {
-    if (flagModel) {
-      const group = new THREE.Group();
-      const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
-      const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+      const customPointObject = (obj) => {
+        // Only render flag for expand pin, never a pin
+        if (obj.isExpandPin) {
+          if (flagModel) {
+            const group = new THREE.Group();
+            const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
+            const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
-      const flag = flagModel.clone(true);
-      flag.scale.set(scale, scale, scale);
+            const flag = flagModel.clone(true);
+            flag.scale.set(scale, scale, scale);
 
-      orientPin(flag, markerVec);
-      flag.rotateY(-Math.PI / 2);
-      flag.rotateZ(-Math.PI / 2);
-      positionPin(flag, -8);
+            orientPin(flag, markerVec);
+            flag.rotateY(-Math.PI / 2);
+            flag.rotateZ(-Math.PI / 2);
+            positionPin(flag, -8);
 
-      group.position.copy(markerVec);
-      flag.userData = { markerId: obj.markerId, label: obj.label };
-      group.add(flag);
-      group.userData = { markerId: obj.markerId, label: obj.label };
-      group.name = "expand-flag-group";
-      return group;
-    }
-    // Flag not ready: do NOT render anything
-    return new THREE.Object3D();
-  }
-  // Standard pins only
-  if (obj.isStandardPin && pinModel) {
-    const group = new THREE.Group();
-    let scale = NORMAL_PIN_SCALE;
-    if (obj.isLondon) {
-      scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
-    }
-    const pin = pinModel.clone(true);
-    pin.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = false;
-        child.material = child.material.clone();
-        child.material.color.set(obj.color || "#b32c2c");
-      }
-    });
-    pin.scale.set(scale, scale, scale);
-    const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-    group.position.copy(markerVec);
-    orientPin(pin, markerVec);
-    positionPin(pin, -6);
-    pin.userData = { markerId: obj.markerId, label: obj.label };
-    group.add(pin);
-    group.userData = { markerId: obj.markerId, label: obj.label };
-    return group;
-  }
-  return new THREE.Object3D();
-};
+            group.position.copy(markerVec);
+            flag.userData = { markerId: obj.markerId, label: obj.label };
+            group.add(flag);
+            group.userData = { markerId: obj.markerId, label: obj.label };
+            group.name = "expand-flag-group";
+            return group;
+          }
+          // Flag not ready: do NOT render anything
+          return new THREE.Object3D();
+        }
+        // Standard pins only
+        if (obj.isStandardPin && pinModel) {
+          const group = new THREE.Group();
+          let scale = NORMAL_PIN_SCALE;
+          if (obj.isLondon) {
+            scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
+          }
+          const pin = pinModel.clone(true);
+          pin.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = false;
+              child.material = child.material.clone();
+              child.material.color.set(obj.color || "#b32c2c");
+            }
+          });
+          pin.scale.set(scale, scale, scale);
+          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+          group.position.copy(markerVec);
+          orientPin(pin, markerVec);
+          positionPin(pin, -6);
+          pin.userData = { markerId: obj.markerId, label: obj.label };
+          group.add(pin);
+          group.userData = { markerId: obj.markerId, label: obj.label };
+          return group;
+        }
+        return new THREE.Object3D();
+      };
 
       return { objectsData, customPointObject, tocList };
     } else {
