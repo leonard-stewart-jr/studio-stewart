@@ -4,8 +4,6 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        {/* Adobe Fonts: Coolvetica Typekit */}
-        <link rel="stylesheet" href="https://use.typekit.net/mzk5snr.css" />
         <link href="https://fonts.googleapis.com/css?family=Bungee+Shade&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet" 
 />
