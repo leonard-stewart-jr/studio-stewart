@@ -218,9 +218,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE;
           // Smaller for London pins (clustered or expanded)
-          if (obj.isLondon) {
-            scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 : NORMAL_PIN_SCALE * 0.72;
-          }
+        if (obj.isLondon) {
+        scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
+      }
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
