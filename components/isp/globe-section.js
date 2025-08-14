@@ -791,7 +791,7 @@ customPointObject = (obj) => {
                   fontWeight: 600,
                   fontSize: 14,
                   cursor: "pointer",
-                  fontFamily: "coolvetica, sans-serif",
+                  fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
                   display: "flex",
                   alignItems: "flex-start",
                   gap: 8,
@@ -816,7 +816,7 @@ customPointObject = (obj) => {
                 title={item.name}
               >
                 <span style={{
-                  fontFamily: "coolvetica, sans-serif",
+                  fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
                   fontWeight: 700,
                   fontSize: 16,
                   minWidth: 18,
@@ -828,7 +828,7 @@ customPointObject = (obj) => {
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
-                  fontFamily: "coolvetica, sans-serif",
+                  fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
                   fontWeight: 600,
                   fontSize: 16,
                   letterSpacing: ".06em",
@@ -844,7 +844,7 @@ customPointObject = (obj) => {
               {item.year && (
                 <div
                   style={{
-                    fontFamily: "coolvetica, sans-serif",
+                    fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
                     fontWeight: 400,
                     fontSize: 12,
                     color: "#b1b1ae",
