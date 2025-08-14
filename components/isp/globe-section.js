@@ -64,12 +64,6 @@ function getLondonMarkers(allLocations) {
 function getNonLondonMarkers(allLocations) {
   return allLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP);
 }
-function getLondonClusterCenter(londonMarkers) {
-  if (londonMarkers.length === 0) return { lat: 51.5, lng: -0.1 };
-  const lat = londonMarkers.reduce((sum, m) => sum + m.lat, 0) / londonMarkers.length;
-  const lng = londonMarkers.reduce((sum, m) => sum + m.lon, 0) / londonMarkers.length;
-  return { lat, lng };
-}
 
 export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   // --- DATA PICKER ---
@@ -112,11 +106,15 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     return () => { mounted = false; };
   }, []);
 
-  // --- COLOR ASSIGNMENTS ---
-  const colorAssignments = useMemo(
-    () => getPaletteAssignments(data.length, 42, palette),
-    [data, palette]
-  );
+  // --- COLOR ASSIGNMENTS, DARKEN FIRST PIN ---
+  const colorAssignments = useMemo(() => {
+    const arr = getPaletteAssignments(data.length, 42, palette);
+    // Darken first pin if in world mode (for Mesopotamia)
+    if (mode === "world" && arr.length > 0) {
+      arr[0] = "#b48b7e"; // darker terracotta brown, tweak as needed
+    }
+    return arr;
+  }, [data, palette, mode]);
 
   // --- WORLD CLUSTER LOGIC ---
   const {
@@ -127,6 +125,42 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (mode === "world") {
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
+
+      // Cluster mode logic
+      const clusterMode = !londonExpanded;
+      // Hide London pins if not expanded, show cluster flag; if expanded, show pins and hide flag
+      let entries = [];
+      if (clusterMode) {
+        entries = [
+          ...nonLondonMarkers.map((marker, idx) => ({
+            ...marker,
+            idx: data.indexOf(marker),
+            clusterGroup: marker.clusterGroup,
+            isStandardPin: true
+          })),
+          // Add cluster flag (EXPAND pin)
+          ...data.filter(m => m.clusterExpand).map(marker => ({
+            ...marker,
+            idx: data.indexOf(marker),
+            isExpandPin: true
+          }))
+        ];
+      } else {
+        entries = [
+          ...nonLondonMarkers.map((marker, idx) => ({
+            ...marker,
+            idx: data.indexOf(marker),
+            clusterGroup: marker.clusterGroup,
+            isStandardPin: true
+          })),
+          ...londonMarkers.map((marker, idx) => ({
+            ...marker,
+            idx: data.indexOf(marker),
+            clusterGroup: marker.clusterGroup,
+            isStandardPin: true
+          }))
+        ];
+      }
 
       const tocList = data
         .map((marker, idx) => {
@@ -148,37 +182,45 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const flagModel = getFlagModel();
 
       // Map all pins, including "EXPAND"
-      const objectsData = data.map((marker, idx) => {
-        let isExpand = marker.clusterExpand === true;
-        return {
-          ...marker,
-          lat: marker.lat,
-          lng: marker.lon,
-          markerId: marker.name,
-          isStandardPin: !isExpand,
-          isExpandPin: isExpand,
-          idx,
-          altitude: DOT_ALTITUDE,
-          color: colorAssignments[idx],
-          label: marker.name
+      const objectsData = entries.map(obj => {
+        if (obj.isExpandPin) {
+          return {
+            ...obj,
+            lat: obj.lat,
+            lng: obj.lon,
+            markerId: obj.name,
+            isExpandPin: true,
+            altitude: DOT_ALTITUDE,
+            color: colorAssignments[obj.idx],
+            label: obj.name
+          };
         }
+        // Standard pin
+        return {
+          ...obj,
+          lat: obj.lat,
+          lng: obj.lon,
+          markerId: obj.name,
+          isStandardPin: true,
+          altitude: DOT_ALTITUDE,
+          color: colorAssignments[obj.idx],
+          label: obj.name
+        };
       });
 
       const customPointObject = (obj) => {
         // EXPAND pin: use flag, orient like a pin
         if (obj.isExpandPin && flagModel) {
           const group = new THREE.Group();
-          const scale = NORMAL_PIN_SCALE;
+          const scale = NORMAL_PIN_SCALE * 1.08; // slightly larger for cluster
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          const flag = flagModel.clone(true);
 
+          const flag = flagModel.clone(true);
           flag.scale.set(scale, scale, scale);
           orientPin(flag, markerVec);
-          positionPin(flag, -4);
-
-          // === FLIP Y and Z AXIS ===
-          flag.scale.y *= -1;
-          flag.scale.z *= -1;
+          positionPin(flag, -12); // Move closer to globe (smaller negative means closer)
+          // === FLIP X AXIS ===
+          flag.scale.x *= -1;
           // === END FLIP ===
 
           group.position.copy(markerVec);
@@ -186,18 +228,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           flag.userData = { markerId: obj.markerId, label: obj.label };
           group.add(flag);
 
-          // Hitbox for interaction
-          const width = 1.8, height = 3.5;
-          const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, 0.25);
-          const hitMat = new THREE.MeshBasicMaterial({
-            color: 0xffffff, transparent: true, opacity: 0.01, depthWrite: false,
-          });
-          const hitBox = new THREE.Mesh(hitGeom, hitMat);
-          hitBox.position.set(0, 0, 0.02);
-          hitBox.userData = { markerId: obj.markerId, label: obj.label };
-          hitBox.name = "expand-flag-hit";
-          group.add(hitBox);
-
+          // Remove hitbox for cluster flag (no visible box)
           group.userData = { markerId: obj.markerId, label: obj.label };
           group.name = "expand-flag-group";
           return group;
@@ -206,7 +237,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         // Standard pins
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
-          const scale = NORMAL_PIN_SCALE;
+          let scale = NORMAL_PIN_SCALE;
+          // Cluster scaling: London pins are smaller when expanded
+          if (obj.clusterGroup === LONDON_CLUSTER_GROUP) {
+            scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 : NORMAL_PIN_SCALE * 0.84;
+          }
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -219,23 +254,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
-          positionPin(pin, -4);
+          positionPin(pin, -6); // Move closer to globe
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Buffered hitbox
-          const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
-          const hitMat = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
-            transparent: true,
-            opacity: 0.01,
-            depthWrite: false,
-          });
-          const hitBox = new THREE.Mesh(hitGeom, hitMat);
-          hitBox.userData = { markerId: obj.markerId, label: obj.label };
-          hitBox.name = "pin-hit-area";
-          group.add(hitBox);
-
+          // Remove semi-transparent hitbox for non-clustered pins
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
@@ -293,22 +316,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
           group.position.copy(markerVec);
           orientPin(pin, markerVec);
-          positionPin(pin, -4);
+          positionPin(pin, -6);
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
-
-          // Buffered hitbox
-          const hitGeom = bufferedBoundingGeometry(pin, HITBOX_BUFFER);
-          const hitMat = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
-            transparent: true,
-            opacity: 0.01,
-            depthWrite: false,
-          });
-          const hitBox = new THREE.Mesh(hitGeom, hitMat);
-          hitBox.userData = { markerId: obj.markerId, label: obj.label };
-          hitBox.name = "pin-hit-area";
-          group.add(hitBox);
 
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
@@ -372,11 +382,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     setLondonExpanded(false);
     setHovered(null);
   }
-
-  // --- OVERLAY ---
-  // REMOVE THE BAD OVERLAY: do not render the top-fixed overlay at all!
-  // The react-globe.gl library already shows an overlay by the pin.
-  // So: no overlay code here at all.
 
   if (!pinReady || !flagReady) {
     return (
@@ -469,7 +474,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       <nav
         aria-label="Table of Contents"
         style={{
-          marginLeft: isMobile ? 0 : 18,
+          marginLeft: isMobile ? 0 : 38,
           marginRight: 0,
           marginTop: isMobile ? 12 : 0,
           minWidth: "fit-content",
@@ -484,7 +489,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           zIndex: 100,
           left: isMobile ? 0 : 0,
-          fontFamily: '"Open Sans", sans-serif'
+          fontFamily: "coolvetica, sans-serif"
         }}
       >
         <ol style={{
@@ -493,7 +498,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? 16 : 14,
+          gap: isMobile ? 14 : 12,
           width: "100%",
         }}>
           {tocList.map((item, idx) => (
@@ -501,18 +506,20 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
               width: "100%",
               marginBottom: 0,
               padding: "0 0 0 0",
+              display: "flex",
+              alignItems: "center"
             }}>
               <button
                 style={{
                   background: "none",
                   border: "none",
                   color: item.color,
-                  fontWeight: 600,
+                  fontWeight: 800,
                   fontSize: 17,
                   cursor: "pointer",
-                  fontFamily: '"Open Sans", sans-serif',
+                  fontFamily: "coolvetica, sans-serif",
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "baseline",
                   gap: 12,
                   padding: "0px 0px",
                   borderRadius: 0,
@@ -536,8 +543,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                 title={item.name}
               >
                 <span style={{
-                  fontFamily: '"Open Sans", sans-serif',
-                  fontWeight: 600,
+                  fontFamily: "coolvetica, sans-serif",
+                  fontWeight: 800,
                   fontSize: 18,
                   minWidth: 26,
                   letterSpacing: ".03em",
@@ -545,27 +552,30 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   opacity: 0.93,
                   flexShrink: 0,
                   marginRight: 10,
+                  display: "inline-block"
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
-                  fontWeight: 600,
+                  fontWeight: 800,
                   fontSize: 17,
                   letterSpacing: ".06em",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   marginRight: 0,
+                  fontFamily: "coolvetica, sans-serif"
                 }}>
                   {item.name}
                 </span>
                 {item.year && (
                   <span style={{
-                    marginLeft: 14,
+                    marginLeft: 16,
                     fontSize: 13,
                     color: "#b1b1ae",
-                    fontWeight: 400,
+                    fontWeight: 700,
                     letterSpacing: ".03em",
-                    fontFamily: '"Open Sans", sans-serif'
+                    fontFamily: "coolvetica, sans-serif",
+                    opacity: 0.88
                   }}>
                     {item.year}
                   </span>
