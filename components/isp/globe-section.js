@@ -187,7 +187,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         // Cluster flag
         if (obj.isExpandPin && flagModel) {
           const group = new THREE.Group();
-          const scale = NORMAL_PIN_SCALE * 1.09;
+          const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
           const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
           const flag = flagModel.clone(true);
