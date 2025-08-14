@@ -10,7 +10,9 @@ import {
   bufferedBoundingGeometry,
   svgStringToTexture,
   getPinPalette,
-  getPaletteAssignments
+  getPaletteAssignments,
+  loadFlagModel,     // <-- NEW
+  getFlagModel       // <-- NEW
 } from "./modal/pin-utils";
 
 // DATA FILES
@@ -106,6 +108,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false); // Only for world
   const [pinReady, setPinReady] = useState(false);
+  const [flagReady, setFlagReady] = useState(false); // <-- NEW
   const [globeReady, setGlobeReady] = useState(false);
 
   // Responsive
@@ -123,6 +126,13 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     let mounted = true;
     loadPinModel().then(() => {
       if (mounted) setPinReady(true);
+    });
+    return () => { mounted = false; };
+  }, []);
+  useEffect(() => {
+    let mounted = true;
+    loadFlagModel().then(() => {
+      if (mounted) setFlagReady(true);
     });
     return () => { mounted = false; };
   }, []);
@@ -208,41 +218,31 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }),
         ];
 
-customPointObject = (obj) => {
-  if (obj.isLondonCluster) {
-    const group = new THREE.Group();
-    // Black rectangle (solid, visible)
-    const width = 1.8;
-    const height = 3.5;
-    const geometry = new THREE.BoxGeometry(width, height, 0.21);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x000000,
-      transparent: true,
-      opacity: 0.89, // You can tweak this for more/less transparency
-    });
-    const box = new THREE.Mesh(geometry, material);
-    box.position.set(0, 0, 0);
-    box.renderOrder = 10;
-    group.add(box);
+        customPointObject = (obj) => {
+          if (obj.isLondonCluster) {
+            const group = new THREE.Group();
+            const flag = getFlagModel();
+            if (flag) {
+              flag.scale.set(1.6, 1.6, 1.6); // Adjust as needed for your globe
+              flag.position.set(0, 0, 0);
+              group.add(flag);
+            }
+            // Hitbox for interaction (same as before)
+            const width = 1.8, height = 3.5;
+            const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, 0.25);
+            const hitMat = new THREE.MeshBasicMaterial({
+              color: 0xffffff, transparent: true, opacity: 0.01, depthWrite: false,
+            });
+            const hitBox = new THREE.Mesh(hitGeom, hitMat);
+            hitBox.position.set(0, 0, 0.02);
+            hitBox.userData = { markerId: "london-cluster", label: "EXPAND" };
+            hitBox.name = "london-cluster-hit";
+            group.add(hitBox);
 
-    // Hitbox for interaction
-    const hitGeom = new THREE.BoxGeometry(width * HITBOX_BUFFER, height * HITBOX_BUFFER, 0.25);
-    const hitMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.01,
-      depthWrite: false,
-    });
-    const hitBox = new THREE.Mesh(hitGeom, hitMat);
-    hitBox.position.set(0, 0, 0.02);
-    hitBox.userData = { markerId: "london-cluster", label: "EXPAND" };
-    hitBox.name = "london-cluster-hit";
-    group.add(hitBox);
-
-    group.userData = { markerId: "london-cluster", label: "EXPAND" };
-    group.name = "london-cluster-group";
-    return group;
-  }
+            group.userData = { markerId: "london-cluster", label: "EXPAND" };
+            group.name = "london-cluster-group";
+            return group;
+          }
 
           // ALL OTHER PINS: use pin-utils helpers for hitbox etc.
           if (obj.isStandardPin && pinModel) {
@@ -467,13 +467,14 @@ customPointObject = (obj) => {
       };
       return { objectsData, linesData: [], customPointObject, customLineObject: undefined, tocList, comparisonMarkerIdx: 0 };
     }
-  }, [mode, data, palette, colorAssignments, expandSvgTex, londonExpanded, pinReady]);
+  }, [mode, data, palette, colorAssignments, expandSvgTex, londonExpanded, pinReady, flagReady]);
 
   // --- GLOBE CAMERA: ZOOM TO MODE ---
   useEffect(() => {
     if (
       globeReady &&
       pinReady &&
+      flagReady &&
       globeEl.current &&
       typeof globeEl.current.pointOfView === "function"
     ) {
@@ -481,7 +482,7 @@ customPointObject = (obj) => {
       globeEl.current.pointOfView(cam, 1200);
     }
     setLondonExpanded(false); // Reset cluster state on mode switch
-  }, [mode, globeReady, pinReady]);
+  }, [mode, globeReady, pinReady, flagReady]);
 
   // --- MARKER SCREEN POSITIONS (for SVG lines, overlays) ---
   useEffect(() => {
@@ -623,7 +624,7 @@ customPointObject = (obj) => {
     };
   }
 
-  if (!pinReady) {
+  if (!pinReady || !flagReady) {
     return (
       <section
         className="isp-globe-section"
