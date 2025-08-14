@@ -39,7 +39,7 @@ export default function BottomModeNav({ active, onChange }) {
       style={{
         width: "100vw",
         display: "flex",
-        justifyContent: "flex-start",
+        justifyContent: "space-between",
         alignItems: "center",
         gap: 44,
         marginTop: 30,
@@ -49,8 +49,8 @@ export default function BottomModeNav({ active, onChange }) {
         boxShadow: "none",
         zIndex: 120,
         position: "relative",
-        paddingLeft: 40,
-        paddingRight: 24,
+        paddingLeft: 42,
+        paddingRight: 42,
         minHeight: 64
       }}
       aria-label="Select dataset view"
