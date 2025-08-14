@@ -143,7 +143,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       } else {
         // Expanded mode: show all nonLondonMarkers and all London markers as pins (spread out London pins)
         const N = londonMarkers.length;
-        const radius = 0.18; // degrees, tweak for spread
+        const radius = 0.4; // degrees, tweak for spread
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
