@@ -473,7 +473,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? 22 : 20, // increased vertical spacing for year
+          gap: isMobile ? 15.5 : 14, // <-- Halfway between original (9/8) and previous (22/20)
           width: "100%",
         }}>
           {tocList.map((item, idx) => (
