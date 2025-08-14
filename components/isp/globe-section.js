@@ -200,7 +200,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           flag.rotateY(-Math.PI / 2);
 
           // NEW: Also rotate Z to make stick point into globe (try Math.PI/2)
-          flag.rotateZ(Math.PI / 2);
+          flag.rotateZ(-Math.PI / 2);
 
           // Position: move out a bit from globe, but not too much
           positionPin(flag, -8); // -8 is between -6 (pin) and -12 (old flag)
