@@ -40,6 +40,22 @@ export function loadPinModel() {
 export function getPinModel() {
   return pinModel;
 }
+// --- 3D FLAG MODEL LOADER ---
+let flagModel = null;
+export async function loadFlagModel() {
+  if (flagModel) return flagModel;
+  const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader');
+  const loader = new GLTFLoader();
+  return new Promise((resolve, reject) => {
+    loader.load('/models/3D_flag.glb', (gltf) => {
+      flagModel = gltf.scene;
+      resolve(flagModel);
+    }, undefined, reject);
+  });
+}
+export function getFlagModel() {
+  return flagModel ? flagModel.clone(true) : null;
+}
 
 /**
  * Converts latitude, longitude, and altitude to a THREE.Vector3 position on a sphere.
