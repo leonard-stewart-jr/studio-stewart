@@ -320,28 +320,30 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     setLondonExpanded(false);
   }, [mode, globeReady, pinReady, flagReady]);
 
-  // Cluster expand/collapse
-  const handleObjectClick = (obj) => {
-    if (obj && obj.isExpandPin) {
-      setLondonExpanded(true);
-      setHovered(null);
-      return;
-    } else if (mode === "world" && obj && getLondonMarkers(data).some(m => m.name === obj.markerId)) {
-      const marker = data.find((m) => m.name === obj.markerId);
-      if (marker) {
-        onMarkerClick(marker);
-      }
-      setLondonExpanded(false);
-      setHovered(null);
-    } else if (obj && obj.isStandardPin) {
-      const marker = data.find((m) => m.name === obj.markerId);
-      if (marker) {
-        onMarkerClick(marker);
-      }
-      setLondonExpanded(false);
-      setHovered(null);
+const handleObjectClick = (obj) => {
+  if (obj && obj.isExpandPin) {
+    setLondonExpanded(true);
+    setHovered(null);
+    return;
+  } else if (mode === "world" && obj && getLondonMarkers(data).some(m => m.name === obj.markerId)) {
+    const marker = data.find((m) => m.name === obj.markerId);
+    if (marker) {
+      onMarkerClick(marker);
     }
-  };
+    setLondonExpanded(false);
+    setHovered(null);
+  } else if (obj && obj.isStandardPin) {
+    const marker = data.find((m) => m.name === obj.markerId);
+    if (marker) {
+      onMarkerClick(marker);
+    }
+    setLondonExpanded(false);
+    setHovered(null);
+  } else if (londonExpanded) {  // <--- THIS IS THE NEW BIT
+    setLondonExpanded(false);
+    setHovered(null);
+  }
+};
 
   const handleObjectHover = (obj) => {
     setHovered(obj);
