@@ -12,12 +12,6 @@ export default [
     ]
   },
   {
-  name: "EXPAND",
-  lat: 51.512,      // Use the computed London cluster center
-  lon: -0.097,      // Use the computed London cluster center
-  clusterExpand: true // Custom property to identify it
-  },
-  {
     name: "THE MAMERTINE PRISON: POLITICAL DETENTION AND EXECUTION",
     modalWidth: 3818,
     lat: 41.8931,
@@ -141,4 +135,10 @@ export default [
       }
     ]
   }
+    {
+  name: "EXPAND",
+  lat: 51.512,      // Use the computed London cluster center
+  lon: -0.097,      // Use the computed London cluster center
+  clusterExpand: true // Custom property to identify it
+  },
 ];
