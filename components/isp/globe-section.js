@@ -199,7 +199,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           // Manual tweak: rotate flag -90deg around Y to get flag banner orientation
           flag.rotateY(-Math.PI / 2);
 
-          // NEW: Also rotate Z to make stick point into globe (try Math.PI/2)
+          // Flip Z axis so stick points out of globe, not in
           flag.rotateZ(-Math.PI / 2);
 
           // Position: move out a bit from globe, but not too much
@@ -445,7 +445,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           onGlobeReady={() => setGlobeReady(true)}
         />
       </div>
-      {/* TOC styled to match navbar - now left aligned */}
+      {/* TOC styled to match navbar - now with year below title, perfectly left aligned, and more vertical space */}
       <nav
         aria-label="Table of Contents"
         style={{
@@ -473,7 +473,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? 9 : 8,
+          gap: isMobile ? 22 : 20, // increased vertical spacing for year
           width: "100%",
         }}>
           {tocList.map((item, idx) => (
@@ -482,7 +482,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
               marginBottom: 0,
               padding: "0 0 0 0",
               display: "flex",
-              alignItems: "center"
+              alignItems: "flex-start"
             }}>
               <button
                 style={{
@@ -494,23 +494,23 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   cursor: "pointer",
                   fontFamily: "coolvetica, sans-serif",
                   display: "flex",
-                  alignItems: "baseline",
+                  alignItems: "flex-start",
                   gap: 10,
                   padding: "0px 0px",
                   borderRadius: 0,
                   width: "100%",
-                  minHeight: 24,
+                  minHeight: 32,
                   boxShadow: "none",
-                  lineHeight: 1.04,
+                  lineHeight: 1.18,
                   textTransform: "uppercase",
                   letterSpacing: "0.5px",
                   overflow: "hidden",
-                  whiteSpace: "nowrap",
+                  whiteSpace: "normal",
                   textOverflow: "ellipsis",
                   transition: "color 0.12s, background 0.12s",
                   marginLeft: 0,
-                  justifyContent: "flex-start", // left align
-                  textAlign: "left", // left align
+                  justifyContent: "flex-start",
+                  textAlign: "left"
                 }}
                 onClick={() => handleTOCClick(item.marker)}
                 onMouseEnter={() => setHovered({ ...item.marker, idx, label: item.name, markerId: item.marker.markerId })}
@@ -519,11 +519,12 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                 aria-label={`Jump to ${item.name}`}
                 title={item.name}
               >
+                {/* Roman numeral: min width so titles always align */}
                 <span style={{
                   fontFamily: "coolvetica, sans-serif",
                   fontWeight: 400,
                   fontSize: 14,
-                  minWidth: 20,
+                  minWidth: 26,
                   letterSpacing: "0.5px",
                   color: item.color,
                   opacity: 0.93,
@@ -532,34 +533,41 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   display: "inline-block",
                   textAlign: "left"
                 }}>{item.roman}.</span>
+                {/* Title + year column */}
                 <span style={{
                   flex: 1,
-                  fontWeight: 400,
-                  fontSize: 14,
-                  letterSpacing: "0.5px",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  marginRight: 0,
-                  fontFamily: "coolvetica, sans-serif",
-                  textAlign: "left"
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  textAlign: "left",
+                  minWidth: 0
                 }}>
-                  {item.name}
-                </span>
-                {item.year && (
                   <span style={{
-                    marginLeft: 14,
-                    fontSize: 13,
-                    color: "#b1b1ae",
                     fontWeight: 400,
+                    fontSize: 14,
                     letterSpacing: "0.5px",
-                    fontFamily: "coolvetica, sans-serif",
-                    opacity: 0.95,
-                    textAlign: "left"
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    fontFamily: "coolvetica, sans-serif"
                   }}>
-                    {item.year}
+                    {item.name}
                   </span>
-                )}
+                  {item.year && (
+                    <span style={{
+                      marginTop: 2,
+                      fontSize: 13,
+                      color: "#b1b1ae",
+                      fontWeight: 400,
+                      letterSpacing: "0.5px",
+                      fontFamily: "coolvetica, sans-serif",
+                      opacity: 0.95,
+                      textAlign: "left"
+                    }}>
+                      {item.year}
+                    </span>
+                  )}
+                </span>
               </button>
             </li>
           ))}
