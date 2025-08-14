@@ -21,7 +21,7 @@ import sdEvents from "../../data/sd-events";
 // --- CONSTANTS AND CONFIGURATION ---
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
-const NORMAL_PIN_SCALE = 9 * 1.5;
+const NORMAL_PIN_SCALE = 9 * 1;
 const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
 
