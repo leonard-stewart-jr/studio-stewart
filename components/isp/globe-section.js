@@ -196,8 +196,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           // Orient flag exactly like the pins
           orientPin(flag, markerVec);
 
-          // Manual tweak: rotate flag -90deg around Y to align stick like pin
+          // Manual tweak: rotate flag -90deg around Y to get flag banner orientation
           flag.rotateY(-Math.PI / 2);
+
+          // NEW: Also rotate Z to make stick point into globe (try Math.PI/2)
+          flag.rotateZ(Math.PI / 2);
 
           // Position: move out a bit from globe, but not too much
           positionPin(flag, -8); // -8 is between -6 (pin) and -12 (old flag)
@@ -442,7 +445,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           onGlobeReady={() => setGlobeReady(true)}
         />
       </div>
-      {/* TOC styled to match navbar */}
+      {/* TOC styled to match navbar - now left aligned */}
       <nav
         aria-label="Table of Contents"
         style={{
@@ -506,6 +509,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   textOverflow: "ellipsis",
                   transition: "color 0.12s, background 0.12s",
                   marginLeft: 0,
+                  justifyContent: "flex-start", // left align
+                  textAlign: "left", // left align
                 }}
                 onClick={() => handleTOCClick(item.marker)}
                 onMouseEnter={() => setHovered({ ...item.marker, idx, label: item.name, markerId: item.marker.markerId })}
@@ -524,7 +529,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   opacity: 0.93,
                   flexShrink: 0,
                   marginRight: 6,
-                  display: "inline-block"
+                  display: "inline-block",
+                  textAlign: "left"
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
@@ -535,7 +541,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   marginRight: 0,
-                  fontFamily: "coolvetica, sans-serif"
+                  fontFamily: "coolvetica, sans-serif",
+                  textAlign: "left"
                 }}>
                   {item.name}
                 </span>
@@ -547,7 +554,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                     fontWeight: 400,
                     letterSpacing: "0.5px",
                     fontFamily: "coolvetica, sans-serif",
-                    opacity: 0.95
+                    opacity: 0.95,
+                    textAlign: "left"
                   }}>
                     {item.year}
                   </span>
