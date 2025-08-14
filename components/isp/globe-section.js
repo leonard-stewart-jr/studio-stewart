@@ -24,6 +24,7 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const NORMAL_PIN_SCALE = 9 * 1.3;
 const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
+const UK_FLAG_URL = "https://upload.wikimedia.org/wikipedia/commons/a/ae/Flag_of_the_United_Kingdom.svg"; // Or host your own!
 
 const CAMERA_CONFIGS = {
   world: { lat: 20, lng: 0, altitude: 2.5 },
@@ -71,6 +72,17 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   const [flagReady, setFlagReady] = useState(false);
   const [globeReady, setGlobeReady] = useState(false);
 
+  // UK flag texture (for expand pin)
+  const [ukFlagTexture, setUkFlagTexture] = useState(null);
+  useEffect(() => {
+    // Only load for world mode
+    if (mode !== "world") return;
+    const loader = new THREE.TextureLoader();
+    loader.load(UK_FLAG_URL, (tex) => {
+      setUkFlagTexture(tex);
+    });
+  }, [mode]);
+
   // Responsive
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -108,6 +120,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
 
+      // Find the London cluster center (the expand marker)
+      const clusterExpandMarker = data.find(m => m.clusterExpand);
+      const clusterLat = clusterExpandMarker ? clusterExpandMarker.lat : 51.512;
+      const clusterLon = clusterExpandMarker ? clusterExpandMarker.lon : -0.097;
+
       let entries = [];
       if (!londonExpanded) {
         // Cluster mode: only nonLondonMarkers and the expand marker (flag)
@@ -124,19 +141,29 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }))
         ];
       } else {
-        // Expanded mode: show all nonLondonMarkers and all London markers as pins
+        // Expanded mode: show all nonLondonMarkers and all London markers as pins (spread out London pins)
+        const N = londonMarkers.length;
+        const radius = 0.18; // degrees, tweak for spread
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
             idx: data.indexOf(marker),
             isStandardPin: true
           })),
-          ...londonMarkers.map(marker => ({
-            ...marker,
-            idx: data.indexOf(marker),
-            isStandardPin: true,
-            isLondon: true
-          }))
+          ...londonMarkers.map((marker, i) => {
+            // Spread in a circle
+            const angle = (2 * Math.PI * i) / N;
+            const lat = clusterLat + radius * Math.cos(angle);
+            const lon = clusterLon + radius * Math.sin(angle);
+            return {
+              ...marker,
+              idx: data.indexOf(marker),
+              isStandardPin: true,
+              isLondon: true,
+              lat, // Overwrite lat/lon to spread
+              lon
+            };
+          })
         ];
       }
 
@@ -199,6 +226,36 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             const flag = flagModel.clone(true);
             flag.scale.set(scale, scale, scale);
 
+            // Apply UK flag texture to banner part (assume it's the biggest Mesh, fallback to all)
+            if (ukFlagTexture) {
+              let bannerMesh = null;
+              flag.traverse(child => {
+                if (child.isMesh) {
+                  if (!bannerMesh || child.geometry.boundingBox?.getSize(new THREE.Vector3()).lengthSq() > bannerMesh.geometry.boundingBox?.getSize(new THREE.Vector3()).lengthSq()) {
+                    bannerMesh = child;
+                  }
+                }
+              });
+              if (bannerMesh) {
+                bannerMesh.material = new THREE.MeshStandardMaterial({
+                  map: ukFlagTexture,
+                  roughness: 0.42,
+                  metalness: 0.06
+                });
+              } else {
+                // fallback: apply to all meshes
+                flag.traverse(child => {
+                  if (child.isMesh) {
+                    child.material = new THREE.MeshStandardMaterial({
+                      map: ukFlagTexture,
+                      roughness: 0.42,
+                      metalness: 0.06
+                    });
+                  }
+                });
+              }
+            }
+
             orientPin(flag, markerVec);
             flag.rotateY(-Math.PI / 2);
             flag.rotateZ(-Math.PI / 2);
@@ -219,8 +276,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE;
           if (obj.isLondon) {
-          scale = NORMAL_PIN_SCALE * 0.75;
-        }
+            scale = NORMAL_PIN_SCALE * 0.75;
+          }
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -303,7 +360,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       };
       return { objectsData, customPointObject, tocList };
     }
-  }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
+  }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady, ukFlagTexture]);
 
   // Camera to mode
   useEffect(() => {
