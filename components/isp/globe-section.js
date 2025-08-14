@@ -157,96 +157,86 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const pinModel = getPinModel();
       const flagModel = getFlagModel();
 
-      const objectsData = entries.map(obj => {
-        // Only return an "expand" object for the flag, NOT a pin for expand marker
-        if (obj.isExpandPin) {
-          return {
-            ...obj,
-            lat: obj.lat,
-            lng: obj.lon,
-            markerId: obj.name,
-            isExpandPin: true,
-            altitude: DOT_ALTITUDE,
-            color: colorAssignments[obj.idx],
-            label: obj.name
-          };
-        }
-        // Standard pins
-        return {
-          ...obj,
-          lat: obj.lat,
-          lng: obj.lon,
-          markerId: obj.name,
-          isStandardPin: true,
-          isLondon: !!obj.isLondon,
-          altitude: DOT_ALTITUDE,
-          color: colorAssignments[obj.idx],
-          label: obj.name
-        };
-      });
+const objectsData = entries.map(obj => {
+  if (obj.isExpandPin) {
+    return {
+      ...obj,
+      lat: obj.lat,
+      lng: obj.lon,
+      markerId: obj.name,
+      isExpandPin: true,
+      altitude: DOT_ALTITUDE,
+      color: colorAssignments[obj.idx],
+      label: obj.name
+    };
+  }
+  // Only standard pins get isStandardPin
+  return {
+    ...obj,
+    lat: obj.lat,
+    lng: obj.lon,
+    markerId: obj.name,
+    isStandardPin: true,
+    isLondon: !!obj.isLondon,
+    altitude: DOT_ALTITUDE,
+    color: colorAssignments[obj.idx],
+    label: obj.name
+  };
+});
 
-      const customPointObject = (obj) => {
-        // Cluster flag only (no pin for expand marker!)
-        if (obj.isExpandPin && flagModel) {
-          const group = new THREE.Group();
-          const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
-          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+const customPointObject = (obj) => {
+  // Only render flag for expand pin, never a pin
+  if (obj.isExpandPin) {
+    if (flagModel) {
+      const group = new THREE.Group();
+      const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
+      const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
 
-          const flag = flagModel.clone(true);
-          flag.scale.set(scale, scale, scale);
+      const flag = flagModel.clone(true);
+      flag.scale.set(scale, scale, scale);
 
-          // Orient flag exactly like the pins
-          orientPin(flag, markerVec);
+      orientPin(flag, markerVec);
+      flag.rotateY(-Math.PI / 2);
+      flag.rotateZ(-Math.PI / 2);
+      positionPin(flag, -8);
 
-          // Manual tweak: rotate flag -90deg around Y to get flag banner orientation
-          flag.rotateY(-Math.PI / 2);
-
-          // Flip Z axis so stick points out of globe, not in
-          flag.rotateZ(-Math.PI / 2);
-
-          // Position: move out a bit from globe, but not too much
-          positionPin(flag, -8); // -8 is between -6 (pin) and -12 (old flag)
-
-          group.position.copy(markerVec);
-          flag.userData = { markerId: obj.markerId, label: obj.label };
-          group.add(flag);
-          group.userData = { markerId: obj.markerId, label: obj.label };
-          group.name = "expand-flag-group";
-          return group;
-        }
-        // Prevent any pin for expand marker (no 3D pin for expand marker)
-        if (obj.isExpandPin) {
-          return new THREE.Object3D();
-        }
-
-        // Standard pins
-        if (obj.isStandardPin && pinModel) {
-          const group = new THREE.Group();
-          let scale = NORMAL_PIN_SCALE;
-          // Smaller for London pins (clustered or expanded)
-          if (obj.isLondon) {
-            scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
-          }
-          const pin = pinModel.clone(true);
-          pin.traverse((child) => {
-            if (child.isMesh) {
-              child.castShadow = false;
-              child.material = child.material.clone();
-              child.material.color.set(obj.color || "#b32c2c");
-            }
-          });
-          pin.scale.set(scale, scale, scale);
-          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          group.position.copy(markerVec);
-          orientPin(pin, markerVec);
-          positionPin(pin, -6);
-          pin.userData = { markerId: obj.markerId, label: obj.label };
-          group.add(pin);
-          group.userData = { markerId: obj.markerId, label: obj.label };
-          return group;
-        }
-        return new THREE.Object3D();
-      };
+      group.position.copy(markerVec);
+      flag.userData = { markerId: obj.markerId, label: obj.label };
+      group.add(flag);
+      group.userData = { markerId: obj.markerId, label: obj.label };
+      group.name = "expand-flag-group";
+      return group;
+    }
+    // Flag not ready: do NOT render anything
+    return new THREE.Object3D();
+  }
+  // Standard pins only
+  if (obj.isStandardPin && pinModel) {
+    const group = new THREE.Group();
+    let scale = NORMAL_PIN_SCALE;
+    if (obj.isLondon) {
+      scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
+    }
+    const pin = pinModel.clone(true);
+    pin.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = false;
+        child.material = child.material.clone();
+        child.material.color.set(obj.color || "#b32c2c");
+      }
+    });
+    pin.scale.set(scale, scale, scale);
+    const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+    group.position.copy(markerVec);
+    orientPin(pin, markerVec);
+    positionPin(pin, -6);
+    pin.userData = { markerId: obj.markerId, label: obj.label };
+    group.add(pin);
+    group.userData = { markerId: obj.markerId, label: obj.label };
+    return group;
+  }
+  return new THREE.Object3D();
+};
 
       return { objectsData, customPointObject, tocList };
     } else {
