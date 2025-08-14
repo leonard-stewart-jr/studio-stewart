@@ -158,6 +158,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const flagModel = getFlagModel();
 
       const objectsData = entries.map(obj => {
+        // Only return an "expand" object for the flag, NOT a pin for expand marker
         if (obj.isExpandPin) {
           return {
             ...obj,
@@ -170,6 +171,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             label: obj.name
           };
         }
+        // Standard pins
         return {
           ...obj,
           lat: obj.lat,
@@ -184,7 +186,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       });
 
       const customPointObject = (obj) => {
-        // Cluster flag
+        // Cluster flag only (no pin for expand marker!)
         if (obj.isExpandPin && flagModel) {
           const group = new THREE.Group();
           const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
@@ -212,15 +214,19 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           group.name = "expand-flag-group";
           return group;
         }
+        // Prevent any pin for expand marker (no 3D pin for expand marker)
+        if (obj.isExpandPin) {
+          return new THREE.Object3D();
+        }
 
         // Standard pins
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE;
           // Smaller for London pins (clustered or expanded)
-        if (obj.isLondon) {
-        scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
-      }
+          if (obj.isLondon) {
+            scale = londonExpanded ? NORMAL_PIN_SCALE * 0.89 * 0.5 : NORMAL_PIN_SCALE * 0.72 * 0.5;
+          }
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -320,30 +326,30 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     setLondonExpanded(false);
   }, [mode, globeReady, pinReady, flagReady]);
 
-const handleObjectClick = (obj) => {
-  if (obj && obj.isExpandPin) {
-    setLondonExpanded(true);
-    setHovered(null);
-    return;
-  } else if (mode === "world" && obj && getLondonMarkers(data).some(m => m.name === obj.markerId)) {
-    const marker = data.find((m) => m.name === obj.markerId);
-    if (marker) {
-      onMarkerClick(marker);
+  const handleObjectClick = (obj) => {
+    if (obj && obj.isExpandPin) {
+      setLondonExpanded(true);
+      setHovered(null);
+      return;
+    } else if (mode === "world" && obj && getLondonMarkers(data).some(m => m.name === obj.markerId)) {
+      const marker = data.find((m) => m.name === obj.markerId);
+      if (marker) {
+        onMarkerClick(marker);
+      }
+      setLondonExpanded(false);
+      setHovered(null);
+    } else if (obj && obj.isStandardPin) {
+      const marker = data.find((m) => m.name === obj.markerId);
+      if (marker) {
+        onMarkerClick(marker);
+      }
+      setLondonExpanded(false);
+      setHovered(null);
+    } else if (londonExpanded) {
+      setLondonExpanded(false);
+      setHovered(null);
     }
-    setLondonExpanded(false);
-    setHovered(null);
-  } else if (obj && obj.isStandardPin) {
-    const marker = data.find((m) => m.name === obj.markerId);
-    if (marker) {
-      onMarkerClick(marker);
-    }
-    setLondonExpanded(false);
-    setHovered(null);
-  } else if (londonExpanded) {  // <--- THIS IS THE NEW BIT
-    setLondonExpanded(false);
-    setHovered(null);
-  }
-};
+  };
 
   const handleObjectHover = (obj) => {
     setHovered(obj);
@@ -475,7 +481,7 @@ const handleObjectClick = (obj) => {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? 15.5 : 14, // <-- Halfway between original (9/8) and previous (22/20)
+          gap: isMobile ? 15.5 : 14,
           width: "100%",
         }}>
           {tocList.map((item, idx) => (
