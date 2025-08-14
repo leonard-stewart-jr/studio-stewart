@@ -8,7 +8,6 @@ import {
   getPinModel,
   positionPin,
   bufferedBoundingGeometry,
-  svgStringToTexture,
   getPinPalette,
   getPaletteAssignments,
   loadFlagModel,
@@ -129,19 +128,21 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
 
-      const tocList = data.map((marker, idx) => {
-        let year = "";
-        if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
-          year = marker.timeline[0].year;
-        return {
-          idx,
-          roman: toRoman(idx + 1),
-          name: marker.name,
-          marker,
-          year,
-          color: colorAssignments[idx]
-        }
-      });
+      const tocList = data
+        .map((marker, idx) => {
+          let year = "";
+          if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
+            year = marker.timeline[0].year;
+          return {
+            idx,
+            roman: toRoman(idx + 1),
+            name: marker.name,
+            marker,
+            year,
+            color: colorAssignments[idx]
+          }
+        })
+        .filter(item => !item.marker.clusterExpand); // REMOVE EXPAND FROM TOC
 
       const pinModel = getPinModel();
       const flagModel = getFlagModel();
@@ -367,8 +368,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   }
 
   // --- OVERLAY ---
-  const showPinOverlay = hovered && (hovered.label || hovered.name);
-  let overlayText = hovered?.label || hovered?.name;
+  // REMOVE THE BAD OVERLAY: do not render the top-fixed overlay at all!
+  // The react-globe.gl library already shows an overlay by the pin.
+  // So: no overlay code here at all.
 
   if (!pinReady || !flagReady) {
     return (
@@ -457,37 +459,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           onObjectHover={handleObjectHover}
           onGlobeReady={() => setGlobeReady(true)}
         />
-        {showPinOverlay && (
-          <div
-            style={{
-              position: "fixed",
-              left: "50%",
-              top: 80,
-              zIndex: 9999,
-              pointerEvents: "none",
-              background: "rgba(0,0,0,0.91)",
-              color: "#fff",
-              borderRadius: 4,
-              padding: "8px 18px",
-              fontFamily: "coolvetica, sans-serif",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: ".03em",
-              textTransform: "uppercase",
-              opacity: 1,
-              transition: "opacity 0.15s",
-              transform: "translate(-50%, 0)",
-              lineHeight: 1.17,
-              textAlign: "center",
-              userSelect: "none",
-              boxShadow: "none",
-              border: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {overlayText}
-          </div>
-        )}
       </div>
       <nav
         aria-label="Table of Contents"
@@ -496,7 +467,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           marginRight: 0,
           marginTop: isMobile ? 12 : 0,
           minWidth: "fit-content",
-          maxWidth: isMobile ? "100%" : 315,
+          maxWidth: isMobile ? "100%" : 400,
           width: "fit-content",
           display: "flex",
           flexDirection: "column",
@@ -515,91 +486,83 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? 7 : 6,
+          gap: isMobile ? 11 : 9,
           width: "100%",
         }}>
           {tocList.map((item, idx) => (
-            <li key={item.name} style={{ width: "100%", marginBottom: 0 }}>
+            <li key={item.name} style={{
+              width: "100%",
+              marginBottom: 0,
+              padding: "0 0 0 0",
+            }}>
               <button
                 style={{
-                  background: "none",
-                  border: "none",
+                  background: "rgba(255,255,255,0.95)",
+                  border: "2px solid #e6dbb9",
                   color: item.color,
-                  fontWeight: 600,
-                  fontSize: 14,
+                  fontWeight: 700,
+                  fontSize: 17,
                   cursor: "pointer",
-                  fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
+                  fontFamily: "coolvetica, 'Open Sans', Arial, sans-serif",
                   display: "flex",
-                  alignItems: "flex-start",
-                  gap: 8,
-                  padding: "1.5px 0 1.5px 0",
-                  borderRadius: 4,
-                  width: "fit-content",
-                  textAlign: "left",
-                  lineHeight: 1.17,
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "12px 24px",
+                  borderRadius: 8,
+                  width: "100%",
+                  minHeight: 48,
+                  boxShadow: "0 2px 10px #e6dbb966",
+                  lineHeight: 1.18,
                   textTransform: "uppercase",
                   letterSpacing: ".06em",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
-                  transition: "color 0.14s",
+                  transition: "color 0.14s, box-shadow 0.14s, background 0.14s",
                   marginLeft: 0,
                 }}
                 onClick={() => handleTOCClick(item.marker)}
-                onMouseEnter={() => setHovered({ name: item.name, year: item.year, idx, label: item.name, markerId: item.marker.markerId })}
+                onMouseEnter={() => setHovered({ ...item.marker, idx, label: item.name, markerId: item.marker.markerId })}
                 onMouseLeave={() => setHovered(null)}
                 tabIndex={0}
                 aria-label={`Jump to ${item.name}`}
                 title={item.name}
               >
                 <span style={{
-                  fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 16,
-                  minWidth: 18,
+                  fontFamily: "coolvetica, 'Open Sans', Arial, sans-serif",
+                  fontWeight: 900,
+                  fontSize: 18,
+                  minWidth: 26,
                   letterSpacing: ".03em",
-                  marginRight: 2,
-                  color: item.color,
+                  color: "#b32c2c",
                   opacity: 0.93,
                   flexShrink: 0,
+                  marginRight: 6,
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
-                  fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
-                  fontWeight: 600,
-                  fontSize: 16,
+                  fontWeight: 700,
+                  fontSize: 17,
                   letterSpacing: ".06em",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   marginRight: 0,
-                  marginBottom: 0,
                 }}>
                   {item.name}
                 </span>
-              </button>
-              {item.year && (
-                <div
-                  style={{
-                    fontFamily: "coolvetica-condensed, coolvetica, 'Open Sans', Arial, sans-serif",
-                    fontWeight: 400,
-                    fontSize: 12,
+                {item.year && (
+                  <span style={{
+                    marginLeft: 14,
+                    fontSize: 13,
                     color: "#b1b1ae",
+                    fontWeight: 400,
                     letterSpacing: ".03em",
-                    marginLeft: 27,
-                    lineHeight: 1.18,
-                    marginTop: 0,
-                    marginBottom: 1,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    textTransform: "none",
-                    maxWidth: 235,
-                  }}
-                >
-                  {item.year}
-                </div>
-              )}
+                  }}>
+                    {item.year}
+                  </span>
+                )}
+              </button>
             </li>
           ))}
         </ol>
