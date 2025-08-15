@@ -25,11 +25,6 @@ const NORMAL_PIN_SCALE = 9 * 1.5;
 const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
 
-const CAMERA_CONFIGS = {
-  world: { lat: 20, lng: 0, altitude: 0.1 },
-  usa:   { lat: 39.8283, lng: -98.5795, altitude: 0.37 },
-  sd:    { lat: 44.5, lng: -100, altitude: 0.17 }
-};
 const GLOBE_IMAGES = {
   world: "/images/globe/world-hd.jpg",
   usa: "/images/globe/usa-hd.jpg",
