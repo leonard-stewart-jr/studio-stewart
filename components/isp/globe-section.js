@@ -421,7 +421,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         style={{
           flex: "0 1 auto",
           width: 1050,
-          height: 750,
+          height: 1000,
           maxWidth: 1050,
           minWidth: 340,
           display: "flex",
@@ -443,7 +443,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           atmosphereAltitude={0.3}
           backgroundColor="rgba(0,0,0,0)"
           width={2000}
-          height={1100}
+          height={1050}
           pointsData={[]} 
           pointLat="lat"
           pointLng="lng"
