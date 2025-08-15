@@ -421,7 +421,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         style={{
           flex: "0 1 auto",
           width: 1050,
-          height: 825,
+          height: 845,
           maxWidth: 1050,
           minWidth: 340,
           display: "flex",
