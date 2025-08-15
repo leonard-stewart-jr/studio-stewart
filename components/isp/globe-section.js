@@ -24,7 +24,6 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 const NORMAL_PIN_SCALE = 9 * 1.3;
 const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
-const UK_FLAG_URL = "https://upload.wikimedia.org/wikipedia/commons/a/ae/Flag_of_the_United_Kingdom.svg"; // Or host your own!
 
 const CAMERA_CONFIGS = {
   world: { lat: 20, lng: 0, altitude: 2.5 },
