@@ -315,8 +315,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
-  // ======= NO CAMERA RESET EFFECT HERE AT ALL =======
-
   const handleObjectClick = (obj) => {
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
@@ -387,7 +385,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         background: "transparent",
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
-        alignItems: "center",
+        alignItems: "stretch",
         justifyContent: "center",
         paddingTop: 0,
         paddingBottom: 0,
@@ -398,9 +396,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         marginTop: 57,
       }}
     >
+      {/* Globe and TOC are now completely separated and fixed */}
       <div
         style={{
-          flex: "0 1 auto",
+          flex: "0 0 auto",
           width: 1050,
           height: 845,
           maxWidth: 1050,
@@ -444,16 +443,13 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           onGlobeReady={() => setGlobeReady(true)}
         />
       </div>
-      {/* TOC styled to match navbar - now with year below title, perfectly left aligned, and more vertical space */}
       <nav
         aria-label="Table of Contents"
         style={{
-          marginLeft: isMobile ? 0 : 38,
-          marginRight: 0,
-          marginTop: isMobile ? 12 : 0,
-          minWidth: "fit-content",
+          flex: "0 0 auto",
+          minWidth: 220,
           maxWidth: isMobile ? "100%" : 540,
-          width: "fit-content",
+          width: isMobile ? "100%" : 340,
           display: "flex",
           flexDirection: "column",
           alignItems: isMobile ? "center" : "flex-start",
@@ -518,7 +514,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                 aria-label={`Jump to ${item.name}`}
                 title={item.name}
               >
-                {/* Roman numeral: min width so titles always align */}
                 <span style={{
                   fontFamily: "coolvetica, sans-serif",
                   fontWeight: 400,
@@ -532,7 +527,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   display: "inline-block",
                   textAlign: "left"
                 }}>{item.roman}.</span>
-                {/* Title + year column */}
                 <span style={{
                   flex: 1,
                   display: "flex",
