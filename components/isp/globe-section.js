@@ -216,8 +216,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
             // Orient the flag so that its "banner" is upright on the globe
             orientPin(flag, markerVec);
-            flag.rotateZ(Math.PI / 2);
-            flag.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+            flag.rotateZ(Math.PI);
             positionPin(flag, -8);
 
             group.position.copy(markerVec);
