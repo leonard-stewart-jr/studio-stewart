@@ -71,17 +71,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   const [flagReady, setFlagReady] = useState(false);
   const [globeReady, setGlobeReady] = useState(false);
 
-  // UK flag texture (for expand pin)
-  const [ukFlagTexture, setUkFlagTexture] = useState(null);
-  useEffect(() => {
-    // Only load for world mode
-    if (mode !== "world") return;
-    const loader = new THREE.TextureLoader();
-    loader.load(UK_FLAG_URL, (tex) => {
-      setUkFlagTexture(tex);
-    });
-  }, [mode]);
-
   // Responsive
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -225,39 +214,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             const flag = flagModel.clone(true);
             flag.scale.set(scale, scale, scale);
 
-            // Apply UK flag texture to banner part (assume it's the biggest Mesh, fallback to all)
-            if (ukFlagTexture) {
-              let bannerMesh = null;
-              flag.traverse(child => {
-                if (child.isMesh) {
-                  if (!bannerMesh || child.geometry.boundingBox?.getSize(new THREE.Vector3()).lengthSq() > bannerMesh.geometry.boundingBox?.getSize(new THREE.Vector3()).lengthSq()) {
-                    bannerMesh = child;
-                  }
-                }
-              });
-              if (bannerMesh) {
-                bannerMesh.material = new THREE.MeshStandardMaterial({
-                  map: ukFlagTexture,
-                  roughness: 0.42,
-                  metalness: 0.06
-                });
-              } else {
-                // fallback: apply to all meshes
-                flag.traverse(child => {
-                  if (child.isMesh) {
-                    child.material = new THREE.MeshStandardMaterial({
-                      map: ukFlagTexture,
-                      roughness: 0.42,
-                      metalness: 0.06
-                    });
-                  }
-                });
-              }
-            }
-
+            // Orient the flag so that its "banner" is upright on the globe
             orientPin(flag, markerVec);
-            flag.rotateX(Math.PI / 2);
-        
+            flag.rotateX(Math.PI / 2); // Axis fix if Y/Z are flipped in your model
+
             positionPin(flag, -8);
 
             group.position.copy(markerVec);
@@ -359,7 +319,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       };
       return { objectsData, customPointObject, tocList };
     }
-  }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady, ukFlagTexture]);
+  }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
   // Camera to mode
   useEffect(() => {
