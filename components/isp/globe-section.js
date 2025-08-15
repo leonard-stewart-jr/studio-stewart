@@ -420,9 +420,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       <div
         style={{
           flex: "0 1 auto",
-          width: 950,
-          height: 700,
-          maxWidth: 950,
+          width: 1050,
+          height: 800,
+          maxWidth: 1050,
           minWidth: 340,
           display: "flex",
           justifyContent: "center",
