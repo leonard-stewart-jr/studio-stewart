@@ -26,7 +26,7 @@ const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
 
 const CAMERA_CONFIGS = {
-  world: { lat: 20, lng: 0, altitude: 2.0 },
+  world: { lat: 20, lng: 0, altitude: 1.0 },
   usa:   { lat: 39.8283, lng: -98.5795, altitude: 0.6 },
   sd:    { lat: 44.5, lng: -100, altitude: 0.2 }
 };
