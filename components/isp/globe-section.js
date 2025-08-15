@@ -216,8 +216,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
             // Orient the flag so that its "banner" is upright on the globe
             orientPin(flag, markerVec);
-            flag.rotateY(Math.PI); // Axis fix if Y/Z are flipped in your model
+            flag.rotateY(-Math.PI / 2); // Axis fix if Y/Z are flipped in your model
             flag.rotateX(Math.PI / 2);
+            flag.rotatez(Math.PI / 2);
             positionPin(flag, -8);
 
             group.position.copy(markerVec);
