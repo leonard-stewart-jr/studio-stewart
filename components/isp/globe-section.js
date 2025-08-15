@@ -18,7 +18,7 @@ import globeLocations from "../../data/globe-locations";
 import usaLocations from "../../data/usa-locations";
 import sdEvents from "../../data/sd-events";
 
-// --- DYNAMIC GLOBE ---
+// --- CONSTANTS AND CONFIGURATION ---
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const NORMAL_PIN_SCALE = 9 * 1.5;
@@ -26,9 +26,9 @@ const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
 
 const CAMERA_CONFIGS = {
-  world: { lat: 20, lng: 0, altitude: 0.12 },
-  usa:   { lat: 39.8283, lng: -98.5795, altitude: 0.22 },
-  sd:    { lat: 44.5, lng: -100, altitude: 0.11 }
+  world: { lat: 20, lng: 0, altitude: 0.1 },
+  usa:   { lat: 39.8283, lng: -98.5795, altitude: 0.37 },
+  sd:    { lat: 44.5, lng: -100, altitude: 0.17 }
 };
 const GLOBE_IMAGES = {
   world: "/images/globe/world-hd.jpg",
@@ -60,13 +60,16 @@ function getNonLondonMarkers(allLocations) {
 }
 
 export default function GlobeSection({ onMarkerClick, mode = "world" }) {
-  const [pinReady, setPinReady] = useState(false);
-  const [flagReady, setFlagReady] = useState(false);
-  const [londonExpanded, setLondonExpanded] = useState(false);
-  const [hovered, setHovered] = useState(null);
-  const [globeReady, setGlobeReady] = useState(false);
+  const data = mode === "world" ? globeLocations : mode === "usa" ? usaLocations : sdEvents;
+  const palette = useMemo(() => getPinPalette(mode), [mode]);
+  const globeImageUrl = GLOBE_IMAGES[mode];
 
   const globeEl = useRef();
+  const [hovered, setHovered] = useState(null);
+  const [londonExpanded, setLondonExpanded] = useState(false);
+  const [pinReady, setPinReady] = useState(false);
+  const [flagReady, setFlagReady] = useState(false);
+  const [globeReady, setGlobeReady] = useState(false);
 
   // Responsive
   const [isMobile, setIsMobile] = useState(false);
@@ -82,33 +85,37 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   useEffect(() => {
     let mounted = true;
     loadPinModel().then(() => { if (mounted) setPinReady(true); });
+    return () => { mounted = false; };
+  }, []);
+  useEffect(() => {
+    let mounted = true;
     loadFlagModel().then(() => { if (mounted) setFlagReady(true); });
     return () => { mounted = false; };
   }, []);
 
-  // Common pin color logic (for all modes)
-  function getColorAssignments(data, palette, mode) {
+  // Pin colors: darken Mesopotamia
+  const colorAssignments = useMemo(() => {
     const arr = getPaletteAssignments(data.length, 42, palette);
     if (mode === "world" && arr.length > 0) {
       arr[0] = "#8f6c5c"; // darker, readable terracotta brown
     }
     return arr;
-  }
+  }, [data, palette, mode]);
 
-  // Data, palette, toc, and objects per mode
-  const { data, palette, colorAssignments, objectsData, customPointObject, tocList } = useMemo(() => {
-    let data, palette, colorAssignments, tocList, objectsData, customPointObject;
+  // --- Cluster logic ---
+  const { objectsData, customPointObject, tocList } = useMemo(() => {
     if (mode === "world") {
-      data = globeLocations;
-      palette = getPinPalette("world");
-      colorAssignments = getColorAssignments(data, palette, "world");
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
+
+      // Find the London cluster center (the expand marker)
       const clusterExpandMarker = data.find(m => m.clusterExpand);
       const clusterLat = clusterExpandMarker ? clusterExpandMarker.lat : 51.512;
       const clusterLon = clusterExpandMarker ? clusterExpandMarker.lon : -0.097;
+
       let entries = [];
       if (!londonExpanded) {
+        // Cluster mode: only nonLondonMarkers and the expand marker (flag)
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
@@ -122,8 +129,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }))
         ];
       } else {
+        // Expanded mode: show all nonLondonMarkers and all London markers as pins (spread out London pins)
         const N = londonMarkers.length;
-        const radius = 1.2;
+        const radius = 1.2; // degrees, tweak for spread
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
@@ -131,6 +139,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             isStandardPin: true
           })),
           ...londonMarkers.map((marker, i) => {
+            // Spread in a circle
             const angle = (2 * Math.PI * i) / N;
             const lat = clusterLat + radius * Math.cos(angle);
             const lon = clusterLon + radius * Math.sin(angle);
@@ -139,13 +148,15 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
               idx: data.indexOf(marker),
               isStandardPin: true,
               isLondon: true,
-              lat,
+              lat, // Overwrite lat/lon to spread
               lon
             };
           })
         ];
       }
-      tocList = data
+
+      // TOC: Remove expand marker (clusterExpand)
+      const tocList = data
         .map((marker, idx) => {
           let year = "";
           if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
@@ -164,8 +175,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const pinModel = getPinModel();
       const flagModel = getFlagModel();
 
-      objectsData = entries.map(obj => {
+      const objectsData = entries.map(obj => {
         if (obj.isExpandPin) {
+          // Only the flag, never a pin
           return {
             ...obj,
             lat: obj.lat,
@@ -177,6 +189,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             label: obj.name
           };
         }
+        // Only standard pins get isStandardPin
         return {
           ...obj,
           lat: obj.lat,
@@ -190,17 +203,22 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         };
       });
 
-      customPointObject = (obj) => {
+      const customPointObject = (obj) => {
+        // Only render flag for expand pin, never a pin
         if (obj.isExpandPin) {
           if (flagModel) {
             const group = new THREE.Group();
             const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
             const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+
             const flag = flagModel.clone(true);
             flag.scale.set(scale, scale, scale);
+
+            // Orient the flag so that its "banner" is upright on the globe
             orientPin(flag, markerVec);
             flag.rotateZ(Math.PI / 4);
             positionPin(flag, -8);
+
             group.position.copy(markerVec);
             flag.userData = { markerId: obj.markerId, label: obj.label };
             group.add(flag);
@@ -208,8 +226,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             group.name = "expand-flag-group";
             return group;
           }
+          // Flag not ready: do NOT render anything
           return new THREE.Object3D();
         }
+        // Standard pins only
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE;
@@ -236,122 +256,73 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         }
         return new THREE.Object3D();
       };
-    } else if (mode === "usa") {
-      data = usaLocations;
-      palette = getPinPalette("usa");
-      colorAssignments = getColorAssignments(data, palette, "usa");
-      tocList = data.map((marker, idx) => {
-        let year = "";
-        if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
-          year = marker.timeline[0].year;
-        return {
-          idx,
-          roman: toRoman(idx + 1),
-          name: marker.name,
-          marker,
-          year,
-          color: colorAssignments[idx]
-        }
-      });
-      const pinScale = NORMAL_PIN_SCALE * 0.5;
-      objectsData = data.map((marker, idx) => ({
-        ...marker,
-        lat: marker.lat,
-        lng: marker.lon,
-        markerId: marker.name,
-        isStandardPin: true,
-        idx,
-        altitude: DOT_ALTITUDE,
-        color: colorAssignments[idx],
-        label: marker.name,
-        pinScale
-      }));
-      customPointObject = (obj) => {
-        const pinModel = getPinModel();
-        if (obj.isStandardPin && pinModel) {
-          const group = new THREE.Group();
-          const scale = obj.pinScale || NORMAL_PIN_SCALE;
-          const pin = pinModel.clone(true);
-          pin.traverse((child) => {
-            if (child.isMesh) {
-              child.castShadow = false;
-              child.material = child.material.clone();
-              child.material.color.set(obj.color || "#b32c2c");
-            }
-          });
-          pin.scale.set(scale, scale, scale);
-          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          group.position.copy(markerVec);
-          orientPin(pin, markerVec);
-          positionPin(pin, -6);
-          pin.userData = { markerId: obj.markerId, label: obj.label };
-          group.add(pin);
-          group.userData = { markerId: obj.markerId, label: obj.label };
-          return group;
-        }
-        return new THREE.Object3D();
-      };
-    } else if (mode === "sd") {
-      data = sdEvents;
-      palette = getPinPalette("sd");
-      colorAssignments = getColorAssignments(data, palette, "sd");
-      tocList = data.map((marker, idx) => {
-        let year = "";
-        if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
-          year = marker.timeline[0].year;
-        return {
-          idx,
-          roman: toRoman(idx + 1),
-          name: marker.name,
-          marker,
-          year,
-          color: colorAssignments[idx]
-        }
-      });
-      const pinScale = NORMAL_PIN_SCALE * 0.25;
-      objectsData = data.map((marker, idx) => ({
-        ...marker,
-        lat: marker.lat,
-        lng: marker.lon,
-        markerId: marker.name,
-        isStandardPin: true,
-        idx,
-        altitude: DOT_ALTITUDE,
-        color: colorAssignments[idx],
-        label: marker.name,
-        pinScale
-      }));
-      customPointObject = (obj) => {
-        const pinModel = getPinModel();
-        if (obj.isStandardPin && pinModel) {
-          const group = new THREE.Group();
-          const scale = obj.pinScale || NORMAL_PIN_SCALE;
-          const pin = pinModel.clone(true);
-          pin.traverse((child) => {
-            if (child.isMesh) {
-              child.castShadow = false;
-              child.material = child.material.clone();
-              child.material.color.set(obj.color || "#b32c2c");
-            }
-          });
-          pin.scale.set(scale, scale, scale);
-          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-          group.position.copy(markerVec);
-          orientPin(pin, markerVec);
-          positionPin(pin, -6);
-          pin.userData = { markerId: obj.markerId, label: obj.label };
-          group.add(pin);
-          group.userData = { markerId: obj.markerId, label: obj.label };
-          return group;
-        }
-        return new THREE.Object3D();
-      };
-    }
-    return { data, palette, colorAssignments, objectsData, customPointObject, tocList };
-  }, [mode, londonExpanded, pinReady, flagReady]);
 
-  // Camera and rotation logic
+      return { objectsData, customPointObject, tocList };
+    } else {
+      // USA/SD
+      const tocList = data.map((marker, idx) => {
+        let year = "";
+        if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
+          year = marker.timeline[0].year;
+        return {
+          idx,
+          roman: toRoman(idx + 1),
+          name: marker.name,
+          marker,
+          year,
+          color: colorAssignments[idx]
+        }
+      });
+      const pinScale =
+        mode === "usa"
+          ? NORMAL_PIN_SCALE * 0.5
+          : mode === "sd"
+          ? NORMAL_PIN_SCALE * 0.25
+          : NORMAL_PIN_SCALE;
+      const objectsData = data.map((marker, idx) => ({
+        ...marker,
+        lat: marker.lat,
+        lng: marker.lon,
+        markerId: marker.name,
+        isStandardPin: true,
+        idx,
+        altitude: DOT_ALTITUDE,
+        color: colorAssignments[idx],
+        label: marker.name,
+        pinScale
+      }));
+      const customPointObject = (obj) => {
+        const pinModel = getPinModel();
+        if (obj.isStandardPin && pinModel) {
+          const group = new THREE.Group();
+          const scale = obj.pinScale || NORMAL_PIN_SCALE;
+          const pin = pinModel.clone(true);
+          pin.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = false;
+              child.material = child.material.clone();
+              child.material.color.set(obj.color || "#b32c2c");
+            }
+          });
+          pin.scale.set(scale, scale, scale);
+          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+          group.position.copy(markerVec);
+          orientPin(pin, markerVec);
+          positionPin(pin, -6);
+          pin.userData = { markerId: obj.markerId, label: obj.label };
+          group.add(pin);
+          group.userData = { markerId: obj.markerId, label: obj.label };
+          return group;
+        }
+        return new THREE.Object3D();
+      };
+      return { objectsData, customPointObject, tocList };
+    }
+  }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
+
+  // Camera to mode + rotate globe for USA/SD
   useEffect(() => {
+    let rotateTimeout = null;
     if (
       globeReady &&
       pinReady &&
@@ -361,17 +332,52 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     ) {
       const cam = CAMERA_CONFIGS[mode] || CAMERA_CONFIGS.world;
       globeEl.current.pointOfView(cam, 1200);
-      // Example: for rotation/spin (optional)
-      // if (mode === "usa" || mode === "sd") {
-      //   setTimeout(() => {
-      //     globeEl.current.controls().rotateLeft(70 * Math.PI / 180);
-      //   }, 1300);
-      // }
+      // After camera moves, rotate globe for USA/SD
+      if (mode === "usa" || mode === "sd") {
+        // 70 degrees in radians
+        const rotateAngle = 70 * Math.PI / 180;
+        rotateTimeout = setTimeout(() => {
+          if (globeEl.current && globeEl.current.controls) {
+            globeEl.current.controls().rotateLeft(rotateAngle);
+          }
+        }, 1250); // after 1200ms animation
+      }
     }
     setLondonExpanded(false);
+    return () => {
+      if (rotateTimeout) clearTimeout(rotateTimeout);
+    };
   }, [mode, globeReady, pinReady, flagReady]);
 
-  // TOC click logic
+  const handleObjectClick = (obj) => {
+    if (obj && obj.isExpandPin) {
+      setLondonExpanded(true);
+      setHovered(null);
+      return;
+    } else if (mode === "world" && obj && getLondonMarkers(data).some(m => m.name === obj.markerId)) {
+      const marker = data.find((m) => m.name === obj.markerId);
+      if (marker) {
+        onMarkerClick(marker);
+      }
+      setLondonExpanded(false);
+      setHovered(null);
+    } else if (obj && obj.isStandardPin) {
+      const marker = data.find((m) => m.name === obj.markerId);
+      if (marker) {
+        onMarkerClick(marker);
+      }
+      setLondonExpanded(false);
+      setHovered(null);
+    } else if (londonExpanded) {
+      setLondonExpanded(false);
+      setHovered(null);
+    }
+  };
+
+  const handleObjectHover = (obj) => {
+    setHovered(obj);
+  };
+
   function handleTOCClick(marker) {
     if (marker.clusterExpand) {
       setLondonExpanded(true);
@@ -445,42 +451,32 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       >
         <Globe
           ref={globeEl}
-          globeImageUrl={GLOBE_IMAGES[mode]}
+          globeImageUrl={globeImageUrl}
           atmosphereColor="#e6dbb9"
           atmosphereAltitude={0.22}
           backgroundColor="rgba(0,0,0,0)"
           width={2000}
           height={1050}
-          pointsData={[]}
+          pointsData={[]} 
           pointLat="lat"
           pointLng="lng"
           pointColor="color"
           pointRadius="size"
           pointAltitude="altitude"
           pointLabel="label"
+          onPointHover={handleObjectHover}
+          onPointClick={onMarkerClick}
           objectsData={objectsData}
           objectLat="lat"
           objectLng="lng"
           objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
           objectThreeObject={customPointObject}
-          onObjectClick={(obj) => {
-            if (mode === "world" && obj && obj.isExpandPin) {
-              setLondonExpanded(true);
-              setHovered(null);
-              return;
-            }
-            if (obj && obj.isStandardPin) {
-              const marker = data.find((m) => m.name === obj.markerId);
-              if (marker) onMarkerClick(marker);
-              setLondonExpanded(false);
-              setHovered(null);
-            }
-          }}
-          onObjectHover={setHovered}
+          onObjectClick={handleObjectClick}
+          onObjectHover={handleObjectHover}
           onGlobeReady={() => setGlobeReady(true)}
         />
       </div>
-      {/* TOC styled to match navbar */}
+      {/* TOC styled to match navbar - now with year below title, perfectly left aligned, and more vertical space */}
       <nav
         aria-label="Table of Contents"
         style={{
@@ -511,7 +507,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           gap: isMobile ? 15.5 : 14,
           width: "100%",
         }}>
-          {(tocList || []).map((item, idx) => (
+          {tocList.map((item, idx) => (
             <li key={item.name} style={{
               width: "100%",
               marginBottom: 0,
@@ -554,6 +550,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                 aria-label={`Jump to ${item.name}`}
                 title={item.name}
               >
+                {/* Roman numeral: min width so titles always align */}
                 <span style={{
                   fontFamily: "coolvetica, sans-serif",
                   fontWeight: 400,
@@ -567,6 +564,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   display: "inline-block",
                   textAlign: "left"
                 }}>{item.roman}.</span>
+                {/* Title + year column */}
                 <span style={{
                   flex: 1,
                   display: "flex",
