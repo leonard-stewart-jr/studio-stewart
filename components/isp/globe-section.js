@@ -218,6 +218,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             orientPin(flag, markerVec);
             flag.rotateZ(Math.PI / 2);
             flag.rotateY(Math.PI / 12);
+            flag.rotateX(Math.PI / 12);
             positionPin(flag, -8);
 
             group.position.copy(markerVec);
