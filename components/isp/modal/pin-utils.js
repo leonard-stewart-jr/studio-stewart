@@ -12,7 +12,8 @@ export function loadPinModel() {
   pinModelPromise = new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.3/');
+    // Use local draco decoder for best performance
+    dracoLoader.setDecoderPath('/draco/');
     loader.setDRACOLoader(dracoLoader);
     loader.load("/models/3D_map_pin.glb", (gltf) => {
       gltf.scene.traverse((child) => {
@@ -38,21 +39,30 @@ export function loadPinModel() {
 }
 
 export function getPinModel() {
-  return pinModel;
+  return pinModel ? pinModel.clone(true) : null;
 }
+
 // --- 3D FLAG MODEL LOADER ---
 let flagModel = null;
-export async function loadFlagModel() {
-  if (flagModel) return flagModel;
-  const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader');
-  const loader = new GLTFLoader();
-  return new Promise((resolve, reject) => {
+let flagModelPromise = null;
+
+export function loadFlagModel() {
+  if (flagModel) return Promise.resolve(flagModel);
+  if (flagModelPromise) return flagModelPromise;
+  flagModelPromise = new Promise((resolve, reject) => {
+    const loader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    // Use local draco decoder for best performance
+    dracoLoader.setDecoderPath('/draco/');
+    loader.setDRACOLoader(dracoLoader);
     loader.load('/models/3D_flag.glb', (gltf) => {
       flagModel = gltf.scene;
       resolve(flagModel);
     }, undefined, reject);
   });
+  return flagModelPromise;
 }
+
 export function getFlagModel() {
   return flagModel ? flagModel.clone(true) : null;
 }
