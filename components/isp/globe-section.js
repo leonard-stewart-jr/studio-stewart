@@ -27,8 +27,8 @@ const LONDON_CLUSTER_GROUP = "london";
 
 const CAMERA_CONFIGS = {
   world: { lat: 20, lng: 0, altitude: 0.1 },
-  usa:   { lat: 39.8283, lng: -98.5795, altitude: 0.6 },
-  sd:    { lat: 44.5, lng: -100, altitude: 0.2 }
+  usa:   { lat: 39.8283, lng: -98.5795, altitude: 0.37 },
+  sd:    { lat: 44.5, lng: -100, altitude: 0.17 }
 };
 const GLOBE_IMAGES = {
   world: "/images/globe/world-hd.jpg",
@@ -320,8 +320,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
-  // Camera to mode
+  // Camera to mode + rotate globe for USA/SD
   useEffect(() => {
+    let rotateTimeout = null;
     if (
       globeReady &&
       pinReady &&
@@ -331,8 +332,21 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     ) {
       const cam = CAMERA_CONFIGS[mode] || CAMERA_CONFIGS.world;
       globeEl.current.pointOfView(cam, 1200);
+      // After camera moves, rotate globe for USA/SD
+      if (mode === "usa" || mode === "sd") {
+        // 70 degrees in radians
+        const rotateAngle = 70 * Math.PI / 180;
+        rotateTimeout = setTimeout(() => {
+          if (globeEl.current && globeEl.current.controls) {
+            globeEl.current.controls().rotateLeft(rotateAngle);
+          }
+        }, 1250); // after 1200ms animation
+      }
     }
     setLondonExpanded(false);
+    return () => {
+      if (rotateTimeout) clearTimeout(rotateTimeout);
+    };
   }, [mode, globeReady, pinReady, flagReady]);
 
   const handleObjectClick = (obj) => {
