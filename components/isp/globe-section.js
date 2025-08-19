@@ -188,8 +188,12 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const flagModel = getFlagModel();
 
       const customPointObject = (obj) => {
-        // --- HITBOX RADIUS: adjust this if you want larger/smaller hit area ---
-        const HITBOX_RADIUS = 3;
+        // --- HITBOX RADII ---
+        const PIN_RADIUS = 3;
+        const FLAG_RADIUS = 5;
+        const CLUSTER_RADIUS = 1.5;
+
+        // Flag (expand pin)
         if (obj.isExpandPin) {
           if (flagModel) {
             const group = new THREE.Group();
@@ -202,9 +206,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             flag.rotateZ(Math.PI / 4);
             positionPin(flag, -8);
 
-            // Add invisible hitbox
+            // Add invisible hitbox for flag
             const hitbox = new THREE.Mesh(
-              new THREE.SphereGeometry(HITBOX_RADIUS, 16, 16),
+              new THREE.SphereGeometry(FLAG_RADIUS, 16, 16),
               new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
             );
             hitbox.position.set(0, 0, 0);
@@ -220,12 +224,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }
           return new THREE.Object3D();
         }
-        if (obj.isStandardPin && pinModel) {
+        // Cluster pins (London pins when expanded)
+        if (obj.isStandardPin && pinModel && obj.isLondon) {
           const group = new THREE.Group();
-          let scale = NORMAL_PIN_SCALE;
-          if (obj.isLondon) {
-            scale = NORMAL_PIN_SCALE * 0.75;
-          }
+          let scale = NORMAL_PIN_SCALE * 0.75;
           const pin = pinModel.clone(true);
           pin.traverse((child) => {
             if (child.isMesh) {
@@ -242,9 +244,41 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Add invisible hitbox
+          // Add invisible hitbox for cluster pin
           const hitbox = new THREE.Mesh(
-            new THREE.SphereGeometry(HITBOX_RADIUS, 16, 16),
+            new THREE.SphereGeometry(CLUSTER_RADIUS, 16, 16),
+            new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
+          );
+          hitbox.position.set(0, 0, 0);
+          hitbox.userData = pin.userData;
+          group.add(hitbox);
+
+          group.userData = { markerId: obj.markerId, label: obj.label };
+          return group;
+        }
+        // Normal pins
+        if (obj.isStandardPin && pinModel) {
+          const group = new THREE.Group();
+          let scale = NORMAL_PIN_SCALE;
+          const pin = pinModel.clone(true);
+          pin.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = false;
+              child.material = child.material.clone();
+              child.material.color.set(obj.color || "#b32c2c");
+            }
+          });
+          pin.scale.set(scale, scale, scale);
+          const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
+          group.position.copy(markerVec);
+          orientPin(pin, markerVec);
+          positionPin(pin, -6);
+          pin.userData = { markerId: obj.markerId, label: obj.label };
+          group.add(pin);
+
+          // Add invisible hitbox for normal pin
+          const hitbox = new THREE.Mesh(
+            new THREE.SphereGeometry(PIN_RADIUS, 16, 16),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
           );
           hitbox.position.set(0, 0, 0);
@@ -317,8 +351,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         pinScale
       }));
       const customPointObject = (obj) => {
-        // For USA/SD, also add bigger hitbox as above
-        const HITBOX_RADIUS = 18;
+        // For USA/SD, all pins use PIN_RADIUS
+        const PIN_RADIUS = 3;
         const pinModel = getPinModel();
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
@@ -341,7 +375,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
           // Add invisible hitbox
           const hitbox = new THREE.Mesh(
-            new THREE.SphereGeometry(HITBOX_RADIUS, 16, 16),
+            new THREE.SphereGeometry(PIN_RADIUS, 16, 16),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
           );
           hitbox.position.set(0, 0, 0);
