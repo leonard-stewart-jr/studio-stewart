@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import SectionTabs from "../components/isp/section-tabs";
 import BottomModeNav from "../components/isp/bottommodenav";
@@ -14,6 +14,26 @@ export default function IndependentStudio() {
   const [activeHistory, setActiveHistory] = useState("world");
   // Info modal state
   const [modalData, setModalData] = useState(null);
+
+  // Lock vertical scroll for this page only
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyHeight = document.body.style.height;
+    const prevHtmlHeight = document.documentElement.style.height;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.height = "100vh";
+    document.documentElement.style.height = "100vh";
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.height = prevBodyHeight;
+      document.documentElement.style.height = prevHtmlHeight;
+    };
+  }, []);
 
   return (
     <>
