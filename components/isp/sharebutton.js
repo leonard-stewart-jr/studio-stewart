@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Props:
 // - pdfUrl: string (required) - where to download the PDF
@@ -12,14 +12,19 @@ export default function ShareButton({
   shareTitle = "Check this out!",
   style = {},
 }) {
+  const [copied, setCopied] = useState(false);
+
   // Copy link handler
-  const handleCopy = () => {
+  const handleCopy = e => {
+    e.stopPropagation();
     navigator.clipboard.writeText(htmlUrl);
-    // Optionally show a copied message here
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
   };
 
   // Email handler
-  const handleMail = () => {
+  const handleMail = e => {
+    e.stopPropagation();
     window.open(
       `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(htmlUrl)}`,
       "_blank"
@@ -27,26 +32,23 @@ export default function ShareButton({
   };
 
   // Download handler
-  const handleDownload = () => {
+  const handleDownload = e => {
+    e.stopPropagation();
     window.open(pdfUrl, "_blank");
   };
 
-  // "More" handler (optional: you could use Web Share API if supported)
-  const handleShare = () => {
+  // "More" handler (Web Share API or fallback to copy)
+  const handleShare = e => {
+    e.stopPropagation();
     if (navigator.share) {
       navigator.share({
         title: shareTitle,
         url: htmlUrl
       });
     } else {
-      // fallback: copy link
-      handleCopy();
+      handleCopy(e);
     }
   };
-
-  // Clicking anywhere on the group opens a menu (optional: you can make it just do one action, or a menu)
-  // For now, we'll just show the 4 icons as a group, but only handle click as a group
-  // If you want a menu, you can add it later.
 
   // Styles
   const barHeight = 46;
@@ -80,17 +82,13 @@ export default function ShareButton({
         }}
         tabIndex={0}
         aria-label="Share/download options"
-        onClick={handleShare}
-        onKeyDown={e => {
-          if (e.key === "Enter" || e.key === " ") handleShare();
-        }}
         title="Share, download, or copy link"
       >
         {/* Download PDF */}
         <span
           style={{ display: "flex", alignItems: "center" }}
           title="Download PDF"
-          onClick={e => { e.stopPropagation(); handleDownload(); }}
+          onClick={handleDownload}
           tabIndex={-1}
         >
           <img
@@ -109,7 +107,7 @@ export default function ShareButton({
         <span
           style={{ display: "flex", alignItems: "center" }}
           title="Share by Email"
-          onClick={e => { e.stopPropagation(); handleMail(); }}
+          onClick={handleMail}
           tabIndex={-1}
         >
           <img
@@ -126,9 +124,9 @@ export default function ShareButton({
         </span>
         {/* Copy Link */}
         <span
-          style={{ display: "flex", alignItems: "center" }}
-          title="Copy HTML Link"
-          onClick={e => { e.stopPropagation(); handleCopy(); }}
+          style={{ display: "flex", alignItems: "center", position: "relative" }}
+          title={copied ? "Copied!" : "Copy HTML Link"}
+          onClick={handleCopy}
           tabIndex={-1}
         >
           <img
@@ -142,12 +140,33 @@ export default function ShareButton({
               borderRadius: 5
             }}
           />
+          {copied && (
+            <span
+              style={{
+                position: "absolute",
+                top: -28,
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "#222",
+                color: "#fff",
+                borderRadius: 6,
+                padding: "2px 10px",
+                fontSize: 13,
+                opacity: 0.93,
+                pointerEvents: "none",
+                zIndex: 99,
+                whiteSpace: "nowrap"
+              }}
+            >
+              Copied!
+            </span>
+          )}
         </span>
         {/* More/Share */}
         <span
           style={{ display: "flex", alignItems: "center" }}
           title="Share"
-          onClick={e => { e.stopPropagation(); handleShare(); }}
+          onClick={handleShare}
           tabIndex={-1}
         >
           <img
