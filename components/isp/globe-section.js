@@ -31,6 +31,22 @@ const GLOBE_IMAGES = {
   sd: "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
 };
 
+// Hardcoded colors for world mode markers (11 pins)
+const WORLD_PIN_COLORS = [
+  "#906c5c",  // 1. Mesopotamia
+  "#cc853e",  // 2. The Mamertine Prison
+  "#3B3A30",  // 3. The Tower of London
+  "#bd9778",  // 4. Newgate Prison
+  "#b6b09a",  // 5. Maison de Force
+  "#7e6651",  // 6. Panopticon Theory
+  "#7C6F57",  // 7. Militarized Architecture
+  "#A3B18A",  // 8. Eastern State
+  "#A0522D",  // 9. British Penal Colonies
+  "#C19A6B",  // 10. Nazi Camps
+  "#8a451f"   // 11. Scandinavian Prison
+];
+// If you want a specific color for the expand pin, add a 12th color here.
+
 function toRoman(num) {
   const map = [
     [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
@@ -88,13 +104,24 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     return () => { mounted = false; };
   }, []);
 
-  // Pin colors: darken Mesopotamia
+  // Pin colors
   const colorAssignments = useMemo(() => {
-    const arr = getPaletteAssignments(data.length, 42, palette);
-    if (mode === "world" && arr.length > 0) {
-      arr[0] = "#8f6c5c"; // darker, readable terracotta brown
+    if (mode === "world") {
+      // Assign the hardcoded colors to the first 11 markers, and fallback to palette for others (like expand pin).
+      const arr = [];
+      for (let i = 0; i < data.length; i++) {
+        if (i < WORLD_PIN_COLORS.length) arr.push(WORLD_PIN_COLORS[i]);
+        else {
+          // For the expand pin or any others, fallback to palette or a default color
+          const fallback = palette && palette.length ? palette[i % palette.length] : "#b32c2c";
+          arr.push(fallback);
+        }
+      }
+      return arr;
+    } else {
+      // For USA or SD use palette logic
+      return getPaletteAssignments(data.length, 42, palette);
     }
-    return arr;
   }, [data, palette, mode]);
 
   // --- Cluster logic ---
@@ -102,15 +129,12 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (mode === "world") {
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
-
-      // Find the London cluster center (the expand marker)
       const clusterExpandMarker = data.find(m => m.clusterExpand);
       const clusterLat = clusterExpandMarker ? clusterExpandMarker.lat : 51.512;
       const clusterLon = clusterExpandMarker ? clusterExpandMarker.lon : -0.097;
 
       let entries = [];
       if (!londonExpanded) {
-        // Cluster mode: only nonLondonMarkers and the expand marker (flag)
         entries = [
           ...nonLondonMarkers.map(marker => ({
             ...marker,
@@ -124,7 +148,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }))
         ];
       } else {
-        // Expanded mode: show all nonLondonMarkers and all London markers as pins (spread out London pins)
         const N = londonMarkers.length;
         const radius = 1.2; // degrees, tweak for spread
         entries = [
@@ -134,7 +157,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             isStandardPin: true
           })),
           ...londonMarkers.map((marker, i) => {
-            // Spread in a circle
             const angle = (2 * Math.PI * i) / N;
             const lat = clusterLat + radius * Math.cos(angle);
             const lon = clusterLon + radius * Math.sin(angle);
@@ -150,7 +172,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         ];
       }
 
-      // TOC: Remove expand marker (clusterExpand)
       const tocList = data
         .map((marker, idx) => {
           let year = "";
@@ -172,7 +193,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
       const objectsData = entries.map(obj => {
         if (obj.isExpandPin) {
-          // Only the flag, never a pin
           return {
             ...obj,
             lat: obj.lat,
@@ -184,7 +204,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             label: obj.name
           };
         }
-        // Only standard pins get isStandardPin
         return {
           ...obj,
           lat: obj.lat,
@@ -199,7 +218,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       });
 
       const customPointObject = (obj) => {
-        // Only render flag for expand pin, never a pin
         if (obj.isExpandPin) {
           if (flagModel) {
             const group = new THREE.Group();
@@ -208,8 +226,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
             const flag = flagModel.clone(true);
             flag.scale.set(scale, scale, scale);
-
-            // Orient the flag so that its "banner" is upright on the globe
             orientPin(flag, markerVec);
             flag.rotateZ(Math.PI / 4);
             positionPin(flag, -8);
@@ -221,10 +237,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             group.name = "expand-flag-group";
             return group;
           }
-          // Flag not ready: do NOT render anything
           return new THREE.Object3D();
         }
-        // Standard pins only
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE;
@@ -254,7 +268,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
       return { objectsData, customPointObject, tocList };
     } else {
-      // USA/SD
       const tocList = data.map((marker, idx) => {
         let year = "";
         if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
@@ -414,6 +427,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           borderRadius: 0,
           boxShadow: "none",
+          transform: isMobile ? "none" : "translateX(-150px)",
         }}
       >
         <Globe
@@ -447,9 +461,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         aria-label="Table of Contents"
         style={{
           flex: "0 0 auto",
-          minWidth: 220,
-          maxWidth: isMobile ? "100%" : 540,
-          width: isMobile ? "100%" : 340,
+          minWidth: 340,
+          maxWidth: isMobile ? "100%" : 640,
+          width: isMobile ? "100%" : 480,
           display: "flex",
           flexDirection: "column",
           alignItems: isMobile ? "center" : "flex-start",
@@ -459,7 +473,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           zIndex: 100,
           left: isMobile ? 0 : 0,
-          fontFamily: "coolvetica, sans-serif"
+          fontFamily: "coolvetica, sans-serif",
+          overflow: "visible",
+          paddingRight: isMobile ? 0 : 48,
+          paddingLeft: isMobile ? 0 : 24,
         }}
       >
         <ol style={{
@@ -470,6 +487,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           flexDirection: "column",
           gap: isMobile ? 15.5 : 14,
           width: "100%",
+          overflow: "visible",
         }}>
           {tocList.map((item, idx) => (
             <li key={item.name} style={{
@@ -500,7 +518,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   textTransform: "uppercase",
                   letterSpacing: "0.5px",
                   overflow: "hidden",
-                  whiteSpace: "normal",
+                  whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   transition: "color 0.12s, background 0.12s",
                   marginLeft: 0,
