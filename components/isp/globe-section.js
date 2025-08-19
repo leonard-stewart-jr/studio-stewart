@@ -45,7 +45,6 @@ const WORLD_PIN_COLORS = [
   "#C19A6B",  // 10. Nazi Camps
   "#8a451f"   // 11. Scandinavian Prison
 ];
-// If you want a specific color for the expand pin, add a 12th color here.
 
 function toRoman(num) {
   const map = [
@@ -107,19 +106,16 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   // Pin colors
   const colorAssignments = useMemo(() => {
     if (mode === "world") {
-      // Assign the hardcoded colors to the first 11 markers, and fallback to palette for others (like expand pin).
       const arr = [];
       for (let i = 0; i < data.length; i++) {
         if (i < WORLD_PIN_COLORS.length) arr.push(WORLD_PIN_COLORS[i]);
         else {
-          // For the expand pin or any others, fallback to palette or a default color
           const fallback = palette && palette.length ? palette[i % palette.length] : "#b32c2c";
           arr.push(fallback);
         }
       }
       return arr;
     } else {
-      // For USA or SD use palette logic
       return getPaletteAssignments(data.length, 42, palette);
     }
   }, [data, palette, mode]);
@@ -165,7 +161,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
               idx: data.indexOf(marker),
               isStandardPin: true,
               isLondon: true,
-              lat, // Overwrite lat/lon to spread
+              lat,
               lon
             };
           })
@@ -427,7 +423,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           borderRadius: 0,
           boxShadow: "none",
-          transform: isMobile ? "none" : "translateX(-70px)",
+          transform: isMobile ? "none" : "translateX(-60px)", // <-- SHIFT RIGHT by -60px
         }}
       >
         <Globe
@@ -461,9 +457,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         aria-label="Table of Contents"
         style={{
           flex: "0 0 auto",
-          minWidth: 340,
-          maxWidth: isMobile ? "100%" : 640,
-          width: isMobile ? "100%" : 480,
+          minWidth: 440,
+          maxWidth: isMobile ? "100%" : 700,
+          width: isMobile ? "100%" : 640,
           display: "flex",
           flexDirection: "column",
           alignItems: isMobile ? "center" : "flex-start",
@@ -471,11 +467,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           background: "none",
           boxShadow: "none",
           position: "relative",
-          zIndex: 100,
+          zIndex: 1000,
           left: isMobile ? 0 : 0,
           fontFamily: "coolvetica, sans-serif",
           overflow: "visible",
-          paddingRight: isMobile ? 0 : 48,
+          paddingRight: isMobile ? 0 : 12,
           paddingLeft: isMobile ? 0 : 24,
         }}
       >
