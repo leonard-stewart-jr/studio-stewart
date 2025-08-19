@@ -1,56 +1,21 @@
-@font-face {
-	font-family:"Coolvetica Bk";
-	font-style:normal;
-	font-weight:normal;
-	src : url("../../font/CoolveticaBk-Regular.otf");
-}
-@font-face {
-	font-family:"Coolvetica El";
-	font-style:normal;
-	font-weight:200;
-	src : url("../../font/CoolveticaEl-Regular.otf");
-}
-@font-face {
-	font-family:"Coolvetica Lt";
-	font-style:italic;
-	font-weight:300;
-	src : url("../../font/CoolveticaLt-Italic.otf");
-}
-@font-face {
-	font-family:"Coolvetica Lt";
-	font-style:oblique;
-	font-weight:300;
-	src : url("../../font/CoolveticaLt-Italic.otf");
-}
-@font-face {
-	font-family:"Coolvetica Lt";
-	font-style:normal;
-	font-weight:300;
-	src : url("../../font/CoolveticaLt-Regular.otf");
-}
-@font-face {
-	font-family:"Coolvetica Ul";
-	font-style:italic;
-	font-weight:200;
-	src : url("../../font/CoolveticaUl-Italic.otf");
-}
-@font-face {
-	font-family:"Coolvetica Ul";
-	font-style:oblique;
-	font-weight:200;
-	src : url("../../font/CoolveticaUl-Italic.otf");
-}
-@font-face {
-	font-family:"Minion Pro";
-	font-style:normal;
-	font-weight:normal;
-	src : url("../../font/MinionPro-Regular.otf");
-}
 body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
 	margin:0;
 	padding:0;
 	border-width:0;
+	font-family:"coolvetica", sans-serif;
 	text-rendering:optimizeSpeed;
+}
+body {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 720px;
+  min-width: 3818px;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 div > svg {
 	position:absolute;
@@ -64,91 +29,91 @@ p.ParaOverride-1 {
 }
 span.CharOverride-1 {
 	color:#cc853e;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:227.4px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-2 {
 	color:#939598;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:280px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-3 {
 	color:#cc853e;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-4 {
 	color:#939598;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-5 {
 	color:#cc853e;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-6 {
 	color:#4d4d4f;
-	font-family:"Coolvetica Bk", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-7 {
 	color:#4d4d4f;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:360px;
 	font-style:normal;
 	font-weight:300;
 }
 span.CharOverride-8 {
 	color:#939598;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:280px;
 	font-style:normal;
 	font-weight:300;
 }
 span.CharOverride-9 {
 	color:#939598;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:300;
 }
 span.CharOverride-10 {
 	color:#4d4d4f;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:300;
 }
 span.CharOverride-11 {
 	color:#6d6e71;
-	font-family:"Coolvetica Lt", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:300;
 }
 span.CharOverride-12 {
 	color:#cc853e;
-	font-family:"Coolvetica Ul", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:200;
 }
 span.CharOverride-13 {
 	color:#939598;
-	font-family:"Coolvetica El", sans-serif;
+	font-family:"coolvetica", sans-serif;
 	font-size:200px;
 	font-style:normal;
 	font-weight:200;
