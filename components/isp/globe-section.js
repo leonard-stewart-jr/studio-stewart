@@ -403,6 +403,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         boxSizing: "border-box",
         position: "relative",
         marginTop: 57,
+        zIndex: 0
       }}
     >
       {/* Globe and TOC are now completely separated and fixed */}
@@ -424,6 +425,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           borderRadius: 0,
           boxShadow: "none",
           transform: isMobile ? "none" : "translateX(-60px)", // <-- SHIFT RIGHT by -60px
+          zIndex: 1
         }}
       >
         <Globe
@@ -458,16 +460,16 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         style={{
           flex: "0 0 auto",
           minWidth: 440,
-          maxWidth: isMobile ? "100%" : 700,
-          width: isMobile ? "100%" : 640,
+          maxWidth: isMobile ? "100%" : 900,
+          width: isMobile ? "100%" : 700,
           display: "flex",
           flexDirection: "column",
           alignItems: isMobile ? "center" : "flex-start",
           justifyContent: isMobile ? "flex-start" : "center",
-          background: "none",
+          background: "rgba(255,255,255,0)", // transparent
           boxShadow: "none",
           position: "relative",
-          zIndex: 1000,
+          zIndex: 2000, // ENSURE TOC IS ALWAYS ON TOP
           left: isMobile ? 0 : 0,
           fontFamily: "coolvetica, sans-serif",
           overflow: "visible",
@@ -484,6 +486,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           gap: isMobile ? 15.5 : 14,
           width: "100%",
           overflow: "visible",
+          zIndex: 2000
         }}>
           {tocList.map((item, idx) => (
             <li key={item.name} style={{
@@ -491,7 +494,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
               marginBottom: 0,
               padding: "0 0 0 0",
               display: "flex",
-              alignItems: "flex-start"
+              alignItems: "flex-start",
+              zIndex: 2000
             }}>
               <button
                 style={{
@@ -519,7 +523,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   transition: "color 0.12s, background 0.12s",
                   marginLeft: 0,
                   justifyContent: "flex-start",
-                  textAlign: "left"
+                  textAlign: "left",
+                  zIndex: 2000
                 }}
                 onClick={() => handleTOCClick(item.marker)}
                 onMouseEnter={() => setHovered({ ...item.marker, idx, label: item.name, markerId: item.marker.markerId })}
@@ -539,7 +544,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   flexShrink: 0,
                   marginRight: 6,
                   display: "inline-block",
-                  textAlign: "left"
+                  textAlign: "left",
+                  zIndex: 2000
                 }}>{item.roman}.</span>
                 <span style={{
                   flex: 1,
@@ -547,7 +553,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                   flexDirection: "column",
                   alignItems: "flex-start",
                   textAlign: "left",
-                  minWidth: 0
+                  minWidth: 0,
+                  maxWidth: "100%",
+                  zIndex: 2000
                 }}>
                   <span style={{
                     fontWeight: 400,
@@ -556,7 +564,12 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
-                    fontFamily: "coolvetica, sans-serif"
+                    fontFamily: "coolvetica, sans-serif",
+                    minWidth: 0,
+                    maxWidth: "100%",
+                    flex: 1,
+                    display: "block",
+                    zIndex: 2000
                   }}>
                     {item.name}
                   </span>
@@ -569,7 +582,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
                       letterSpacing: "0.5px",
                       fontFamily: "coolvetica, sans-serif",
                       opacity: 0.95,
-                      textAlign: "left"
+                      textAlign: "left",
+                      zIndex: 2000
                     }}>
                       {item.year}
                     </span>
