@@ -55,8 +55,8 @@ export default function BottomModeNav({ active, onChange }) {
   const leftX = leftPadding;
   const centerY = svgHeight / 2 + fontSize / 2.8;
 
-  // Spacing: Add 50px to previous gap
-  const gap = svgHeight + 50;
+  // Spacing: Double the previous gap (was svgHeight + 50)
+  const gap = (svgHeight + 50) * 2;
 
   // Calculate vertical margin
   const navHeightPx = typeof window !== "undefined" ? window.innerHeight - NAVBAR_HEIGHT : 900 - NAVBAR_HEIGHT;
