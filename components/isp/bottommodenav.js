@@ -32,18 +32,27 @@ const MODE_GRADIENTS = {
 
 const MODE_LABELS = {
   world: "WORLD",
-  usa: "USA",
-  sd: "SD"
+  usa: "UNITED STATES",
+  sd: "SOUTH DAKOTA"
 };
 
 export default function BottomModeNav({ active, onChange }) {
-  // Responsive font size
+  // Responsive font size for maximum label ("UNITED STATES"/"SOUTH DAKOTA")
   const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
-  const fontSize = isMobile ? 48 : 72; // px
+  // Font size chosen so that "UNITED STATES" and "SOUTH DAKOTA" never overflow
+  const fontSize = isMobile ? 28 : 38; // px (can adjust as needed)
 
-  // Fixed SVG width for all buttons (largest label)
-  const svgWidth = 240;
-  const svgHeight = fontSize * 1.25;
+  // Compute SVG width to fit the longest word, plus a little padding
+  const longestLabel = "UNITED STATES".length > "SOUTH DAKOTA".length ? "UNITED STATES" : "SOUTH DAKOTA";
+  const svgWidth = longestLabel.length * fontSize * 0.68 + 24;
+  const svgHeight = fontSize * 1.35;
+
+  // For vertical positioning: evenly spaced in thirds between navbar and bottom
+  // Assume navbar height is 76px (from your HeaderBar/Layout)
+  const navBarHeight = 76;
+  const navHeight = svgHeight * 3 + 72; // 3 buttons + gap
+  const available = `calc(100vh - ${navBarHeight}px)`;
+  // Use flex layout and margins to center the nav in remaining space
 
   return (
     <nav
@@ -51,16 +60,18 @@ export default function BottomModeNav({ active, onChange }) {
       style={{
         position: "fixed",
         left: 0,
-        top: "50%",
-        transform: "translateY(-50%)",
+        top: navBarHeight,
+        height: `calc(100vh - ${navBarHeight}px)`,
+        width: svgWidth + 54, // move text farther right (increase as needed)
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start", // left align
-        gap: 36,
+        alignItems: "flex-start",
+        justifyContent: "space-between",
+        padding: "0 0 0 32px", // shift text to the right
         background: "transparent",
-        padding: isMobile ? 8 : 38,
-        pointerEvents: "auto"
+        pointerEvents: "auto",
+        boxSizing: "border-box",
       }}
     >
       {["world", "usa", "sd"].map((mode) => {
@@ -113,17 +124,17 @@ export default function BottomModeNav({ active, onChange }) {
               </defs>
               <text
                 x={0}
-                y={svgHeight / 2 + fontSize / 2.7}
+                y={svgHeight / 2 + fontSize / 2.8}
                 textAnchor="start"
                 dominantBaseline="middle"
                 fontFamily="'coolvetica', 'Bungee Shade', Arial, sans-serif"
                 fontSize={fontSize}
                 fontWeight={700}
-                letterSpacing="0.08em"
+                letterSpacing="0.06em"
                 style={{
                   fill: `url(#${gradientId})`,
                   stroke: stroke,
-                  strokeWidth: isActive ? 4 : 3,
+                  strokeWidth: isActive ? 3.5 : 2.7,
                   paintOrder: "stroke fill",
                   filter: isActive ? "drop-shadow(0 2px 8px #e0dececc)" : undefined,
                   transition: "stroke-width 0.14s, filter 0.18s"
