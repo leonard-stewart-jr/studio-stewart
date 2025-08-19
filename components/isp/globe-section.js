@@ -121,7 +121,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   }, [data, palette, mode]);
 
   // --- Cluster logic ---
-  const { objectsData, customPointObject, tocList } = useMemo(() => {
+  const { objectsData, customPointObject, tocList, clusterLat, clusterLon } = useMemo(() => {
     if (mode === "world") {
       const londonMarkers = getLondonMarkers(data);
       const nonLondonMarkers = getNonLondonMarkers(data);
@@ -317,7 +317,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         };
       });
 
-      return { objectsData, customPointObject, tocList };
+      return { objectsData, customPointObject, tocList, clusterLat, clusterLon };
     } else {
       const tocList = data.map((marker, idx) => {
         let year = "";
@@ -387,30 +387,50 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         }
         return new THREE.Object3D();
       };
-      return { objectsData, customPointObject, tocList };
+      return { objectsData, customPointObject, tocList, clusterLat: null, clusterLon: null };
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
   const handleObjectClick = (obj) => {
+    // Expand flag clicked: open cluster, zoom to England
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
       setHovered(null);
+      // Zoom to cluster area (England/London)
+      if (globeEl.current && obj.lat && obj.lng) {
+        globeEl.current.pointOfView(
+          {
+            lat: obj.lat,
+            lng: obj.lng,
+            altitude: 1.4 // lower is closer, 1.4 is a good default for zooming in
+          },
+          1700 // duration ms
+        );
+      }
       return;
-    } else if (mode === "world" && obj && getLondonMarkers(data).some(m => m.name === obj.markerId)) {
+    }
+    // Cluster pin (London pin) clicked: open modal, collapse cluster
+    if (londonExpanded && obj && obj.isStandardPin && obj.isLondon) {
       const marker = data.find((m) => m.name === obj.markerId);
       if (marker) {
         onMarkerClick(marker);
       }
       setLondonExpanded(false);
       setHovered(null);
-    } else if (obj && obj.isStandardPin) {
+      return;
+    }
+    // Regular pin clicked: open modal, collapse cluster
+    if (obj && obj.isStandardPin) {
       const marker = data.find((m) => m.name === obj.markerId);
       if (marker) {
         onMarkerClick(marker);
       }
       setLondonExpanded(false);
       setHovered(null);
-    } else if (londonExpanded) {
+      return;
+    }
+    // Clicked on background or a non-pin while cluster is open: collapse cluster
+    if (londonExpanded) {
       setLondonExpanded(false);
       setHovered(null);
     }
@@ -424,6 +444,17 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (marker.clusterExpand) {
       setLondonExpanded(true);
       setHovered(null);
+      // Zoom to cluster area (England/London)
+      if (globeEl.current && marker.lat && marker.lon) {
+        globeEl.current.pointOfView(
+          {
+            lat: marker.lat,
+            lng: marker.lon,
+            altitude: 1.4
+          },
+          1700
+        );
+      }
       return;
     }
     onMarkerClick(marker);
