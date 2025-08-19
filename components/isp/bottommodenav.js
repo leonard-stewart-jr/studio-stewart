@@ -3,37 +3,33 @@ import React from "react";
 // Define color gradients for each mode
 const MODE_GRADIENTS = {
   world: {
-    // Earthy tones: green to brown to tan
     stops: [
-      { offset: "0%", color: "#A3B18A" }, // olive green
-      { offset: "40%", color: "#bcb08b" }, // sandy
-      { offset: "80%", color: "#865439" }, // brown
-      { offset: "100%", color: "#D6C08E" } // tan
+      { offset: "0%", color: "#A3B18A" },
+      { offset: "40%", color: "#bcb08b" },
+      { offset: "80%", color: "#865439" },
+      { offset: "100%", color: "#D6C08E" }
     ],
     stroke: "#4C3B26"
   },
   usa: {
-    // Red, white, blue
     stops: [
-      { offset: "0%", color: "#C32B2B" }, // red
-      { offset: "40%", color: "#F1F1F1" }, // white
-      { offset: "100%", color: "#2E3A87" } // blue
+      { offset: "0%", color: "#C32B2B" },
+      { offset: "40%", color: "#F1F1F1" },
+      { offset: "100%", color: "#2E3A87" }
     ],
-    stroke: "#181818"
+    stroke: "#222"
   },
   sd: {
-    // Prairie: yellow, blue sky, light green, tan
     stops: [
-      { offset: "0%", color: "#FFE066" }, // yellow
-      { offset: "40%", color: "#A3DAE6" }, // sky blue
-      { offset: "80%", color: "#91C499" }, // prairie green
-      { offset: "100%", color: "#E6CBA8" } // tan
+      { offset: "0%", color: "#FFE066" },
+      { offset: "40%", color: "#A3DAE6" },
+      { offset: "80%", color: "#91C499" },
+      { offset: "100%", color: "#E6CBA8" }
     ],
     stroke: "#4B3920"
   }
 };
 
-// Map for display text
 const MODE_LABELS = {
   world: "WORLD",
   usa: "USA",
@@ -41,9 +37,13 @@ const MODE_LABELS = {
 };
 
 export default function BottomModeNav({ active, onChange }) {
-  // Responsive (optional): make text even bigger on desktop
+  // Responsive font size
   const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
   const fontSize = isMobile ? 48 : 72; // px
+
+  // Fixed SVG width for all buttons (largest label)
+  const svgWidth = 240;
+  const svgHeight = fontSize * 1.25;
 
   return (
     <nav
@@ -56,10 +56,10 @@ export default function BottomModeNav({ active, onChange }) {
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
-        gap: isMobile ? 28 : 44,
+        alignItems: "flex-start", // left align
+        gap: 36,
         background: "transparent",
-        padding: isMobile ? 8 : 32,
+        padding: isMobile ? 8 : 38,
         pointerEvents: "auto"
       }}
     >
@@ -85,8 +85,9 @@ export default function BottomModeNav({ active, onChange }) {
               margin: 0,
               cursor: isActive ? "default" : "pointer",
               display: "block",
+              width: svgWidth,
+              height: svgHeight,
               transition: "transform 0.17s",
-              transform: isActive ? "scale(1.11)" : "scale(1)",
               opacity: isActive ? 1 : 0.88,
               pointerEvents: isActive ? "none" : "auto",
               userSelect: "none"
@@ -94,9 +95,9 @@ export default function BottomModeNav({ active, onChange }) {
             disabled={isActive}
           >
             <svg
-              width={label.length * fontSize * 0.7}
-              height={fontSize * 1.33}
-              viewBox={`0 0 ${label.length * fontSize * 0.7} ${fontSize * 1.33}`}
+              width={svgWidth}
+              height={svgHeight}
+              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
               style={{
                 display: "block"
               }}
@@ -111,9 +112,9 @@ export default function BottomModeNav({ active, onChange }) {
                 </linearGradient>
               </defs>
               <text
-                x="50%"
-                y="57%"
-                textAnchor="middle"
+                x={0}
+                y={svgHeight / 2 + fontSize / 2.7}
+                textAnchor="start"
                 dominantBaseline="middle"
                 fontFamily="'coolvetica', 'Bungee Shade', Arial, sans-serif"
                 fontSize={fontSize}
