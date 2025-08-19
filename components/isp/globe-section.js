@@ -189,7 +189,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
       const customPointObject = (obj) => {
         // --- HITBOX RADIUS: adjust this if you want larger/smaller hit area ---
-        const HITBOX_RADIUS = 6;
+        const HITBOX_RADIUS = 3;
         if (obj.isExpandPin) {
           if (flagModel) {
             const group = new THREE.Group();
