@@ -1,21 +1,56 @@
+@font-face {
+	font-family:"Coolvetica Bk";
+	font-style:normal;
+	font-weight:normal;
+	src : url("../../font/CoolveticaBk-Regular.otf");
+}
+@font-face {
+	font-family:"Coolvetica El";
+	font-style:normal;
+	font-weight:200;
+	src : url("../../font/CoolveticaEl-Regular.otf");
+}
+@font-face {
+	font-family:"Coolvetica Lt";
+	font-style:italic;
+	font-weight:300;
+	src : url("../../font/CoolveticaLt-Italic.otf");
+}
+@font-face {
+	font-family:"Coolvetica Lt";
+	font-style:oblique;
+	font-weight:300;
+	src : url("../../font/CoolveticaLt-Italic.otf");
+}
+@font-face {
+	font-family:"Coolvetica Lt";
+	font-style:normal;
+	font-weight:300;
+	src : url("../../font/CoolveticaLt-Regular.otf");
+}
+@font-face {
+	font-family:"Coolvetica Ul";
+	font-style:italic;
+	font-weight:200;
+	src : url("../../font/CoolveticaUl-Italic.otf");
+}
+@font-face {
+	font-family:"Coolvetica Ul";
+	font-style:oblique;
+	font-weight:200;
+	src : url("../../font/CoolveticaUl-Italic.otf");
+}
+@font-face {
+	font-family:"Minion Pro";
+	font-style:normal;
+	font-weight:normal;
+	src : url("../../font/MinionPro-Regular.otf");
+}
 body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
 	margin:0;
 	padding:0;
 	border-width:0;
-	font-family:"coolvetica", sans-serif;
 	text-rendering:optimizeSpeed;
-}
-body {
-  overflow-x: auto;
-  overflow-y: hidden;
-  min-height: 720px;
-  min-width: 4950px;
-  width: 100vw;
-  height: 100vh;
-  background: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 div > svg {
 	position:absolute;
@@ -28,78 +63,85 @@ p.ParaOverride-1 {
 	white-space:nowrap;
 }
 span.CharOverride-1 {
-	color:#bd9f72;
-	font-family:"coolvetica", sans-serif;
+	color:#3b3a30;
+	font-family:"Coolvetica Bk", sans-serif;
 	font-size:227.4px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-2 {
-	color:#808285;
-	font-family:"coolvetica", sans-serif;
+	color:#939598;
+	font-family:"Coolvetica Lt", sans-serif;
 	font-size:227.4px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-3 {
-	color:#bd9f72;
-	font-family:"coolvetica", sans-serif;
+	color:#3b3a30;
+	font-family:"Coolvetica Lt", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-4 {
-	color:#808285;
-	font-family:"coolvetica", sans-serif;
+	color:#939598;
+	font-family:"Coolvetica Lt", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:300;
 }
 span.CharOverride-5 {
-	color:#282829;
-	font-family:"coolvetica", sans-serif;
+	color:#3b3a30;
+	font-family:"Coolvetica Bk", sans-serif;
 	font-size:320px;
 	font-style:normal;
 	font-weight:normal;
 }
 span.CharOverride-6 {
-	color:#282829;
-	font-family:"coolvetica", sans-serif;
+	color:#4d4d4f;
+	font-family:"Coolvetica Bk", sans-serif;
+	font-size:320px;
+	font-style:normal;
+	font-weight:normal;
+}
+span.CharOverride-7 {
+	color:#4d4d4f;
+	font-family:"Coolvetica Lt", sans-serif;
 	font-size:360px;
 	font-style:normal;
 	font-weight:300;
 }
-span.CharOverride-7 {
-	color:#6d6e71;
-	font-family:"coolvetica", sans-serif;
+span.CharOverride-8 {
+	color:#939598;
+	font-family:"Coolvetica Lt", sans-serif;
 	font-size:280px;
 	font-style:normal;
 	font-weight:300;
 }
-span.CharOverride-8 {
-	color:#6d6e71;
-	font-family:"coolvetica", sans-serif;
-	font-size:240px;
-	font-style:normal;
-	font-weight:300;
-}
 span.CharOverride-9 {
-	color:#282829;
-	font-family:"coolvetica", sans-serif;
+	color:#939598;
+	font-family:"Coolvetica Lt", sans-serif;
 	font-size:240px;
 	font-style:normal;
 	font-weight:300;
 }
 span.CharOverride-10 {
-	color:#282829;
-	font-family:"coolvetica", sans-serif;
+	color:#4d4d4f;
+	font-family:"Coolvetica Lt", sans-serif;
+	font-size:240px;
+	font-style:normal;
+	font-weight:300;
+}
+span.CharOverride-11 {
+	color:#3b3a30;
+	font-family:"Coolvetica Ul", sans-serif;
 	font-size:240px;
 	font-style:italic;
 	font-weight:200;
 }
-span.CharOverride-11 {
-	color:#6d6e71;
-	font-family:"coolvetica", sans-serif;
+span.CharOverride-12 {
+	color:#939598;
+	font-family:"Coolvetica El", sans-serif;
 	font-size:200px;
 	font-style:normal;
 	font-weight:200;
@@ -109,7 +151,7 @@ span.CharOverride-11 {
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(231.999px,13.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
-	height:692.07px;
+	height:705.37px;
 	left:0px;
 	position:absolute;
 	top:0px;
@@ -117,14 +159,14 @@ span.CharOverride-11 {
 	transform:translate(231.999px,13.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	transform-origin:0% 0%;
 	transform-origin:0% 0%;
-	width:1114.46px;
+	width:1127.76px;
 }
 #_idContainer001 {
 	-ms-transform:translate(2776.000px,13.999px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(2776.000px,13.999px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
-	height:692.00px;
+	height:705.30px;
 	left:0px;
 	position:absolute;
 	top:0px;
@@ -132,14 +174,14 @@ span.CharOverride-11 {
 	transform:translate(2776.000px,13.999px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	transform-origin:0% 0%;
 	transform-origin:0% 0%;
-	width:754.85px;
+	width:768.15px;
 }
 #_idContainer002 {
 	-ms-transform:translate(1802.621px,14.000px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(1802.621px,14.000px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
-	height:692.00px;
+	height:705.30px;
 	left:0px;
 	position:absolute;
 	top:0px;
@@ -147,14 +189,14 @@ span.CharOverride-11 {
 	transform:translate(1802.621px,14.000px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	transform-origin:0% 0%;
 	transform-origin:0% 0%;
-	width:494.26px;
+	width:507.56px;
 }
 #_idContainer003 {
 	-ms-transform:translate(3910.390px,13.999px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(3910.390px,13.999px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
-	height:692.00px;
+	height:705.30px;
 	left:0px;
 	position:absolute;
 	top:0px;
@@ -162,19 +204,19 @@ span.CharOverride-11 {
 	transform:translate(3910.390px,13.999px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	transform-origin:0% 0%;
 	transform-origin:0% 0%;
-	width:1025.61px;
+	width:1038.91px;
 }
 #_idContainer004 {
-	-ms-transform:translate(1352.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	-ms-transform:translate(1353.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
-	-webkit-transform:translate(1352.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	-webkit-transform:translate(1353.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
 	height:696.72px;
 	left:0px;
 	position:absolute;
 	top:0px;
-	transform:translate(1352.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform:translate(1352.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	transform:translate(1353.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	transform:translate(1353.455px,12.928px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	transform-origin:0% 0%;
 	transform-origin:0% 0%;
 	width:70.62px;
@@ -244,7 +286,7 @@ span.CharOverride-11 {
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(-0.001px,82.838px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
-	height:624.04px;
+	height:349.16px;
 	left:0px;
 	position:absolute;
 	top:0px;
@@ -255,81 +297,21 @@ span.CharOverride-11 {
 	width:187.00px;
 }
 #_idContainer010 {
-	-ms-transform:translate(171.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	-ms-transform:translate(13.999px,11.581px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
-	-webkit-transform:translate(171.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	-webkit-transform:translate(13.999px,11.581px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-webkit-transform-origin:0% 0%;
-	height:16.00px;
+	height:77.30px;
 	left:0px;
 	position:absolute;
 	top:0px;
-	transform:translate(171.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform:translate(171.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform-origin:0% 0%;
-	transform-origin:0% 0%;
-	width:16.00px;
-}
-#_idContainer011 {
-	-ms-transform:translate(151.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-ms-transform-origin:0% 0%;
-	-webkit-transform:translate(151.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-webkit-transform-origin:0% 0%;
-	height:16.00px;
-	left:0px;
-	position:absolute;
-	top:0px;
-	transform:translate(151.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform:translate(151.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform-origin:0% 0%;
-	transform-origin:0% 0%;
-	width:16.00px;
-}
-#_idContainer012 {
-	-ms-transform:translate(131.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-ms-transform-origin:0% 0%;
-	-webkit-transform:translate(131.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-webkit-transform-origin:0% 0%;
-	height:16.00px;
-	left:0px;
-	position:absolute;
-	top:0px;
-	transform:translate(131.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform:translate(131.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform-origin:0% 0%;
-	transform-origin:0% 0%;
-	width:16.00px;
-}
-#_idContainer013 {
-	-ms-transform:translate(111.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-ms-transform-origin:0% 0%;
-	-webkit-transform:translate(111.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-webkit-transform-origin:0% 0%;
-	height:16.00px;
-	left:0px;
-	position:absolute;
-	top:0px;
-	transform:translate(111.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform:translate(111.999px,689.878px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform-origin:0% 0%;
-	transform-origin:0% 0%;
-	width:16.00px;
-}
-#_idContainer014 {
-	-ms-transform:translate(13.999px,11.459px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-ms-transform-origin:0% 0%;
-	-webkit-transform:translate(13.999px,11.459px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	-webkit-transform-origin:0% 0%;
-	height:77.42px;
-	left:0px;
-	position:absolute;
-	top:0px;
-	transform:translate(13.999px,11.459px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
-	transform:translate(13.999px,11.459px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	transform:translate(13.999px,11.581px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
+	transform:translate(13.999px,11.581px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	transform-origin:0% 0%;
 	transform-origin:0% 0%;
 	width:173.00px;
 }
-#_idContainer015 {
+#_idContainer011 {
 	-ms-transform:translate(3560.849px,10.567px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(3560.849px,10.567px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
@@ -344,7 +326,7 @@ span.CharOverride-11 {
 	transform-origin:0% 0%;
 	width:319.54px;
 }
-#_idContainer016 {
+#_idContainer012 {
 	-ms-transform:translate(3717.000px,367.000px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
 	-ms-transform-origin:0% 0%;
 	-webkit-transform:translate(3717.000px,367.000px) rotate(0.000deg) skew(0.000deg) scale(1.000,1.000);
@@ -368,8 +350,4 @@ img._idGenObjectAttribute-2 {
 	left:0px;
 	position:absolute;
 	top:0px;
-}
-div._idGenObjectStyle-Disabled {
-	background-color:transparent;
-	border-width:0px;
 }
