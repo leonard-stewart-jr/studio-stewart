@@ -36,33 +36,31 @@ const MODE_LABELS = {
   sd: "SOUTH DAKOTA"
 };
 
-const NAVBAR_HEIGHT = 76; // px, from your header
+const NAVBAR_HEIGHT = 76; // px
 
 export default function BottomModeNav({ active, onChange }) {
   // Responsive font size
   const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
   const fontSize = isMobile ? 27 : 40; // px
 
-  // Find the max label length for consistent svg width
+  // Find the max label width
   const labelValues = Object.values(MODE_LABELS);
-  const maxLabelLength = Math.max(...labelValues.map(label => label.length));
-  // Estimate width for the longest label + a little padding
-  const svgWidth = Math.ceil(maxLabelLength * fontSize * 0.68 + 40);
+  const maxLabel = labelValues.reduce((a, b) => (a.length > b.length ? a : b));
+  const approxCharWidth = fontSize * 0.68;
+  const svgWidth = Math.ceil(maxLabel.length * approxCharWidth) + 12; // minimal left/right padding
   const svgHeight = Math.ceil(fontSize * 1.39);
 
   // Center X coordinate for all SVG text
-  const centerX = svgWidth / 2;
-  // Center Y coordinate for text
+  const centerX = 10 + Math.floor(svgWidth / 2); // 10px left pad so first letter never clipped
   const centerY = svgHeight / 2 + fontSize / 2.8;
 
   // Spacing: Add 50px to previous gap
-  const baseGap = svgHeight; // original gap was the height of a button
-  const gap = baseGap + 50;
+  const gap = svgHeight + 50;
 
   // Calculate vertical margin
   const navHeightPx = typeof window !== "undefined" ? window.innerHeight - NAVBAR_HEIGHT : 900 - NAVBAR_HEIGHT;
   const totalButtonsHeight = svgHeight * 3 + gap * 2;
-  const verticalMargin = Math.max((navHeightPx - totalButtonsHeight) / 2, 32);
+  const verticalMargin = Math.max((navHeightPx - totalButtonsHeight) / 2, 24);
 
   // Glow/scale for active
   const activeGlow = "0 0 24px 6px #e6dbb999, 0 0 0px 2px #fff";
@@ -79,7 +77,7 @@ export default function BottomModeNav({ active, onChange }) {
         left: 0,
         top: NAVBAR_HEIGHT,
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-        width: svgWidth,
+        width: svgWidth + 2, // no unnecessary width
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
