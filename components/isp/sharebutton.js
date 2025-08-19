@@ -1,201 +1,131 @@
-import React, { useState } from "react";
+import React from "react";
 
-// Props:
-// - pdfUrl: string (required) - where to download the PDF
-// - htmlUrl: string (required) - the HTML link to copy/share
-// - shareTitle: string (optional) - the title to use for sharing
-// - style: CSS override (optional)
+// Icon paths (SVG imports or require if using with Webpack/Next, or just as /icons/share/...)
+const ICONS = {
+  download: "/icons/share/download.svg",
+  linkedin: "/icons/share/linkedin.svg",
+  reddit: "/icons/share/reddit.svg",
+  mail: "/icons/share/mail.svg",
+  link: "/icons/share/link.svg",
+};
 
-export default function ShareButton({
-  pdfUrl,
-  htmlUrl,
-  shareTitle = "Check this out!",
-  style = {},
-}) {
-  const [copied, setCopied] = useState(false);
+// Helper to open share links
+function openInNewTab(url) {
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
+  // Compose share URLs
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(htmlUrl)}`;
+  const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(htmlUrl)}&title=${encodeURIComponent(shareTitle)}`;
+  const mailUrl = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(htmlUrl)}`;
 
   // Copy link handler
-  const handleCopy = e => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(htmlUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
-  };
-
-  // Email handler
-  const handleMail = e => {
-    e.stopPropagation();
-    window.open(
-      `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(htmlUrl)}`,
-      "_blank"
-    );
-  };
-
-  // Download handler
-  const handleDownload = e => {
-    e.stopPropagation();
-    window.open(pdfUrl, "_blank");
-  };
-
-  // "More" handler (Web Share API or fallback to copy)
-  const handleShare = e => {
-    e.stopPropagation();
-    if (navigator.share) {
-      navigator.share({
-        title: shareTitle,
-        url: htmlUrl
-      });
-    } else {
-      handleCopy(e);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(htmlUrl);
+      alert("Link copied!");
+    } catch (err) {
+      alert("Failed to copy link.");
     }
   };
 
-  // Styles
-  const barHeight = 46;
+  // Download handler
+  const handleDownload = () => {
+    openInNewTab(pdfUrl);
+  };
 
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "flex-end",
-        width: "100%",
-        pointerEvents: "auto",
-        position: "relative",
-        ...style
+        flexDirection: "row",
+        gap: 18,
+        background: "rgba(0,0,0,0.92)",
+        borderRadius: 8,
+        padding: "9px 20px",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+        alignItems: "center",
+        ...style,
       }}
+      aria-label="Share or download this project"
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          background: "#181818",
-          borderRadius: 8,
-          padding: "7px 16px 7px 18px",
-          gap: 14,
-          boxShadow: "0 2px 14px #0006",
-          cursor: "pointer",
-          border: "1.5px solid #fff",
-          minHeight: barHeight,
-          minWidth: 185,
-          transition: "box-shadow 0.18s, border 0.15s",
-        }}
-        tabIndex={0}
-        aria-label="Share/download options"
-        title="Share, download, or copy link"
+      {/* Download Button */}
+      <button
+        onClick={handleDownload}
+        style={iconButtonStyle}
+        aria-label="Download PDF"
+        title="Download PDF"
+        type="button"
       >
-        {/* Download PDF */}
-        <span
-          style={{ display: "flex", alignItems: "center" }}
-          title="Download PDF"
-          onClick={handleDownload}
-          tabIndex={-1}
-        >
-          <img
-            src="/icons/share/download.svg"
-            alt="Download PDF"
-            style={{
-              width: 28,
-              height: 28,
-              display: "block",
-              background: "#000",
-              borderRadius: 5
-            }}
-          />
-        </span>
-        {/* Email */}
-        <span
-          style={{ display: "flex", alignItems: "center" }}
-          title="Share by Email"
-          onClick={handleMail}
-          tabIndex={-1}
-        >
-          <img
-            src="/icons/share/mail.svg"
-            alt="Email"
-            style={{
-              width: 28,
-              height: 28,
-              display: "block",
-              background: "#000",
-              borderRadius: 5
-            }}
-          />
-        </span>
-        {/* Copy Link */}
-        <span
-          style={{ display: "flex", alignItems: "center", position: "relative" }}
-          title={copied ? "Copied!" : "Copy HTML Link"}
-          onClick={handleCopy}
-          tabIndex={-1}
-        >
-          <img
-            src="/icons/share/link.svg"
-            alt="Copy Link"
-            style={{
-              width: 28,
-              height: 28,
-              display: "block",
-              background: "#000",
-              borderRadius: 5
-            }}
-          />
-          {copied && (
-            <span
-              style={{
-                position: "absolute",
-                top: -28,
-                left: "50%",
-                transform: "translateX(-50%)",
-                background: "#222",
-                color: "#fff",
-                borderRadius: 6,
-                padding: "2px 10px",
-                fontSize: 13,
-                opacity: 0.93,
-                pointerEvents: "none",
-                zIndex: 99,
-                whiteSpace: "nowrap"
-              }}
-            >
-              Copied!
-            </span>
-          )}
-        </span>
-        {/* More/Share */}
-        <span
-          style={{ display: "flex", alignItems: "center" }}
-          title="Share"
-          onClick={handleShare}
-          tabIndex={-1}
-        >
-          <img
-            src="/icons/share/share.svg"
-            alt="Share"
-            style={{
-              width: 28,
-              height: 28,
-              display: "block",
-              background: "#000",
-              borderRadius: 5
-            }}
-          />
-        </span>
-        <span
-          style={{
-            color: "#fff",
-            fontFamily: "coolvetica, sans-serif",
-            fontSize: 16,
-            fontWeight: 400,
-            marginLeft: 18,
-            letterSpacing: "0.03em",
-            opacity: 0.64,
-            userSelect: "none"
-          }}
-        >
-          SHARE
-        </span>
-      </div>
+        <img src={ICONS.download} alt="" style={iconImgStyle} />
+      </button>
+
+      {/* LinkedIn */}
+      <button
+        onClick={() => openInNewTab(linkedInUrl)}
+        style={iconButtonStyle}
+        aria-label="Share on LinkedIn"
+        title="Share on LinkedIn"
+        type="button"
+      >
+        <img src={ICONS.linkedin} alt="" style={iconImgStyle} />
+      </button>
+
+      {/* Reddit */}
+      <button
+        onClick={() => openInNewTab(redditUrl)}
+        style={iconButtonStyle}
+        aria-label="Share on Reddit"
+        title="Share on Reddit"
+        type="button"
+      >
+        <img src={ICONS.reddit} alt="" style={iconImgStyle} />
+      </button>
+
+      {/* Email */}
+      <button
+        onClick={() => openInNewTab(mailUrl)}
+        style={iconButtonStyle}
+        aria-label="Share by email"
+        title="Share by email"
+        type="button"
+      >
+        <img src={ICONS.mail} alt="" style={iconImgStyle} />
+      </button>
+
+      {/* Copy Link */}
+      <button
+        onClick={handleCopy}
+        style={iconButtonStyle}
+        aria-label="Copy link"
+        title="Copy link"
+        type="button"
+      >
+        <img src={ICONS.link} alt="" style={iconImgStyle} />
+      </button>
     </div>
   );
 }
+
+// Styles
+const iconButtonStyle = {
+  background: "transparent",
+  border: "none",
+  borderRadius: 4,
+  padding: 4,
+  cursor: "pointer",
+  width: 40,
+  height: 40,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  transition: "box-shadow 0.13s, background 0.13s",
+};
+
+const iconImgStyle = {
+  width: 32,
+  height: 32,
+  display: "block",
+  pointerEvents: "none",
+};
