@@ -36,51 +36,45 @@ const MODE_LABELS = {
   sd: "SOUTH DAKOTA"
 };
 
-// Layout constants
 const NAVBAR_HEIGHT = 76; // px, from your header
-const BUTTON_COUNT = 3;
 
 export default function BottomModeNav({ active, onChange }) {
   // Responsive font size (decreased for long labels)
   const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
   const fontSize = isMobile ? 27 : 40; // px
 
-  // Calculate SVG width based on maximum label length, plus padding
-  const svgPadding = 18; // px, left-right padding inside SVG
-  const buttonWidth = Math.ceil(Math.max(
-    ...Object.values(MODE_LABELS).map(label => label.length * fontSize * 0.67)
-  )) + svgPadding * 2;
+  const svgPadding = 24; // px, left-right padding inside SVG for no clipping
+  // Calculate the maximum label width
+  const labelWidths = Object.values(MODE_LABELS).map(
+    label => label.length * fontSize * 0.62
+  );
+  const maxLabelWidth = Math.max(...labelWidths);
+  const svgWidth = Math.ceil(maxLabelWidth + svgPadding * 2);
 
   const buttonHeight = Math.ceil(fontSize * 1.39);
+
+  // Spacing: 50px extra between each button
+  const gap = buttonHeight + 50;
+
+  // Center all words on the same vertical center-line
+  const centerX = svgWidth / 2;
 
   // Height available for the nav (excluding header)
   const navHeight = `calc(100vh - ${NAVBAR_HEIGHT}px)`;
 
-  // For perfect thirds: 
-  // Space above + button1 + gap1 + button2 + gap2 + button3 + space below = navHeight
-  // Let space = S, gap = G, button height = H
-  // S + H + G + H + G + H + S = navHeight  => 2S + 2G + 3H = navHeight
-  // So: S = (navHeight - 3H - 2G) / 2
-
-  // Let's use G = buttonHeight (one full button height as gap)
-  const gap = buttonHeight;
-  // For CSS calc, must use px
-  // space = (navHeight_px - 3*buttonHeight - 2*gap) / 2
-  // But navHeight is in CSS calc, so use JS for px value
+  // For SSR/fallback, default space to 64px if not available
   const navHeightPx = typeof window !== "undefined" ? window.innerHeight - NAVBAR_HEIGHT : 900 - NAVBAR_HEIGHT;
-  const space = Math.max((navHeightPx - BUTTON_COUNT * buttonHeight - 2 * gap) / 2, 0);
-
-  // For SSR/fallback, default space to 48px if negative
-  const topSpace = space >= 0 ? space : 48;
-  const bottomSpace = topSpace;
-
-  // For the glowing active state
-  const activeGlow = "0 0 24px 6px #e6dbb999, 0 0 0px 2px #fff";
-  const activeScale = 1.18;
-  const inactiveScale = 1;
+  // 2 gaps, 3 buttons, fill with margin above and below
+  const totalButtonsHeight = buttonHeight * 3 + gap * 2;
+  const verticalMargin = Math.max((navHeightPx - totalButtonsHeight) / 2, 32);
 
   // Button order
   const modes = ["world", "usa", "sd"];
+
+  // Glowing/scale effect for active
+  const activeGlow = "0 0 24px 6px #e6dbb999, 0 0 0px 2px #fff";
+  const activeScale = 1.19;
+  const inactiveScale = 1;
 
   return (
     <nav
@@ -90,27 +84,30 @@ export default function BottomModeNav({ active, onChange }) {
         left: 0,
         top: NAVBAR_HEIGHT,
         height: navHeight,
-        width: buttonWidth + 30, // enough for padding and shadow
+        width: svgWidth + 30,
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "flex-start",
         background: "transparent",
         pointerEvents: "auto",
         boxSizing: "border-box",
-        // Remove scrolling for nav
         overflow: "hidden"
       }}
     >
-      {/* Top space */}
-      <div style={{ height: topSpace }} />
+      {/* Top vertical margin */}
+      <div style={{ height: verticalMargin }} />
       {/* MODE BUTTONS */}
       {modes.map((mode, idx) => {
         const gradientId = `mode-gradient-${mode}`;
         const { stops, stroke } = MODE_GRADIENTS[mode];
         const label = MODE_LABELS[mode];
         const isActive = active === mode;
+        // Calculate label width for perfect visual centering
+        const labelWidth = label.length * fontSize * 0.62;
+        // Center X minus half actual label width, so each word is centered on the same line
+        const labelX = centerX - labelWidth / 2;
 
         return (
           <React.Fragment key={mode}>
@@ -129,26 +126,24 @@ export default function BottomModeNav({ active, onChange }) {
                 cursor: isActive ? "default" : "pointer",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "flex-start",
-                width: buttonWidth,
+                justifyContent: "center",
+                width: svgWidth,
                 height: buttonHeight,
                 transition: "transform 0.18s, filter 0.18s",
                 opacity: isActive ? 1 : 0.91,
                 pointerEvents: isActive ? "none" : "auto",
-                userSelect: "none",
-                // Center the button's content vertically in its area
+                userSelect: "none"
               }}
               disabled={isActive}
             >
               <svg
-                width={buttonWidth}
+                width={svgWidth}
                 height={buttonHeight}
-                viewBox={`0 0 ${buttonWidth} ${buttonHeight}`}
+                viewBox={`0 0 ${svgWidth} ${buttonHeight}`}
                 style={{
                   display: "block",
-                  // Center content left, but pad so no clipping
                   marginLeft: 0,
-                  marginRight: "auto",
+                  marginRight: 0,
                   overflow: "visible"
                 }}
                 aria-hidden="true"
@@ -162,7 +157,7 @@ export default function BottomModeNav({ active, onChange }) {
                   </linearGradient>
                 </defs>
                 <text
-                  x={svgPadding}
+                  x={labelX}
                   y={buttonHeight / 2 + fontSize / 2.8}
                   textAnchor="start"
                   dominantBaseline="middle"
@@ -187,12 +182,12 @@ export default function BottomModeNav({ active, onChange }) {
               </svg>
             </button>
             {/* Gap except after last button */}
-            {idx < BUTTON_COUNT - 1 && <div style={{ height: gap }} />}
+            {idx < modes.length - 1 && <div style={{ height: gap }} />}
           </React.Fragment>
         );
       })}
-      {/* Bottom space */}
-      <div style={{ flex: 1, height: bottomSpace }} />
+      {/* Bottom vertical margin */}
+      <div style={{ height: verticalMargin, flexShrink: 0 }} />
     </nav>
   );
 }
