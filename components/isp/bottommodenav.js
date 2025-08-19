@@ -39,42 +39,37 @@ const MODE_LABELS = {
 const NAVBAR_HEIGHT = 76; // px, from your header
 
 export default function BottomModeNav({ active, onChange }) {
-  // Responsive font size (decreased for long labels)
+  // Responsive font size
   const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
   const fontSize = isMobile ? 27 : 40; // px
 
-  const svgPadding = 24; // px, left-right padding inside SVG for no clipping
-  // Calculate the maximum label width
-  const labelWidths = Object.values(MODE_LABELS).map(
-    label => label.length * fontSize * 0.62
-  );
-  const maxLabelWidth = Math.max(...labelWidths);
-  const svgWidth = Math.ceil(maxLabelWidth + svgPadding * 2);
+  // Find the max label length for consistent svg width
+  const labelValues = Object.values(MODE_LABELS);
+  const maxLabelLength = Math.max(...labelValues.map(label => label.length));
+  // Estimate width for the longest label + a little padding
+  const svgWidth = Math.ceil(maxLabelLength * fontSize * 0.68 + 40);
+  const svgHeight = Math.ceil(fontSize * 1.39);
 
-  const buttonHeight = Math.ceil(fontSize * 1.39);
-
-  // Spacing: 50px extra between each button
-  const gap = buttonHeight + 50;
-
-  // Center all words on the same vertical center-line
+  // Center X coordinate for all SVG text
   const centerX = svgWidth / 2;
+  // Center Y coordinate for text
+  const centerY = svgHeight / 2 + fontSize / 2.8;
 
-  // Height available for the nav (excluding header)
-  const navHeight = `calc(100vh - ${NAVBAR_HEIGHT}px)`;
+  // Spacing: Add 50px to previous gap
+  const baseGap = svgHeight; // original gap was the height of a button
+  const gap = baseGap + 50;
 
-  // For SSR/fallback, default space to 64px if not available
+  // Calculate vertical margin
   const navHeightPx = typeof window !== "undefined" ? window.innerHeight - NAVBAR_HEIGHT : 900 - NAVBAR_HEIGHT;
-  // 2 gaps, 3 buttons, fill with margin above and below
-  const totalButtonsHeight = buttonHeight * 3 + gap * 2;
+  const totalButtonsHeight = svgHeight * 3 + gap * 2;
   const verticalMargin = Math.max((navHeightPx - totalButtonsHeight) / 2, 32);
 
-  // Button order
-  const modes = ["world", "usa", "sd"];
-
-  // Glowing/scale effect for active
+  // Glow/scale for active
   const activeGlow = "0 0 24px 6px #e6dbb999, 0 0 0px 2px #fff";
-  const activeScale = 1.19;
+  const activeScale = 1.18;
   const inactiveScale = 1;
+
+  const modes = ["world", "usa", "sd"];
 
   return (
     <nav
@@ -83,31 +78,25 @@ export default function BottomModeNav({ active, onChange }) {
         position: "fixed",
         left: 0,
         top: NAVBAR_HEIGHT,
-        height: navHeight,
-        width: svgWidth + 30,
+        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+        width: svgWidth,
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "flex-start",
         background: "transparent",
         pointerEvents: "auto",
         boxSizing: "border-box",
-        overflow: "hidden"
+        overflow: "hidden",
       }}
     >
-      {/* Top vertical margin */}
       <div style={{ height: verticalMargin }} />
-      {/* MODE BUTTONS */}
       {modes.map((mode, idx) => {
         const gradientId = `mode-gradient-${mode}`;
         const { stops, stroke } = MODE_GRADIENTS[mode];
         const label = MODE_LABELS[mode];
         const isActive = active === mode;
-        // Calculate label width for perfect visual centering
-        const labelWidth = label.length * fontSize * 0.62;
-        // Center X minus half actual label width, so each word is centered on the same line
-        const labelX = centerX - labelWidth / 2;
 
         return (
           <React.Fragment key={mode}>
@@ -128,7 +117,7 @@ export default function BottomModeNav({ active, onChange }) {
                 alignItems: "center",
                 justifyContent: "center",
                 width: svgWidth,
-                height: buttonHeight,
+                height: svgHeight,
                 transition: "transform 0.18s, filter 0.18s",
                 opacity: isActive ? 1 : 0.91,
                 pointerEvents: isActive ? "none" : "auto",
@@ -138,12 +127,11 @@ export default function BottomModeNav({ active, onChange }) {
             >
               <svg
                 width={svgWidth}
-                height={buttonHeight}
-                viewBox={`0 0 ${svgWidth} ${buttonHeight}`}
+                height={svgHeight}
+                viewBox={`0 0 ${svgWidth} ${svgHeight}`}
                 style={{
                   display: "block",
-                  marginLeft: 0,
-                  marginRight: 0,
+                  margin: 0,
                   overflow: "visible"
                 }}
                 aria-hidden="true"
@@ -157,9 +145,9 @@ export default function BottomModeNav({ active, onChange }) {
                   </linearGradient>
                 </defs>
                 <text
-                  x={labelX}
-                  y={buttonHeight / 2 + fontSize / 2.8}
-                  textAnchor="start"
+                  x={centerX}
+                  y={centerY}
+                  textAnchor="middle"
                   dominantBaseline="middle"
                   fontFamily="'coolvetica', 'Bungee Shade', Arial, sans-serif"
                   fontSize={fontSize}
@@ -181,12 +169,10 @@ export default function BottomModeNav({ active, onChange }) {
                 </text>
               </svg>
             </button>
-            {/* Gap except after last button */}
             {idx < modes.length - 1 && <div style={{ height: gap }} />}
           </React.Fragment>
         );
       })}
-      {/* Bottom vertical margin */}
       <div style={{ height: verticalMargin, flexShrink: 0 }} />
     </nav>
   );
