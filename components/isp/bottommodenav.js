@@ -63,8 +63,8 @@ export default function BottomModeNav({ active, onChange }) {
   const totalButtonsHeight = svgHeight * 3 + gap * 2;
   const verticalMargin = Math.max((navHeightPx - totalButtonsHeight) / 2, 24);
 
-  // Glow/scale for active
-  const activeGlow = "0 0 24px 6px #e6dbb999, 0 0 0px 2px #fff";
+  // Stronger glow/scale for active
+  const activeGlow = "0 0 54px 12px #e6dbb9cc, 0 0 12px 6px #fff";
   const activeScale = 1.18;
   const inactiveScale = 1;
 
