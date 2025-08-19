@@ -1,6 +1,6 @@
 import React from "react";
 
-// Icon paths (SVG imports or require if using with Webpack/Next, or just as /icons/share/...)
+// Icon paths (adjust if your structure is different)
 const ICONS = {
   download: "/icons/share/download.svg",
   linkedin: "/icons/share/linkedin.svg",
@@ -9,7 +9,7 @@ const ICONS = {
   link: "/icons/share/link.svg",
 };
 
-// Helper to open share links
+// Helper to open share links in new tab
 function openInNewTab(url) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -25,7 +25,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
     try {
       await navigator.clipboard.writeText(htmlUrl);
       alert("Link copied!");
-    } catch (err) {
+    } catch {
       alert("Failed to copy link.");
     }
   };
@@ -39,84 +39,107 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
     <div
       style={{
         display: "flex",
-        flexDirection: "row",
-        gap: 18,
-        background: "rgba(0,0,0,0.92)",
-        borderRadius: 8,
-        padding: "9px 20px",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+        flexDirection: "column",
         alignItems: "center",
+        width: "auto",
         ...style,
       }}
-      aria-label="Share or download this project"
     >
-      {/* Download Button */}
-      <button
-        onClick={handleDownload}
-        style={iconButtonStyle}
-        aria-label="Download PDF"
-        title="Download PDF"
-        type="button"
+      {/* SHARE label */}
+      <span
+        style={{
+          fontFamily: "'coolvetica', 'Open Sans', sans-serif",
+          fontWeight: 300,
+          fontSize: 16, // 12pt ≈ 16px
+          color: "rgba(0,0,0,0.5)",
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          textAlign: "center",
+          marginBottom: 7,
+          userSelect: "none",
+          lineHeight: 1.17,
+        }}
       >
-        <img src={ICONS.download} alt="" style={iconImgStyle} />
-      </button>
-
-      {/* LinkedIn */}
-      <button
-        onClick={() => openInNewTab(linkedInUrl)}
-        style={iconButtonStyle}
-        aria-label="Share on LinkedIn"
-        title="Share on LinkedIn"
-        type="button"
+        Share
+      </span>
+      {/* Icon bar */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 10,
+          background: "none",
+          borderRadius: 8,
+          padding: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        aria-label="Share or download this project"
       >
-        <img src={ICONS.linkedin} alt="" style={iconImgStyle} />
-      </button>
-
-      {/* Reddit */}
-      <button
-        onClick={() => openInNewTab(redditUrl)}
-        style={iconButtonStyle}
-        aria-label="Share on Reddit"
-        title="Share on Reddit"
-        type="button"
-      >
-        <img src={ICONS.reddit} alt="" style={iconImgStyle} />
-      </button>
-
-      {/* Email */}
-      <button
-        onClick={() => openInNewTab(mailUrl)}
-        style={iconButtonStyle}
-        aria-label="Share by email"
-        title="Share by email"
-        type="button"
-      >
-        <img src={ICONS.mail} alt="" style={iconImgStyle} />
-      </button>
-
-      {/* Copy Link */}
-      <button
-        onClick={handleCopy}
-        style={iconButtonStyle}
-        aria-label="Copy link"
-        title="Copy link"
-        type="button"
-      >
-        <img src={ICONS.link} alt="" style={iconImgStyle} />
-      </button>
+        {/* Download */}
+        <button
+          onClick={handleDownload}
+          style={iconButtonStyle}
+          aria-label="Download PDF"
+          title="Download PDF"
+          type="button"
+        >
+          <img src={ICONS.download} alt="" style={iconImgStyle} />
+        </button>
+        {/* LinkedIn */}
+        <button
+          onClick={() => openInNewTab(linkedInUrl)}
+          style={iconButtonStyle}
+          aria-label="Share on LinkedIn"
+          title="Share on LinkedIn"
+          type="button"
+        >
+          <img src={ICONS.linkedin} alt="" style={iconImgStyle} />
+        </button>
+        {/* Reddit */}
+        <button
+          onClick={() => openInNewTab(redditUrl)}
+          style={iconButtonStyle}
+          aria-label="Share on Reddit"
+          title="Share on Reddit"
+          type="button"
+        >
+          <img src={ICONS.reddit} alt="" style={iconImgStyle} />
+        </button>
+        {/* Email */}
+        <button
+          onClick={() => openInNewTab(mailUrl)}
+          style={iconButtonStyle}
+          aria-label="Share by email"
+          title="Share by email"
+          type="button"
+        >
+          <img src={ICONS.mail} alt="" style={iconImgStyle} />
+        </button>
+        {/* Copy Link */}
+        <button
+          onClick={handleCopy}
+          style={iconButtonStyle}
+          aria-label="Copy link"
+          title="Copy link"
+          type="button"
+        >
+          <img src={ICONS.link} alt="" style={iconImgStyle} />
+        </button>
+      </div>
     </div>
   );
 }
 
-// Styles
+// Styles for icon buttons and images
 const iconButtonStyle = {
   background: "transparent",
   border: "none",
   borderRadius: 4,
-  padding: 4,
+  padding: 2,
   cursor: "pointer",
-  width: 40,
-  height: 40,
+  width: 34,
+  height: 34,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -124,8 +147,8 @@ const iconButtonStyle = {
 };
 
 const iconImgStyle = {
-  width: 32,
-  height: 32,
+  width: 28,
+  height: 28,
   display: "block",
   pointerEvents: "none",
 };
