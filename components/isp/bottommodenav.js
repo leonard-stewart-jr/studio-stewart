@@ -45,13 +45,13 @@ export default function BottomModeNav({ active, onChange }) {
 
   // Find the max label width
   const labelValues = Object.values(MODE_LABELS);
-  const maxLabel = labelValues.reduce((a, b) => (a.length > b.length ? a : b));
+  const maxLabelLength = Math.max(...labelValues.map(label => label.length));
   const approxCharWidth = fontSize * 0.68;
-  const svgWidth = Math.ceil(maxLabel.length * approxCharWidth) + 12; // minimal left/right padding
+  const svgWidth = Math.ceil(maxLabelLength * approxCharWidth) + 24; // 24px left padding
   const svgHeight = Math.ceil(fontSize * 1.39);
 
-  // Center X coordinate for all SVG text
-  const centerX = 10 + Math.floor(svgWidth / 2); // 10px left pad so first letter never clipped
+  // Left x for all text (start at 12px so no clipping)
+  const leftX = 12;
   const centerY = svgHeight / 2 + fontSize / 2.8;
 
   // Spacing: Add 50px to previous gap
@@ -77,7 +77,7 @@ export default function BottomModeNav({ active, onChange }) {
         left: 0,
         top: NAVBAR_HEIGHT,
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-        width: svgWidth + 2, // no unnecessary width
+        width: svgWidth,
         zIndex: 40,
         display: "flex",
         flexDirection: "column",
@@ -113,7 +113,7 @@ export default function BottomModeNav({ active, onChange }) {
                 cursor: isActive ? "default" : "pointer",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 width: svgWidth,
                 height: svgHeight,
                 transition: "transform 0.18s, filter 0.18s",
@@ -143,9 +143,9 @@ export default function BottomModeNav({ active, onChange }) {
                   </linearGradient>
                 </defs>
                 <text
-                  x={centerX}
+                  x={leftX}
                   y={centerY}
-                  textAnchor="middle"
+                  textAnchor="start"
                   dominantBaseline="middle"
                   fontFamily="'coolvetica', 'Bungee Shade', Arial, sans-serif"
                   fontSize={fontSize}
