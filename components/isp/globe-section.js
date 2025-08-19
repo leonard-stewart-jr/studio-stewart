@@ -31,7 +31,6 @@ const GLOBE_IMAGES = {
   sd: "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
 };
 
-// Hardcoded colors for world mode markers (11 pins)
 const WORLD_PIN_COLORS = [
   "#906c5c",  // 1. Mesopotamia
   "#cc853e",  // 2. The Mamertine Prison
@@ -74,7 +73,12 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   const palette = useMemo(() => getPinPalette(mode), [mode]);
   const globeImageUrl = GLOBE_IMAGES[mode];
 
+  // Use a callback ref to get the Globe instance (for pointOfView)
   const globeEl = useRef();
+  const setGlobeRef = (instance) => {
+    globeEl.current = instance;
+  };
+
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
   const [pinReady, setPinReady] = useState(false);
@@ -351,7 +355,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         pinScale
       }));
       const customPointObject = (obj) => {
-        // For USA/SD, all pins use PIN_RADIUS
         const PIN_RADIUS = 3;
         const pinModel = getPinModel();
         if (obj.isStandardPin && pinModel) {
@@ -373,7 +376,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
 
-          // Add invisible hitbox
           const hitbox = new THREE.Mesh(
             new THREE.SphereGeometry(PIN_RADIUS, 16, 16),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
@@ -397,14 +399,14 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       setLondonExpanded(true);
       setHovered(null);
       // Zoom to cluster area (England/London)
-      if (globeEl.current && obj.lat && obj.lng) {
+      if (globeEl.current && typeof globeEl.current.pointOfView === "function" && obj.lat && obj.lng) {
         globeEl.current.pointOfView(
           {
             lat: obj.lat,
             lng: obj.lng,
-            altitude: 1.4 // lower is closer, 1.4 is a good default for zooming in
+            altitude: 1.4
           },
-          1700 // duration ms
+          1700
         );
       }
       return;
@@ -444,8 +446,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (marker.clusterExpand) {
       setLondonExpanded(true);
       setHovered(null);
-      // Zoom to cluster area (England/London)
-      if (globeEl.current && marker.lat && marker.lon) {
+      if (globeEl.current && typeof globeEl.current.pointOfView === "function" && marker.lat && marker.lon) {
         globeEl.current.pointOfView(
           {
             lat: marker.lat,
@@ -504,7 +505,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         zIndex: 0
       }}
     >
-      {/* Globe and TOC are now completely separated and fixed */}
       <div
         style={{
           flex: "0 0 auto",
@@ -522,12 +522,12 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           borderRadius: 0,
           boxShadow: "none",
-          transform: isMobile ? "none" : "translateX(100px)", // <-- SHIFT RIGHT by +100px
+          transform: isMobile ? "none" : "translateX(100px)",
           zIndex: 1
         }}
       >
         <Globe
-          ref={globeEl}
+          ref={setGlobeRef}
           globeImageUrl={globeImageUrl}
           atmosphereColor="#e6dbb9"
           atmosphereAltitude={0.22}
@@ -564,7 +564,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           flexDirection: "column",
           alignItems: isMobile ? "center" : "flex-start",
           justifyContent: isMobile ? "flex-start" : "center",
-          background: "rgba(255,255,255,0)", // transparent
+          background: "rgba(255,255,255,0)",
           boxShadow: "none",
           position: "relative",
           zIndex: 2000,
