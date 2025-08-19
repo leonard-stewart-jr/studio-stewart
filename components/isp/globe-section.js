@@ -187,33 +187,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const pinModel = getPinModel();
       const flagModel = getFlagModel();
 
-      const objectsData = entries.map(obj => {
-        if (obj.isExpandPin) {
-          return {
-            ...obj,
-            lat: obj.lat,
-            lng: obj.lon,
-            markerId: obj.name,
-            isExpandPin: true,
-            altitude: DOT_ALTITUDE,
-            color: colorAssignments[obj.idx],
-            label: obj.name
-          };
-        }
-        return {
-          ...obj,
-          lat: obj.lat,
-          lng: obj.lon,
-          markerId: obj.name,
-          isStandardPin: true,
-          isLondon: !!obj.isLondon,
-          altitude: DOT_ALTITUDE,
-          color: colorAssignments[obj.idx],
-          label: obj.name
-        };
-      });
-
       const customPointObject = (obj) => {
+        // --- HITBOX RADIUS: adjust this if you want larger/smaller hit area ---
+        const HITBOX_RADIUS = 18;
         if (obj.isExpandPin) {
           if (flagModel) {
             const group = new THREE.Group();
@@ -225,6 +201,15 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             orientPin(flag, markerVec);
             flag.rotateZ(Math.PI / 4);
             positionPin(flag, -8);
+
+            // Add invisible hitbox
+            const hitbox = new THREE.Mesh(
+              new THREE.SphereGeometry(HITBOX_RADIUS, 16, 16),
+              new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
+            );
+            hitbox.position.set(0, 0, 0);
+            hitbox.userData = flag.userData;
+            group.add(hitbox);
 
             group.position.copy(markerVec);
             flag.userData = { markerId: obj.markerId, label: obj.label };
@@ -256,11 +241,47 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           positionPin(pin, -6);
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
+
+          // Add invisible hitbox
+          const hitbox = new THREE.Mesh(
+            new THREE.SphereGeometry(HITBOX_RADIUS, 16, 16),
+            new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
+          );
+          hitbox.position.set(0, 0, 0);
+          hitbox.userData = pin.userData;
+          group.add(hitbox);
+
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
         return new THREE.Object3D();
       };
+
+      const objectsData = entries.map(obj => {
+        if (obj.isExpandPin) {
+          return {
+            ...obj,
+            lat: obj.lat,
+            lng: obj.lon,
+            markerId: obj.name,
+            isExpandPin: true,
+            altitude: DOT_ALTITUDE,
+            color: colorAssignments[obj.idx],
+            label: obj.name
+          };
+        }
+        return {
+          ...obj,
+          lat: obj.lat,
+          lng: obj.lon,
+          markerId: obj.name,
+          isStandardPin: true,
+          isLondon: !!obj.isLondon,
+          altitude: DOT_ALTITUDE,
+          color: colorAssignments[obj.idx],
+          label: obj.name
+        };
+      });
 
       return { objectsData, customPointObject, tocList };
     } else {
@@ -296,6 +317,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         pinScale
       }));
       const customPointObject = (obj) => {
+        // For USA/SD, also add bigger hitbox as above
+        const HITBOX_RADIUS = 18;
         const pinModel = getPinModel();
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
@@ -315,6 +338,16 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           positionPin(pin, -6);
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
+
+          // Add invisible hitbox
+          const hitbox = new THREE.Mesh(
+            new THREE.SphereGeometry(HITBOX_RADIUS, 16, 16),
+            new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
+          );
+          hitbox.position.set(0, 0, 0);
+          hitbox.userData = pin.userData;
+          group.add(hitbox);
+
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
@@ -424,7 +457,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           borderRadius: 0,
           boxShadow: "none",
-          transform: isMobile ? "none" : "translateX(100px)", // <-- SHIFT RIGHT by -60px
+          transform: isMobile ? "none" : "translateX(100px)", // <-- SHIFT RIGHT by +100px
           zIndex: 1
         }}
       >
@@ -469,7 +502,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           background: "rgba(255,255,255,0)", // transparent
           boxShadow: "none",
           position: "relative",
-          zIndex: 2000, // ENSURE TOC IS ALWAYS ON TOP
+          zIndex: 2000,
           left: isMobile ? 0 : 0,
           fontFamily: "coolvetica, sans-serif",
           overflow: "visible",
