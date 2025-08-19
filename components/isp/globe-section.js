@@ -13,36 +13,23 @@ import {
   getFlagModel
 } from "./modal/pin-utils";
 
-// DATA FILES
 import globeLocations from "../../data/globe-locations";
 import usaLocations from "../../data/usa-locations";
 import sdEvents from "../../data/sd-events";
 
-// --- CONSTANTS AND CONFIGURATION ---
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 const NORMAL_PIN_SCALE = 9 * 1.5;
 const DOT_ALTITUDE = 0.012;
 const LONDON_CLUSTER_GROUP = "london";
-
 const GLOBE_IMAGES = {
   world: "/images/globe/world-hd.jpg",
   usa: "/images/globe/usa-hd.jpg",
   sd: "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
 };
-
 const WORLD_PIN_COLORS = [
-  "#906c5c",  // 1. Mesopotamia
-  "#cc853e",  // 2. The Mamertine Prison
-  "#3B3A30",  // 3. The Tower of London
-  "#bd9778",  // 4. Newgate Prison
-  "#b6b09a",  // 5. Maison de Force
-  "#7e6651",  // 6. Panopticon Theory
-  "#7C6F57",  // 7. Militarized Architecture
-  "#A3B18A",  // 8. Eastern State
-  "#A0522D",  // 9. British Penal Colonies
-  "#C19A6B",  // 10. Nazi Camps
-  "#8a451f"   // 11. Scandinavian Prison
+  "#906c5c", "#cc853e", "#3B3A30", "#bd9778", "#b6b09a", "#7e6651",
+  "#7C6F57", "#A3B18A", "#A0522D", "#C19A6B", "#8a451f"
 ];
 
 function toRoman(num) {
@@ -60,7 +47,6 @@ function toRoman(num) {
   }
   return result;
 }
-
 function getLondonMarkers(allLocations) {
   return allLocations.filter((m) => m.clusterGroup === LONDON_CLUSTER_GROUP);
 }
@@ -73,58 +59,36 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   const palette = useMemo(() => getPinPalette(mode), [mode]);
   const globeImageUrl = GLOBE_IMAGES[mode];
 
-  // Use a callback ref to get the Globe instance (for pointOfView)
   const globeEl = useRef();
-  const setGlobeRef = (instance) => {
-    globeEl.current = instance;
-  };
+  const setGlobeRef = (instance) => { globeEl.current = instance; };
 
   const [hovered, setHovered] = useState(null);
   const [londonExpanded, setLondonExpanded] = useState(false);
   const [pinReady, setPinReady] = useState(false);
   const [flagReady, setFlagReady] = useState(false);
-  const [globeReady, setGlobeReady] = useState(false);
+  const [globeIsReady, setGlobeIsReady] = useState(false);
 
-  // Responsive
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(typeof window !== "undefined" && window.innerWidth < 800);
-    };
+    const handleResize = () => setIsMobile(typeof window !== "undefined" && window.innerWidth < 800);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  useEffect(() => { let m = true; loadPinModel().then(() => { if (m) setPinReady(true); }); return () => { m = false; }; }, []);
+  useEffect(() => { let m = true; loadFlagModel().then(() => { if (m) setFlagReady(true); }); return () => { m = false; }; }, []);
 
-  useEffect(() => {
-    let mounted = true;
-    loadPinModel().then(() => { if (mounted) setPinReady(true); });
-    return () => { mounted = false; };
-  }, []);
-  useEffect(() => {
-    let mounted = true;
-    loadFlagModel().then(() => { if (mounted) setFlagReady(true); });
-    return () => { mounted = false; };
-  }, []);
-
-  // Pin colors
   const colorAssignments = useMemo(() => {
     if (mode === "world") {
       const arr = [];
       for (let i = 0; i < data.length; i++) {
         if (i < WORLD_PIN_COLORS.length) arr.push(WORLD_PIN_COLORS[i]);
-        else {
-          const fallback = palette && palette.length ? palette[i % palette.length] : "#b32c2c";
-          arr.push(fallback);
-        }
+        else arr.push((palette && palette.length) ? palette[i % palette.length] : "#b32c2c");
       }
       return arr;
-    } else {
-      return getPaletteAssignments(data.length, 42, palette);
-    }
+    } else return getPaletteAssignments(data.length, 42, palette);
   }, [data, palette, mode]);
 
-  // --- Cluster logic ---
   const { objectsData, customPointObject, tocList, clusterLat, clusterLon } = useMemo(() => {
     if (mode === "world") {
       const londonMarkers = getLondonMarkers(data);
@@ -137,80 +101,53 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       if (!londonExpanded) {
         entries = [
           ...nonLondonMarkers.map(marker => ({
-            ...marker,
-            idx: data.indexOf(marker),
-            isStandardPin: true
+            ...marker, idx: data.indexOf(marker), isStandardPin: true
           })),
           ...data.filter(m => m.clusterExpand).map(marker => ({
-            ...marker,
-            idx: data.indexOf(marker),
-            isExpandPin: true
+            ...marker, idx: data.indexOf(marker), isExpandPin: true
           }))
         ];
       } else {
         const N = londonMarkers.length;
-        const radius = 1.2; // degrees, tweak for spread
+        const radius = 1.2;
         entries = [
           ...nonLondonMarkers.map(marker => ({
-            ...marker,
-            idx: data.indexOf(marker),
-            isStandardPin: true
+            ...marker, idx: data.indexOf(marker), isStandardPin: true
           })),
           ...londonMarkers.map((marker, i) => {
             const angle = (2 * Math.PI * i) / N;
             const lat = clusterLat + radius * Math.cos(angle);
             const lon = clusterLon + radius * Math.sin(angle);
-            return {
-              ...marker,
-              idx: data.indexOf(marker),
-              isStandardPin: true,
-              isLondon: true,
-              lat,
-              lon
-            };
+            return { ...marker, idx: data.indexOf(marker), isStandardPin: true, isLondon: true, lat, lon };
           })
         ];
       }
 
-      const tocList = data
-        .map((marker, idx) => {
-          let year = "";
-          if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
-            year = marker.timeline[0].year;
-          return {
-            idx,
-            roman: toRoman(idx + 1),
-            name: marker.name,
-            marker,
-            year,
-            color: colorAssignments[idx]
-          }
-        })
-        .filter(item => !item.marker.clusterExpand);
+      const tocList = data.map((marker, idx) => {
+        let year = "";
+        if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
+          year = marker.timeline[0].year;
+        return {
+          idx, roman: toRoman(idx + 1), name: marker.name,
+          marker, year, color: colorAssignments[idx]
+        }
+      }).filter(item => !item.marker.clusterExpand);
 
       const pinModel = getPinModel();
       const flagModel = getFlagModel();
 
       const customPointObject = (obj) => {
-        // --- HITBOX RADII ---
-        const PIN_RADIUS = 3;
-        const FLAG_RADIUS = 5;
-        const CLUSTER_RADIUS = 1.5;
-
-        // Flag (expand pin)
+        const PIN_RADIUS = 3, FLAG_RADIUS = 5, CLUSTER_RADIUS = 1.5;
         if (obj.isExpandPin) {
           if (flagModel) {
             const group = new THREE.Group();
             const scale = NORMAL_PIN_SCALE * 1.09 * 0.5;
             const markerVec = latLngAltToVec3(obj.lat, obj.lng, obj.altitude);
-
             const flag = flagModel.clone(true);
             flag.scale.set(scale, scale, scale);
             orientPin(flag, markerVec);
             flag.rotateZ(Math.PI / 4);
             positionPin(flag, -8);
-
-            // Add invisible hitbox for flag
             const hitbox = new THREE.Mesh(
               new THREE.SphereGeometry(FLAG_RADIUS, 16, 16),
               new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
@@ -218,7 +155,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             hitbox.position.set(0, 0, 0);
             hitbox.userData = flag.userData;
             group.add(hitbox);
-
             group.position.copy(markerVec);
             flag.userData = { markerId: obj.markerId, label: obj.label };
             group.add(flag);
@@ -228,7 +164,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           }
           return new THREE.Object3D();
         }
-        // Cluster pins (London pins when expanded)
         if (obj.isStandardPin && pinModel && obj.isLondon) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE * 0.75;
@@ -247,8 +182,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           positionPin(pin, -6);
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
-
-          // Add invisible hitbox for cluster pin
           const hitbox = new THREE.Mesh(
             new THREE.SphereGeometry(CLUSTER_RADIUS, 16, 16),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
@@ -256,11 +189,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           hitbox.position.set(0, 0, 0);
           hitbox.userData = pin.userData;
           group.add(hitbox);
-
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
-        // Normal pins
         if (obj.isStandardPin && pinModel) {
           const group = new THREE.Group();
           let scale = NORMAL_PIN_SCALE;
@@ -279,8 +210,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           positionPin(pin, -6);
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
-
-          // Add invisible hitbox for normal pin
           const hitbox = new THREE.Mesh(
             new THREE.SphereGeometry(PIN_RADIUS, 16, 16),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
@@ -288,7 +217,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           hitbox.position.set(0, 0, 0);
           hitbox.userData = pin.userData;
           group.add(hitbox);
-
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
@@ -298,26 +226,15 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       const objectsData = entries.map(obj => {
         if (obj.isExpandPin) {
           return {
-            ...obj,
-            lat: obj.lat,
-            lng: obj.lon,
-            markerId: obj.name,
-            isExpandPin: true,
-            altitude: DOT_ALTITUDE,
-            color: colorAssignments[obj.idx],
-            label: obj.name
+            ...obj, lat: obj.lat, lng: obj.lon,
+            markerId: obj.name, isExpandPin: true, altitude: DOT_ALTITUDE,
+            color: colorAssignments[obj.idx], label: obj.name
           };
         }
         return {
-          ...obj,
-          lat: obj.lat,
-          lng: obj.lon,
-          markerId: obj.name,
-          isStandardPin: true,
-          isLondon: !!obj.isLondon,
-          altitude: DOT_ALTITUDE,
-          color: colorAssignments[obj.idx],
-          label: obj.name
+          ...obj, lat: obj.lat, lng: obj.lon,
+          markerId: obj.name, isStandardPin: true, isLondon: !!obj.isLondon,
+          altitude: DOT_ALTITUDE, color: colorAssignments[obj.idx], label: obj.name
         };
       });
 
@@ -328,12 +245,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         if (marker.timeline && marker.timeline.length > 0 && marker.timeline[0].year)
           year = marker.timeline[0].year;
         return {
-          idx,
-          roman: toRoman(idx + 1),
-          name: marker.name,
-          marker,
-          year,
-          color: colorAssignments[idx]
+          idx, roman: toRoman(idx + 1), name: marker.name,
+          marker, year, color: colorAssignments[idx]
         }
       });
       const pinScale =
@@ -375,7 +288,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           positionPin(pin, -6);
           pin.userData = { markerId: obj.markerId, label: obj.label };
           group.add(pin);
-
           const hitbox = new THREE.Mesh(
             new THREE.SphereGeometry(PIN_RADIUS, 16, 16),
             new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
@@ -383,7 +295,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           hitbox.position.set(0, 0, 0);
           hitbox.userData = pin.userData;
           group.add(hitbox);
-
           group.userData = { markerId: obj.markerId, label: obj.label };
           return group;
         }
@@ -393,19 +304,16 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
+  // --- MAIN CLICK HANDLERS ---
   const handleObjectClick = (obj) => {
     // Expand flag clicked: open cluster, zoom to England
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
       setHovered(null);
-      // Zoom to cluster area (England/London)
-      if (globeEl.current && typeof globeEl.current.pointOfView === "function" && obj.lat && obj.lng) {
+      // Only zoom if globe is ready and method exists
+      if (globeIsReady && globeEl.current && typeof globeEl.current.pointOfView === "function" && obj.lat && obj.lng) {
         globeEl.current.pointOfView(
-          {
-            lat: obj.lat,
-            lng: obj.lng,
-            altitude: 1.4
-          },
+          { lat: obj.lat, lng: obj.lng, altitude: 1.4 },
           1700
         );
       }
@@ -414,9 +322,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     // Cluster pin (London pin) clicked: open modal, collapse cluster
     if (londonExpanded && obj && obj.isStandardPin && obj.isLondon) {
       const marker = data.find((m) => m.name === obj.markerId);
-      if (marker) {
-        onMarkerClick(marker);
-      }
+      if (marker) onMarkerClick(marker);
       setLondonExpanded(false);
       setHovered(null);
       return;
@@ -424,35 +330,31 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     // Regular pin clicked: open modal, collapse cluster
     if (obj && obj.isStandardPin) {
       const marker = data.find((m) => m.name === obj.markerId);
-      if (marker) {
-        onMarkerClick(marker);
-      }
+      if (marker) onMarkerClick(marker);
       setLondonExpanded(false);
       setHovered(null);
       return;
     }
-    // Clicked on background or a non-pin while cluster is open: collapse cluster
+    // Clicked on background or a non-pin while cluster is open: collapse cluster (handled in onBackgroundClick)
+  };
+
+  // --- NEW: Collapse cluster on background click ---
+  const handleBackgroundClick = () => {
     if (londonExpanded) {
       setLondonExpanded(false);
       setHovered(null);
     }
   };
 
-  const handleObjectHover = (obj) => {
-    setHovered(obj);
-  };
+  const handleObjectHover = (obj) => setHovered(obj);
 
   function handleTOCClick(marker) {
     if (marker.clusterExpand) {
       setLondonExpanded(true);
       setHovered(null);
-      if (globeEl.current && typeof globeEl.current.pointOfView === "function" && marker.lat && marker.lon) {
+      if (globeIsReady && globeEl.current && typeof globeEl.current.pointOfView === "function" && marker.lat && marker.lon) {
         globeEl.current.pointOfView(
-          {
-            lat: marker.lat,
-            lng: marker.lon,
-            altitude: 1.4
-          },
+          { lat: marker.lat, lng: marker.lon, altitude: 1.4 },
           1700
         );
       }
@@ -550,7 +452,9 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           objectThreeObject={customPointObject}
           onObjectClick={handleObjectClick}
           onObjectHover={handleObjectHover}
-          onGlobeReady={() => setGlobeReady(true)}
+          onGlobeReady={() => setGlobeIsReady(true)}
+          // --- This line collapses cluster on background click!
+          onBackgroundClick={handleBackgroundClick}
         />
       </div>
       <nav
