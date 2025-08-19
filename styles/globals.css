@@ -399,9 +399,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 }
 .isp-globe-section nav {
   flex-shrink: 0 !important;
-  min-width: 220px !important;
-  max-width: 540px !important;
-  width: 340px !important;
+  min-width: 340px !important;
+  max-width: 900px !important;
+  width: 700px !important;
 }
 @media (max-width: 800px) {
   .isp-globe-section {
