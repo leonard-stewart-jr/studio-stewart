@@ -54,6 +54,16 @@ function getNonLondonMarkers(allLocations) {
   return allLocations.filter((m) => m.clusterGroup !== LONDON_CLUSTER_GROUP && !m.clusterExpand);
 }
 
+// Utility for initial globe camera position on mount/remount
+function getInitialPointOfView(mode) {
+  if (mode === "usa" || mode === "world") {
+    return { lat: 39, lng: -98, altitude: 1.18 };
+  } else if (mode === "sd") {
+    return { lat: 44, lng: -100, altitude: 1.5 };
+  }
+  return { lat: 39, lng: -98, altitude: 1.18 };
+}
+
 export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   // --- Data and palette ---
   const data = mode === "world" ? globeLocations : mode === "usa" ? usaLocations : sdEvents;
@@ -306,30 +316,32 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
-  // --- Animate globe/camera to center for each mode ---
-  useEffect(() => {
-    if (
-      globeIsReady &&
-      globeEl.current &&
-      typeof globeEl.current.pointOfView === "function"
-    ) {
-      let pov;
-      // Center on USA for both world and usa modes
-      if (mode === "usa" || mode === "world") {
-        pov = { lat: 39, lng: -98, altitude: 1.18 };
-      } else if (mode === "sd") {
-        pov = { lat: 44, lng: -100, altitude: 1.5 };
-      }
-      globeEl.current.pointOfView(pov, 1400);
-    }
-  }, [mode, globeIsReady, globeImageUrl]);
+  if (!pinReady || !flagReady) {
+    return (
+      <section
+        className="isp-globe-section"
+        style={{
+          width: "100vw",
+          minHeight: 500,
+          height: 500,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 24,
+          color: "#b32c2c",
+        }}
+      >
+        Loading globe...
+      </section>
+    );
+  }
 
   // --- Click handlers ---
   const handleObjectClick = (obj) => {
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
       setHovered(null);
-      if (globeIsReady && globeEl.current && typeof globeEl.current.pointOfView === "function" && obj.lat && obj.lng) {
+      if (globeEl.current && typeof globeEl.current.pointOfView === "function" && obj.lat && obj.lng) {
         globeEl.current.pointOfView(
           { lat: obj.lat, lng: obj.lng, altitude: 1.4 },
           1700
@@ -366,7 +378,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (marker.clusterExpand) {
       setLondonExpanded(true);
       setHovered(null);
-      if (globeIsReady && globeEl.current && typeof globeEl.current.pointOfView === "function" && marker.lat && marker.lon) {
+      if (globeEl.current && typeof globeEl.current.pointOfView === "function" && marker.lat && marker.lon) {
         globeEl.current.pointOfView(
           { lat: marker.lat, lng: marker.lon, altitude: 1.4 },
           1700
@@ -377,26 +389,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     onMarkerClick(marker);
     setLondonExpanded(false);
     setHovered(null);
-  }
-
-  if (!pinReady || !flagReady) {
-    return (
-      <section
-        className="isp-globe-section"
-        style={{
-          width: "100vw",
-          minHeight: 500,
-          height: 500,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 24,
-          color: "#b32c2c",
-        }}
-      >
-        Loading globe...
-      </section>
-    );
   }
 
   return (
@@ -443,9 +435,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         }}
       >
         <Globe
-          key={mode} // <<<<<<<<<<<< FORCE REMOUNT ON MODE CHANGE
+          key={mode}
           ref={setGlobeRef}
           globeImageUrl={globeImageUrl}
+          initialPointOfView={getInitialPointOfView(mode)}
           atmosphereColor="#e6dbb9"
           atmosphereAltitude={0.22}
           backgroundColor="rgba(0,0,0,0)"
