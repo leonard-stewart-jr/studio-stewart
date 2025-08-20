@@ -380,13 +380,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     setHovered(null);
   }
 
-  // --- Manual test button for spinning to USA ---
-  function handleManualSpinUSA() {
-    if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
-      globeEl.current.pointOfView({ lat: 39, lng: -98, altitude: 1.18 }, 1600);
-    }
-  }
-
   if (!pinReady || !flagReady) {
     return (
       <section
@@ -478,28 +471,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           onGlobeReady={() => setGlobeIsReady(true)}
           onBackgroundClick={handleBackgroundClick}
         />
-        {/* Manual test button for diagnostics - remove when done */}
-        <button
-          style={{
-            position: "absolute",
-            bottom: 30,
-            left: 30,
-            zIndex: 9999,
-            background: "#e6dbb9",
-            color: "#181818",
-            border: "none",
-            borderRadius: 8,
-            padding: "9px 18px",
-            fontFamily: "coolvetica, sans-serif",
-            fontWeight: 700,
-            fontSize: 16,
-            cursor: "pointer",
-            boxShadow: "0 2px 12px rgba(32,32,32,0.12)"
-          }}
-          onClick={handleManualSpinUSA}
-        >
-          Spin to USA (Manual Test)
-        </button>
       </div>
       <nav
         aria-label="Table of Contents"
