@@ -58,17 +58,20 @@ export default function InfoModal({ open, onClose, marker }) {
         width={width}
         height={height}
       >
-        {/* Share bar INSIDE the modal content, bottom-right aligned */}
+        {/* Share bar INSIDE the modal content, bottom-left aligned */}
         <div
           style={{
             width: "100%",
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "flex-start",
             alignItems: "flex-end",
             margin: 0,
             padding: 0,
-            position: "relative",
+            position: "absolute",
+            left: 0,
+            bottom: 0,
             zIndex: 120,
+            pointerEvents: "auto",
           }}
         >
           <ShareButton
@@ -76,7 +79,7 @@ export default function InfoModal({ open, onClose, marker }) {
             htmlUrl={htmlUrl}
             shareTitle={shareTitle}
             style={{
-              margin: "16px 36px 16px 0", // adjust as needed
+              margin: "0 0 24px 32px", // bottom left
               maxWidth: 420,
             }}
           />
