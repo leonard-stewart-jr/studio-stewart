@@ -50,10 +50,6 @@ export default function InfoModal({ open, onClose, marker }) {
       : src;
     const shareTitle = marker.name;
 
-    // ADJUST THIS MARGIN TO PERFECTLY LINE UP WITH YOUR LEFT COLUMN
-    // You may need to tweak this value (try 42px, 56px, 64px, etc.)
-    const leftColumnAlignMargin = "48px";
-
     return (
       <FloatingModal
         open={open}
@@ -62,12 +58,19 @@ export default function InfoModal({ open, onClose, marker }) {
         width={width}
         height={height}
       >
+        {/* Share bar INSIDE the modal content, bottom-left aligned */}
         <div
           style={{
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "flex-start",
             alignItems: "flex-end",
-            margin: `0 0 24px ${leftColumnAlignMargin}`,
+            margin: 0,
+            padding: 0,
+            position: "absolute",
+            left: 0,
+            bottom: 0,
+            zIndex: 120,
             pointerEvents: "auto",
           }}
         >
@@ -76,8 +79,8 @@ export default function InfoModal({ open, onClose, marker }) {
             htmlUrl={htmlUrl}
             shareTitle={shareTitle}
             style={{
+              margin: "0 0 24px 32px", // bottom left
               maxWidth: 420,
-              width: "100%",
             }}
           />
         </div>
