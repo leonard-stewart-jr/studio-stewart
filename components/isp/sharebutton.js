@@ -5,7 +5,7 @@ const ICONS = {
   upload: "/icons/share/upload.svg",
   linkedin: "/icons/share/linkedin.svg",
   reddit: "/icons/share/reddit.svg",
-  download: "/icons/share/download.svg", // Download icon
+  download: "/icons/share/download.svg",
 };
 
 // Helper to open share links in new tab
@@ -45,7 +45,9 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
 
   // Download handler
   const handleDownload = () => {
-    openInNewTab(pdfUrl);
+    if (pdfUrl) {
+      openInNewTab(pdfUrl);
+    }
   };
 
   return (
@@ -54,7 +56,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-end", // Right align label and icons
+        alignItems: "flex-end",
         ...style,
       }}
     >
@@ -63,11 +65,11 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         style={{
           fontFamily: "'coolvetica', 'Open Sans', sans-serif",
           fontWeight: 300,
-          fontSize: 14, // 2px smaller than before
+          fontSize: 14,
           color: "rgba(0,0,0,0.5)",
-          letterSpacing: "0.04em", // less letter spacing
+          letterSpacing: "0.04em",
           textTransform: "uppercase",
-          textAlign: "right", // right aligned
+          textAlign: "right",
           display: "block",
           marginBottom: 7,
           userSelect: "none",
@@ -81,7 +83,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         style={{
           display: "flex",
           flexDirection: "row",
-          gap: 10,
+          gap: 4, // Reduced gap for tighter spacing
           background: "none",
           borderRadius: 8,
           padding: 0,
