@@ -39,7 +39,6 @@ const handSVG = encodeURIComponent(`
 </svg>
 `);
 
-// Data URIs for cursor CSS (with accent color)
 const leftArrowCursor = `url("data:image/svg+xml,${leftArrowSVG}") 2 9, pointer`;
 const rightArrowCursor = `url("data:image/svg+xml,${rightArrowSVG}") 16 9, pointer`;
 const handCursor = `url("data:image/svg+xml,${handSVG}") 9 9, pointer`;
@@ -50,7 +49,7 @@ export default function FloatingModal({
   src,
   width,
   height = 720,
-  children, // <-- Accept children to render inside content
+  children,
 }) {
   const backdropRef = useRef(null);
   const scrollRef = useRef(null);
@@ -63,8 +62,7 @@ export default function FloatingModal({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
-
-  const [cursorType, setCursorType] = useState("hand"); // "left", "right", or "hand"
+  const [cursorType, setCursorType] = useState("hand");
 
   useEffect(() => {
     if (open && scrollRef.current) {
@@ -294,7 +292,6 @@ export default function FloatingModal({
   );
 }
 
-// Styles
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
