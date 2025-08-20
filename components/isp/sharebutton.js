@@ -5,10 +5,10 @@ const ICONS = {
   upload: "/icons/share/upload.svg",
   linkedin: "/icons/share/linkedin.svg",
   reddit: "/icons/share/reddit.svg",
-  download: "/icons/share/download.svg", // <-- THIS IS THE DOWNLOAD ICON
+  download: "/icons/share/download.svg", // Download icon
 };
 
-// Helper to open links in a new tab
+// Helper to open share links in new tab
 function openInNewTab(url) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -20,7 +20,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(htmlUrl)}`;
   const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(htmlUrl)}&title=${encodeURIComponent(shareTitle)}`;
 
-  // Native share (upload/share) handler
+  // Native share (upload) handler
   const handleUploadShare = async () => {
     if (navigator.share) {
       try {
@@ -32,7 +32,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         // User cancelled or error.
       }
     } else {
-      // Fallback: copy to clipboard and show feedback
+      // Fallback: copy to clipboard
       try {
         await navigator.clipboard.writeText(htmlUrl);
         setCopied(true);
@@ -51,10 +51,10 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
   return (
     <div
       style={{
+        width: "100%",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        width: "auto",
+        alignItems: "flex-end", // Right align label and icons
         ...style,
       }}
     >
@@ -63,11 +63,12 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         style={{
           fontFamily: "'coolvetica', 'Open Sans', sans-serif",
           fontWeight: 300,
-          fontSize: 16,
+          fontSize: 14, // 2px smaller than before
           color: "rgba(0,0,0,0.5)",
-          letterSpacing: "0.18em",
+          letterSpacing: "0.04em", // less letter spacing
           textTransform: "uppercase",
-          textAlign: "center",
+          textAlign: "right", // right aligned
+          display: "block",
           marginBottom: 7,
           userSelect: "none",
           lineHeight: 1.17,
@@ -85,7 +86,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
           borderRadius: 8,
           padding: 0,
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-end",
         }}
         aria-label="Share or download this project"
       >
