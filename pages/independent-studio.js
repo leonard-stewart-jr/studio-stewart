@@ -36,10 +36,10 @@ export default function IndependentStudio() {
   }, []);
 
   // Responsive padding for mobile
-  const [sidePadding, setSidePadding] = useState(120);
+  const [sidePadding, setSidePadding] = useState(80);
   useEffect(() => {
     const updatePadding = () => {
-      setSidePadding(window.innerWidth < 800 ? 24 : 120);
+      setSidePadding(window.innerWidth < 800 ? 24 : 80);
     };
     updatePadding();
     window.addEventListener("resize", updatePadding);
@@ -121,7 +121,7 @@ export default function IndependentStudio() {
 
       {/* Bottom Mode Nav */}
       {mainSection === "history" && (
-        <BottomModeNav active={activeHistory} onChange={setActiveHistory} />
+        <BottomModeNav active={activeHistory} onChange={setActiveHistory} sidePadding={sidePadding} />
       )}
     </>
   );
