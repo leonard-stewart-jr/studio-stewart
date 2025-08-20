@@ -5,10 +5,10 @@ const ICONS = {
   upload: "/icons/share/upload.svg",
   linkedin: "/icons/share/linkedin.svg",
   reddit: "/icons/share/reddit.svg",
-  link: "/icons/share/link.svg", // <-- Make sure this exists in your folder!
+  download: "/icons/share/download.svg", // <-- THIS IS THE DOWNLOAD ICON
 };
 
-// Helper to open share links in new tab
+// Helper to open links in a new tab
 function openInNewTab(url) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -20,7 +20,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(htmlUrl)}`;
   const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(htmlUrl)}&title=${encodeURIComponent(shareTitle)}`;
 
-  // Native share (upload) handler
+  // Native share (upload/share) handler
   const handleUploadShare = async () => {
     if (navigator.share) {
       try {
@@ -32,7 +32,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         // User cancelled or error.
       }
     } else {
-      // Fallback: copy to clipboard
+      // Fallback: copy to clipboard and show feedback
       try {
         await navigator.clipboard.writeText(htmlUrl);
         setCopied(true);
@@ -43,15 +43,9 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
     }
   };
 
-  // Copy link handler
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(htmlUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      window.prompt("Copy and share this link:", htmlUrl);
-    }
+  // Download handler
+  const handleDownload = () => {
+    openInNewTab(pdfUrl);
   };
 
   return (
@@ -104,6 +98,26 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
           type="button"
         >
           <img src={ICONS.upload} alt="" style={iconImgStyle} />
+          {copied && (
+            <span
+              style={{
+                position: "absolute",
+                bottom: "110%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "#e6dbb9",
+                color: "#222",
+                fontSize: 13,
+                borderRadius: 6,
+                padding: "3px 10px",
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+                zIndex: 99,
+              }}
+            >
+              Copied!
+            </span>
+          )}
         </button>
         {/* LinkedIn */}
         <button
@@ -125,35 +139,15 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         >
           <img src={ICONS.reddit} alt="" style={iconImgStyle} />
         </button>
-        {/* Copy Link */}
+        {/* Download */}
         <button
-          onClick={handleCopy}
+          onClick={handleDownload}
           style={iconButtonStyle}
-          aria-label="Copy link"
-          title="Copy link"
+          aria-label="Download PDF"
+          title="Download PDF"
           type="button"
         >
-          <img src={ICONS.link} alt="" style={iconImgStyle} />
-          {copied && (
-            <span
-              style={{
-                position: "absolute",
-                bottom: "110%",
-                left: "50%",
-                transform: "translateX(-50%)",
-                background: "#e6dbb9",
-                color: "#222",
-                fontSize: 13,
-                borderRadius: 6,
-                padding: "3px 10px",
-                whiteSpace: "nowrap",
-                pointerEvents: "none",
-                zIndex: 99,
-              }}
-            >
-              Copied!
-            </span>
-          )}
+          <img src={ICONS.download} alt="" style={iconImgStyle} />
         </button>
       </div>
     </div>
