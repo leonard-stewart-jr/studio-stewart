@@ -314,12 +314,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       typeof globeEl.current.pointOfView === "function"
     ) {
       let pov;
-      if (mode === "usa") {
+      // Center on USA for both world and usa modes
+      if (mode === "usa" || mode === "world") {
         pov = { lat: 39, lng: -98, altitude: 1.18 };
       } else if (mode === "sd") {
         pov = { lat: 44, lng: -100, altitude: 1.5 };
-      } else { // world or default
-        pov = { lat: 20, lng: 0, altitude: 2.1 };
       }
       globeEl.current.pointOfView(pov, 1400);
     }
