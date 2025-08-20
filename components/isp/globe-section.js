@@ -385,232 +385,217 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     );
   }
 
-  // --- NEW: Outer container for globe section with 120px padding on both sides ---
   return (
-    <div
+    <section
+      className="isp-globe-section"
       style={{
         width: "100vw",
-        boxSizing: "border-box",
-        paddingLeft: isMobile ? 24 : 120,
-        paddingRight: isMobile ? 24 : 120,
+        minHeight: "500px",
+        height: "auto",
         background: "transparent",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: isMobile ? "column" : "row",
         alignItems: "stretch",
         justifyContent: "center",
+        paddingTop: 0,
+        paddingBottom: 0,
+        margin: 0,
+        overflow: "hidden",
+        boxSizing: "border-box",
+        position: "relative",
+        marginTop: 57,
+        zIndex: 0
       }}
     >
-      <section
-        className="isp-globe-section"
+      <div
         style={{
-          width: "100%",
-          minHeight: "500px",
-          height: "auto",
-          background: "transparent",
+          flex: "0 0 auto",
+          width: 1050,
+          height: 845,
+          maxWidth: 1050,
+          minWidth: 600,
           display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          alignItems: "stretch",
           justifyContent: "center",
-          paddingTop: 0,
-          paddingBottom: 0,
-          margin: 0,
-          overflow: "hidden",
-          boxSizing: "border-box",
+          alignItems: "center",
+          margin: isMobile ? "0 auto 24px auto" : "0 0 0 0",
+          padding: 0,
+          background: "transparent",
+          overflow: "unset",
           position: "relative",
-          marginTop: 57,
-          zIndex: 0
+          borderRadius: 0,
+          boxShadow: "none",
+          transform: isMobile ? "none" : "translateX(100px)",
+          zIndex: 1
         }}
       >
-        <div
-          style={{
-            flex: "0 0 auto",
-            width: 1050,
-            height: 845,
-            maxWidth: 1050,
-            minWidth: 600,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: isMobile ? "0 auto 24px auto" : "0 0 0 0",
-            padding: 0,
-            background: "transparent",
-            overflow: "unset",
-            position: "relative",
-            borderRadius: 0,
-            boxShadow: "none",
-            transform: isMobile ? "none" : "translateX(100px)",
-            zIndex: 1
-          }}
-        >
-          <Globe
-            ref={setGlobeRef}
-            globeImageUrl={globeImageUrl}
-            atmosphereColor="#e6dbb9"
-            atmosphereAltitude={0.22}
-            backgroundColor="rgba(0,0,0,0)"
-            width={2000}
-            height={1050}
-            pointsData={[]} 
-            pointLat="lat"
-            pointLng="lng"
-            pointColor="color"
-            pointRadius="size"
-            pointAltitude="altitude"
-            pointLabel="label"
-            onPointHover={handleObjectHover}
-            onPointClick={onMarkerClick}
-            objectsData={objectsData}
-            objectLat="lat"
-            objectLng="lng"
-            objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
-            objectThreeObject={customPointObject}
-            onObjectClick={handleObjectClick}
-            onObjectHover={handleObjectHover}
-            onGlobeReady={() => setGlobeIsReady(true)}
-            // --- This line collapses cluster on background click!
-            onBackgroundClick={handleBackgroundClick}
-          />
-        </div>
-        <nav
-          aria-label="Table of Contents"
-          style={{
-            flex: "0 0 auto",
-            minWidth: 440,
-            maxWidth: isMobile ? "100%" : 900,
-            width: isMobile ? "100%" : 700,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: isMobile ? "center" : "flex-start",
-            justifyContent: isMobile ? "flex-start" : "center",
-            background: "rgba(255,255,255,0)",
-            boxShadow: "none",
-            position: "relative",
-            zIndex: 2000,
-            left: isMobile ? 0 : 0,
-            fontFamily: "coolvetica, sans-serif",
-            overflow: "visible",
-            paddingRight: 0,
-            paddingLeft: 0,
-          }}
-        >
-          <ol style={{
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: isMobile ? 15.5 : 14,
-            width: "100%",
-            overflow: "visible",
-            zIndex: 2000
-          }}>
-            {tocList.map((item, idx) => (
-              <li key={item.name} style={{
-                width: "100%",
-                marginBottom: 0,
-                padding: "0 0 0 0",
-                display: "flex",
-                alignItems: "flex-start",
-                zIndex: 2000
-              }}>
-                <button
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: item.color,
+        <Globe
+          ref={setGlobeRef}
+          globeImageUrl={globeImageUrl}
+          atmosphereColor="#e6dbb9"
+          atmosphereAltitude={0.22}
+          backgroundColor="rgba(0,0,0,0)"
+          width={2000}
+          height={1050}
+          pointsData={[]} 
+          pointLat="lat"
+          pointLng="lng"
+          pointColor="color"
+          pointRadius="size"
+          pointAltitude="altitude"
+          pointLabel="label"
+          onPointHover={handleObjectHover}
+          onPointClick={onMarkerClick}
+          objectsData={objectsData}
+          objectLat="lat"
+          objectLng="lng"
+          objectAltitude={(obj) => obj.altitude || DOT_ALTITUDE}
+          objectThreeObject={customPointObject}
+          onObjectClick={handleObjectClick}
+          onObjectHover={handleObjectHover}
+          onGlobeReady={() => setGlobeIsReady(true)}
+          // --- This line collapses cluster on background click!
+          onBackgroundClick={handleBackgroundClick}
+        />
+      </div>
+      <nav
+        aria-label="Table of Contents"
+        style={{
+          flex: "0 0 auto",
+          minWidth: 440,
+          maxWidth: isMobile ? "100%" : 900,
+          width: isMobile ? "100%" : 700,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: isMobile ? "center" : "flex-start",
+          justifyContent: isMobile ? "flex-start" : "center",
+          background: "rgba(255,255,255,0)",
+          boxShadow: "none",
+          position: "relative",
+          zIndex: 2000,
+          left: isMobile ? 0 : 0,
+          fontFamily: "coolvetica, sans-serif",
+          overflow: "visible",
+          paddingRight: isMobile ? 0 : 12,
+          paddingLeft: isMobile ? 0 : 24,
+        }}
+      >
+        <ol style={{
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: isMobile ? 15.5 : 14,
+          width: "100%",
+          overflow: "visible",
+          zIndex: 2000
+        }}>
+          {tocList.map((item, idx) => (
+            <li key={item.name} style={{
+              width: "100%",
+              marginBottom: 0,
+              padding: "0 0 0 0",
+              display: "flex",
+              alignItems: "flex-start",
+              zIndex: 2000
+            }}>
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: item.color,
+                  fontWeight: 400,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  fontFamily: "coolvetica, sans-serif",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 10,
+                  padding: "0px 0px",
+                  borderRadius: 0,
+                  width: "100%",
+                  minHeight: 32,
+                  boxShadow: "none",
+                  lineHeight: 1.18,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  transition: "color 0.12s, background 0.12s",
+                  marginLeft: 0,
+                  justifyContent: "flex-start",
+                  textAlign: "left",
+                  zIndex: 2000
+                }}
+                onClick={() => handleTOCClick(item.marker)}
+                onMouseEnter={() => setHovered({ ...item.marker, idx, label: item.name, markerId: item.marker.markerId })}
+                onMouseLeave={() => setHovered(null)}
+                tabIndex={0}
+                aria-label={`Jump to ${item.name}`}
+                title={item.name}
+              >
+                <span style={{
+                  fontFamily: "coolvetica, sans-serif",
+                  fontWeight: 400,
+                  fontSize: 14,
+                  minWidth: 26,
+                  letterSpacing: "0.5px",
+                  color: item.color,
+                  opacity: 0.93,
+                  flexShrink: 0,
+                  marginRight: 6,
+                  display: "inline-block",
+                  textAlign: "left",
+                  zIndex: 2000
+                }}>{item.roman}.</span>
+                <span style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  textAlign: "left",
+                  minWidth: 0,
+                  maxWidth: "100%",
+                  zIndex: 2000
+                }}>
+                  <span style={{
                     fontWeight: 400,
                     fontSize: 14,
-                    cursor: "pointer",
-                    fontFamily: "coolvetica, sans-serif",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 10,
-                    padding: "0px 0px",
-                    borderRadius: 0,
-                    width: "100%",
-                    minHeight: 32,
-                    boxShadow: "none",
-                    lineHeight: 1.18,
-                    textTransform: "uppercase",
                     letterSpacing: "0.5px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
-                    transition: "color 0.12s, background 0.12s",
-                    marginLeft: 0,
-                    justifyContent: "flex-start",
-                    textAlign: "left",
-                    zIndex: 2000
-                  }}
-                  onClick={() => handleTOCClick(item.marker)}
-                  onMouseEnter={() => setHovered({ ...item.marker, idx, label: item.name, markerId: item.marker.markerId })}
-                  onMouseLeave={() => setHovered(null)}
-                  tabIndex={0}
-                  aria-label={`Jump to ${item.name}`}
-                  title={item.name}
-                >
-                  <span style={{
                     fontFamily: "coolvetica, sans-serif",
-                    fontWeight: 400,
-                    fontSize: 14,
-                    minWidth: 26,
-                    letterSpacing: "0.5px",
-                    color: item.color,
-                    opacity: 0.93,
-                    flexShrink: 0,
-                    marginRight: 6,
-                    display: "inline-block",
-                    textAlign: "left",
-                    zIndex: 2000
-                  }}>{item.roman}.</span>
-                  <span style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    textAlign: "left",
                     minWidth: 0,
                     maxWidth: "100%",
+                    flex: 1,
+                    display: "block",
                     zIndex: 2000
                   }}>
+                    {item.name}
+                  </span>
+                  {item.year && (
                     <span style={{
+                      marginTop: 2,
+                      fontSize: 13,
+                      color: "#b1b1ae",
                       fontWeight: 400,
-                      fontSize: 14,
                       letterSpacing: "0.5px",
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
                       fontFamily: "coolvetica, sans-serif",
-                      minWidth: 0,
-                      maxWidth: "100%",
-                      flex: 1,
-                      display: "block",
+                      opacity: 0.95,
+                      textAlign: "left",
                       zIndex: 2000
                     }}>
-                      {item.name}
+                      {item.year}
                     </span>
-                    {item.year && (
-                      <span style={{
-                        marginTop: 2,
-                        fontSize: 13,
-                        color: "#b1b1ae",
-                        fontWeight: 400,
-                        letterSpacing: "0.5px",
-                        fontFamily: "coolvetica, sans-serif",
-                        opacity: 0.95,
-                        textAlign: "left",
-                        zIndex: 2000
-                      }}>
-                        {item.year}
-                      </span>
-                    )}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </section>
-    </div>
+                  )}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </section>
   );
 }
