@@ -424,7 +424,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           position: "relative",
           borderRadius: 0,
           boxShadow: "none",
-          transform: isMobile ? "none" : "translateX(20px)",
+          transform: isMobile ? "none" : "translateX(60px)",
           zIndex: 1
         }}
       >
