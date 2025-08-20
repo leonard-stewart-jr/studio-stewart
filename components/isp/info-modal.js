@@ -58,7 +58,7 @@ export default function InfoModal({ open, onClose, marker }) {
         width={width}
         height={height}
       >
-        {/* Share bar INSIDE the modal content, bottom-left aligned */}
+        {/* Share bar INSIDE the modal content, bottom-left aligned and shifted left by 260px */}
         <div
           style={{
             width: "100%",
@@ -72,6 +72,7 @@ export default function InfoModal({ open, onClose, marker }) {
             bottom: 0,
             zIndex: 120,
             pointerEvents: "auto",
+            transform: "translateX(-260px)", // <--- This is the main change
           }}
         >
           <ShareButton
