@@ -64,7 +64,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
       <span
         style={{
           fontFamily: "'coolvetica', 'Open Sans', sans-serif",
-          fontWeight: 300,
+          fontWeight: 200, // Thinner text
           fontSize: 14,
           color: "rgba(0,0,0,0.5)",
           letterSpacing: "0.04em",
