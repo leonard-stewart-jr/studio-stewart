@@ -55,6 +55,8 @@ function getNonLondonMarkers(allLocations) {
 }
 
 export default function GlobeSection({ onMarkerClick, mode = "world" }) {
+  console.log("GlobeSection rendered - mode is", mode);
+
   const data = mode === "world" ? globeLocations : mode === "usa" ? usaLocations : sdEvents;
   const palette = useMemo(() => getPinPalette(mode), [mode]);
   const globeImageUrl = GLOBE_IMAGES[mode];
@@ -306,23 +308,31 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
 
   // --- Animate globe to US view on mode change and globe ready ---
   useEffect(() => {
+    // Logging for debugging the USA globe spin/zoom
+    console.log("[GlobeSection useEffect] mode:", mode, "globeIsReady:", globeIsReady, "globeEl.current:", globeEl.current);
     if (
       globeIsReady &&
       globeEl.current &&
       typeof globeEl.current.pointOfView === "function" &&
       mode === "usa"
     ) {
-      // Centered roughly on Kansas/Nebraska for US-wide view, nice zoom and rotation
-      globeEl.current.pointOfView(
-        { lat: 39, lng: -98, altitude: 1.18 },
-        1600 // ms for smooth spin/zoom animation
-      );
+      // Extra log for debug
+      console.log("[GlobeSection] Spinning and zooming globe to USA view (lat:39, lng:-98, alt:1.18)");
+      setTimeout(() => {
+        if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
+          globeEl.current.pointOfView(
+            { lat: 39, lng: -98, altitude: 1.18 },
+            1600 // ms for smooth spin/zoom animation
+          );
+        } else {
+          console.log("[GlobeSection] globeEl.current or pointOfView not available at timeout");
+        }
+      }, 140); // 140ms delay to ensure globe is fully ready
     }
   }, [mode, globeIsReady]);
 
   // --- MAIN CLICK HANDLERS ---
   const handleObjectClick = (obj) => {
-    // Expand flag clicked: open cluster, zoom to England
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
       setHovered(null);
@@ -335,7 +345,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       }
       return;
     }
-    // Cluster pin (London pin) clicked: open modal, collapse cluster
     if (londonExpanded && obj && obj.isStandardPin && obj.isLondon) {
       const marker = data.find((m) => m.name === obj.markerId);
       if (marker) onMarkerClick(marker);
@@ -343,7 +352,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       setHovered(null);
       return;
     }
-    // Regular pin clicked: open modal, collapse cluster
     if (obj && obj.isStandardPin) {
       const marker = data.find((m) => m.name === obj.markerId);
       if (marker) onMarkerClick(marker);
@@ -351,7 +359,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       setHovered(null);
       return;
     }
-    // Clicked on background or a non-pin while cluster is open: collapse cluster (handled in onBackgroundClick)
   };
 
   // --- NEW: Collapse cluster on background click ---
@@ -468,7 +475,10 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           objectThreeObject={customPointObject}
           onObjectClick={handleObjectClick}
           onObjectHover={handleObjectHover}
-          onGlobeReady={() => setGlobeIsReady(true)}
+          onGlobeReady={() => {
+            console.log("[GlobeSection] onGlobeReady fired");
+            setGlobeIsReady(true);
+          }}
           // --- This line collapses cluster on background click!
           onBackgroundClick={handleBackgroundClick}
         />
