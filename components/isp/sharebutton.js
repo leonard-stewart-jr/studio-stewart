@@ -64,7 +64,8 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
       <span
         style={{
           fontFamily: "'coolvetica', 'Open Sans', sans-serif",
-          fontWeight: 300,
+          fontWeight: 400,
+          fontStretch: "condensed",
           fontSize: 14,
           color: "rgba(0,0,0,0.5)",
           letterSpacing: "0.04em",
@@ -74,7 +75,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
           marginBottom: 7,
           userSelect: "none",
           lineHeight: 1.17,
-          marginLeft: "-4px", // Shift text 4px to the left
+          transform: "translateX(-4px)", // Actually shifts the text 4px to the left
         }}
       >
         Share
