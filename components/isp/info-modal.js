@@ -42,8 +42,21 @@ export default function InfoModal({ open, onClose, marker }) {
       src = "/models/world/the_tower_of_london/index.html";
     }
 
-    // Generate PDF URL by replacing index.html with file.pdf (customize if your PDFs have a different path)
-    const pdfUrl = src.replace(/index\.html$/, "file.pdf");
+    // Generate PDF URL for download
+    let pdfUrl;
+    if (src.includes("mesopotamia-1")) {
+      pdfUrl = "/models/world/mesopotamia-1/mesopotamia.pdf";
+    } else {
+      // get folder name, e.g. "panopticon" from src="/models/world/panopticon/index.html"
+      const folderMatch = src.match(/\/models\/world\/([^\/]+)\/index\.html/);
+      if (folderMatch) {
+        const folder = folderMatch[1];
+        pdfUrl = `/models/world/${folder}/${folder}.pdf`;
+      } else {
+        pdfUrl = src.replace(/index\.html$/, "file.pdf");
+      }
+    }
+
     // HTML link is the modal src as shown in the address bar
     const htmlUrl = typeof window !== "undefined"
       ? window.location.origin + src
