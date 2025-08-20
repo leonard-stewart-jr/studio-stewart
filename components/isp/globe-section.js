@@ -321,7 +321,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       console.log("[GlobeSection] Forcing spin/zoom to USA (lat:39, lng:-98, alt:1.18) with extra retries");
 
       // Try calling at several intervals to force the animation
-      [180, 350, 700].forEach((delay) => {
+      [180, 350, 700, 1200].forEach((delay) => {
         setTimeout(() => {
           if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
             console.log(`[GlobeSection] (delay ${delay}) calling pointOfView`);
@@ -330,7 +330,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
         }, delay);
       });
     }
-  }, [mode, globeIsReady]);
+  }, [mode, globeIsReady, globeImageUrl]);
 
   // --- MAIN CLICK HANDLERS ---
   const handleObjectClick = (obj) => {
