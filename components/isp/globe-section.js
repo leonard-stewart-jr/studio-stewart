@@ -55,8 +55,7 @@ function getNonLondonMarkers(allLocations) {
 }
 
 export default function GlobeSection({ onMarkerClick, mode = "world" }) {
-  console.log("GlobeSection rendered - mode is", mode);
-
+  // --- Data and palette ---
   const data = mode === "world" ? globeLocations : mode === "usa" ? usaLocations : sdEvents;
   const palette = useMemo(() => getPinPalette(mode), [mode]);
   const globeImageUrl = GLOBE_IMAGES[mode];
@@ -91,6 +90,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     } else return getPaletteAssignments(data.length, 42, palette);
   }, [data, palette, mode]);
 
+  // --- Data prep for pins, clusters, etc. ---
   const { objectsData, customPointObject, tocList, clusterLat, clusterLon } = useMemo(() => {
     if (mode === "world") {
       const londonMarkers = getLondonMarkers(data);
@@ -306,11 +306,8 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
-  // --- Animate globe to the correct view on mode change and globe ready ---
+  // --- Animate globe/camera to center for each mode ---
   useEffect(() => {
-    // Logging for debugging
-    console.log("[GlobeSection useEffect] mode:", mode, "globeIsReady:", globeIsReady, "globeEl.current:", globeEl.current);
-
     if (
       globeIsReady &&
       globeEl.current &&
@@ -324,12 +321,11 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       } else { // world or default
         pov = { lat: 20, lng: 0, altitude: 2.1 };
       }
-      console.log("[GlobeSection] Animating to", pov, "for mode", mode);
       globeEl.current.pointOfView(pov, 1400);
     }
   }, [mode, globeIsReady, globeImageUrl]);
 
-  // --- MAIN CLICK HANDLERS ---
+  // --- Click handlers ---
   const handleObjectClick = (obj) => {
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
@@ -471,10 +467,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
           objectThreeObject={customPointObject}
           onObjectClick={handleObjectClick}
           onObjectHover={handleObjectHover}
-          onGlobeReady={() => {
-            console.log("[GlobeSection] onGlobeReady fired");
-            setGlobeIsReady(true);
-          }}
+          onGlobeReady={() => setGlobeIsReady(true)}
           onBackgroundClick={handleBackgroundClick}
         />
       </div>
