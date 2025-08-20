@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Icon paths (adjust if your structure is different)
 const ICONS = {
-  download: "/icons/share/download.svg",
+  upload: "/icons/share/upload.svg",
   linkedin: "/icons/share/linkedin.svg",
   reddit: "/icons/share/reddit.svg",
-  mail: "/icons/share/mail.svg",
-  link: "/icons/share/link.svg",
+  link: "/icons/share/link.svg", // <-- Make sure this exists in your folder!
 };
 
 // Helper to open share links in new tab
@@ -15,24 +14,44 @@ function openInNewTab(url) {
 }
 
 export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
+  const [copied, setCopied] = useState(false);
+
   // Compose share URLs
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(htmlUrl)}`;
   const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(htmlUrl)}&title=${encodeURIComponent(shareTitle)}`;
-  const mailUrl = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(htmlUrl)}`;
+
+  // Native share (upload) handler
+  const handleUploadShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          url: htmlUrl,
+        });
+      } catch (err) {
+        // User cancelled or error.
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(htmlUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      } catch {
+        window.prompt("Copy and share this link:", htmlUrl);
+      }
+    }
+  };
 
   // Copy link handler
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(htmlUrl);
-      alert("Link copied!");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch {
-      alert("Failed to copy link.");
+      window.prompt("Copy and share this link:", htmlUrl);
     }
-  };
-
-  // Download handler
-  const handleDownload = () => {
-    openInNewTab(pdfUrl);
   };
 
   return (
@@ -50,7 +69,7 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         style={{
           fontFamily: "'coolvetica', 'Open Sans', sans-serif",
           fontWeight: 300,
-          fontSize: 16, // 12pt ≈ 16px
+          fontSize: 16,
           color: "rgba(0,0,0,0.5)",
           letterSpacing: "0.18em",
           textTransform: "uppercase",
@@ -76,15 +95,15 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         }}
         aria-label="Share or download this project"
       >
-        {/* Download */}
+        {/* Upload/Share (native share on mobile, fallback to copy) */}
         <button
-          onClick={handleDownload}
+          onClick={handleUploadShare}
           style={iconButtonStyle}
-          aria-label="Download PDF"
-          title="Download PDF"
+          aria-label="Share via apps"
+          title="Share via apps"
           type="button"
         >
-          <img src={ICONS.download} alt="" style={iconImgStyle} />
+          <img src={ICONS.upload} alt="" style={iconImgStyle} />
         </button>
         {/* LinkedIn */}
         <button
@@ -106,16 +125,6 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
         >
           <img src={ICONS.reddit} alt="" style={iconImgStyle} />
         </button>
-        {/* Email */}
-        <button
-          onClick={() => openInNewTab(mailUrl)}
-          style={iconButtonStyle}
-          aria-label="Share by email"
-          title="Share by email"
-          type="button"
-        >
-          <img src={ICONS.mail} alt="" style={iconImgStyle} />
-        </button>
         {/* Copy Link */}
         <button
           onClick={handleCopy}
@@ -125,6 +134,26 @@ export default function ShareButton({ pdfUrl, htmlUrl, shareTitle, style }) {
           type="button"
         >
           <img src={ICONS.link} alt="" style={iconImgStyle} />
+          {copied && (
+            <span
+              style={{
+                position: "absolute",
+                bottom: "110%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "#e6dbb9",
+                color: "#222",
+                fontSize: 13,
+                borderRadius: 6,
+                padding: "3px 10px",
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+                zIndex: 99,
+              }}
+            >
+              Copied!
+            </span>
+          )}
         </button>
       </div>
     </div>
@@ -143,6 +172,7 @@ const iconButtonStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  position: "relative",
   transition: "box-shadow 0.13s, background 0.13s",
 };
 
