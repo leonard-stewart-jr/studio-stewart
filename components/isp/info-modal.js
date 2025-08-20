@@ -50,6 +50,47 @@ export default function InfoModal({ open, onClose, marker }) {
       : src;
     const shareTitle = marker.name;
 
+    // This is the left column content, you may have this logic in FloatingModal as children
+    const leftColumn = (
+      <div
+        style={{
+          width: 420, // or whatever your left column width is
+          minWidth: 320,
+          maxWidth: 600,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end", // right-aligns all text and SHARE section
+          justifyContent: "flex-start",
+          height: "100%",
+          padding: "0 0 0 0",
+          boxSizing: "border-box",
+        }}
+      >
+        {/* --- Your left column content here (title, date, etc) --- */}
+        {/* Replace this section with your actual info markup */}
+        <div style={{ width: "100%", textAlign: "right", marginBottom: 16 }}>
+          <div style={{ fontWeight: 400, fontSize: 24 }}>
+            {marker.name}
+          </div>
+          {/* Insert other info blocks here */}
+        </div>
+        {/* --- End left column info content --- */}
+
+        {/* Share bar at the bottom; marginTop: "auto" pushes it down */}
+        <div style={{ width: "100%", marginTop: "auto" }}>
+          <ShareButton
+            pdfUrl={pdfUrl}
+            htmlUrl={htmlUrl}
+            shareTitle={shareTitle}
+            style={{
+              maxWidth: 420,
+              width: "100%",
+            }}
+          />
+        </div>
+      </div>
+    );
+
     return (
       <FloatingModal
         open={open}
@@ -58,32 +99,8 @@ export default function InfoModal({ open, onClose, marker }) {
         width={width}
         height={height}
       >
-        {/* Share bar INSIDE the modal content, bottom-left aligned */}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "flex-end",
-            margin: 0,
-            padding: 0,
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            zIndex: 120,
-            pointerEvents: "auto",
-          }}
-        >
-          <ShareButton
-            pdfUrl={pdfUrl}
-            htmlUrl={htmlUrl}
-            shareTitle={shareTitle}
-            style={{
-              margin: "0 0 24px 32px", // bottom left
-              maxWidth: 420,
-            }}
-          />
-        </div>
+        {leftColumn}
+        {/* Your other modal children, e.g. image and right column, go in FloatingModal */}
       </FloatingModal>
     );
   }
