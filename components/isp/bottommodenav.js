@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // Gradients and stroke for each mode
 const MODE_GRADIENTS = {
@@ -40,7 +40,19 @@ const NAVBAR_HEIGHT = 76; // px
 
 export default function BottomModeNav({ active, onChange }) {
   // Responsive font size
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 700;
+  const [isMobile, setIsMobile] = useState(false);
+  const [sidePadding, setSidePadding] = useState(120);
+
+  useEffect(() => {
+    const update = () => {
+      setIsMobile(window.innerWidth < 700);
+      setSidePadding(window.innerWidth < 800 ? 24 : 120);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   const fontSize = isMobile ? 27 : 40; // px
 
   // Find the max label width
@@ -50,15 +62,13 @@ export default function BottomModeNav({ active, onChange }) {
   const svgWidth = Math.ceil(maxLabelLength * approxCharWidth) + 24; // 24px for right padding
   const svgHeight = Math.ceil(fontSize * 1.39);
 
-  // Padding for the left edge (add 50px here)
-  const leftPadding = 50;
+  // Padding for the left edge (should now be 0 for flush alignment)
+  const leftPadding = 0;
   const leftX = leftPadding;
   const centerY = svgHeight / 2 + fontSize / 2.8;
 
-  // Spacing: Subtract 50px from previous gap (was (svgHeight + 50) * 2)
-  // Previous gap: (svgHeight + 50) * 2
-  // Now: (svgHeight + 50) * 2 - 50 = (svgHeight * 2) + 50
-  const gap = (svgHeight + 50) * 2 - 50;
+  // Spacing between buttons
+  const gap = (svgHeight * 2) + 50;
 
   // Calculate vertical margin
   const navHeightPx = typeof window !== "undefined" ? window.innerHeight - NAVBAR_HEIGHT : 900 - NAVBAR_HEIGHT;
@@ -72,109 +82,119 @@ export default function BottomModeNav({ active, onChange }) {
 
   const modes = ["world", "usa", "sd"];
 
+  // Outer container aligns with the main site padding
   return (
-    <nav
-      aria-label="View mode switcher"
+    <div
       style={{
-        position: "fixed",
-        left: 0,
-        top: NAVBAR_HEIGHT,
-        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-        width: svgWidth + leftPadding,
-        zIndex: 40,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-        background: "transparent",
-        pointerEvents: "auto",
+        width: "100vw",
         boxSizing: "border-box",
-        overflow: "hidden",
+        paddingLeft: sidePadding,
+        paddingRight: sidePadding,
+        background: "transparent",
+        pointerEvents: "none", // allow overlay
+        position: "relative",
+        zIndex: 41,
       }}
     >
-      <div style={{ height: verticalMargin }} />
-      {modes.map((mode, idx) => {
-        const gradientId = `mode-gradient-${mode}`;
-        const { stops, stroke } = MODE_GRADIENTS[mode];
-        const label = MODE_LABELS[mode];
-        const isActive = active === mode;
+      <nav
+        aria-label="View mode switcher"
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "flex-start",
+          background: "transparent",
+          pointerEvents: "auto",
+          boxSizing: "border-box",
+          overflow: "visible",
+          minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+        }}
+      >
+        <div style={{ height: verticalMargin }} />
+        {modes.map((mode, idx) => {
+          const gradientId = `mode-gradient-${mode}`;
+          const { stops, stroke } = MODE_GRADIENTS[mode];
+          const label = MODE_LABELS[mode];
+          const isActive = active === mode;
 
-        return (
-          <React.Fragment key={mode}>
-            <button
-              aria-label={label}
-              type="button"
-              onClick={() => onChange(mode)}
-              tabIndex={0}
-              style={{
-                background: "none",
-                border: "none",
-                outline: "none",
-                boxShadow: "none",
-                padding: 0,
-                margin: 0,
-                cursor: isActive ? "default" : "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                width: svgWidth + leftPadding,
-                height: svgHeight,
-                transition: "transform 0.18s, filter 0.18s",
-                opacity: isActive ? 1 : 0.91,
-                pointerEvents: isActive ? "none" : "auto",
-                userSelect: "none"
-              }}
-              disabled={isActive}
-            >
-              <svg
-                width={svgWidth + leftPadding}
-                height={svgHeight}
-                viewBox={`0 0 ${svgWidth + leftPadding} ${svgHeight}`}
+          return (
+            <React.Fragment key={mode}>
+              <button
+                aria-label={label}
+                type="button"
+                onClick={() => onChange(mode)}
+                tabIndex={0}
                 style={{
-                  display: "block",
+                  background: "none",
+                  border: "none",
+                  outline: "none",
+                  boxShadow: "none",
+                  padding: 0,
                   margin: 0,
-                  overflow: "visible"
+                  cursor: isActive ? "default" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  width: svgWidth,
+                  height: svgHeight,
+                  transition: "transform 0.18s, filter 0.18s",
+                  opacity: isActive ? 1 : 0.91,
+                  pointerEvents: isActive ? "none" : "auto",
+                  userSelect: "none"
                 }}
-                aria-hidden="true"
-                focusable="false"
+                disabled={isActive}
               >
-                <defs>
-                  <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-                    {stops.map((stop, i) => (
-                      <stop key={i} offset={stop.offset} stopColor={stop.color} />
-                    ))}
-                  </linearGradient>
-                </defs>
-                <text
-                  x={leftX}
-                  y={centerY}
-                  textAnchor="start"
-                  dominantBaseline="middle"
-                  fontFamily="'coolvetica', 'Bungee Shade', Arial, sans-serif"
-                  fontSize={fontSize}
-                  fontWeight={700}
-                  letterSpacing="0.055em"
+                <svg
+                  width={svgWidth}
+                  height={svgHeight}
+                  viewBox={`0 0 ${svgWidth} ${svgHeight}`}
                   style={{
-                    fill: `url(#${gradientId})`,
-                    stroke: stroke,
-                    strokeWidth: isActive ? 3.5 : 2.5,
-                    paintOrder: "stroke fill",
-                    filter: isActive
-                      ? `drop-shadow(${activeGlow})`
-                      : undefined,
-                    transition: "stroke-width 0.14s, filter 0.18s, font-size 0.18s, transform 0.18s",
-                    transform: `scale(${isActive ? activeScale : inactiveScale})`,
+                    display: "block",
+                    margin: 0,
+                    overflow: "visible"
                   }}
+                  aria-hidden="true"
+                  focusable="false"
                 >
-                  {label}
-                </text>
-              </svg>
-            </button>
-            {idx < modes.length - 1 && <div style={{ height: gap }} />}
-          </React.Fragment>
-        );
-      })}
-      <div style={{ height: verticalMargin, flexShrink: 0 }} />
-    </nav>
+                  <defs>
+                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+                      {stops.map((stop, i) => (
+                        <stop key={i} offset={stop.offset} stopColor={stop.color} />
+                      ))}
+                    </linearGradient>
+                  </defs>
+                  <text
+                    x={leftX}
+                    y={centerY}
+                    textAnchor="start"
+                    dominantBaseline="middle"
+                    fontFamily="'coolvetica', 'Bungee Shade', Arial, sans-serif"
+                    fontSize={fontSize}
+                    fontWeight={700}
+                    letterSpacing="0.055em"
+                    style={{
+                      fill: `url(#${gradientId})`,
+                      stroke: stroke,
+                      strokeWidth: isActive ? 3.5 : 2.5,
+                      paintOrder: "stroke fill",
+                      filter: isActive
+                        ? `drop-shadow(${activeGlow})`
+                        : undefined,
+                      transition: "stroke-width 0.14s, filter 0.18s, font-size 0.18s, transform 0.18s",
+                      transform: `scale(${isActive ? activeScale : inactiveScale})`,
+                    }}
+                  >
+                    {label}
+                  </text>
+                </svg>
+              </button>
+              {idx < modes.length - 1 && <div style={{ height: gap }} />}
+            </React.Fragment>
+          );
+        })}
+        <div style={{ height: verticalMargin, flexShrink: 0 }} />
+      </nav>
+    </div>
   );
 }
