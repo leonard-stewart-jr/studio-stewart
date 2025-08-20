@@ -310,6 +310,7 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
   useEffect(() => {
     // Logging for debugging the USA globe spin/zoom
     console.log("[GlobeSection useEffect] mode:", mode, "globeIsReady:", globeIsReady, "globeEl.current:", globeEl.current);
+
     if (
       globeIsReady &&
       globeEl.current &&
@@ -317,17 +318,17 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
       mode === "usa"
     ) {
       // Extra log for debug
-      console.log("[GlobeSection] Spinning and zooming globe to USA view (lat:39, lng:-98, alt:1.18)");
-      setTimeout(() => {
-        if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
-          globeEl.current.pointOfView(
-            { lat: 39, lng: -98, altitude: 1.18 },
-            1600 // ms for smooth spin/zoom animation
-          );
-        } else {
-          console.log("[GlobeSection] globeEl.current or pointOfView not available at timeout");
-        }
-      }, 140); // 140ms delay to ensure globe is fully ready
+      console.log("[GlobeSection] Forcing spin/zoom to USA (lat:39, lng:-98, alt:1.18) with extra retries");
+
+      // Try calling at several intervals to force the animation
+      [180, 350, 700].forEach((delay) => {
+        setTimeout(() => {
+          if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
+            console.log(`[GlobeSection] (delay ${delay}) calling pointOfView`);
+            globeEl.current.pointOfView({ lat: 39, lng: -98, altitude: 1.18 }, 1400);
+          }
+        }, delay);
+      });
     }
   }, [mode, globeIsReady]);
 
