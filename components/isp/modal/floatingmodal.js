@@ -50,27 +50,22 @@ export default function FloatingModal({
   src,
   width,
   height = 720,
+  children, // <-- Accept children to render inside content
 }) {
   const backdropRef = useRef(null);
   const scrollRef = useRef(null);
 
-  // --- BUFFER LOGIC ---
   const bufferWidth = 200;
   const visibleWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
   const scrollAreaWidth = visibleWidth;
 
-  // Track scroll position
   const [scrollX, setScrollX] = useState(0);
-
-  // Drag-to-scroll logic
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
-  // Cursor logic by vertical thirds of viewport
   const [cursorType, setCursorType] = useState("hand"); // "left", "right", or "hand"
 
-  // Ensure scroll starts at 0 on open
   useEffect(() => {
     if (open && scrollRef.current) {
       scrollRef.current.scrollLeft = 0;
@@ -78,14 +73,12 @@ export default function FloatingModal({
     }
   }, [open, width]);
 
-  // Update scrollX on scroll
   function onScroll() {
     if (scrollRef.current) {
       setScrollX(scrollRef.current.scrollLeft);
     }
   }
 
-  // Drag-to-scroll for content
   function handleDragStart(e) {
     if (e.button !== 0) return;
     setIsDragging(true);
@@ -112,7 +105,6 @@ export default function FloatingModal({
     };
   }, [isDragging]);
 
-  // Touch drag for mobile
   useEffect(() => {
     let startX = 0, startScroll = 0, dragging = false;
     function onTouchStart(e) {
@@ -145,14 +137,12 @@ export default function FloatingModal({
     };
   }, [scrollRef.current, width]);
 
-  // Wheel scroll: horizontal only
   function handleWheel(e) {
     if (!scrollRef.current) return;
     scrollRef.current.scrollBy({ left: e.deltaY, behavior: "auto" });
     e.preventDefault();
   }
 
-  // Keyboard navigation
   useEffect(() => {
     function handleKeyDown(e) {
       if (!open || !scrollRef.current) return;
@@ -167,12 +157,10 @@ export default function FloatingModal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, width, onClose]);
 
-  // Backdrop click closes
   function handleBackdropClick(e) {
     if (e.target === backdropRef.current) onClose();
   }
 
-  // HIDE NATIVE SCROLLBAR
   useEffect(() => {
     if (!scrollRef.current) return;
     scrollRef.current.style.scrollbarWidth = "none";
@@ -183,9 +171,8 @@ export default function FloatingModal({
     };
   }, []);
 
-  // Cursor logic: set on mouse move over overlay
   function handleMouseMove(e) {
-    if (isDragging) return; // cursor: grabbing is set by JS while dragging
+    if (isDragging) return;
     const vw = window.innerWidth;
     const x = e.clientX;
     if (x < vw / 3) setCursorType("left");
@@ -197,7 +184,6 @@ export default function FloatingModal({
     setCursorType("hand");
   }
 
-  // Double-click-to-shift logic (now 1000px)
   function handleOverlayDoubleClick(e) {
     if (isDragging) return;
     if (!scrollRef.current) return;
@@ -209,10 +195,8 @@ export default function FloatingModal({
     } else if (x > (2 * vw) / 3) {
       scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
     }
-    // If in the center third, do nothing on double click
   }
 
-  // Pick which cursor to use for overlay
   let overlayCursor = "grab";
   if (isDragging) {
     overlayCursor = "grabbing";
@@ -234,7 +218,6 @@ export default function FloatingModal({
       aria-modal="true"
     >
       <ModalContentWrap>
-        {/* Scroll area: full viewport width, no margin */}
         <HorizontalScrollArea
           ref={scrollRef}
           className="mesopotamia-scrollbar hide-native-scrollbar"
@@ -254,7 +237,6 @@ export default function FloatingModal({
           onWheel={handleWheel}
           onScroll={onScroll}
         >
-          {/* LEFT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
           <ContentBlock
             style={{
@@ -270,6 +252,7 @@ export default function FloatingModal({
               boxShadow: "0 6px 42px 0 rgba(0,0,0,0.18)",
               borderRadius: 0,
               margin: 0,
+              overflow: "visible",
             }}
           >
             <iframe
@@ -286,7 +269,8 @@ export default function FloatingModal({
               }}
               draggable={false}
             />
-            {/* Transparent overlay for drag-to-scroll, double-click, and cursor */}
+            {/* Render children (e.g., ShareButton bar) inside the modal content */}
+            {children}
             <DragOverlay
               style={{
                 pointerEvents: "auto",
@@ -299,10 +283,8 @@ export default function FloatingModal({
             />
             <CloseButton onClick={onClose} aria-label="Close">&times;</CloseButton>
           </ContentBlock>
-          {/* RIGHT transparent buffer */}
           <BufferDiv style={{ width: bufferWidth, minWidth: bufferWidth }} />
         </HorizontalScrollArea>
-        {/* Hide native scrollbar for all browsers */}
         <style>{`
           .hide-native-scrollbar::-webkit-scrollbar { display: none !important; }
           .hide-native-scrollbar { scrollbar-width: none !important; }
@@ -351,6 +333,7 @@ const ContentBlock = styled.div`
   position: relative;
   box-sizing: border-box;
   margin: 0;
+  overflow: visible;
 `;
 
 const BufferDiv = styled.div`
