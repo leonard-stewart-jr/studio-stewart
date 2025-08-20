@@ -37,19 +37,22 @@ const MODE_LABELS = {
 
 const NAVBAR_HEIGHT = 76; // px
 
-export default function BottomModeNav({ active, onChange }) {
+export default function BottomModeNav({ active, onChange, sidePadding }) {
   const [isMobile, setIsMobile] = useState(false);
-  const [sidePadding, setSidePadding] = useState(120);
+  const [internalSidePadding, setInternalSidePadding] = useState(80);
 
   useEffect(() => {
     const update = () => {
       setIsMobile(window.innerWidth < 700);
-      setSidePadding(window.innerWidth < 800 ? 24 : 120);
+      setInternalSidePadding(window.innerWidth < 800 ? 24 : 80);
     };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
+
+  // Use the prop if provided, otherwise fallback to internal state
+  const leftPad = typeof sidePadding === "number" ? sidePadding : internalSidePadding;
 
   const fontSize = isMobile ? 27 : 40;
   const labelValues = Object.values(MODE_LABELS);
@@ -61,7 +64,6 @@ export default function BottomModeNav({ active, onChange }) {
   // Spacing between buttons
   const gap = (svgHeight * 2) + 50;
 
-  // Glow/scale for active label
   const activeGlow = "0 0 54px 12px #e6dbb9cc, 0 0 12px 6px #fff";
   const activeScale = 1.18;
   const inactiveScale = 1;
@@ -73,7 +75,7 @@ export default function BottomModeNav({ active, onChange }) {
       aria-label="View mode switcher"
       style={{
         position: "fixed",
-        left: sidePadding,
+        left: leftPad,
         top: NAVBAR_HEIGHT,
         height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
         width: svgWidth,
