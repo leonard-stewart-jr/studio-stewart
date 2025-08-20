@@ -50,34 +50,27 @@ export default function InfoModal({ open, onClose, marker }) {
       : src;
     const shareTitle = marker.name;
 
-    // This is the left column content, you may have this logic in FloatingModal as children
-    const leftColumn = (
-      <div
-        style={{
-          width: 420, // or whatever your left column width is
-          minWidth: 320,
-          maxWidth: 600,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end", // right-aligns all text and SHARE section
-          justifyContent: "flex-start",
-          height: "100%",
-          padding: "0 0 0 0",
-          boxSizing: "border-box",
-        }}
-      >
-        {/* --- Your left column content here (title, date, etc) --- */}
-        {/* Replace this section with your actual info markup */}
-        <div style={{ width: "100%", textAlign: "right", marginBottom: 16 }}>
-          <div style={{ fontWeight: 400, fontSize: 24 }}>
-            {marker.name}
-          </div>
-          {/* Insert other info blocks here */}
-        </div>
-        {/* --- End left column info content --- */}
+    // ADJUST THIS MARGIN TO PERFECTLY LINE UP WITH YOUR LEFT COLUMN
+    // You may need to tweak this value (try 42px, 56px, 64px, etc.)
+    const leftColumnAlignMargin = "48px";
 
-        {/* Share bar at the bottom; marginTop: "auto" pushes it down */}
-        <div style={{ width: "100%", marginTop: "auto" }}>
+    return (
+      <FloatingModal
+        open={open}
+        onClose={onClose}
+        src={src}
+        width={width}
+        height={height}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            margin: `0 0 24px ${leftColumnAlignMargin}`,
+            pointerEvents: "auto",
+          }}
+        >
           <ShareButton
             pdfUrl={pdfUrl}
             htmlUrl={htmlUrl}
@@ -88,19 +81,6 @@ export default function InfoModal({ open, onClose, marker }) {
             }}
           />
         </div>
-      </div>
-    );
-
-    return (
-      <FloatingModal
-        open={open}
-        onClose={onClose}
-        src={src}
-        width={width}
-        height={height}
-      >
-        {leftColumn}
-        {/* Your other modal children, e.g. image and right column, go in FloatingModal */}
       </FloatingModal>
     );
   }
