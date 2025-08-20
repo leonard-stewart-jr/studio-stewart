@@ -39,9 +39,13 @@ const NAVBAR_HEIGHT = 76; // px
 
 export default function BottomModeNav({ active, onChange }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [sidePadding, setSidePadding] = useState(120);
 
   useEffect(() => {
-    const update = () => setIsMobile(window.innerWidth < 700);
+    const update = () => {
+      setIsMobile(window.innerWidth < 700);
+      setSidePadding(window.innerWidth < 800 ? 24 : 120);
+    };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -57,10 +61,7 @@ export default function BottomModeNav({ active, onChange }) {
   // Spacing between buttons
   const gap = (svgHeight * 2) + 50;
 
-  const navHeightPx = typeof window !== "undefined" ? window.innerHeight - NAVBAR_HEIGHT : 900 - NAVBAR_HEIGHT;
-  const totalButtonsHeight = svgHeight * 3 + gap * 2;
-  const verticalMargin = Math.max((navHeightPx - totalButtonsHeight) / 2, 24);
-
+  // Glow/scale for active label
   const activeGlow = "0 0 54px 12px #e6dbb9cc, 0 0 12px 6px #fff";
   const activeScale = 1.18;
   const inactiveScale = 1;
@@ -71,21 +72,22 @@ export default function BottomModeNav({ active, onChange }) {
     <nav
       aria-label="View mode switcher"
       style={{
-        width: "100%",
+        position: "fixed",
+        left: sidePadding,
+        top: NAVBAR_HEIGHT,
+        height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+        width: svgWidth,
+        zIndex: 40,
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         background: "transparent",
         pointerEvents: "auto",
         boxSizing: "border-box",
-        overflow: "visible",
-        minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-        zIndex: 40,
-        position: "relative",
+        overflow: "visible"
       }}
     >
-      <div style={{ height: verticalMargin }} />
       {modes.map((mode, idx) => {
         const gradientId = `mode-gradient-${mode}`;
         const { stops, stroke } = MODE_GRADIENTS[mode];
@@ -167,7 +169,6 @@ export default function BottomModeNav({ active, onChange }) {
           </React.Fragment>
         );
       })}
-      <div style={{ height: verticalMargin, flexShrink: 0 }} />
     </nav>
   );
 }
