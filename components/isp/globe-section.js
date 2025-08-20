@@ -306,29 +306,26 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
-  // --- Animate globe to US view on mode change and globe ready ---
+  // --- Animate globe to the correct view on mode change and globe ready ---
   useEffect(() => {
-    // Logging for debugging the USA globe spin/zoom
+    // Logging for debugging
     console.log("[GlobeSection useEffect] mode:", mode, "globeIsReady:", globeIsReady, "globeEl.current:", globeEl.current);
 
     if (
       globeIsReady &&
       globeEl.current &&
-      typeof globeEl.current.pointOfView === "function" &&
-      mode === "usa"
+      typeof globeEl.current.pointOfView === "function"
     ) {
-      // Extra log for debug
-      console.log("[GlobeSection] Forcing spin/zoom to USA (lat:39, lng:-98, alt:1.18) with extra retries");
-
-      // Try calling at several intervals to force the animation
-      [180, 350, 700, 1200].forEach((delay) => {
-        setTimeout(() => {
-          if (globeEl.current && typeof globeEl.current.pointOfView === "function") {
-            console.log(`[GlobeSection] (delay ${delay}) calling pointOfView`);
-            globeEl.current.pointOfView({ lat: 39, lng: -98, altitude: 1.18 }, 1400);
-          }
-        }, delay);
-      });
+      let pov;
+      if (mode === "usa") {
+        pov = { lat: 39, lng: -98, altitude: 1.18 };
+      } else if (mode === "sd") {
+        pov = { lat: 44, lng: -100, altitude: 1.5 };
+      } else { // world or default
+        pov = { lat: 20, lng: 0, altitude: 2.1 };
+      }
+      console.log("[GlobeSection] Animating to", pov, "for mode", mode);
+      globeEl.current.pointOfView(pov, 1400);
     }
   }, [mode, globeIsReady, globeImageUrl]);
 
@@ -337,7 +334,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     if (obj && obj.isExpandPin) {
       setLondonExpanded(true);
       setHovered(null);
-      // Only zoom if globe is ready and method exists
       if (globeIsReady && globeEl.current && typeof globeEl.current.pointOfView === "function" && obj.lat && obj.lng) {
         globeEl.current.pointOfView(
           { lat: obj.lat, lng: obj.lng, altitude: 1.4 },
@@ -362,7 +358,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   };
 
-  // --- NEW: Collapse cluster on background click ---
   const handleBackgroundClick = () => {
     if (londonExpanded) {
       setLondonExpanded(false);
@@ -480,7 +475,6 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
             console.log("[GlobeSection] onGlobeReady fired");
             setGlobeIsReady(true);
           }}
-          // --- This line collapses cluster on background click!
           onBackgroundClick={handleBackgroundClick}
         />
       </div>
