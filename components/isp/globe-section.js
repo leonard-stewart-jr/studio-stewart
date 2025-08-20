@@ -304,6 +304,22 @@ export default function GlobeSection({ onMarkerClick, mode = "world" }) {
     }
   }, [mode, data, palette, colorAssignments, londonExpanded, pinReady, flagReady]);
 
+  // --- Animate globe to US view on mode change and globe ready ---
+  useEffect(() => {
+    if (
+      globeIsReady &&
+      globeEl.current &&
+      typeof globeEl.current.pointOfView === "function" &&
+      mode === "usa"
+    ) {
+      // Centered roughly on Kansas/Nebraska for US-wide view, nice zoom and rotation
+      globeEl.current.pointOfView(
+        { lat: 39, lng: -98, altitude: 1.18 },
+        1600 // ms for smooth spin/zoom animation
+      );
+    }
+  }, [mode, globeIsReady]);
+
   // --- MAIN CLICK HANDLERS ---
   const handleObjectClick = (obj) => {
     // Expand flag clicked: open cluster, zoom to England
