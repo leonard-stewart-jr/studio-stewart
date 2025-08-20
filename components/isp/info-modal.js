@@ -50,46 +50,38 @@ export default function InfoModal({ open, onClose, marker }) {
       : src;
     const shareTitle = marker.name;
 
-    // Debug: log the resolved src and marker
-    console.log({ src, marker });
-
     return (
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        <FloatingModal
-          open={open}
-          onClose={onClose}
-          src={src}
-          width={width}
-          height={height}
-        />
-        {/* Share button is absolutely positioned in the modal's bottom left corner, right-aligned with modal's title */}
-        <div style={{
-          position: "absolute",
-          left: 0,
-          bottom: 0,
-          width: "100%",
-          zIndex: 33,
-          pointerEvents: "none" // allows modal close click-through except for sharebutton group
-        }}>
-          <div style={{
+      <FloatingModal
+        open={open}
+        onClose={onClose}
+        src={src}
+        width={width}
+        height={height}
+      >
+        {/* Share bar INSIDE the modal content, bottom-right aligned */}
+        <div
+          style={{
             width: "100%",
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "flex-end",
-            pointerEvents: "auto"
-          }}>
-            <ShareButton
-              pdfUrl={pdfUrl}
-              htmlUrl={htmlUrl}
-              shareTitle={shareTitle}
-              style={{
-                margin: "0 62px 26px 0", // adjust as needed to align with your modal's title/text
-                maxWidth: 420
-              }}
-            />
-          </div>
+            margin: 0,
+            padding: 0,
+            position: "relative",
+            zIndex: 120,
+          }}
+        >
+          <ShareButton
+            pdfUrl={pdfUrl}
+            htmlUrl={htmlUrl}
+            shareTitle={shareTitle}
+            style={{
+              margin: "16px 36px 16px 0", // adjust as needed
+              maxWidth: 420,
+            }}
+          />
         </div>
-      </div>
+      </FloatingModal>
     );
   }
 
