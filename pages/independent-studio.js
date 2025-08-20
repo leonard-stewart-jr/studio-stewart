@@ -35,10 +35,20 @@ export default function IndependentStudio() {
     };
   }, []);
 
+  // Responsive padding for mobile
+  const [sidePadding, setSidePadding] = useState(120);
+  useEffect(() => {
+    const updatePadding = () => {
+      setSidePadding(window.innerWidth < 800 ? 24 : 120);
+    };
+    updatePadding();
+    window.addEventListener("resize", updatePadding);
+    return () => window.removeEventListener("resize", updatePadding);
+  }, []);
+
   return (
     <>
       {/* NAVIGATION LAYERS IN "CARD" STYLE" */}
-      {/* Main nav: handled by layout/header, so only render cards from tabs down */}
       <div
         className="nav-card nav-card-mid"
         style={{
@@ -67,9 +77,21 @@ export default function IndependentStudio() {
       </div>
       {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
       {mainSection === "history" && (
-        <section className="isp-globe-section">
-          <GlobeSection mode={activeHistory} onMarkerClick={setModalData} />
-        </section>
+        <div
+          style={{
+            width: "100vw",
+            boxSizing: "border-box",
+            paddingLeft: sidePadding,
+            paddingRight: sidePadding,
+            background: "#f9f9f7", // match your main bg
+            minHeight: 0,
+            minWidth: 0,
+          }}
+        >
+          <section className="isp-globe-section">
+            <GlobeSection mode={activeHistory} onMarkerClick={setModalData} />
+          </section>
+        </div>
       )}
       {mainSection === "future" && (
         <div
