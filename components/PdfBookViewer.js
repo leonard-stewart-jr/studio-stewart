@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
-// A full-page PDF viewer with:
-// - Zoom +/-
+// Full-page PDF viewer used on /undergraduate-portfolio.
+// - Zoom +/−
 // - Fit to width
 // - Two-up spreads toggle
-// - Optional "skip covers" in two-up (first and last shown as single pages)
-// - Responsive sizing beneath your header
+// - Optional "skip covers" (first/last single pages)
+// - Mobile: spreads still render; portrait allows horizontal scroll to see full spread.
 
 export default function PdfBookViewer({
   file,
@@ -19,17 +19,27 @@ export default function PdfBookViewer({
 }) {
   const [numPages, setNumPages] = useState(null);
   const [containerWidth, setContainerWidth] = useState(1100);
-  const [scale, setScale] = useState(1.0); // zoom scale multiplier
-  const [fitToWidth, setFitToWidth] = useState(true); // when true, width is auto-fit
+  const [scale, setScale] = useState(1.0); // zoom multiplier when not fit-to-width
+  const [fitToWidth, setFitToWidth] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [loadError, setLoadError] = useState(null);
 
   const wrapperRef = useRef(null);
 
   useEffect(() => {
     setIsClient(true);
-    // Configure PDF.js worker
+    // Use a CDN worker or host locally if you prefer. CDN is fine for most setups.
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
   }, []);
+
+  // Resolve an absolute URL for the PDF to avoid any path resolution issues.
+  const resolvedFile = useMemo(() => {
+    if (typeof window === "undefined") return file || "";
+    if (!file) return "";
+    // Ensure leading slash and prepend origin
+    const path = file.startsWith("/") ? file : `/${file}`;
+    return `${window.location.origin}${path}`;
+  }, [file]);
 
   useEffect(() => {
     function handleResize() {
@@ -44,16 +54,20 @@ export default function PdfBookViewer({
 
   function onPdfLoadSuccess({ numPages: np }) {
     setNumPages(np);
-    // Reset zoom on load if fit-to-width
+    setLoadError(null);
     if (fitToWidth) setScale(1.0);
   }
 
-  // Compute per-page width based on mode and zoom
+  function onPdfLoadError(err) {
+    // Show a friendly message and log the raw error for debugging.
+    console.error("PDF load error:", err);
+    setLoadError(err?.message || "Failed to load PDF.");
+  }
+
   const gap = 24;
   const baseWidth = twoUpView ? Math.floor((containerWidth - gap) / 2) : containerWidth;
   const pageRenderWidth = Math.floor(baseWidth * (fitToWidth ? 1.0 : scale));
 
-  // Zoom controls
   function zoomIn() {
     setFitToWidth(false);
     setScale((s) => Math.min(3.0, s + 0.15));
@@ -67,16 +81,11 @@ export default function PdfBookViewer({
     setScale(1.0);
   }
 
-  // Build a page ordering for two-up spreads skipping covers:
-  // - First page alone
-  // - Middle pages in pairs
-  // - Last page alone (if odd count or you want both ends single)
   const twoUpPairs = useMemo(() => {
     if (!numPages || !twoUpView) return null;
     const pages = Array.from({ length: numPages }, (_, i) => i + 1);
 
     if (!skipCoversInTwoUp) {
-      // Just pair pages in sequence
       const out = [];
       for (let i = 0; i < pages.length; i += 2) {
         const left = pages[i];
@@ -86,33 +95,27 @@ export default function PdfBookViewer({
       return out;
     }
 
-    // Skip covers: first and last single; middle in pairs
+    // Skip covers: first and last single; middle pages paired.
     const out = [];
     if (pages.length <= 2) {
-      // Edge cases: 1 or 2 pages -> render singles
       for (const p of pages) out.push([p]);
       return out;
     }
-    // First cover single
-    out.push([pages[0]]);
-    // Middle pairs
+    out.push([pages[0]]); // front cover single
     for (let i = 1; i < pages.length - 1; i += 2) {
       const left = pages[i];
       const right = pages[i + 1];
       if (right && i + 1 < pages.length - 1) {
         out.push([left, right]);
       } else {
-        // If odd count in middle, push leftover single
         out.push([left]);
       }
     }
-    // Last cover single
-    out.push([pages[pages.length - 1]]);
+    out.push([pages[pages.length - 1]]); // back cover single
     return out;
   }, [numPages, twoUpView, skipCoversInTwoUp]);
 
   if (!isClient) {
-    // Avoid SSR layout thrash; render a minimal shell
     return (
       <div
         style={{
@@ -157,28 +160,13 @@ export default function PdfBookViewer({
         </h1>
 
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-          <button
-            onClick={zoomOut}
-            aria-label="Zoom out"
-            style={btnStyle}
-            title="Zoom out"
-          >
+          <button onClick={zoomOut} aria-label="Zoom out" style={btnStyle} title="Zoom out">
             −
           </button>
-          <button
-            onClick={zoomIn}
-            aria-label="Zoom in"
-            style={btnStyle}
-            title="Zoom in"
-          >
+          <button onClick={zoomIn} aria-label="Zoom in" style={btnStyle} title="Zoom in">
             +
           </button>
-          <button
-            onClick={setFitWidth}
-            aria-label="Fit to width"
-            style={btnStyle}
-            title="Fit to width"
-          >
+          <button onClick={setFitWidth} aria-label="Fit to width" style={btnStyle} title="Fit to width">
             Fit
           </button>
 
@@ -204,21 +192,10 @@ export default function PdfBookViewer({
             Skip covers
           </label>
 
-          <a
-            href={file}
-            download
-            style={linkStyle}
-            title="Download PDF"
-          >
+          <a href={resolvedFile} download style={linkStyle} title="Download PDF">
             Download
           </a>
-          <a
-            href={file}
-            target="_blank"
-            rel="noreferrer"
-            style={linkStyle}
-            title="Open in browser tab"
-          >
+          <a href={resolvedFile} target="_blank" rel="noreferrer" style={linkStyle} title="Open in browser tab">
             Open
           </a>
         </div>
@@ -226,53 +203,60 @@ export default function PdfBookViewer({
 
       {/* PDF content */}
       <div style={{ width: containerWidth, margin: "0 auto" }}>
-        {!file ? (
+        {!resolvedFile ? (
           <p>No PDF file provided.</p>
         ) : (
-          <Document
-            file={file}
-            onLoadSuccess={onPdfLoadSuccess}
-            loading={<p>Loading PDF…</p>}
-          >
-            {numPages &&
-              (twoUpView
-                ? // Render pairs according to twoUpPairs
-                  twoUpPairs.map((pair, idx) => (
-                    <div
-                      key={`pair-${idx}`}
-                      style={{
-                        display: "flex",
-                        gap,
-                        alignItems: "flex-start",
-                        justifyContent: "center",
-                        marginBottom: 16,
-                        // On narrow mobile portrait, allow horizontal scroll to view the full spread
-                        overflowX: "auto",
-                      }}
-                    >
-                      {pair.map((pageNum) => (
+          <>
+            {loadError && (
+              <div style={{ color: "#b00020", marginBottom: 12, fontSize: 14 }}>
+                Failed to load PDF. Please refresh the page. If it persists, check the browser console for details.
+              </div>
+            )}
+            <Document
+              file={{ url: resolvedFile }}
+              onLoadSuccess={onPdfLoadSuccess}
+              onLoadError={onPdfLoadError}
+              loading={<p>Loading PDF…</p>}
+              error={<p>Failed to load PDF.</p>}
+              options={{}}
+            >
+              {numPages &&
+                (twoUpView
+                  ? twoUpPairs.map((pair, idx) => (
+                      <div
+                        key={`pair-${idx}`}
+                        style={{
+                          display: "flex",
+                          gap,
+                          alignItems: "flex-start",
+                          justifyContent: "center",
+                          marginBottom: 16,
+                          overflowX: "auto", // mobile portrait: allow horizontal scroll for full spread
+                        }}
+                      >
+                        {pair.map((pageNum) => (
+                          <Page
+                            key={`page-${pageNum}`}
+                            pageNumber={pageNum}
+                            width={pageRenderWidth}
+                            renderTextLayer={false}
+                            renderAnnotationLayer={false}
+                          />
+                        ))}
+                      </div>
+                    ))
+                  : Array.from({ length: numPages }, (_, i) => (
+                      <div key={`single-${i + 1}`} style={{ marginBottom: 16 }}>
                         <Page
-                          key={`page-${pageNum}`}
-                          pageNumber={pageNum}
+                          pageNumber={i + 1}
                           width={pageRenderWidth}
                           renderTextLayer={false}
                           renderAnnotationLayer={false}
                         />
-                      ))}
-                    </div>
-                  ))
-                : // Single page stacked
-                  Array.from({ length: numPages }, (_, i) => (
-                    <div key={`single-${i + 1}`} style={{ marginBottom: 16 }}>
-                      <Page
-                        pageNumber={i + 1}
-                        width={pageRenderWidth}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                      />
-                    </div>
-                  )))}
-          </Document>
+                      </div>
+                    )))}
+            </Document>
+          </>
         )}
       </div>
     </div>
