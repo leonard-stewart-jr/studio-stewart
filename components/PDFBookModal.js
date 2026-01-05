@@ -1,19 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
+// Keeps your modal-based viewer working for anything else using it on / (Projects)
+// Not used for the new full-page route, but included so Vercel builds cleanly.
+
 export default function PdfBookModal({ open, onClose, file, title, spreadsMode = true }) {
   const [numPages, setNumPages] = useState(null);
   const [containerWidth, setContainerWidth] = useState(1000);
 
   useEffect(() => {
-    // Ensure the PDF.js worker is available
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
   }, []);
 
   useEffect(() => {
     function handleResize() {
       const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-      // Leave some side padding inside the modal
       setContainerWidth(Math.max(320, Math.min(1200, w - 160)));
     }
     handleResize();
@@ -25,7 +26,6 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
 
   const pageWidth = useMemo(() => {
     if (!spreadsMode) return containerWidth;
-    // For spreads, show two pages per row with a gap
     const gap = 24;
     return Math.floor((containerWidth - gap) / 2);
   }, [containerWidth, spreadsMode]);
@@ -102,8 +102,7 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
             <Document file={file} onLoadSuccess={onPdfLoadSuccess} loading={<p>Loading PDF…</p>}>
               {numPages &&
                 (spreadsMode
-                  ? // Render spreads (two pages side by side)
-                    Array.from({ length: Math.ceil(numPages / 2) }, (_, i) => {
+                  ? Array.from({ length: Math.ceil(numPages / 2) }, (_, i) => {
                       const leftPage = i * 2 + 1;
                       const rightPage = leftPage + 1;
                       return (
@@ -134,8 +133,7 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
                         </div>
                       );
                     })
-                  : // Render single pages stacked
-                    Array.from({ length: numPages }, (_, i) => (
+                  : Array.from({ length: numPages }, (_, i) => (
                       <div key={`page-${i}`} style={{ marginBottom: 16 }}>
                         <Page
                           pageNumber={i + 1}
