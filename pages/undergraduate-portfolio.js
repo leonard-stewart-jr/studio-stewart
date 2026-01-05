@@ -1,20 +1,51 @@
+import React, { useEffect, useState } from "react";
+import HeaderBar from "../components/HeaderBar";
 import PdfBookViewer from "../components/PdfBookViewer";
 
 export default function UndergraduatePortfolioPage() {
-  return (
-    <main style={{ padding: "96px 16px 32px 16px" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-        <h1 style={{ margin: "0 0 8px 0", fontSize: 28, lineHeight: 1.2 }}>
-          Undergraduate Portfolio
-        </h1>
-        <div style={{ color: "#7d7d78", marginBottom: 16 }}>2020–2024</div>
+  // Header height in your app is 76px
+  const HEADER_HEIGHT = 76;
 
+  // Default preferences:
+  // - twoUpView: show spreads (two pages side-by-side)
+  // - skipCoversInTwoUp: first and last pages render as single pages
+  const [twoUpView, setTwoUpView] = useState(true);
+  const [skipCoversInTwoUp, setSkipCoversInTwoUp] = useState(true);
+
+  // Allow deep-link overrides via query if you want in future
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("twoUp")) {
+      setTwoUpView(params.get("twoUp") === "true");
+    }
+    if (params.has("skipCovers")) {
+      setSkipCoversInTwoUp(params.get("skipCovers") === "true");
+    }
+  }, []);
+
+  return (
+    <>
+      <HeaderBar fixedNav={true} />
+
+      <main
+        style={{
+          // Fill viewport beneath header
+          marginTop: HEADER_HEIGHT,
+          minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+          background: "#fff",
+        }}
+      >
         <PdfBookViewer
           file="/portfolio/undergraduate-portfolio.pdf"
           title="UNDERGRADUATE PORTFOLIO (2020–2024)"
-          spreadsMode={true}
+          twoUpView={twoUpView}
+          onToggleTwoUp={() => setTwoUpView((t) => !t)}
+          skipCoversInTwoUp={skipCoversInTwoUp}
+          onToggleSkipCovers={() => setSkipCoversInTwoUp((s) => !s)}
+          headerHeight={HEADER_HEIGHT}
         />
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
