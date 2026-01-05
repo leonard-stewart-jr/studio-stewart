@@ -1,6 +1,86 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 	<head>
+<!-- Fill viewport width for InDesign HTML export pages; allow vertical scroll -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  html, body { margin: 0; background: #ffffff; }
+  /* Wrapper we create around all existing body children; we scale this element */
+  #__id_stage_wrap {
+    position: relative;            /* keep absolute children positioned as-is */
+    transform-origin: top left;    /* scale from the top-left corner */
+    will-change: transform;
+  }
+</style>
+<script>
+  (function () {
+    // Visual padding at top and sides (adjust TOP_PADDING to reserve space under a site header later)
+    const SIDE_PADDING = 16;   // px
+    const TOP_PADDING  = 12;   // px   (set to 76 if this will sit under your fixed header)
+
+    function parseSizeFromBodyStyle(prop) {
+      const s = document.body.getAttribute("style") || "";
+      const m = s.match(new RegExp(prop + "\\s*:\\s*(\\d+)px", "i"));
+      return m ? parseFloat(m[1]) : null;
+    }
+
+    function wrapAndFitToWidth() {
+      const body = document.body;
+
+      // InDesign sets page size on body inline style (e.g., width: 1224px; height: 792px;)
+      const stageW = parseSizeFromBodyStyle("width")  || body.offsetWidth  || 612;
+      const stageH = parseSizeFromBodyStyle("height") || body.offsetHeight || 792;
+
+      // Create a wrapper and move all current body children inside it once
+      let wrap = document.getElementById("__id_stage_wrap");
+      if (!wrap) {
+        wrap = document.createElement("div");
+        wrap.id = "__id_stage_wrap";
+        const kids = Array.from(body.childNodes);
+        kids.forEach(node => wrap.appendChild(node));
+        body.appendChild(wrap);
+      }
+
+      // Set intrinsic wrapper size so absolute children keep their layout
+      wrap.style.width = stageW + "px";
+      wrap.style.height = stageH + "px";
+
+      // Viewport width/height
+      const vw = Math.max(320, window.innerWidth || 320);
+      const vh = Math.max(320, window.innerHeight || 320);
+
+      // Fit-to-width only: compute scale from width; ignore height constraint
+      const scale = Math.max(0.1, (vw - SIDE_PADDING * 2) / stageW);
+
+      const scaledW = Math.ceil(stageW * scale);
+      const scaledH = Math.ceil(stageH * scale);
+
+      // Apply scale; center horizontally; align to top with padding
+      wrap.style.transform = "scale(" + scale + ")";
+      wrap.style.left = Math.max(0, Math.floor((vw - scaledW) / 2)) + "px";
+      wrap.style.top  = TOP_PADDING + "px";
+
+      // Allow vertical scrolling; avoid horizontal scroll
+      document.documentElement.style.background = "#ffffff";
+      body.style.margin = "0";
+      body.style.padding = "0";
+      body.style.overflowX = "hidden";
+      body.style.overflowY = "auto";
+      body.style.width = "100vw";
+      body.style.height = "auto";
+    }
+
+    // Run on load and resize
+    window.addEventListener("DOMContentLoaded", wrapAndFitToWidth, { once: true });
+    window.addEventListener("load", () => setTimeout(wrapAndFitToWidth, 50), { once: true });
+    window.addEventListener("resize", wrapAndFitToWidth);
+
+    // Re-run after fonts load (text metrics can change slightly)
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => setTimeout(wrapAndFitToWidth, 50));
+    }
+  })();
+</script>
 		<meta charset="utf-8" />
 		<title>publication-1</title>
 		<link href="../css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
