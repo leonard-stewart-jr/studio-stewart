@@ -1,20 +1,31 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
-// Keeps your modal-based viewer working for anything else using it on / (Projects)
-// Not used for the new full-page route, but included so Vercel builds cleanly.
+// Modal viewer used on the Projects page for any PDF-type project.
+// Keeps SSR safe by only touching pdfjs worker in useEffect.
 
 export default function PdfBookModal({ open, onClose, file, title, spreadsMode = true }) {
   const [numPages, setNumPages] = useState(null);
   const [containerWidth, setContainerWidth] = useState(1000);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
+    // Ensure the PDF.js worker is available in the browser
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
   }, []);
+
+  // Resolve an absolute URL for the PDF to avoid any path resolution issues.
+  const resolvedFile = useMemo(() => {
+    if (typeof window === "undefined") return file || "";
+    if (!file) return "";
+    const path = file.startsWith("/") ? file : `/${file}`;
+    return `${window.location.origin}${path}`;
+  }, [file]);
 
   useEffect(() => {
     function handleResize() {
       const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+      // Leave side padding inside the modal
       setContainerWidth(Math.max(320, Math.min(1200, w - 160)));
     }
     handleResize();
@@ -32,6 +43,12 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
 
   function onPdfLoadSuccess({ numPages: np }) {
     setNumPages(np);
+    setLoadError(null);
+  }
+
+  function onPdfLoadError(err) {
+    console.error("PDF load error (modal):", err);
+    setLoadError(err?.message || "Failed to load PDF.");
   }
 
   if (!open) return null;
@@ -95,11 +112,22 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
           </h2>
         )}
 
-        {!file ? (
+        {!resolvedFile ? (
           <p style={{ margin: "24px 0" }}>No PDF file provided.</p>
         ) : (
           <div style={{ width: containerWidth, margin: "0 auto" }}>
-            <Document file={file} onLoadSuccess={onPdfLoadSuccess} loading={<p>Loading PDF…</p>}>
+            {loadError && (
+              <div style={{ color: "#b00020", marginBottom: 12, fontSize: 14 }}>
+                Failed to load PDF. Please refresh the page. If it persists, check the browser console for details.
+              </div>
+            )}
+            <Document
+              file={{ url: resolvedFile }}
+              onLoadSuccess={onPdfLoadSuccess}
+              onLoadError={onPdfLoadError}
+              loading={<p>Loading PDF…</p>}
+              error={<p>Failed to load PDF.</p>}
+            >
               {numPages &&
                 (spreadsMode
                   ? Array.from({ length: Math.ceil(numPages / 2) }, (_, i) => {
