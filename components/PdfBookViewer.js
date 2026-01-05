@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
-// Full-page PDF viewer used on /undergraduate-portfolio.
-// - Renders only the current page (each page in your PDF is already a spread).
+// Full-page PDF "book" viewer for /undergraduate-portfolio.
+// - Your PDF is single pages (each page = a designed spread).
+// - We show ONLY one spread at a time:
+//   • First and last pages render as singles.
+//   • Middle pages render as pairs (two-up).
+// - Prev/Next flips by spread; never more than one spread visible.
 // - Zoom +/− and Fit-to-width.
-// - Prev/Next controls and keyboard shortcuts for flipping pages.
-// - Mobile portrait: horizontal scroll if needed; landscape fills more naturally.
+// - Keyboard: ←/→ to flip, +/- to zoom, F to fit.
 
 export default function PdfBookViewer({
   file,
@@ -14,25 +17,24 @@ export default function PdfBookViewer({
 }) {
   const [numPages, setNumPages] = useState(null);
   const [containerWidth, setContainerWidth] = useState(1100);
-  const [scale, setScale] = useState(1.0);          // zoom when not fit-to-width
+  const [scale, setScale] = useState(1.0);      // zoom factor when not fitting
   const [fitToWidth, setFitToWidth] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [loadError, setLoadError] = useState(null);
 
-  // Book state (only render current page)
-  const [currentPage, setCurrentPage] = useState(1);
+  // Book state (spread index only; we render one spread at a time)
+  const [currentSpreadIdx, setCurrentSpreadIdx] = useState(0);
   const loadedOnceRef = useRef(false);
-
   const wrapperRef = useRef(null);
 
+  // Use ESM worker compatible with react-pdf v10
   useEffect(() => {
     setIsClient(true);
-    // Use ESM worker (react-pdf v10 expects .mjs)
     const ver = pdfjs.version || "latest";
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${ver}/build/pdf.worker.min.mjs`;
   }, []);
 
-  // Resolve an absolute URL for the PDF to avoid path resolution issues.
+  // Resolve absolute URL for the PDF
   const resolvedFile = useMemo(() => {
     if (typeof window === "undefined") return file || "";
     if (!file) return "";
@@ -40,10 +42,10 @@ export default function PdfBookViewer({
     return `${window.location.origin}${path}`;
   }, [file]);
 
+  // Size to fill under header with small side padding
   useEffect(() => {
     function handleResize() {
       if (!wrapperRef.current) return;
-      // Fill viewport width under header with a small side padding.
       const maxWidth = Math.max(360, Math.min(window.innerWidth - 24, 1800));
       setContainerWidth(maxWidth);
     }
@@ -55,14 +57,14 @@ export default function PdfBookViewer({
   function onPdfLoadSuccess({ numPages: np }) {
     setNumPages(np);
     setLoadError(null);
-    // Only set page 1 the first time the document loads.
+    // Only set to the first spread on initial load
     if (!loadedOnceRef.current) {
       loadedOnceRef.current = true;
-      setCurrentPage(1);
+      setCurrentSpreadIdx(0);
       if (fitToWidth) setScale(1.0);
     } else {
-      // Clamp current page if it exceeds new bounds
-      setCurrentPage(prev => Math.min(Math.max(prev, 1), np));
+      // Clamp if needed after reload
+      setCurrentSpreadIdx(prev => Math.min(prev, Math.max(0, buildTwoUpPairs(np).length - 1)));
     }
   }
 
@@ -71,29 +73,56 @@ export default function PdfBookViewer({
     setLoadError(err?.message || "Failed to load PDF.");
   }
 
-  // Page width calculation
-  const pageRenderWidth = useMemo(() => {
-    return Math.floor((fitToWidth ? containerWidth : containerWidth * scale));
-  }, [containerWidth, fitToWidth, scale]);
+  // Build pairs with covers as singles:
+  // [ [1], [2,3], [4,5], ..., [N] ]
+  function buildTwoUpPairs(n) {
+    if (!n || n <= 0) return [];
+    if (n === 1) return [[1]];
+    if (n === 2) return [[1], [2]];
+    const pairs = [];
+    pairs.push([1]); // front cover
+    for (let p = 2; p <= n - 1; p += 2) {
+      if (p + 1 <= n - 1) pairs.push([p, p + 1]);
+      else pairs.push([p]);
+    }
+    pairs.push([n]); // back cover
+    return pairs;
+  }
+
+  const twoUpPairs = useMemo(() => buildTwoUpPairs(numPages || 0), [numPages]);
+
+  // Determine which page(s) to render for the current spread
+  const visiblePages = useMemo(() => {
+    if (!twoUpPairs.length) return [];
+    const i = Math.max(0, Math.min(currentSpreadIdx, twoUpPairs.length - 1));
+    return twoUpPairs[i];
+  }, [twoUpPairs, currentSpreadIdx]);
+
+  // Width calculation for the currently visible spread
+  const gap = 24;
+  const pairMode = visiblePages.length === 2;
+  const baseWidth = pairMode ? Math.floor((containerWidth - gap) / 2) : containerWidth;
+  const pageRenderWidth = Math.floor(baseWidth * (fitToWidth ? 1.0 : scale));
 
   // Controls
   function zoomIn() {
     setFitToWidth(false);
-    setScale(s => Math.min(3.0, s + 0.15));
+    setScale((s) => Math.min(3.0, s + 0.15));
   }
   function zoomOut() {
     setFitToWidth(false);
-    setScale(s => Math.max(0.35, s - 0.15));
+    setScale((s) => Math.max(0.35, s - 0.15));
   }
   function setFitWidth() {
     setFitToWidth(true);
     setScale(1.0);
   }
   function goPrev() {
-    setCurrentPage(p => Math.max(1, p - 1));
+    setCurrentSpreadIdx(i => Math.max(0, i - 1));
   }
   function goNext() {
-    setCurrentPage(p => Math.min((numPages || 1), p + 1));
+    const maxIdx = Math.max(0, twoUpPairs.length - 1);
+    setCurrentSpreadIdx(i => Math.min(maxIdx, i + 1));
   }
 
   // Keyboard shortcuts
@@ -108,7 +137,7 @@ export default function PdfBookViewer({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [numPages]);
+  }, [twoUpPairs.length]);
 
   if (!isClient) {
     return (
@@ -122,7 +151,9 @@ export default function PdfBookViewer({
     );
   }
 
-  const pageCounter = numPages ? `${currentPage} / ${numPages}` : null;
+  const spreadCounter = twoUpPairs.length
+    ? `${Math.min(currentSpreadIdx + 1, twoUpPairs.length)} / ${twoUpPairs.length}`
+    : null;
 
   return (
     <div
@@ -157,15 +188,15 @@ export default function PdfBookViewer({
         </h1>
 
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={goPrev} aria-label="Previous" style={btnStyle} title="Previous page">
+          <button onClick={goPrev} aria-label="Previous" style={btnStyle} title="Previous spread">
             ‹ Prev
           </button>
-          <button onClick={goNext} aria-label="Next" style={btnStyle} title="Next page">
+          <button onClick={goNext} aria-label="Next" style={btnStyle} title="Next spread">
             Next ›
           </button>
 
           <span style={counterStyle}>
-            {pageCounter ? `Page: ${pageCounter}` : ""}
+            {spreadCounter ? `Spread: ${spreadCounter}` : ""}
           </span>
 
           <button onClick={zoomOut} aria-label="Zoom out" style={btnStyle} title="Zoom out">
@@ -187,7 +218,7 @@ export default function PdfBookViewer({
         </div>
       </div>
 
-      {/* PDF content: only render the current page (spread) */}
+      {/* Content: only the current spread is rendered */}
       <div style={{ width: containerWidth, margin: "0 auto" }}>
         {!resolvedFile ? (
           <p>No PDF file provided.</p>
@@ -204,20 +235,31 @@ export default function PdfBookViewer({
               onLoadError={onPdfLoadError}
               loading={<p>Loading PDF…</p>}
               error={<p>Failed to load PDF.</p>}
-              // Provide cMap and standard font data to improve rendering fidelity
               options={{
                 cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version || "latest"}/cmaps/`,
                 cMapPacked: true,
                 standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version || "latest"}/standard_fonts/`,
               }}
             >
-              <div style={{ marginBottom: 16, overflowX: "auto" }}>
-                <Page
-                  pageNumber={currentPage}
-                  width={pageRenderWidth}
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
-                />
+              <div
+                style={{
+                  display: "flex",
+                  gap,
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  marginBottom: 16,
+                  overflowX: pairMode ? "auto" : "hidden", // mobile portrait can pan a spread
+                }}
+              >
+                {visiblePages.map((pageNum) => (
+                  <Page
+                    key={`page-${pageNum}`}
+                    pageNumber={pageNum}
+                    width={pageRenderWidth}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                ))}
               </div>
             </Document>
           </>
