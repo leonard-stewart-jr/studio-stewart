@@ -28,15 +28,15 @@ export default function PdfBookViewer({
 
   useEffect(() => {
     setIsClient(true);
-    // Use a CDN worker or host locally if you prefer. CDN is fine for most setups.
-    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+    // Point the worker to the ESM build hosted on unpkg (react-pdf v10 expects .mjs worker)
+    const ver = pdfjs.version || "latest";
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${ver}/build/pdf.worker.min.mjs`;
   }, []);
 
   // Resolve an absolute URL for the PDF to avoid any path resolution issues.
   const resolvedFile = useMemo(() => {
     if (typeof window === "undefined") return file || "";
     if (!file) return "";
-    // Ensure leading slash and prepend origin
     const path = file.startsWith("/") ? file : `/${file}`;
     return `${window.location.origin}${path}`;
   }, [file]);
@@ -59,7 +59,6 @@ export default function PdfBookViewer({
   }
 
   function onPdfLoadError(err) {
-    // Show a friendly message and log the raw error for debugging.
     console.error("PDF load error:", err);
     setLoadError(err?.message || "Failed to load PDF.");
   }
@@ -218,7 +217,6 @@ export default function PdfBookViewer({
               onLoadError={onPdfLoadError}
               loading={<p>Loading PDF…</p>}
               error={<p>Failed to load PDF.</p>}
-              options={{}}
             >
               {numPages &&
                 (twoUpView
