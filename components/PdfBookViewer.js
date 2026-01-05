@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
 // Full-page PDF viewer used on /undergraduate-portfolio.
-// - Zoom +/−
-// - Fit to width
-// - Two-up spreads toggle
-// - Optional "skip covers" (first/last single pages)
-// - Mobile: spreads still render; portrait allows horizontal scroll to see full spread.
+// - Renders only the current page (single) or current spread (two-up) — not the whole PDF.
+// - Zoom +/− and Fit-to-width.
+// - Two-up spreads toggle, optional "skip covers" (first/last single).
+// - Mobile portrait: spreads render with horizontal scroll; landscape fills more naturally.
+// - Keyboard shortcuts: Left/Right to flip, +/- to zoom, F to fit.
 
 export default function PdfBookViewer({
   file,
@@ -19,21 +19,25 @@ export default function PdfBookViewer({
 }) {
   const [numPages, setNumPages] = useState(null);
   const [containerWidth, setContainerWidth] = useState(1100);
-  const [scale, setScale] = useState(1.0); // zoom multiplier when not fit-to-width
+  const [scale, setScale] = useState(1.0);          // zoom when not fit-to-width
   const [fitToWidth, setFitToWidth] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [loadError, setLoadError] = useState(null);
+
+  // Book state (only render current)
+  const [currentPage, setCurrentPage] = useState(1);        // for single-page mode
+  const [currentSpreadIdx, setCurrentSpreadIdx] = useState(0); // for two-up mode
 
   const wrapperRef = useRef(null);
 
   useEffect(() => {
     setIsClient(true);
-    // Point the worker to the ESM build hosted on unpkg (react-pdf v10 expects .mjs worker)
+    // Use ESM worker matching react-pdf v10 expectations
     const ver = pdfjs.version || "latest";
     pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${ver}/build/pdf.worker.min.mjs`;
   }, []);
 
-  // Resolve an absolute URL for the PDF to avoid any path resolution issues.
+  // Resolve an absolute URL for the PDF to avoid path resolution issues.
   const resolvedFile = useMemo(() => {
     if (typeof window === "undefined") return file || "";
     if (!file) return "";
@@ -44,8 +48,9 @@ export default function PdfBookViewer({
   useEffect(() => {
     function handleResize() {
       if (!wrapperRef.current) return;
-      const maxWidth = Math.min(window.innerWidth - 40, 1400); // side padding
-      setContainerWidth(Math.max(360, maxWidth));
+      // Fill the viewport width under header with a small side padding.
+      const maxWidth = Math.max(360, Math.min(window.innerWidth - 24, 1800));
+      setContainerWidth(maxWidth);
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -55,6 +60,9 @@ export default function PdfBookViewer({
   function onPdfLoadSuccess({ numPages: np }) {
     setNumPages(np);
     setLoadError(null);
+    // Reset book indices on load
+    setCurrentPage(1);
+    setCurrentSpreadIdx(0);
     if (fitToWidth) setScale(1.0);
   }
 
@@ -63,23 +71,7 @@ export default function PdfBookViewer({
     setLoadError(err?.message || "Failed to load PDF.");
   }
 
-  const gap = 24;
-  const baseWidth = twoUpView ? Math.floor((containerWidth - gap) / 2) : containerWidth;
-  const pageRenderWidth = Math.floor(baseWidth * (fitToWidth ? 1.0 : scale));
-
-  function zoomIn() {
-    setFitToWidth(false);
-    setScale((s) => Math.min(3.0, s + 0.15));
-  }
-  function zoomOut() {
-    setFitToWidth(false);
-    setScale((s) => Math.max(0.35, s - 0.15));
-  }
-  function setFitWidth() {
-    setFitToWidth(true);
-    setScale(1.0);
-  }
-
+  // Build two-up pairs (array of [left,right] or [single]).
   const twoUpPairs = useMemo(() => {
     if (!numPages || !twoUpView) return null;
     const pages = Array.from({ length: numPages }, (_, i) => i + 1);
@@ -114,6 +106,66 @@ export default function PdfBookViewer({
     return out;
   }, [numPages, twoUpView, skipCoversInTwoUp]);
 
+  // Page width calculation
+  const gap = 24;
+  const baseWidth = twoUpView ? Math.floor((containerWidth - gap) / 2) : containerWidth;
+  const pageRenderWidth = Math.floor(baseWidth * (fitToWidth ? 1.0 : scale));
+
+  // Controls
+  function zoomIn() {
+    setFitToWidth(false);
+    setScale((s) => Math.min(3.0, s + 0.15));
+  }
+  function zoomOut() {
+    setFitToWidth(false);
+    setScale((s) => Math.max(0.35, s - 0.15));
+  }
+  function setFitWidth() {
+    setFitToWidth(true);
+    setScale(1.0);
+  }
+
+  function goPrev() {
+    if (twoUpView) {
+      setCurrentSpreadIdx((i) => Math.max(0, i - 1));
+    } else {
+      setCurrentPage((p) => Math.max(1, p - 1));
+    }
+  }
+  function goNext() {
+    if (twoUpView) {
+      const maxIdx = (twoUpPairs?.length || 1) - 1;
+      setCurrentSpreadIdx((i) => Math.min(maxIdx, i + 1));
+    } else {
+      setCurrentPage((p) => Math.min(numPages || 1, p + 1));
+    }
+  }
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    function onKey(e) {
+      const k = e.key.toLowerCase();
+      if (k === "arrowleft") { e.preventDefault(); goPrev(); }
+      else if (k === "arrowright") { e.preventDefault(); goNext(); }
+      else if (k === "+") { e.preventDefault(); zoomIn(); }
+      else if (k === "-") { e.preventDefault(); zoomOut(); }
+      else if (k === "f") { e.preventDefault(); setFitWidth(); }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [twoUpView, twoUpPairs, numPages]);
+
+  // Visible pages for current state
+  const visiblePages = useMemo(() => {
+    if (!numPages) return [];
+    if (twoUpView && twoUpPairs) {
+      const pair = twoUpPairs[Math.max(0, Math.min(currentSpreadIdx, twoUpPairs.length - 1))] || [];
+      return pair;
+    }
+    // single-page mode
+    return [Math.max(1, Math.min(currentPage, numPages))];
+  }, [numPages, twoUpView, twoUpPairs, currentSpreadIdx, currentPage]);
+
   if (!isClient) {
     return (
       <div
@@ -125,6 +177,11 @@ export default function PdfBookViewer({
       />
     );
   }
+
+  // Counters
+  const spreadTotal = twoUpPairs?.length || 0;
+  const spreadCounter = twoUpView ? `${Math.min(currentSpreadIdx + 1, spreadTotal)} / ${spreadTotal || "—"}` : null;
+  const pageCounter = !twoUpView && numPages ? `${currentPage} / ${numPages}` : null;
 
   return (
     <div
@@ -159,6 +216,17 @@ export default function PdfBookViewer({
         </h1>
 
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+          <button onClick={goPrev} aria-label="Previous" style={btnStyle} title="Previous spread/page">
+            ‹ Prev
+          </button>
+          <button onClick={goNext} aria-label="Next" style={btnStyle} title="Next spread/page">
+            Next ›
+          </button>
+
+          <span style={counterStyle}>
+            {twoUpView ? `Spread: ${spreadCounter}` : `Page: ${pageCounter}`}
+          </span>
+
           <button onClick={zoomOut} aria-label="Zoom out" style={btnStyle} title="Zoom out">
             −
           </button>
@@ -173,7 +241,12 @@ export default function PdfBookViewer({
             <input
               type="checkbox"
               checked={twoUpView}
-              onChange={onToggleTwoUp}
+              onChange={() => {
+                // Toggle mode: normalize indices
+                if (onToggleTwoUp) onToggleTwoUp();
+                setCurrentSpreadIdx(0);
+                setCurrentPage(1);
+              }}
               style={{ marginRight: 6 }}
             />
             Two-up (spreads)
@@ -183,7 +256,10 @@ export default function PdfBookViewer({
             <input
               type="checkbox"
               checked={skipCoversInTwoUp}
-              onChange={onToggleSkipCovers}
+              onChange={() => {
+                if (onToggleSkipCovers) onToggleSkipCovers();
+                setCurrentSpreadIdx(0);
+              }}
               style={{ marginRight: 6 }}
               disabled={!twoUpView}
               title={!twoUpView ? "Enable Two-up to use this option" : ""}
@@ -200,7 +276,7 @@ export default function PdfBookViewer({
         </div>
       </div>
 
-      {/* PDF content */}
+      {/* PDF content: only render current page(s) */}
       <div style={{ width: containerWidth, margin: "0 auto" }}>
         {!resolvedFile ? (
           <p>No PDF file provided.</p>
@@ -218,41 +294,37 @@ export default function PdfBookViewer({
               loading={<p>Loading PDF…</p>}
               error={<p>Failed to load PDF.</p>}
             >
-              {numPages &&
-                (twoUpView
-                  ? twoUpPairs.map((pair, idx) => (
-                      <div
-                        key={`pair-${idx}`}
-                        style={{
-                          display: "flex",
-                          gap,
-                          alignItems: "flex-start",
-                          justifyContent: "center",
-                          marginBottom: 16,
-                          overflowX: "auto", // mobile portrait: allow horizontal scroll for full spread
-                        }}
-                      >
-                        {pair.map((pageNum) => (
-                          <Page
-                            key={`page-${pageNum}`}
-                            pageNumber={pageNum}
-                            width={pageRenderWidth}
-                            renderTextLayer={false}
-                            renderAnnotationLayer={false}
-                          />
-                        ))}
-                      </div>
-                    ))
-                  : Array.from({ length: numPages }, (_, i) => (
-                      <div key={`single-${i + 1}`} style={{ marginBottom: 16 }}>
-                        <Page
-                          pageNumber={i + 1}
-                          width={pageRenderWidth}
-                          renderTextLayer={false}
-                          renderAnnotationLayer={false}
-                        />
-                      </div>
-                    )))}
+              {twoUpView ? (
+                <div
+                  style={{
+                    display: "flex",
+                    gap,
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    marginBottom: 16,
+                    overflowX: "auto", // mobile portrait: allow horizontal scroll for full spread
+                  }}
+                >
+                  {visiblePages.map((pageNum) => (
+                    <Page
+                      key={`page-${pageNum}`}
+                      pageNumber={pageNum}
+                      width={pageRenderWidth}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div style={{ marginBottom: 16 }}>
+                  <Page
+                    pageNumber={visiblePages[0]}
+                    width={pageRenderWidth}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                </div>
+              )}
             </Document>
           </>
         )}
@@ -286,5 +358,12 @@ const linkStyle = {
   fontSize: 12,
   color: "#181818",
   textDecoration: "underline",
+  padding: "0 6px",
+};
+
+const counterStyle = {
+  fontFamily: "coolvetica, sans-serif",
+  fontSize: 12,
+  color: "#666",
   padding: "0 6px",
 };
