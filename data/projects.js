@@ -4,7 +4,6 @@ const projects = [
     title: "DES MOINES ACADAMY OF ARTS AND ATHLETICS",
     type: "EDUCATION, SPORTS, RESIDENTIAL",
     slug: "DMA-25",
-    description: "ARCH 650 // COMPREHENSIVE BUILDING STUDIO // SOLO",
     modalWidth: 4000,
     bannerSrc: "/images/portfolio/dma25.png",
     action: "route",
@@ -13,9 +12,8 @@ const projects = [
   {
     grade: "SUMMER 25'",
     title: "INDEPENDENT STUDIO",
-    type: "RESEARCH",
+    type: "JUSTICE FACILITIES",
     slug: "ISP",
-    description: "Interactive research studio with globe and maps.",
     bannerSrc: "/images/placeholders/blank.svg",
     action: "route",
     linkHref: "/independent-studio"
@@ -23,9 +21,8 @@ const projects = [
   {
     grade: "2020–2024",
     title: "UNDERGRADUATE PORTFOLIO",
-    type: "PORTFOLIO",
+    type: "SELECTED WORKS",
     slug: "UG-PORTFOLIO",
-    description: "Selected undergraduate work in 11x17 spreads.",
     bannerSrc: "/images/placeholders/blank.svg",
     action: "route",
     linkHref: "/undergraduate-portfolio"
