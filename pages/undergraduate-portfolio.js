@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import HeaderBar from "../components/HeaderBar";
-import PdfBookViewer from "../components/PdfBookViewer";
+
+// IMPORTANT: Load PdfBookViewer only on the client to avoid SSR pdf.js (DOMMatrix) errors
+const PdfBookViewer = dynamic(() => import("../components/PdfBookViewer"), { ssr: false });
 
 export default function UndergraduatePortfolioPage() {
   // Header height in your app is 76px
