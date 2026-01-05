@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>publication</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive fit-to-viewport for InDesign HTML export -->
+    <style>
+      html, body {
+        margin: 0;
+        background: #ffffff;
+      }
+      /* Mark the stage when scaled; transform-origin is set in JS */
+      .__id_stage_scaled {
+        will-change: transform;
+      }
+    </style>
+    <script>
+      (function () {
+        // Visual padding around the page so it doesn't touch edges
+        const SIDE_PADDING = 16; // px
+        const TOP_PADDING = 12;  // px
+
+        function findStageEl() {
+          // Choose the largest direct child of <body> (InDesign's stage)
+          let best = null, maxArea = 0;
+          const kids = Array.from(document.body.children || []);
+          for (const el of kids) {
+            const r = el.getBoundingClientRect();
+            const area = (r.width || 0) * (r.height || 0);
+            if (area > maxArea) { maxArea = area; best = el; }
+          }
+          return best || document.body.firstElementChild || document.body;
+        }
+
+        function fitStage() {
+          try {
+            const stage = findStageEl();
+            if (!stage) return;
+
+            // Ensure base styles and reset before measuring
+            document.documentElement.style.background = "#ffffff";
+            document.body.style.margin = "0";
+            document.body.style.padding = "0";
+            document.body.style.overflow = "hidden";
+
+            stage.classList.add("__id_stage_scaled");
+            stage.style.transformOrigin = "top center";
+            // Reset any previous transform to measure intrinsic size
+            stage.style.transform = "translate(0px, 0px) scale(1)";
+
+            // Intrinsic dimensions (from InDesign export)
+            const intrinsicW = stage.offsetWidth || stage.getBoundingClientRect().width || 612;
+            const intrinsicH = stage.offsetHeight || stage.getBoundingClientRect().height || 792;
+
+            // Viewport
+            const vw = Math.max(320, window.innerWidth || 320);
+            const vh = Math.max(320, window.innerHeight || 320);
+
+            const fitW = (vw - SIDE_PADDING * 2) / intrinsicW;
+            const fitH = (vh - TOP_PADDING) / intrinsicH;
+            const scale = Math.max(0.1, Math.min(fitW, fitH));
+
+            // Apply scale and center via left/top offsets
+            const scaledW = Math.ceil(intrinsicW * scale);
+            const scaledH = Math.ceil(intrinsicH * scale);
+
+            stage.style.transform = "translate(0px, 0px) scale(" + scale + ")";
+            stage.style.left = Math.max(0, Math.floor((vw - scaledW) / 2)) + "px";
+            stage.style.top  = Math.max(0, Math.floor((vh - scaledH) / 2)) + "px";
+
+            // Expand body to viewport so the iframe can size correctly
+            document.body.style.width = vw + "px";
+            document.body.style.height = vh + "px";
+          } catch (e) {
+            console.warn("Responsive fit error:", e);
+          }
+        }
+
+        // Run on load and resize
+        window.addEventListener("DOMContentLoaded", fitStage, { once: true });
+        window.addEventListener("load", () => setTimeout(fitStage, 50), { once: true });
+        window.addEventListener("resize", fitStage);
+
+        // Re-run after fonts load to avoid late reflow changing intrinsic size
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => setTimeout(fitStage, 50));
+        }
+      })();
+    </script>
+  </head>
+  <body id="publication" style="width:612px;height:792px;background-color:transparent;">
+    <div style="position:absolute;overflow:hidden;left:0px;top:0px;-webkit-transform:translate(0.00px,0.00px);-ms-transform:translate(0.00px,0.00px);transform:translate(0.00px,0.00px);width:612.00px;height:792.00px;background-color:white">
+      <div id="_idContainer000">
+        <img class="_idGenObjectAttribute-1 _idGenObjectAttribute-2" src="../image/PORTFOLIO_COVER.png" alt="" />
+      </div>
+    </div>
+  </body>
+</html>
