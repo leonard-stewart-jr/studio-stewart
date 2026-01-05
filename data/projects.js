@@ -7,8 +7,8 @@ const projects = [
     description: "ARCH 650 // COMPREHENSIVE BUILDING STUDIO // SOLO",
     modalWidth: 4000,
     bannerSrc: "/images/portfolio/dma25.png",
-    action: "modal",          // "modal" | "route" | "external"
-    modalType: "html"         // "html" (interactive exported HTML), optional for other modals
+    action: "modal",
+    modalType: "html"
   },
   {
     grade: "SUMMER 25'",
@@ -27,10 +27,8 @@ const projects = [
     slug: "UG-PORTFOLIO",
     description: "Selected undergraduate work in 11x17 spreads.",
     bannerSrc: "/images/placeholders/blank.svg",
-    action: "modal",
-    modalType: "pdf",
-    pdfSrc: "/portfolio/undergraduate-portfolio.pdf",
-    pdfSpreads: true
+    action: "route",
+    linkHref: "/undergraduate-portfolio"
   }
 ];
 
