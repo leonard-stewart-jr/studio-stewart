@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import ProjectList from "../components/ProjectList";
 import FloatingProjectModal from "../components/floatingprojectmodal";
-import PdfBookModal from "../components/PdfBookModal";
+// IMPORTANT: Load PdfBookModal only on the client to avoid SSR pdf.js (DOMMatrix) errors
+const PdfBookModal = dynamic(() => import("../components/PdfBookModal"), { ssr: false });
 import projects from "../data/projects";
 
 function getProjectModalProps(project) {
