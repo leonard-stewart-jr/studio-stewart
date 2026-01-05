@@ -1,50 +1,70 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import ProjectList from "../components/ProjectList";
 import FloatingProjectModal from "../components/floatingprojectmodal";
+import PdfBookModal from "../components/PdfBookModal";
 import projects from "../data/projects";
 
-// Helper: Derive the HTML5 export path and width from project (add these in your data if not present)
 function getProjectModalProps(project) {
-  // Use your desired file structure:
-  // For DMA-25: /portfolio/dma/25/index
-  // For other projects, adjust as needed!
-  let src = "";
+  // Map project to your interactive HTML export path
   if (project.slug === "DMA-25") {
-    src = "/portfolio/dma/25/index";
-  } else if (project.slug === "MPSC-24") {
-    src = "/portfolio/mpsc/24/index";
-  } else if (project.slug === "BPL-24") {
-    src = "/portfolio/bpl/24/index";
-  } else {
-    // fallback: use slug-lower
-    src = `/portfolio/${project.slug.toLowerCase()}/index`;
+    return { src: "/portfolio/dma/25/index", width: project.modalWidth || 2436 };
   }
-  const width = project.modalWidth || 2436;
-  return { src, width };
+  // Fallback: derive from slug
+  const slugLower = (project.slug || "").toLowerCase();
+  return { src: `/portfolio/${slugLower}/index`, width: project.modalWidth || 2436 };
 }
 
 export default function Home() {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const router = useRouter();
+
+  const [activeHtmlIndex, setActiveHtmlIndex] = useState(null);
+  const [pdfOpen, setPdfOpen] = useState(false);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfTitle, setPdfTitle] = useState("UNDERGRADUATE PORTFOLIO (2020–2024)");
+
+  function handleProjectClick(idx) {
+    const project = projects[idx];
+    if (!project) return;
+
+    if (project.action === "route" && project.linkHref) {
+      router.push(project.linkHref);
+      return;
+    }
+
+    if (project.action === "modal" && project.modalType === "pdf") {
+      setPdfFile(project.pdfSrc);
+      setPdfTitle(`${project.title} (${project.grade})`);
+      setPdfOpen(true);
+      return;
+    }
+
+    if (project.action === "modal") {
+      setActiveHtmlIndex(idx);
+      return;
+    }
+  }
 
   return (
-    <main style={{
-      minHeight: "100vh",
-      background: "#fff",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    }}>
-      <ProjectList projects={projects} onProjectClick={setActiveIndex} />
-      {activeIndex !== null && (
+    <>
+      <ProjectList projects={projects} onProjectClick={handleProjectClick} />
+
+      {activeHtmlIndex !== null && (
         <FloatingProjectModal
-          open={true}
-          onClose={() => setActiveIndex(null)}
-          // Get src/width for the selected project:
-          {...getProjectModalProps(projects[activeIndex])}
+          onClose={() => setActiveHtmlIndex(null)}
+          {...getProjectModalProps(projects[activeHtmlIndex])}
           height={785}
           navOffset={76}
         />
       )}
-    </main>
+
+      <PdfBookModal
+        open={pdfOpen}
+        onClose={() => setPdfOpen(false)}
+        file={pdfFile}
+        title={pdfTitle}
+        spreadsMode={true}
+      />
+    </>
   );
 }
