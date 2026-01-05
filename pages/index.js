@@ -27,6 +27,13 @@ export default function Home() {
     const project = projects[idx];
     if (!project) return;
 
+    // Hard guard: Independent Studio should ALWAYS route to its dedicated page
+    // This prevents any accidental modal opening due to stale/mismatched data.
+    if (project.slug === "ISP") {
+      router.push("/independent-studio");
+      return;
+    }
+
     if (project.action === "route" && project.linkHref) {
       router.push(project.linkHref);
       return;
