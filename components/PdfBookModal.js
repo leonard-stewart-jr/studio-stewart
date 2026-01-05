@@ -10,8 +10,9 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
   const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
-    // Ensure the PDF.js worker is available in the browser
-    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+    // Point the worker to the ESM build hosted on unpkg (react-pdf v10 expects .mjs worker)
+    const ver = pdfjs.version || "latest";
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${ver}/build/pdf.worker.min.mjs`;
   }, []);
 
   // Resolve an absolute URL for the PDF to avoid any path resolution issues.
@@ -133,12 +134,14 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
                   ? Array.from({ length: Math.ceil(numPages / 2) }, (_, i) => {
                       const leftPage = i * 2 + 1;
                       const rightPage = leftPage + 1;
+                      const spreadGap = 24;
+                      const pageW = Math.floor((containerWidth - spreadGap) / 2);
                       return (
                         <div
                           key={`spread-${i}`}
                           style={{
                             display: "flex",
-                            gap: 24,
+                            gap: spreadGap,
                             alignItems: "flex-start",
                             justifyContent: "center",
                             marginBottom: 16
@@ -146,14 +149,14 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
                         >
                           <Page
                             pageNumber={leftPage}
-                            width={pageWidth}
+                            width={pageW}
                             renderTextLayer={false}
                             renderAnnotationLayer={false}
                           />
                           {rightPage <= numPages ? (
                             <Page
                               pageNumber={rightPage}
-                              width={pageWidth}
+                              width={pageW}
                               renderTextLayer={false}
                               renderAnnotationLayer={false}
                             />
@@ -165,7 +168,7 @@ export default function PdfBookModal({ open, onClose, file, title, spreadsMode =
                       <div key={`page-${i}`} style={{ marginBottom: 16 }}>
                         <Page
                           pageNumber={i + 1}
-                          width={pageWidth}
+                          width={containerWidth}
                           renderTextLayer={false}
                           renderAnnotationLayer={false}
                         />
