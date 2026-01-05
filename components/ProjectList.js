@@ -1,62 +1,45 @@
 import { useRef, useState } from "react";
 
 export default function ProjectList({ projects, onProjectClick }) {
-  // Previously used for "show once"; keeping ref in case we reintroduce logic later
   const showCaptionOnce = useRef(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
+  function overlayLabel(project) {
+    if (project.action === "route") return "View Project";
+    if (project.action === "modal" && project.modalType === "pdf") return "Open Portfolio";
+    return "View Interactive Model";
+    }
+
   return (
-    <div
-      style={{
-        width: "100%",
-        boxSizing: "border-box",
-        padding: "0 24px",
-        maxWidth: "1400px",
-        margin: "0 auto",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", gap: 42, padding: "24px 24px 48px 24px" }}>
       {projects.map((project, idx) => (
         <div
           key={project.slug || idx}
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr minmax(300px, 900px)",
-            gap: "24px",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 24,
             alignItems: "center",
-            margin: "32px 0",
           }}
         >
           {/* Left: Info */}
           <div>
-            <h2
-              style={{
-                margin: "0 0 8px 0",
-                fontSize: "28px",
-                lineHeight: 1.15,
-                fontWeight: 900,
-                letterSpacing: "0.2px",
-              }}
-            >
+            <h2 style={{ margin: "0 0 8px 0", fontSize: 28, lineHeight: 1.15 }}>
               {project.title}
             </h2>
-            <div
-              style={{
-                margin: 0,
-                color: "#6f6f6a",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
+            <div style={{ color: "#7d7d78", fontSize: 14, marginBottom: 10 }}>
               {project.grade} — {project.type}
             </div>
+            {project.description && (
+              <div style={{ color: "#4a4a46", fontSize: 15 }}>{project.description}</div>
+            )}
           </div>
 
-          {/* Right: Flat image with hover caption (replaces torn-paper PortfolioOverlay) */}
+          {/* Right: Image with overlay */}
           <div
             role="button"
             tabIndex={0}
-            aria-label={`Open interactive modal for ${project.title}`}
+            aria-label={`Open ${overlayLabel(project)} for ${project.title}`}
             onClick={() => onProjectClick(idx)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -69,55 +52,39 @@ export default function ProjectList({ projects, onProjectClick }) {
             style={{
               position: "relative",
               width: "100%",
-              maxWidth: "900px",
+              maxWidth: 900,
               cursor: "pointer",
-              borderRadius: 0, // flat: no rounding
+              borderRadius: 0,
               overflow: "hidden",
-              boxShadow: "none", // flat: no shadow
-              border: "none", // flat: no border
+              boxShadow: "none",
+              border: "none",
               background: "#f5f5f2",
             }}
           >
             <img
               src={project.bannerSrc}
               alt={project.title}
-              style={{
-                display: "block",
-                width: "100%",
-                height: "auto",
-                verticalAlign: "middle",
-              }}
+              style={{ width: "100%", height: "auto", display: "block" }}
             />
-
-            {/* Hover overlay + caption */}
+            {/* Overlay */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
                 display: "flex",
                 alignItems: "flex-end",
-                justifyContent: "center",
+                justifyContent: "flex-start",
+                padding: 16,
                 background:
-                  hoveredIndex === idx ? "rgba(0,0,0,0.18)" : "rgba(0,0,0,0.0)",
-                transition: "background 0.18s ease",
-                pointerEvents: "none",
+                  hoveredIndex === idx
+                    ? "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.42) 100%)"
+                    : "linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.28) 100%)",
+                color: "#fff",
+                transition: "background 0.18s",
               }}
             >
-              <span
-                style={{
-                  opacity: hoveredIndex === idx ? 1 : 0,
-                  transition: "opacity 0.18s ease",
-                  color: "#fff",
-                  background: "rgba(0,0,0,0.55)",
-                  padding: "8px 12px",
-                  margin: "16px",
-                  borderRadius: 4,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  fontSize: 14,
-                }}
-              >
-                View Interactive Model
+              <span style={{ fontSize: 14, letterSpacing: 0.4, textTransform: "uppercase" }}>
+                {overlayLabel(project)}
               </span>
             </div>
           </div>
