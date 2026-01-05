@@ -7,8 +7,8 @@ const projects = [
     description: "ARCH 650 // COMPREHENSIVE BUILDING STUDIO // SOLO",
     modalWidth: 4000,
     bannerSrc: "/images/portfolio/dma25.png",
-    action: "modal",
-    modalType: "html"
+    action: "route",
+    linkHref: "/projects/dma-25"
   },
   {
     grade: "SUMMER 25'",
