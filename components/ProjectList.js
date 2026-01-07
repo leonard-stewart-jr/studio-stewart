@@ -21,35 +21,36 @@ export default function ProjectList({ projects, onProjectClick }) {
     return "View Interactive Model";
   }
 
-  // Centered page container
+  // Centered page container (slightly narrower to pull content inward)
   const pageContainerStyle = {
-    width: "min(1200px, 92vw)",
+    width: "min(1100px, 90vw)",
     margin: "0 auto",
-    padding: "12px 0 48px 0",
+    padding: "16px 0 48px 0",
     display: "flex",
     flexDirection: "column",
-    gap: isMobile ? 36 : 44,
+    gap: isMobile ? 32 : 40,
     boxSizing: "border-box",
   };
 
-  // Row: two columns; vertically center items; tighter gap to move text closer to image
+  // Row: fixed left text column + flexible right image column
+  // Vertically center items and keep the text close to the image
   const rowStyle = {
     display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "1fr 1.15fr",
-    alignItems: "center",           // vertically center text relative to image
-    gap: isMobile ? 14 : 12,        // smaller gap brings text closer to the image
+    gridTemplateColumns: isMobile ? "1fr" : "minmax(260px, 320px) 1fr",
+    alignItems: "center",     // vertically center text relative to image
+    gap: isMobile ? 12 : 16,  // tight gap: text sits near the image
     width: "100%",
   };
 
-  // Info column: right-align so content sits near the image edge
+  // Info column: right-align so content hugs the image edge
   const infoColStyle = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "flex-end",         // push text toward the image
-    textAlign: "right",
-    gap: 8,
-    padding: isMobile ? "0 6px" : "0",
+    alignItems: isMobile ? "flex-start" : "flex-end",
+    textAlign: isMobile ? "left" : "right",
+    gap: 6,
+    padding: isMobile ? "0 8px" : "0 6px 0 0",
   };
 
   const titleStyle = {
@@ -61,7 +62,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   const metaStyle = {
-    margin: "6px 0 10px 0",
+    margin: "6px 0 0 0",
     fontSize: isMobile ? 12 : 13,
     color: "#6c6c6a",
     letterSpacing: ".02em",
@@ -69,12 +70,13 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   const descStyle = {
-    margin: 0,
+    margin: "6px 0 0 0",
     fontSize: isMobile ? 12 : 13,
     color: "#888",
     letterSpacing: ".01em",
   };
 
+  // Image wrapper: keep your current size and styling
   const imageWrapStyle = {
     position: "relative",
     width: "100%",
@@ -114,7 +116,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     <section style={pageContainerStyle} aria-label="Projects">
       {projects.map((project, idx) => (
         <div key={project.slug || idx} style={rowStyle}>
-          {/* Left: Info (right-aligned, vertically centered to image) */}
+          {/* Left: Info (right-aligned on desktop, vertically centered to image) */}
           <div style={infoColStyle}>
             <h2 style={titleStyle}>{project.title}</h2>
             <div style={metaStyle}>
