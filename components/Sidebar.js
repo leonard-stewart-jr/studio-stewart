@@ -1,146 +1,193 @@
-import { motion } from "framer-motion";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import LogoHamburger from "./LogoHamburger";
+/* ====== SIDEBAR STYLES (60px header) ====== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  max-width: 80vw;
+  height: 100vh;
+  background: #fff;
+  color: #181818;
+  box-shadow: 2px 0 24px rgba(0,0,0,0.13);
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 22px 22px;
+  pointer-events: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
 
-const navItems = [
-  { label: "PORTFOLIO", href: "/" },
-  { label: "INDEPENDENT STUDIO", href: "/independent-studio" },
-  { label: "3D PRINTING", href: "/3d-printing" },
-  { label: "ABOUT ME", href: "/about" },
-];
+/* Custom Scrollbar Styles */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+  background: #f0f0ed;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: #e6dbb9; /* Matches active nav color */
+  border-radius: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #d6c08e;
+}
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #e6dbb9 #f0f0ed;
+}
 
-const socialLinks = [
-  { label: "Email", href: "mailto:your@email.com" },
-  { label: "GitHub", href: "https://github.com/leonard-stewart-jr" },
-];
+.sidebar.open {
+  pointer-events: auto;
+}
 
-export default function Sidebar({
-  open,
-  onClose,
-  logoSize = 66,
-  sidebarPaddingLeft = 22,
-  headerHeight = 76,
-}) {
-  const router = useRouter();
-  const verticalOffset = (headerHeight - logoSize) / 2 - 2;
-
-  function isActive(href) {
-    if (href === "/") return router.pathname === "/";
-    return router.pathname === href || router.pathname.startsWith(href + "/");
+@media (max-width: 700px) {
+  .sidebar {
+    left: 0 !important;
+    width: 80vw !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    padding: 0 12px 22px 12px !important;
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 1200 !important;
+    height: 100vh !important;
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
+}
 
-  const sidebarVariants = {
-    closed: { x: "-100%", transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } },
-    open:   { x: 0,      transition: { duration: 0.48, ease: [0.7, 0.2, 0.3, 1] } }
-  };
-  const hamburgerTransition = { duration: 0.18, ease: "linear" };
+/* ====== LOGO-HAMBURGER (60x60 to match header) ====== */
+.logo-hamburger-wrap {
+  position: relative;
+  width: 60px;   /* matches 60px header */
+  height: 60px;  /* matches 60px header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+.logo-hamburger-wrap img,
+.logo-hamburger-wrap svg {
+  position: absolute;
+  inset: 0;
+  width: 60px;
+  height: 60px;
+  transition: opacity 0.18s;
+  pointer-events: none;
+}
 
-  return (
-    <>
-      <div
-        className={`sidebar-overlay${open ? " open" : ""}`}
-        onClick={onClose}
-        aria-label="Close menu"
-        style={{
-          display: open ? "block" : "none",
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,0.32)",
-          zIndex: 1300,
-          transition: "background 0.2s",
-        }}
-      />
-      <motion.aside
-        className={`sidebar${open ? " open" : ""}`}
-        initial="closed"
-        animate={open ? "open" : "closed"}
-        variants={sidebarVariants}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          height: "100vh",
-          width: 300,
-          maxWidth: "80vw",
-          background: "#fff",
-          boxShadow: "2px 0 16px 0 rgba(0,0,0,0.15)",
-          zIndex: 1400,
-          display: "flex",
-          flexDirection: "column",
-        }}
-        onClick={e => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        tabIndex={-1}
-      >
-        {open && (
-          <motion.div
-            transition={hamburgerTransition}
-            style={{
-              position: "absolute",
-              top: verticalOffset,
-              right: 28, // Place close button where you want it on the sidebar
-              zIndex: 2200,
-              cursor: "pointer",
-              opacity: open ? 1 : 0,
-              pointerEvents: open ? "auto" : "none",
-              transition: "opacity 0.18s",
-            }}
-          >
-            <LogoHamburger
-              logoSize={logoSize}
-              sidebarPaddingLeft={sidebarPaddingLeft}
-              onOpenSidebar={onClose}
-            />
-          </motion.div>
-        )}
-        <nav
-          className="sidebar-nav"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 22,
-            marginTop: logoSize,
-            paddingLeft: sidebarPaddingLeft,
-            paddingRight: sidebarPaddingLeft,
-          }}
-        >
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} passHref legacyBehavior>
-              <a
-                className={isActive(item.href) ? "active" : ""}
-                onClick={onClose}
-              >
-                {item.label}
-              </a>
-            </Link>
-          ))}
-        </nav>
-        <div className="sidebar-info" style={{ padding: "24px" }}>
-          <p>
-            <b>Studio Stewart</b> — Digital portfolio<br />
-            Student, designer, and maker.<br />
-            Explore my work and reach out to connect!
-          </p>
-        </div>
-        <div className="sidebar-footer" style={{ padding: "0 24px 24px" }}>
-          <h3>Contact & Social</h3>
-          <ul>
-            {socialLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </motion.aside>
-    </>
-  );
+/* ====== SIDEBAR NAVIGATION (match navbar hover logic) ====== */
+nav.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-family: "coolvetica", sans-serif;
+}
+
+/* Default: darker gray, thin weight; uppercase; no underline */
+.sidebarNavLink {
+  color: #6c6c6a;            /* same as navbar default */
+  font-family: "coolvetica", sans-serif;
+  font-weight: 300;          /* thin to match navbar */
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  margin: 0;
+  transition: color 0.18s, font-weight 0.16s;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Active: underline, keep thin, use active color, optional size bump */
+.active {
+  color: #e6dbb9;           /* same as navbar active */
+  text-decoration: underline;
+  cursor: default;
+  font-size: 16px;          /* match navbar active size */
+  font-weight: 300;         /* keep thin even when active */
+}
+
+/* Hover/focus (non-active): keep thin, change color, no underline */
+.sidebarNavLink:not(.active):hover,
+.sidebarNavLink:not(.active):focus {
+  font-weight: 300;         /* do not bold on hover */
+  color: #e6dbb9;           /* match navbar hover color */
+  text-decoration: none;
+}
+
+/* Accessibility focus outline */
+.sidebarNavLink:focus-visible {
+  outline: 2px solid #e6dbb9;
+}
+
+/* ====== CLOSE BUTTON (top-right X) ====== */
+.sidebar button[aria-label="Close menu"],
+.sidebar [aria-label="Close sidebar"] {
+  background: none;
+  border: none;
+  color: #181818;
+  font-size: 32px;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  cursor: pointer;
+  z-index: 2200;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+/* ====== OVERLAY ====== */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.22);
+  z-index: 2000;
+  display: none;
+}
+.sidebar-overlay.open {
+  display: block;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+/* ====== OPTIONAL CONTENT/FOOTER/SOCIAL (if used) ====== */
+.sidebar .sidebar-footer {
+  margin-top: auto;
+  font-size: 14px;
+  color: #888;
+}
+.sidebar .sidebar-footer h3 {
+  font-size: 17px;
+  margin: 10px 0 6px 0;
+  color: #181818;
+}
+.sidebar .sidebar-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar .sidebar-footer li {
+  margin-bottom: 5px;
+}
+.sidebar .sidebar-footer a {
+  color: #181818;
+  text-decoration: underline;
+  font-size: 15.5px;
+}
+.sidebar .sidebar-info {
+  margin: 18px 0 8px 0;
+  font-size: 17px;
+  color: #555;
+}
+.sidebar .sidebar-info b {
+  font-weight: bold;
 }
