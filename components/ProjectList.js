@@ -32,19 +32,22 @@ export default function ProjectList({ projects, onProjectClick }) {
     boxSizing: "border-box",
   };
 
-  // Row: two columns, tighter gap, centered
+  // Row: two columns; vertically center items; tighter gap to move text closer to image
   const rowStyle = {
     display: "grid",
     gridTemplateColumns: isMobile ? "1fr" : "1fr 1.15fr",
-    alignItems: "start",
-    gap: isMobile ? 18 : 24,
+    alignItems: "center",           // vertically center text relative to image
+    gap: isMobile ? 14 : 12,        // smaller gap brings text closer to the image
     width: "100%",
   };
 
+  // Info column: right-align so content sits near the image edge
   const infoColStyle = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: "flex-end",         // push text toward the image
+    textAlign: "right",
     gap: 8,
     padding: isMobile ? "0 6px" : "0",
   };
@@ -111,7 +114,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     <section style={pageContainerStyle} aria-label="Projects">
       {projects.map((project, idx) => (
         <div key={project.slug || idx} style={rowStyle}>
-          {/* Left: Info */}
+          {/* Left: Info (right-aligned, vertically centered to image) */}
           <div style={infoColStyle}>
             <h2 style={titleStyle}>{project.title}</h2>
             <div style={metaStyle}>
@@ -120,7 +123,7 @@ export default function ProjectList({ projects, onProjectClick }) {
             {project.description && <p style={descStyle}>{project.description}</p>}
           </div>
 
-          {/* Right: Image with overlay, centered within container */}
+          {/* Right: Image with overlay */}
           <div
             role="button"
             aria-label={`Open ${overlayLabel(project)} for ${project.title}`}
