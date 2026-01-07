@@ -12,7 +12,7 @@
   z-index: 2100;
   display: flex;
   flex-direction: column;
-  padding: 0 22px 22px 0; /* right padding handled per-row */
+  padding: 0 22px 22px 22px;
   pointer-events: none;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -25,13 +25,16 @@
   width: 8px;
   background: #f0f0ed;
 }
+
 .sidebar::-webkit-scrollbar-thumb {
-  background: #e6dbb9;
+  background: #e6dbb9; /* Matches active nav color */
   border-radius: 6px;
 }
+
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
+
 .sidebar {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
@@ -47,7 +50,7 @@
     width: 80vw !important;
     min-width: 0 !important;
     max-width: 100vw !important;
-    padding: 0 12px 22px 0 !important;
+    padding: 0 12px 22px 12px !important;
     position: fixed !important;
     top: 0 !important;
     z-index: 1200 !important;
@@ -57,27 +60,73 @@
   }
 }
 
-/* ====== LOGO-HAMBURGER (60x60 for header match) ====== */
+/* ====== LOGO-HAMBURGER ====== */
+/* This block is optional now that the component sizes itself.
+   Kept here so Sidebar can reuse consistent sizing if needed. */
 .logo-hamburger-wrap {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 60px;   /* 60 to match 60px header */
+  height: 60px;  /* 60 to match 60px header */
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: manipulation;
 }
+
 .logo-hamburger-wrap img,
-.logo-hamburger-wrap svg {
+.logo-hamburger-wrap .hamburger-svg {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 60px;
   height: 60px;
   transition: opacity 0.18s;
   pointer-events: none;
 }
 
-/* ====== SIDEBAR NAVIGATION LINKS ====== */
+.logo-hamburger-wrap .hamburger-svg {
+  opacity: 0;
+}
+
+.logo-hamburger-wrap:hover img,
+.logo-hamburger-wrap:focus img {
+  opacity: 0;
+}
+
+.logo-hamburger-wrap:hover .hamburger-svg,
+.logo-hamburger-wrap:focus .hamburger-svg {
+  opacity: 1;
+}
+
+/* ====== CLOSE BUTTON ====== */
+.sidebar button[aria-label="Close menu"],
+.sidebar [aria-label="Close sidebar"] {
+  background: none;
+  border: none;
+  color: #181818;
+  font-size: 32px;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  cursor: pointer;
+  z-index: 2200;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+/* ====== SIDEBAR NAVIGATION ====== */
+nav.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-family: "coolvetica", sans-serif;
+}
+
+/* Use this class for sidebar nav links to match navbar style */
 .sidebarNavLink {
   color: #b1b1ae;
   font-family: "coolvetica", sans-serif;
@@ -91,10 +140,11 @@
   padding: 4px 0;
   margin: 0;
   transition: color 0.2s, font-size 0.16s, font-weight 0.16s;
-  display: inline-block;
+  display: block;
   cursor: pointer;
 }
 
+/* Active: underline, grow font size, active color, bold */
 .active {
   color: #e6dbb9;
   background: none;
@@ -104,12 +154,58 @@
   font-weight: 700;
 }
 
+/* Hover/focus non-active: bold, active color, grow font size, no underline */
 .sidebarNavLink:not(.active):hover,
 .sidebarNavLink:not(.active):focus {
   color: #e6dbb9;
   font-weight: 500;
   font-size: 16px;
   text-decoration: none;
+}
+
+/* Optionally, keep focus visible outline for accessibility */
+.sidebarNavLink:focus-visible {
+  outline: 2px solid #e6dbb9;
+}
+
+/* ====== CONTENT/FOOTER/SOCIAL ====== */
+.sidebar .sidebar-footer {
+  margin-top: auto;
+  font-size: 14px;
+  color: #888;
+}
+
+.sidebar .sidebar-footer h3 {
+  font-size: 17px;
+  margin: 10px 0 6px 0;
+  color: #181818;
+}
+
+.sidebar .sidebar-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .sidebar-footer li {
+  margin-bottom: 5px;
+}
+
+.sidebar .sidebar-footer a {
+  color: #181818;
+  text-decoration: underline;
+  font-size: 15.5px;
+}
+
+/* ====== INFO BOX ====== */
+.sidebar .sidebar-info {
+  margin: 18px 0 8px 0;
+  font-size: 17px;
+  color: #555;
+}
+
+.sidebar .sidebar-info b {
+  font-weight: bold;
 }
 
 /* ====== OVERLAY ====== */
@@ -120,6 +216,7 @@
   z-index: 2000;
   display: none;
 }
+
 .sidebar-overlay.open {
   display: block;
   pointer-events: auto;
