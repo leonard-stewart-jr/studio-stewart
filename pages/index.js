@@ -30,7 +30,6 @@ export default function Home() {
     if (!project) return;
 
     // Hard guard: Independent Studio should ALWAYS route to its dedicated page
-    // This prevents any accidental modal opening due to stale/mismatched data.
     if (project.slug === "ISP") {
       router.push("/independent-studio");
       return;
@@ -63,7 +62,7 @@ export default function Home() {
           onClose={() => setActiveHtmlIndex(null)}
           {...getProjectModalProps(projects[activeHtmlIndex])}
           height={785}
-          navOffset={76}
+          navOffset={60}  /* reduced from 76 */
         />
       )}
 

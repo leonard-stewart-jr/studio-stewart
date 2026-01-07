@@ -63,6 +63,7 @@ html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
 html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
+
 /* ====== CARD NAV STYLES ====== */
 .nav-card {
   margin: 0 auto;
@@ -75,8 +76,8 @@ html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
 }
 .nav-card-top {
   box-shadow: 0 5px 24px 0 rgba(0,0,0,0.13);
-  min-height: 76px;
-  height: 76px;
+  min-height: 60px; /* reduced from 76 */
+  height: 60px;     /* reduced from 76 */
   padding: 0;
   background: #fff;
 }
@@ -107,25 +108,25 @@ nav.main-nav {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  height: 76px;
+  gap: 28px;
+  height: 60px; /* reduced from 76 */
   font-family: "coolvetica", sans-serif;
 }
 
 nav.main-nav a {
-  color: #b1b1ae;
-  font-weight: 400;
+  color: #6c6c6a;            /* darker gray than before */
+  font-weight: 300;          /* thinner appearance */
   font-size: 14px;
   text-transform: uppercase;
   text-decoration: none;
   padding: 4px 0;
   border-bottom: none;
-  transition: color 0.2s;
+  transition: color 0.2s, font-weight 0.16s;
   display: inline-block;
   white-space: nowrap;
   font-family: inherit;
   letter-spacing: 0.5px;
-  margin: 0 24px;
+  margin: 0 20px;
   cursor: pointer;
 }
 
@@ -134,7 +135,8 @@ nav.main-nav a[aria-current="page"] {
   color: #e6dbb9;
   text-decoration: underline;
   cursor: default;
-  font-size: 16px; /* Increase font size when active */
+  font-size: 16px; /* Keep larger size when active */
+  font-weight: 300; /* stay thin even when active */
 }
 
 nav.main-nav a.active:hover,
@@ -142,10 +144,10 @@ nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
 }
 
-/* New: hover non-active main nav link: bold, no underline */
+/* Hover/focus: keep thin, change color */
 nav.main-nav a:not(.active):not([aria-current="page"]):hover,
 nav.main-nav a:not(.active):not([aria-current="page"]):focus {
-  font-weight: 500;
+  font-weight: 300; /* do not bold on hover */
   color: #e6dbb9;
   text-decoration: none;
 }
@@ -160,7 +162,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   padding: 0;
   min-height: 60px;
   height: auto;
-  margin: 0;
+  margin: -12px 0 0 0; /* scoot up by 12px to compensate for thinner header */
   box-shadow: none;
   border-bottom: none;
   width: 100%;
@@ -170,10 +172,10 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   background: none;
   border: none;
   font-family: "coolvetica", sans-serif;
-  font-weight: 400;
+  font-weight: 300;           /* thinner */
   font-size: 12px;
   letter-spacing: 0.5px;
-  color: #dededb;
+  color: #6c6c6a;             /* darker gray */
   text-transform: uppercase;
   padding: 9px 20px 6px 20px;
   margin: 0 12px;
@@ -185,7 +187,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   outline: none;
   border-radius: 0;
   border-bottom: none;
-  transition: color 0.18s, text-decoration 0.18s;
+  transition: color 0.18s, text-decoration 0.18s, font-weight 0.16s;
   box-shadow: none;
   position: relative;
 }
@@ -198,21 +200,22 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   text-decoration-thickness: 1.5px;
   cursor: default;
   font-size: 14px; /* Increase font size when active */
+  font-weight: 300; /* keep thin */
 }
 
 .isp-tab-btn.active:hover,
 .isp-tab-btn[aria-current="page"]:hover,
 .isp-tab-btn.active:focus,
-.isp-tab-btn[aria-current="page"]:focus {
+.isp-tab-btn[aria-current="page"]:.focus {
   text-decoration: none;
 }
 
-/* New: hover non-active section tab: bold, no underline */
+/* Hover non-active: thin, no underline */
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
-  font-weight: 500;
+  font-weight: 300;
   color: #e6dbb9;
-  text-decoration: none; /* No underline on hover for non-active */
+  text-decoration: none;
 }
 
 .isp-subnav-row {
@@ -224,7 +227,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   padding: 0;
   min-height: 40px;
   height: auto;
-  margin: 0;
+  margin: -12px 0 0 0; /* scoot up by 12px as well */
   box-shadow: none;
   border-bottom: none;
   width: 100%;
@@ -234,9 +237,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   background: none;
   border: none;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 300;          /* thinner */
   font-size: 10px;
-  color: #d4d4ce;
+  color: #6c6c6a;            /* darker gray */
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 9px 18px 6px 18px;
@@ -251,7 +254,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   min-width: 44px;
   border-bottom: none;
   box-shadow: none;
-  transition: color 0.18s, text-decoration 0.18s;
+  transition: color 0.18s, text-decoration 0.18s, font-weight 0.16s;
   position: relative;
 }
 
@@ -262,22 +265,23 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
   cursor: default;
-  font-size: 12px; /* Increase font size when active */
+  font-size: 12px;
+  font-weight: 300; /* keep thin */
 }
 
 .isp-subnav-btn.active:hover,
 .isp-subnav-btn[aria-current="page"]:hover,
 .isp-subnav-btn.active:focus,
-.isp-subnav-btn[aria-current="page"]:focus {
+.isp-subnav-btn[aria-current="page"]:.focus {
   text-decoration: none;
 }
 
-/* New: hover non-active subnav: bold, no underline */
+/* Hover non-active subnav: thin, no underline */
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
-  font-weight: 500;
+  font-weight: 300;
   color: #e6dbb9;
-  text-decoration: none; /* No underline on hover for non-active */
+  text-decoration: none;
 }
 
 .isp-tab-btn:focus-visible,
@@ -300,7 +304,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   nav.main-nav {
     gap: 18px;
     font-size: 14px;
-    height: 60px;
+    height: 60px; /* keep 60 on tablet */
   }
   nav.main-nav a {
     font-size: 14px;
@@ -325,6 +329,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .isp-section-tabs {
     gap: 11px;
     min-height: 36px;
+    margin-top: -12px; /* maintain upward nudge on mobile */
   }
   .isp-tab-btn {
     font-size: 11px;
@@ -334,6 +339,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .isp-subnav-row {
     gap: 7px;
     min-height: 24px;
+    margin-top: -12px; /* maintain upward nudge on mobile */
   }
   .isp-subnav-btn {
     font-size: 9px;
@@ -383,9 +389,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   left: 0;
   width: 100vw;
   z-index: 1200;
-  /* If you want a subtle shadow for separation, you can add:
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  */
 }
 .isp-globe-section {
   align-items: stretch !important;
