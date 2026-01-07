@@ -1,42 +1,33 @@
 import { useState } from "react";
 
 /**
- * LogoHamburger
- * - Always shows the logo by default.
- * - hoverMode="hamburger" (header): on hover, shows triangle-with-bars.
- * - hoverMode="x" (sidebar): on hover, shows an "X".
- * - Click triggers onClick/onOpenSidebar (either prop is supported).
+ * Original behavior:
+ * - Shows logo by default.
+ * - On hover (in the header), swaps to the triangle-with-bars "hamburger".
+ * - Click triggers onOpenSidebar.
+ * - No close/X state and no border around the logo when not hovered.
  */
 export default function LogoHamburger({
-  size = 60,
-  hoverMode = "hamburger", // "hamburger" (header) | "x" (sidebar)
+  logoSize = 60,
+  onOpenSidebar,
   color = "#181818",
   title = "Open menu",
-  onClick,
-  onOpenSidebar, // kept for compatibility with existing calls
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Single activation helper (accept legacy onOpenSidebar too)
-  function activate() {
-    if (typeof onClick === "function") return onClick();
-    if (typeof onOpenSidebar === "function") return onOpenSidebar();
-  }
-
-  // Triangle frame in a 120x120 viewBox (keeps brand shape)
+  // Triangle geometry in a 120x120 viewBox
   const triangle = [
     { x: 30, y: 96 },
     { x: 60, y: 34 },
     { x: 90, y: 96 },
   ];
-  const vbW = 120;
-  const vbH = 120;
-  const stroke = 6;
+  const viewBoxWidth = 120;
+  const viewBoxHeight = 120;
 
-  // Hamburger bars inside the triangle
+  // Build 4 horizontal bars within the triangle
   const lineCount = 4;
-  const minT = 0.08;
-  const maxT = 0.92;
+  const minT = 0.10; // keep bars inside triangle edges
+  const maxT = 0.90;
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = minT + (i / (lineCount - 1)) * (maxT - minT);
@@ -45,21 +36,11 @@ export default function LogoHamburger({
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
     lines.push({ x1: leftX, x2: rightX, y });
   }
-
-  // "X" drawn inside the same triangle bounds
-  // Use a simple inset box to ensure the X sits well within the triangle
-  const inset = 36;
-  const x1 = { x1: inset, y1: 92, x2: 120 - inset, y2: 36 };
-  const x2 = { x1: 120 - inset, y1: 92, x2: inset, y2: 36 };
-
-  // Layer visibility
-  const showLogo = !hovered;
-  const showHamburger = hovered && hoverMode === "hamburger";
-  const showX = hovered && hoverMode === "x";
+  const stroke = 6;
 
   const wrapStyle = {
-    width: `${size}px`,
-    height: `${size}px`,
+    width: `${logoSize}px`,
+    height: `${logoSize}px`,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -69,46 +50,57 @@ export default function LogoHamburger({
     touchAction: "manipulation",
   };
 
-  const layerBase = {
+  const imgStyle = {
     position: "absolute",
     inset: 0,
     width: "100%",
     height: "100%",
+    objectFit: "contain",
+    opacity: hovered ? 0 : 1, // hide logo only while hovering
+    transition: "opacity 0.18s",
+    pointerEvents: "none",
+  };
+
+  const svgStyle = {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    opacity: hovered ? 1 : 0, // show hamburger only while hovering
     transition: "opacity 0.18s",
     pointerEvents: "none",
   };
 
   return (
     <div
-      className="logo-hamburger-wrap"
       style={wrapStyle}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={activate}
+      onClick={() => onOpenSidebar && onOpenSidebar()}
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
+        if (onOpenSidebar && (e.key === "Enter" || e.key === " ")) {
           e.preventDefault();
-          activate();
+          onOpenSidebar();
         }
       }}
-      role="button"
       title={title}
       aria-label={title}
+      role="button"
     >
-      {/* Logo (default) */}
+      {/* Logo mark (visible when not hovered) */}
       <img
         src="/assets/logo-mark-only.svg"
         alt="Studio Stewart Logo"
-        style={{ ...layerBase, opacity: showLogo ? 1 : 0, objectFit: "contain" }}
+        style={imgStyle}
       />
 
-      {/* Triangle + hamburger (header hover) */}
+      {/* Triangle + hamburger (visible only on hover) */}
       <svg
-        viewBox={`0 0 ${vbW} ${vbH}`}
+        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
-        style={{ ...layerBase, opacity: showHamburger ? 1 : 0 }}
+        style={svgStyle}
       >
         <polygon
           points={`${triangle[0].x},${triangle[0].y} ${triangle[1].x},${triangle[1].y} ${triangle[2].x},${triangle[2].y}`}
@@ -117,52 +109,18 @@ export default function LogoHamburger({
           strokeWidth={stroke}
           strokeLinejoin="round"
         />
-        {lines.map((ln, i) => (
+        {lines.map((line, i) => (
           <line
             key={i}
-            x1={ln.x1}
-            y1={ln.y}
-            x2={ln.x2}
-            y2={ln.y}
+            x1={line.x1}
+            y1={line.y}
+            x2={line.x2}
+            y2={line.y}
             stroke={color}
             strokeWidth={stroke}
             strokeLinecap="round"
           />
         ))}
-      </svg>
-
-      {/* Triangle + X (sidebar hover) */}
-      <svg
-        viewBox={`0 0 ${vbW} ${vbH}`}
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-        style={{ ...layerBase, opacity: showX ? 1 : 0 }}
-      >
-        <polygon
-          points={`${triangle[0].x},${triangle[0].y} ${triangle[1].x},${triangle[1].y} ${triangle[2].x},${triangle[2].y}`}
-          fill="none"
-          stroke={color}
-          strokeWidth={stroke}
-          strokeLinejoin="round"
-        />
-        <line
-          x1={x1.x1}
-          y1={x1.y1}
-          x2={x1.x2}
-          y2={x1.y2}
-          stroke={color}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-        />
-        <line
-          x1={x2.x1}
-          y1={x2.y1}
-          x2={x2.x2}
-          y2={x2.y2}
-          stroke={color}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-        />
       </svg>
     </div>
   );

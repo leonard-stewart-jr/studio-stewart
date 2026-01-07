@@ -4,63 +4,64 @@ import LogoHamburger from "./LogoHamburger";
 import NavBar from "./NavBar";
 import Sidebar from "./Sidebar";
 
+/**
+ * Original pattern:
+ * - Header shows the logo; on hover the triangle/hamburger appears; click opens sidebar.
+ * - Sidebar has its own X close button (separate from the logo).
+ * - Header text stays centered.
+ */
 export default function HeaderBar({ fixedNav = false }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Consistent sizing
-  const logoSize = 60;         // adjust logo area to match thinner header visually
-  const headerHeight = 60;     // reduced from 76 to 60
-  const sidebarPaddingLeft = 22;
-
-  // Animation speed for hamburger fade
-  const hamburgerTransition = { duration: 0.18, ease: "linear" };
+  // Sizing to match your 60px header
+  const logoSize = 60;
+  const headerHeight = 60;
+  const sidePad = 22;
 
   const navBarStyle = {
     position: fixedNav ? "fixed" : "sticky",
     top: 0,
     zIndex: 1200,
     width: "100vw",
-    paddingLeft: 0,
-    paddingRight: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     minHeight: headerHeight,
     height: headerHeight,
     background: "#fff",
-    left: 0,
+    left: 0
   };
 
   return (
     <>
-      {/* Card nav for header */}
       <div className="nav-card nav-card-top" style={navBarStyle}>
-        {/* Left: Hamburger/Logo */}
+        {/* Left: Logo/Hamburger (opens sidebar) */}
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
-          transition={hamburgerTransition}
-          style={{ display: "flex", alignItems: "center", paddingLeft: sidebarPaddingLeft }}
+          transition={{ duration: 0.18, ease: "linear" }}
+          style={{ display: "flex", alignItems: "center", paddingLeft: sidePad }}
         >
           <LogoHamburger
             logoSize={logoSize}
             onOpenSidebar={() => setSidebarOpen(true)}
+            title="Open menu"
           />
         </motion.div>
 
-        {/* Center: NavBar */}
+        {/* Center: Main nav */}
         <NavBar headerHeight={headerHeight} />
 
-        {/* Right: Reserved for future use, maintains space for symmetry */}
-        <div style={{ width: logoSize, paddingRight: sidebarPaddingLeft }} />
+        {/* Right spacer for symmetry */}
+        <div style={{ width: logoSize, paddingRight: sidePad }} />
       </div>
 
-      {/* Sidebar with separate close button */}
+      {/* Sidebar (with separate X button) */}
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         logoSize={logoSize}
-        sidebarPaddingLeft={sidebarPaddingLeft}
+        sidebarPaddingLeft={sidePad}
         headerHeight={headerHeight}
       />
     </>
