@@ -1,127 +1,116 @@
 import { useState } from "react";
 
-/**
- * Original behavior:
- * - Shows logo by default.
- * - On hover (in the header), swaps to the triangle-with-bars "hamburger".
- * - Click triggers onOpenSidebar.
- * - No close/X state and no border around the logo when not hovered.
- */
 export default function LogoHamburger({
-  logoSize = 60,
+  logoSize = 66,
   onOpenSidebar,
-  color = "#181818",
-  title = "Open menu",
+  color = "#181818", // Default matches sidebar/nav text color
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Triangle geometry in a 120x120 viewBox
+  // Triangle points from SVG: (30,100), (60,30), (90,100)
+  // Account for stroke width on the triangle (6px): avoid extremes.
+  // We'll nudge all lines down by 2px for better centering.
   const triangle = [
-    { x: 30, y: 96 },
-    { x: 60, y: 34 },
-    { x: 90, y: 96 },
+    { x: 30, y: 96 }, // 100 - 4, nudged up for stroke
+    { x: 60, y: 34 }, // 30 + 4, nudged down for stroke
+    { x: 90, y: 96 }, // 100 - 4, nudged up for stroke
   ];
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
-
-  // Build 4 horizontal bars within the triangle
   const lineCount = 4;
-  const minT = 0.10; // keep bars inside triangle edges
-  const maxT = 0.90;
+  const minT = 0.04;
+  const maxT = 0.96;
+  const yNudge = 4; // move hamburger down 4px
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = minT + (i / (lineCount - 1)) * (maxT - minT);
-    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
+    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y) + yNudge;
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
     lines.push({ x1: leftX, x2: rightX, y });
   }
-  const stroke = 6;
-
-  const wrapStyle = {
-    width: `${logoSize}px`,
-    height: `${logoSize}px`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    cursor: "pointer",
-    userSelect: "none",
-    touchAction: "manipulation",
-  };
-
-  const imgStyle = {
-    position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-    objectFit: "contain",
-    opacity: hovered ? 0 : 1, // hide logo only while hovering
-    transition: "opacity 0.18s",
-    pointerEvents: "none",
-  };
-
-  const svgStyle = {
-    position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-    opacity: hovered ? 1 : 0, // show hamburger only while hovering
-    transition: "opacity 0.18s",
-    pointerEvents: "none",
-  };
+  const lineThickness = 6; // matches triangle stroke
 
   return (
     <div
-      style={wrapStyle}
+      className="logo-hamburger-wrap"
+      style={{
+        position: "relative",
+        width: logoSize,
+        height: logoSize,
+        cursor: "pointer",
+        zIndex: 1200,
+        userSelect: "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={onOpenSidebar}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onOpenSidebar && onOpenSidebar()}
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (onOpenSidebar && (e.key === "Enter" || e.key === " ")) {
           e.preventDefault();
           onOpenSidebar();
         }
       }}
-      title={title}
-      aria-label={title}
+      title="Open menu"
+      aria-label="Open menu"
       role="button"
     >
-      {/* Logo mark (visible when not hovered) */}
+      {/* Logo mark (visible when not hovered or not active) */}
       <img
         src="/assets/logo-mark-only.svg"
         alt="Studio Stewart Logo"
-        style={imgStyle}
+        draggable={false}
+        style={{
+          width: logoSize,
+          height: logoSize,
+          position: "absolute",
+          left: 0,
+          top: 0,
+          opacity: hovered ? 0 : 1,
+          transition: "opacity 0.18s",
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
       />
 
-      {/* Triangle + hamburger (visible only on hover) */}
-      <svg
-        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-        style={svgStyle}
+      {/* Hamburger SVG (visible only when hovered/active) */}
+      <div
+        className="hamburger-svg"
+        style={{
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.18s",
+          width: logoSize,
+          height: logoSize,
+          position: "absolute",
+          left: 0,
+          top: 0,
+          pointerEvents: "none",
+        }}
       >
-        <polygon
-          points={`${triangle[0].x},${triangle[0].y} ${triangle[1].x},${triangle[1].y} ${triangle[2].x},${triangle[2].y}`}
+        <svg
+          width={logoSize}
+          height={logoSize}
+          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
           fill="none"
-          stroke={color}
-          strokeWidth={stroke}
-          strokeLinejoin="round"
-        />
-        {lines.map((line, i) => (
-          <line
-            key={i}
-            x1={line.x1}
-            y1={line.y}
-            x2={line.x2}
-            y2={line.y}
-            stroke={color}
-            strokeWidth={stroke}
-            strokeLinecap="round"
-          />
-        ))}
-      </svg>
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {lines.map((line, i) => (
+            <rect
+              key={i}
+              x={line.x1}
+              y={line.y - lineThickness / 2}
+              width={line.x2 - line.x1}
+              height={lineThickness}
+              fill={color}
+              rx={2}
+            />
+          ))}
+        </svg>
+      </div>
     </div>
   );
 }
