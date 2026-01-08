@@ -1,0 +1,16 @@
+{
+  "title": "Undergraduate Portfolio",
+  "headerHeight": 60,
+  "pages": [
+    {
+      "id": "cover",
+      "title": "Cover",
+      "src": "/portfolio/undergraduate/cover/index.html"
+    },
+    {
+      "id": "page-5",
+      "title": "Page 5",
+      "src": "/portfolio/undergraduate/page-5/index.html"
+    }
+  ]
+}
