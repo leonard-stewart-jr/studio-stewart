@@ -1,68 +1,50 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import LogoHamburger from "./LogoHamburger";
-import NavBar from "./NavBar";
-import Sidebar from "./Sidebar";
+import React, { useState } from "react";
+import ProjectList from "../components/ProjectList";
+import FloatingProjectModal from "../components/floatingprojectmodal";
+import projects from "../data/projects";
 
-export default function HeaderBar({ fixedNav = false }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+// Helper: Derive the HTML5 export path and width from project (add these in your data if not present)
+function getProjectModalProps(project) {
+  // Use your desired file structure:
+  // For DMA-25: /portfolio/dma/25/index
+  // For other projects, adjust as needed!
+  let src = "";
+  if (project.slug === "DMA-25") {
+    src = "/portfolio/dma/25/index";
+  } else if (project.slug === "MPSC-24") {
+    src = "/portfolio/mpsc/24/index";
+  } else if (project.slug === "BPL-24") {
+    src = "/portfolio/bpl/24/index";
+  } else {
+    // fallback: use slug-lower
+    src = `/portfolio/${project.slug.toLowerCase()}/index`;
+  }
+  const width = project.modalWidth || 2436;
+  return { src, width };
+}
 
-  // Consistent sizing
-  const logoSize = 60;         // adjust logo area to match thinner header visually
-  const headerHeight = 60;     // reduced from 76 to 60
-  const sidebarPaddingLeft = 22;
-
-  // Animation speed for hamburger fade
-  const hamburgerTransition = { duration: 0.18, ease: "linear" };
-
-  const navBarStyle = {
-    position: fixedNav ? "fixed" : "sticky",
-    top: 0,
-    zIndex: 1200,
-    width: "100vw",
-    paddingLeft: 0,
-    paddingRight: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    minHeight: headerHeight,
-    height: headerHeight,
-    background: "#fff",
-    left: 0,
-  };
+export default function Home() {
+  const [activeIndex, setActiveIndex] = useState(null);
 
   return (
-    <>
-      {/* Card nav for header */}
-      <div className="nav-card nav-card-top" style={navBarStyle}>
-        {/* Left: Hamburger/Logo */}
-        <motion.div
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-          transition={hamburgerTransition}
-          style={{ display: "flex", alignItems: "center", paddingLeft: sidebarPaddingLeft }}
-        >
-          <LogoHamburger
-            logoSize={logoSize}
-            onOpenSidebar={() => setSidebarOpen(true)}
-          />
-        </motion.div>
-
-        {/* Center: NavBar */}
-        <NavBar headerHeight={headerHeight} />
-
-        {/* Right: Reserved for future use, maintains space for symmetry */}
-        <div style={{ width: logoSize, paddingRight: sidebarPaddingLeft }} />
-      </div>
-
-      {/* Sidebar with separate close button */}
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        logoSize={logoSize}
-        sidebarPaddingLeft={sidebarPaddingLeft}
-        headerHeight={headerHeight}
-      />
-    </>
+    <main style={{
+      minHeight: "100vh",
+      background: "#fff",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    }}>
+      <ProjectList projects={projects} onProjectClick={setActiveIndex} />
+      {activeIndex !== null && (
+        <FloatingProjectModal
+          open={true}
+          onClose={() => setActiveIndex(null)}
+          // Get src/width for the selected project:
+          {...getProjectModalProps(projects[activeIndex])}
+          height={785}
+          navOffset={76}
+        />
+      )}
+    </main>
   );
 }
