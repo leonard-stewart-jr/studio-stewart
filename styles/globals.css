@@ -228,7 +228,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   padding: 0;
   min-height: 40px;
   height: auto;
-  margin: -12px 0 0 0; /* scoot up by 12px as well */
+  margin: 0px 0 0 0; /* scoot up by 12px as well */
   box-shadow: none;
   border-bottom: none;
   width: 100%;
@@ -331,7 +331,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .isp-section-tabs {
     gap: 11px;
     min-height: 36px;
-    margin-top: -12px; /* maintain upward nudge on mobile */
+    margin-top: 0px; /* maintain upward nudge on mobile */
   }
   .isp-tab-btn {
     font-size: 11px;
@@ -341,7 +341,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .isp-subnav-row {
     gap: 7px;
     min-height: 24px;
-    margin-top: -12px; /* maintain upward nudge on mobile */
+    margin-top: 0px; /* maintain upward nudge on mobile */
   }
   .isp-subnav-btn {
     font-size: 9px;
