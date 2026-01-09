@@ -64,6 +64,15 @@ html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
 
+/* ====== GLOBAL HEADINGS: thin coolvetica site-wide ====== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "coolvetica", "Open Sans", sans-serif;
+  font-weight: 300;         /* thin look across headings */
+  letter-spacing: 0.04em;   /* subtle spacing to match site vibe */
+  margin: 0;
+  color: inherit;
+}
+
 /* ====== CARD NAV STYLES ====== */
 .nav-card {
   margin: 0 auto;
