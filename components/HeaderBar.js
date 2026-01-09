@@ -50,7 +50,7 @@ export default function HeaderBar({ fixedNav = false }) {
             transition={hamburgerTransition}
             style={{
               marginLeft: sidebarPaddingLeft,
-              marginTop: -10, // shift logo up by 10px
+              marginTop: -5, // shift logo up by 10px
               cursor: "pointer",
               opacity: sidebarOpen ? 0 : 1,
               pointerEvents: sidebarOpen ? "none" : "auto",
