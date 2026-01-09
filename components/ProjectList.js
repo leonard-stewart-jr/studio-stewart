@@ -107,7 +107,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     width: "100%",
     maxWidth: "900px",
     margin: isMobile ? "0 auto" : "0",
-    justifySelf: isMobile ? "center" : "center",
+    justifySelf: "center",
     cursor: "pointer",
     borderRadius: 6,
     overflow: "hidden",
