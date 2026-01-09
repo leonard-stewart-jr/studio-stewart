@@ -14,7 +14,7 @@ const Banner = styled.div`
   writing-mode: vertical-rl;
   text-orientation: mixed;
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  font-weight: 300; /* thinner than bold */
+  font-weight: var(--weight-thin);
   font-size: 2rem;
   letter-spacing: 2px;
   display: flex;
