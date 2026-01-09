@@ -65,7 +65,6 @@ export default function Sidebar({
             aria-modal="true"
             tabIndex={-1}
           >
-            {/* Top row: logo (left) and X button (right) */}
             <div
               style={{
                 display: "flex",
@@ -114,7 +113,6 @@ export default function Sidebar({
               </button>
             </div>
 
-            {/* Nav links */}
             <nav className="sidebar-nav" style={{ paddingLeft: sidebarPaddingLeft }}>
               {navItems.map((item) => (
                 <Link

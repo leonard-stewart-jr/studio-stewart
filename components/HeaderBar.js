@@ -28,7 +28,6 @@ export default function HeaderBar({ fixedNav = false }) {
   return (
     <>
       <div className="nav-card nav-card-top" style={navBarStyle}>
-        {/* Left: Logo/Hamburger */}
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
@@ -42,14 +41,11 @@ export default function HeaderBar({ fixedNav = false }) {
           />
         </motion.div>
 
-        {/* Center: Main nav */}
         <NavBar headerHeight={headerHeight} />
 
-        {/* Right spacer for symmetry */}
         <div style={{ width: logoSize, paddingRight: sidePad }} />
       </div>
 
-      {/* Sidebar */}
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}

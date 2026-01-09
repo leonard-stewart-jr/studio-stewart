@@ -21,7 +21,6 @@ export default function ProjectList({ projects, onProjectClick }) {
     return "View Interactive Model";
   }
 
-  // Centered page container (slightly narrower to pull content inward)
   const pageContainerStyle = {
     width: "min(1100px, 90vw)",
     margin: "0 auto",
@@ -29,20 +28,17 @@ export default function ProjectList({ projects, onProjectClick }) {
     display: "flex",
     flexDirection: "column",
     gap: isMobile ? 32 : 40,
-    boxSizing: "border-box",
+    boxSizing: "border-box"
   };
 
-  // Row: fixed left text column + flexible right image column
-  // Vertically center items and keep the text close to the image
   const rowStyle = {
     display: "grid",
     gridTemplateColumns: isMobile ? "1fr" : "minmax(260px, 320px) 1fr",
-    alignItems: "center",     // vertically center text relative to image
-    gap: isMobile ? 12 : 16,  // tight gap: text sits near the image
-    width: "100%",
+    alignItems: "center",
+    gap: isMobile ? 12 : 16,
+    width: "100%"
   };
 
-  // Info column: right-align so content hugs the image edge
   const infoColStyle = {
     display: "flex",
     flexDirection: "column",
@@ -50,7 +46,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     alignItems: isMobile ? "flex-start" : "flex-end",
     textAlign: isMobile ? "left" : "right",
     gap: 6,
-    padding: isMobile ? "0 8px" : "0 6px 0 0",
+    padding: isMobile ? "0 8px" : "0 6px 0 0"
   };
 
   const titleStyle = {
@@ -58,7 +54,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     fontSize: isMobile ? 18 : 22,
     letterSpacing: ".04em",
     textTransform: "uppercase",
-    lineHeight: 1.25,
+    lineHeight: 1.25
   };
 
   const metaStyle = {
@@ -66,17 +62,16 @@ export default function ProjectList({ projects, onProjectClick }) {
     fontSize: isMobile ? 12 : 13,
     color: "#6c6c6a",
     letterSpacing: ".02em",
-    textTransform: "uppercase",
+    textTransform: "uppercase"
   };
 
   const descStyle = {
     margin: "6px 0 0 0",
     fontSize: isMobile ? 12 : 13,
     color: "#888",
-    letterSpacing: ".01em",
+    letterSpacing: ".01em"
   };
 
-  // Image wrapper: keep your current size and styling
   const imageWrapStyle = {
     position: "relative",
     width: "100%",
@@ -88,13 +83,13 @@ export default function ProjectList({ projects, onProjectClick }) {
     boxShadow: "0 3px 14px rgba(0,0,0,0.10)",
     border: "1px solid #e9e7e0",
     background: "#f6f5f2",
-    transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s",
+    transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s"
   };
 
   const imageStyle = {
     display: "block",
     width: "100%",
-    height: "auto",
+    height: "auto"
   };
 
   const overlayStyle = {
@@ -109,14 +104,13 @@ export default function ProjectList({ projects, onProjectClick }) {
     letterSpacing: ".06em",
     textTransform: "uppercase",
     borderRadius: 4,
-    userSelect: "none",
+    userSelect: "none"
   };
 
   return (
-    <section style={pageContainerStyle} aria-label="Projects">
+    <div style={pageContainerStyle}>
       {projects.map((project, idx) => (
-        <div key={project.slug || idx} style={rowStyle}>
-          {/* Left: Info (right-aligned on desktop, vertically centered to image) */}
+        <div key={idx} style={rowStyle}>
           <div style={infoColStyle}>
             <h2 style={titleStyle}>{project.title}</h2>
             <div style={metaStyle}>
@@ -125,11 +119,10 @@ export default function ProjectList({ projects, onProjectClick }) {
             {project.description && <p style={descStyle}>{project.description}</p>}
           </div>
 
-          {/* Right: Image with overlay */}
           <div
             role="button"
-            aria-label={`Open ${overlayLabel(project)} for ${project.title}`}
             tabIndex={0}
+            aria-label={`Open ${overlayLabel(project)} for ${project.title}`}
             onClick={() => onProjectClick(idx)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -138,10 +131,13 @@ export default function ProjectList({ projects, onProjectClick }) {
               }
             }}
             onMouseEnter={() => setHoveredIndex(idx)}
-            onMouseLeave={() => setHoveredIndex((h) => (h === idx ? null : h))}
+            onMouseLeave={() =>
+              setHoveredIndex((h) => (h === idx ? null : h))
+            }
             style={{
               ...imageWrapStyle,
-              transform: hoveredIndex === idx && !isMobile ? "translateY(-2px)" : "none",
+              transform:
+                hoveredIndex === idx && !isMobile ? "translateY(-2px)" : "none",
               boxShadow:
                 hoveredIndex === idx && !isMobile
                   ? "0 6px 18px rgba(0,0,0,0.12)"
@@ -149,19 +145,18 @@ export default function ProjectList({ projects, onProjectClick }) {
               border:
                 hoveredIndex === idx && !isMobile
                   ? "1px solid #e6dbb9"
-                  : imageWrapStyle.border,
+                  : imageWrapStyle.border
             }}
           >
             <img
               src={project.bannerSrc}
               alt={project.title}
               style={imageStyle}
-              loading="lazy"
             />
             <div style={overlayStyle}>{overlayLabel(project)}</div>
           </div>
         </div>
       ))}
-    </section>
+    </div>
   );
 }

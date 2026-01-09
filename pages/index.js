@@ -3,18 +3,15 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import ProjectList from "../components/ProjectList";
 import FloatingProjectModal from "../components/floatingprojectmodal";
-// IMPORTANT: Load PdfBookModal only on the client to avoid SSR pdf.js (DOMMatrix) errors
 const PdfBookModal = dynamic(() => import("../components/PdfBookModal"), { ssr: false });
 import projects from "../data/projects";
 
 function getProjectModalProps(project) {
-  // Map project to your interactive HTML export path
   if (project.slug === "DMA-25") {
-    return { src: "/portfolio/dma/25/index", width: project.modalWidth || 2436 };
+    return { src: "/portfolio/dma/25/index.html", width: project.modalWidth || 2436 };
   }
-  // Fallback: derive from slug
-  const slugLower = (project.slug || "").toLowerCase();
-  return { src: `/portfolio/${slugLower}/index`, width: project.modalWidth || 2436 };
+  const slugLower = (project.slug || "").toLowerCase().replace(/[^a-z0-9-]/g, "-");
+  return { src: `/portfolio/${slugLower}/index.html`, width: project.modalWidth || 2436 };
 }
 
 export default function Home() {
@@ -29,7 +26,6 @@ export default function Home() {
     const project = projects[idx];
     if (!project) return;
 
-    // Hard guard: Independent Studio should ALWAYS route to its dedicated page
     if (project.slug === "ISP") {
       router.push("/independent-studio");
       return;
@@ -55,24 +51,27 @@ export default function Home() {
 
   return (
     <>
-      <ProjectList projects={projects} onProjectClick={handleProjectClick} />
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <ProjectList projects={projects} onProjectClick={handleProjectClick} />
+      </div>
 
       {activeHtmlIndex !== null && (
         <FloatingProjectModal
           onClose={() => setActiveHtmlIndex(null)}
           {...getProjectModalProps(projects[activeHtmlIndex])}
           height={785}
-          navOffset={60}  /* reduced from 76 */
+          navOffset={60}
         />
       )}
 
-      <PdfBookModal
-        open={pdfOpen}
-        onClose={() => setPdfOpen(false)}
-        file={pdfFile}
-        title={pdfTitle}
-        spreadsMode={true}
-      />
+      {pdfOpen && (
+        <PdfBookModal
+          onClose={() => setPdfOpen(false)}
+          file={pdfFile}
+          title={pdfTitle}
+          spreadsMode={true}
+        />
+      )}
     </>
   );
 }
