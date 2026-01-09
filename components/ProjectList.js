@@ -36,7 +36,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     display: "grid",
     gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
     alignItems: "center",
-    columnGap: isMobile ? 12 : 24,
+    columnGap: isMobile ? 12 : 24, // requested 24px gap on desktop
     rowGap: isMobile ? 12 : 0,
     width: "100%"
   };
@@ -51,7 +51,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     gap: 3,
     padding: isMobile ? "0 8px" : "0",
     fontFamily: "Inter, sans-serif",
-    width: isMobile ? "auto" : 320,
+    width: isMobile ? "auto" : 320,    // requested 320px info block width
     maxWidth: isMobile ? "100%" : 320,
     justifySelf: isMobile ? "start" : "end"
   };
