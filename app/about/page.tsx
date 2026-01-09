@@ -20,7 +20,7 @@ export default function About() {
 
     return (
         <main style={containerStyle}>
-            <h1 style={titleStyle}>IN PROGRESS</h1>
+            <h1 style={titleStyle}>IN PROGRESS By Makashif</h1>
         </main>
     );
 }

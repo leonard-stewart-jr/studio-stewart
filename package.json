@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
     "framer-motion": "^12.25.0",
@@ -30,6 +31,8 @@
     "@types/styled-components": "^5.1.36",
     "@types/three": "^0.182.0",
     "shx": "^0.3.4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1"
   }
 }
