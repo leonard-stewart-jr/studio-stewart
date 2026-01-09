@@ -297,6 +297,15 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   outline: 2px solid #e6dbb9;
 }
 
+/* Desktop-only visual centering tweak: shift tab/subnav labels down by 6px */
+@media (min-width: 701px) {
+  .isp-tab-btn,
+  .isp-subnav-btn {
+    transform: translateY(6px);
+  }
+}
+
+/* ====== Divider hidden ====== */
 .nav-divider {
   display: none !important;
 }
@@ -356,6 +365,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     opacity: 1 !important;
     z-index: 1000 !important;
     position: relative !important;
+    transform: none; /* no shift on mobile */
   }
 }
 
