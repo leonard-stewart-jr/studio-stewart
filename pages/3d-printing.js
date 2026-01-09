@@ -13,32 +13,41 @@ import {
 } from "../data/nfl-logos";
 
 export default function ThreeDPrinting() {
+  // Categories: "hueforge" (NFL logos), "lithophanes", "custom cad", "more"
   const [activeCategory, setActiveCategory] = useState("hueforge");
-  const [conference, setConference] = useState("ALL");
-  const [division, setDivision] = useState("ALL");
-  const [showFilterBar, setShowFilterBar] = useState(false);
 
+  // Filters
+  const [conference, setConference] = useState("ALL"); // ALL, AFC, NFC
+  const [division, setDivision] = useState("ALL");     // ALL, EAST, WEST, SOUTH, NORTH
+
+  // Show filter bar by default on page load (as requested)
+  const [showFilterBar, setShowFilterBar] = useState(true);
+
+  // Grid controls
   const gridRef = useRef(null);
   const [columns, setColumns] = useState(4);
 
+  // Responsive
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     function handleResize() {
-      const win = typeof window !== "undefined" ? window : {};
-      setColumns(win.innerWidth < 700 ? 2 : win.innerWidth < 1100 ? 2 : 4);
-      setIsMobile(win.innerWidth < 700);
+      const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+      setColumns(w < 700 ? 2 : w < 1100 ? 2 : 4);
+      setIsMobile(w < 700);
     }
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Build grid data and logo states
   let gridData = [];
-  let showAfcNfcLogos = false;
-  let showCenteredLogo = null;
+  let showAfcNfcLogos = false; // show both logos row (AFC + NFC)
+  let showCenteredLogo = null; // show one centered logo (AFC or NFC)
 
   if (activeCategory === "hueforge") {
     if (conference === "ALL" && division === "ALL") {
+      // Show both logos above the filter bar and interleave AFC/NFC teams in the grid
       showAfcNfcLogos = true;
       const afcTeams = [];
       const nfcTeams = [];
@@ -53,53 +62,144 @@ export default function ThreeDPrinting() {
         gridData.push([afcTeams[i], nfcTeams[i]]);
       }
     } else if (conference !== "ALL" && division === "ALL") {
+      // A conference selected, all divisions
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
-      gridData = divisionNames.flatMap(div =>
-        DIVISIONS[conference][div]
-      );
+      gridData = divisionNames.flatMap(div => DIVISIONS[conference][div]);
     } else if (conference === "ALL" && division !== "ALL") {
+      // All conferences, specific division
       gridData = [
         ...DIVISIONS.AFC[division],
         ...DIVISIONS.NFC[division]
       ];
     } else if (conference !== "ALL" && division !== "ALL") {
+      // Specific conference and division
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
       gridData = DIVISIONS[conference][division];
     }
   }
 
+  // Non-Hueforge categories
   let filteredPrints = [];
   if (activeCategory === "lithophanes") filteredPrints = [LITHOPHANE];
   if (activeCategory === "custom cad") filteredPrints = [CUSTOM_CAD];
   if (activeCategory === "more") filteredPrints = [MORE_SAMPLE];
 
+  // Styles
+  const pageStyle = {
+    width: "min(1600px, 95vw)",
+    margin: "0 auto",
+    padding: "12px 0 48px 0",
+    boxSizing: "border-box"
+  };
+
+  const categoryTabsStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: isMobile ? 16 : 26,
+    padding: "0",
+    minHeight: "44px",
+    height: "44px",
+    margin: "0 0 4px 0",
+    background: "transparent"
+  };
+
+  const categoryBtnBase = {
+    background: "none",
+    border: "none",
+    fontFamily: "Inter, sans-serif",
+    fontWeight: 280,
+    fontSize: isMobile ? 13 : 14,
+    letterSpacing: ".035em",
+    color: "#6c6c6a",
+    textTransform: "uppercase",
+    padding: "6px 14px",
+    margin: "0 8px",
+    display: "inline-flex",
+    alignItems: "center",
+    cursor: "pointer",
+    textDecoration: "none",
+    outline: "none",
+    borderRadius: 0,
+    transition: "color 0.18s, font-weight 0.16s",
+    position: "relative"
+  };
+
+  const logoRowStyle = {
+    display: "grid",
+    gridTemplateColumns: showAfcNfcLogos ? "1fr 1fr" : "1fr",
+    alignItems: "center",
+    justifyItems: "center",
+    minHeight: "120px",           // requested dedicated logo row height
+    marginTop: "-6px",             // nudge up toward the horizontal line as requested
+    marginBottom: isMobile ? "6px" : "4px",
+    width: "100%"
+  };
+
+  const filterRowStyle = {
+    display: activeCategory === "hueforge" && showFilterBar ? "flex" : "none",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: isMobile ? 10 : 16,
+    minHeight: "40px",
+    height: "40px",
+    margin: "4px 0 10px 0",
+    background: "transparent",
+    width: "100%"
+  };
+
+  const filterBtnBase = {
+    background: "none",
+    border: "none",
+    fontFamily: "Inter, sans-serif", // Inter for consistency
+    fontWeight: 280,
+    fontSize: isMobile ? "13px" : "15px", // +2px on desktop
+    letterSpacing: ".06em",
+    textTransform: "uppercase",
+    padding: "6px 18px",
+    margin: "0 4px",
+    display: "inline-flex",
+    alignItems: "center",
+    cursor: "pointer",
+    textDecoration: "none",
+    outline: "none",
+    borderRadius: "6px",
+    boxShadow: "none",
+    transition: "color 0.18s, font-weight 0.16s, text-decoration 0.18s",
+    position: "relative",
+    color: "#bcbcb6"
+  };
+
+  const gridWrapStyle = {
+    display: "grid",
+    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+    gap: isMobile ? 14 : 18,
+    alignItems: "start",
+    justifyItems: "center",
+    marginTop: isMobile ? 12 : 14
+  };
+
   function renderFilterRow() {
     if (activeCategory !== "hueforge" || !showFilterBar) return null;
     return (
-      <div
-        style={{
-          width: "100%",
-          maxWidth: isMobile ? 320 : 700,
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: isMobile ? 10 : 16,
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
+      <div style={filterRowStyle}>
         {FILTER_BUTTONS.map(btn => {
           const isActive =
-            btn.type === "conference"
-              ? conference === btn.value
-              : division === btn.value;
-          return (
-            <span
-              key={btn.value}
-              role="button"
-              tabIndex={0}
-              aria-label={btn.label}
+            btn.type === "conference" ? conference === btn.value : division === btn.value;
+
+          const style = {
+            ...filterBtnBase,
+            color: isActive ? "#e6dbb9" : filterBtnBase.color,
+            textDecoration: isActive ? "underline" : "none",
+            textUnderlineOffset: "3px",
+            textDecorationThickness: "1.5px",
+            fontWeight: isActive ? 350 : 280
+          };
+
+        return (
+            <button
+              key={`${btn.type}-${btn.value}`}
+              style={style}
               onClick={() => {
                 if (btn.type === "conference") {
                   setConference(btn.value);
@@ -108,7 +208,7 @@ export default function ThreeDPrinting() {
                   setDivision(btn.value);
                 }
               }}
-              onKeyDown={e => {
+              onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   if (btn.type === "conference") {
                     setConference(btn.value);
@@ -118,31 +218,10 @@ export default function ThreeDPrinting() {
                   }
                 }
               }}
-              style={{
-                fontFamily: "coolvetica, sans-serif",
-                fontWeight: 700,
-                fontSize: "13px",
-                letterSpacing: ".08em",
-                textTransform: "uppercase",
-                color: isActive ? "#e6dbb9" : "#bcbcb6",
-                background: "none",
-                border: "none",
-                boxShadow: "none",
-                padding: "4px 18px",
-                borderRadius: "6px",
-                cursor: "pointer",
-                outline: "none",
-                transition: "color 0.17s, background 0.17s",
-                userSelect: "none",
-                textDecoration: isActive ? "underline" : "none",
-                textUnderlineOffset: "3px",
-                textDecorationThickness: "1.3px",
-                opacity: isActive ? 1 : 0.8,
-                position: "relative"
-              }}
+              aria-current={isActive ? "page" : undefined}
             >
               {btn.label}
-            </span>
+            </button>
           );
         })}
       </div>
@@ -152,25 +231,10 @@ export default function ThreeDPrinting() {
   function renderLogoRow() {
     if (activeCategory !== "hueforge" || !showAfcNfcLogos) return null;
     return (
-      <div
-        style={{
-          width: "100%",
-          maxWidth: isMobile ? 320 : 700,
-          margin: "40px auto 0 auto",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: isMobile ? "18px" : "120px",
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}
-      >
+      <div style={logoRowStyle}>
         <ConferenceLogo
           logo={AFC_LOGO}
-          style={{
-            position: "static"
-          }}
-          rotate={0}
+          style={{ height: isMobile ? 66 : 84 }}
           onClick={() => {
             setConference("AFC");
             setDivision("ALL");
@@ -179,10 +243,7 @@ export default function ThreeDPrinting() {
         />
         <ConferenceLogo
           logo={NFC_LOGO}
-          style={{
-            position: "static"
-          }}
-          rotate={0}
+          style={{ height: isMobile ? 66 : 84 }}
           onClick={() => {
             setConference("NFC");
             setDivision("ALL");
@@ -196,25 +257,15 @@ export default function ThreeDPrinting() {
   function renderCenteredLogo() {
     if (activeCategory !== "hueforge" || !showCenteredLogo) return null;
     return (
-      <div style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "40px",
-        marginBottom: "0px",
-      }}>
+      <div style={{ ...logoRowStyle, gridTemplateColumns: "1fr" }}>
         <ConferenceLogo
           logo={showCenteredLogo}
-          style={{
-            position: "static",
-            margin: "0 auto",
-            display: "block"
-          }}
-          rotate={0}
+          style={{ height: isMobile ? 72 : 96 }}
           onClick={() => {
+            // Clicking the centered logo returns to ALL
             setConference("ALL");
             setDivision("ALL");
-            setShowFilterBar(false);
+            setShowFilterBar(true);
           }}
         />
       </div>
@@ -222,168 +273,111 @@ export default function ThreeDPrinting() {
   }
 
   return (
-    <main style={{
-      width: "100%",
-      minHeight: "100vh",
-      background: "#f9f9f7",
-      paddingTop: 0,
-    }}>
-      <div className="nav-card nav-card-mid">
-        <nav className="isp-section-tabs">
-          {CATEGORIES.map((cat) => (
+    <div style={pageStyle}>
+      {/* Category tabs */}
+      <nav style={categoryTabsStyle} aria-label="3D Printing categories">
+        {CATEGORIES.map((cat) => {
+          const isActive = activeCategory === cat.value;
+          return (
             <button
               key={cat.value}
-              className={`isp-tab-btn${activeCategory === cat.value ? " active" : ""}`}
               onClick={() => {
                 setActiveCategory(cat.value);
                 setConference("ALL");
                 setDivision("ALL");
-                setShowFilterBar(false);
+                setShowFilterBar(true); // persist visible bar
               }}
-              aria-current={activeCategory === cat.value ? "page" : undefined}
+              aria-current={isActive ? "page" : undefined}
               tabIndex={0}
+              style={{
+                ...categoryBtnBase,
+                fontSize: isActive ? (isMobile ? 14 : 16) : categoryBtnBase.fontSize,
+                fontWeight: isActive ? 350 : 280,
+                color: isActive ? "#e6dbb9" : "#6c6c6a",
+                textDecoration: isActive ? "underline" : "none",
+                textUnderlineOffset: "3px",
+                textDecorationThickness: "1.5px"
+              }}
             >
               {cat.label}
             </button>
-          ))}
-        </nav>
+          );
+        })}
+      </nav>
+
+      {/* Logo rows and filter bar */}
+      {renderLogoRow()}
+      {renderCenteredLogo()}
+      {renderFilterRow()}
+
+      {/* Grid */}
+      <div ref={gridRef} style={gridWrapStyle}>
+        {activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
+          ? gridData.map(([afc, nfc], idx) => (
+              <div key={`pair-${idx}`} style={{ display: "contents" }}>
+                {afc && <PrintCard print={afc} isMobile={isMobile} />}
+                {nfc && <PrintCard print={nfc} isMobile={isMobile} />}
+              </div>
+            ))
+          : activeCategory === "hueforge" &&
+            conference === "ALL" &&
+            division === "ALL" &&
+            !isMobile
+            ? gridData.flat().map((item, idx) => {
+                if (!item) return null;
+                return <PrintCard key={`all-${idx}`} print={item} isMobile={isMobile} />;
+              })
+          : activeCategory === "hueforge" && gridData.map((item, idx) => {
+              if (!item) return null;
+              return <PrintCard key={`hf-${idx}`} print={item} isMobile={isMobile} />;
+            })}
+
+        {activeCategory !== "hueforge" && filteredPrints.map((print, idx) => (
+          <PrintCard key={`other-${idx}`} print={print} isMobile={isMobile} />
+        ))}
+
+        {activeCategory !== "hueforge" && filteredPrints.length === 0 && (
+          <div
+            style={{
+              gridColumn: `span ${columns}`,
+              textAlign: "center",
+              color: "#888",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 280,
+              fontSize: isMobile ? 13 : 14
+            }}
+          >
+            No prints yet in this category.
+          </div>
+        )}
       </div>
-      <section style={{
-        maxWidth: 1200,
-        margin: "0 auto",
-        width: "100%",
-        padding: isMobile ? "0 0 80px 0" : "0 24px 80px 24px",
-        position: "relative",
-      }}>
-        {renderLogoRow()}
-        {renderCenteredLogo()}
-        {renderFilterRow()}
-        <div
-          ref={gridRef}
-          style={{
-            display: "grid",
-            gridTemplateColumns: activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
-              ? "repeat(2, minmax(0, 1fr))"
-              : `repeat(${Math.min(columns, gridData.length)}, minmax(220px, 1fr))`,
-            gap: "30px",
-            justifyItems: "center",
-            alignItems: "center",
-            width: "100%",
-            maxWidth: isMobile ? 320 : 1200,
-            margin: "0 auto",
-            minHeight: 320,
-            position: "relative"
-          }}
-        >
-          {activeCategory === "hueforge" && conference === "ALL" && division === "ALL" && isMobile
-            ? gridData.map(([afc, nfc], idx) => (
-                <>
-                  {afc && (
-                    <PrintCard
-                      key={afc.id}
-                      print={{
-                        ...afc,
-                        image: `/images/prints/nfl/${afc.id}.png`,
-                        name: `${afc.name} Set`
-                      }}
-                      isMobile={isMobile}
-                    />
-                  )}
-                  {nfc && (
-                    <PrintCard
-                      key={nfc.id}
-                      print={{
-                        ...nfc,
-                        image: `/images/prints/nfl/${nfc.id}.png`,
-                        name: `${nfc.name} Set`
-                      }}
-                      isMobile={isMobile}
-                    />
-                  )}
-                </>
-              ))
-            : activeCategory === "hueforge" &&
-              conference === "ALL" &&
-              division === "ALL" &&
-              !isMobile
-              ? gridData.flat().map((item, idx) => {
-                  if (!item) return <div key={`empty-${idx}`} />;
-                  return (
-                    <PrintCard
-                      key={item.id}
-                      print={{
-                        ...item,
-                        image: `/images/prints/nfl/${item.id}.png`,
-                        name: `${item.name} Set`
-                      }}
-                      isMobile={isMobile}
-                    />
-                  );
-                })
-            : activeCategory === "hueforge" && gridData.map((item, idx) => {
-                if (!item) return <div key={`empty-${idx}`} />;
-                return (
-                  <PrintCard
-                    key={item.id}
-                    print={{
-                      ...item,
-                      image: `/images/prints/nfl/${item.id}.png`,
-                      name: `${item.name} Set`
-                    }}
-                    isMobile={isMobile}
-                  />
-                );
-              })}
-          {activeCategory !== "hueforge" && filteredPrints.map(print => (
-            <PrintCard key={print.id} print={print} isMobile={isMobile} />
-          ))}
-          {activeCategory !== "hueforge" && filteredPrints.length === 0 && (
-            <div
-              style={{
-                gridColumn: "1 / -1",
-                textAlign: "center",
-                color: "#bbb",
-                fontSize: 20,
-                letterSpacing: "0.04em",
-                marginTop: 48,
-                opacity: 0.7,
-              }}
-            >
-              No prints yet in this category.
-            </div>
-          )}
-        </div>
-      </section>
-    </main>
+    </div>
   );
 }
 
-function ConferenceLogo({ logo, style, onClick, rotate }) {
+function ConferenceLogo({ logo, style, onClick }) {
   const [hovered, setHovered] = useState(false);
+  const base = {
+    display: "block",
+    height: style?.height || 84,
+    width: "auto",
+    cursor: "pointer",
+    filter: hovered ? "drop-shadow(0 6px 18px rgba(0,0,0,0.12))" : "drop-shadow(0 3px 12px rgba(0,0,0,0.10))",
+    transition: "filter 0.18s, transform 0.18s",
+    transform: hovered ? "translateY(-2px)" : "none",
+    userSelect: "none"
+  };
   return (
     <img
       src={logo.image}
       alt={logo.name}
-      draggable={false}
-      style={{
-        width: hovered ? 136 : 124,
-        height: hovered ? 136 : 124,
-        objectFit: "contain",
-        opacity: hovered ? 0.19 : 1,
-        cursor: "pointer",
-        userSelect: "none",
-        transition: "all 0.18s",
-        filter: "drop-shadow(0 2px 8px rgba(32,32,32,0.13))",
-        transform: `rotate(${rotate || 0}deg)`,
-        ...style
-      }}
-      tabIndex={0}
-      role="button"
-      aria-label={`Filter by ${logo.name}`}
+      style={base}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onKeyDown={e => { if (e.key === "Enter" || e.key === " ") onClick(); }}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClick(); }}
+      tabIndex={0}
+      aria-label={`Filter by ${logo.name}`}
     />
   );
 }
@@ -393,70 +387,56 @@ function PrintCard({ print, isMobile }) {
   const cardSize = isMobile ? 120 : hovered ? 320 : 288;
   const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
 
+  const cardStyle = {
+    width: cardSize,
+    height: cardSize,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#fff",
+    borderRadius: 8,
+    boxShadow: hovered ? "0 6px 18px rgba(0,0,0,0.12)" : "0 3px 12px rgba(0,0,0,0.10)",
+    border: hovered ? "1px solid #e6dbb9" : "1px solid #eee",
+    transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s",
+    cursor: "pointer",
+    position: "relative",
+    overflow: "hidden"
+  };
+
+  const nameStyle = {
+    position: "absolute",
+    left: 10,
+    bottom: 8,
+    padding: "4px 10px",
+    background: "rgba(0,0,0,0.35)",
+    color: "#fff",
+    fontFamily: "Inter, sans-serif",
+    fontWeight: 280,
+    fontSize: 12,
+    letterSpacing: ".06em",
+    textTransform: "uppercase",
+    borderRadius: 4,
+    userSelect: "none",
+    opacity: hovered ? 1 : 0,
+    transition: "opacity 0.18s"
+  };
+
   return (
     <div
-      className="print-card"
-      style={{
-        width: "100%",
-        maxWidth: cardSize,
-        aspectRatio: "1 / 1",
-        background: "#fcfcfa",
-        borderRadius: 0,
-        boxShadow: "0 2px 18px rgba(32,32,32,0.12)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        overflow: "hidden",
-        transition: "box-shadow 0.18s, max-width 0.18s",
-        cursor: "pointer",
-      }}
+      style={cardStyle}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       tabIndex={0}
       aria-label={print.name}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setHovered((h) => !h); }}
+      title={print.name}
     >
       <img
         src={print.image}
         alt={print.name}
-        style={{
-          maxWidth: imageSize,
-          maxHeight: imageSize,
-          objectFit: "contain",
-          display: "block",
-          margin: "0 auto",
-          opacity: hovered ? 0.12 : 1,
-          transition: "opacity 0.18s, max-width 0.18s, max-height 0.18s",
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
-        draggable={false}
+        style={{ width: imageSize, height: "auto", display: "block" }}
       />
-      {hovered && (
-        <div style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          color: "#888",
-          fontWeight: 700,
-          fontSize: isMobile ? 13 : 21,
-          fontFamily: "coolvetica, sans-serif",
-          letterSpacing: ".04em",
-          opacity: 1,
-          pointerEvents: "none",
-          userSelect: "none",
-          textTransform: "uppercase",
-          margin: isMobile ? 8 : 20,
-        }}>
-          {print.name}
-        </div>
-      )}
+      <div style={nameStyle}>{print.name}</div>
     </div>
   );
 }
