@@ -31,7 +31,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     boxSizing: "border-box"
   };
 
-  // Grid centers the image (middle column) on desktop
+  // Center the image in the middle column on desktop
   const rowStyle = {
     display: "grid",
     gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
@@ -41,7 +41,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     width: "100%"
   };
 
-  // Info block (left of image on desktop, above on mobile)
+  // Info block: left of image (desktop), above image (mobile)
   const infoColStyle = {
     display: "flex",
     flexDirection: "column",
@@ -101,7 +101,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     letterSpacing: ".01em"
   };
 
-  // Image column (centered in middle grid column)
+  // Image card (centered in middle grid column)
   const imageWrapStyle = {
     position: "relative",
     width: "100%",
