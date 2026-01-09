@@ -61,8 +61,6 @@
 }
 
 /* ====== LOGO-HAMBURGER ====== */
-/* This block is optional now that the component sizes itself.
-   Kept here so Sidebar can reuse consistent sizing if needed. */
 .logo-hamburger-wrap {
   position: relative;
   width: 60px;   /* 60 to match 60px header */
@@ -126,12 +124,12 @@ nav.sidebar-nav {
   font-family: "coolvetica", sans-serif;
 }
 
-/* Use this class for sidebar nav links to match navbar style */
+/* Match top nav bar base style */
 .sidebarNavLink {
-  color: #b1b1ae;
+  color: #6c6c6a;                   /* match nav.main-nav base color */
   font-family: "coolvetica", sans-serif;
-  font-weight: 400;
-  font-size: 14px;
+  font-weight: 300;                 /* thinner appearance to match nav */
+  font-size: 14px;                  /* match nav base size */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-decoration: none;
@@ -139,31 +137,30 @@ nav.sidebar-nav {
   border: none;
   padding: 4px 0;
   margin: 0;
-  transition: color 0.2s, font-size 0.16s, font-weight 0.16s;
+  transition: color 0.2s, font-weight 0.16s;
   display: block;
   cursor: pointer;
 }
 
-/* Active: underline, grow font size, active color, bold */
+/* Match top nav bar active style: thin + underline + larger size */
 .active {
   color: #e6dbb9;
   background: none;
   text-decoration: underline;
   cursor: default;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 16px;                  /* larger when active, same as nav */
+  font-weight: 300;                 /* keep thin, do not bold */
 }
 
-/* Hover/focus non-active: bold, active color, grow font size, no underline */
+/* Match top nav bar hover/focus style: thin + color change, no underline */
 .sidebarNavLink:not(.active):hover,
 .sidebarNavLink:not(.active):focus {
   color: #e6dbb9;
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 300;                 /* do not bold on hover */
   text-decoration: none;
 }
 
-/* Optionally, keep focus visible outline for accessibility */
+/* Accessibility: focus visible outline */
 .sidebarNavLink:focus-visible {
   outline: 2px solid #e6dbb9;
 }
