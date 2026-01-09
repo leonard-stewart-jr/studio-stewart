@@ -20,7 +20,7 @@ export default function ThreeDPrinting() {
   const [conference, setConference] = useState("ALL"); // ALL, AFC, NFC
   const [division, setDivision] = useState("ALL");     // ALL, EAST, WEST, SOUTH, NORTH
 
-  // Show filter bar by default on page load (as requested)
+  // Show filter bar by default on page load
   const [showFilterBar, setShowFilterBar] = useState(true);
 
   // Grid controls
@@ -64,7 +64,7 @@ export default function ThreeDPrinting() {
     } else if (conference !== "ALL" && division === "ALL") {
       // A conference selected, all divisions
       showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
-      gridData = divisionNames.flatMap(div => DIVISIONS[conference][div]);
+      gridData = divisionNames.flatMap((div) => DIVISIONS[conference][div]);
     } else if (conference === "ALL" && division !== "ALL") {
       // All conferences, specific division
       gridData = [
@@ -100,7 +100,7 @@ export default function ThreeDPrinting() {
     padding: "0",
     minHeight: "44px",
     height: "44px",
-    margin: "0 0 4px 0",
+    margin: "0",
     background: "transparent"
   };
 
@@ -143,7 +143,7 @@ export default function ThreeDPrinting() {
     gap: isMobile ? 10 : 16,
     minHeight: "40px",
     height: "40px",
-    margin: "4px 0 10px 0",
+    margin: "0",
     background: "transparent",
     width: "100%"
   };
@@ -179,56 +179,58 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  function renderFilterRow() {
+  function FilterRow() {
     if (activeCategory !== "hueforge" || !showFilterBar) return null;
     return (
-      <div style={filterRowStyle}>
-        {FILTER_BUTTONS.map(btn => {
-          const isActive =
-            btn.type === "conference" ? conference === btn.value : division === btn.value;
+      <div className="nav-card-bot">
+        <div style={filterRowStyle}>
+          {FILTER_BUTTONS.map((btn) => {
+            const isActive =
+              btn.type === "conference" ? conference === btn.value : division === btn.value;
 
-          const style = {
-            ...filterBtnBase,
-            color: isActive ? "#e6dbb9" : filterBtnBase.color,
-            textDecoration: isActive ? "underline" : "none",
-            textUnderlineOffset: "3px",
-            textDecorationThickness: "1.5px",
-            fontWeight: isActive ? 350 : 280
-          };
+            const style = {
+              ...filterBtnBase,
+              color: isActive ? "#e6dbb9" : filterBtnBase.color,
+              textDecoration: isActive ? "underline" : "none",
+              textUnderlineOffset: "3px",
+              textDecorationThickness: "1.5px",
+              fontWeight: isActive ? 350 : 280
+            };
 
-          return (
-            <button
-              key={`${btn.type}-${btn.value}`}
-              style={style}
-              onClick={() => {
-                if (btn.type === "conference") {
-                  setConference(btn.value);
-                  if (btn.value === "ALL") setDivision("ALL");
-                } else {
-                  setDivision(btn.value);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
+            return (
+              <button
+                key={`${btn.type}-${btn.value}`}
+                style={style}
+                onClick={() => {
                   if (btn.type === "conference") {
                     setConference(btn.value);
                     if (btn.value === "ALL") setDivision("ALL");
                   } else {
                     setDivision(btn.value);
                   }
-                }
-              }}
-              aria-current={isActive ? "page" : undefined}
-            >
-              {btn.label}
-            </button>
-          );
-        })}
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    if (btn.type === "conference") {
+                      setConference(btn.value);
+                      if (btn.value === "ALL") setDivision("ALL");
+                    } else {
+                      setDivision(btn.value);
+                    }
+                  }
+                }}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {btn.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
     );
   }
 
-  function renderLogoRow() {
+  function LogoRow() {
     if (activeCategory !== "hueforge" || !showAfcNfcLogos) return null;
     return (
       <div style={logoRowStyle}>
@@ -254,7 +256,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  function renderCenteredLogo() {
+  function CenteredLogo() {
     if (activeCategory !== "hueforge" || !showCenteredLogo) return null;
     return (
       <div style={{ ...logoRowStyle, gridTemplateColumns: "1fr" }}>
@@ -274,41 +276,43 @@ export default function ThreeDPrinting() {
 
   return (
     <div style={pageStyle}>
-      {/* Category tabs */}
-      <nav style={categoryTabsStyle} aria-label="3D Printing categories">
-        {CATEGORIES.map((cat) => {
-          const isActive = activeCategory === cat.value;
-          return (
-            <button
-              key={cat.value}
-              onClick={() => {
-                setActiveCategory(cat.value);
-                setConference("ALL");
-                setDivision("ALL");
-                setShowFilterBar(true); // persist visible bar
-              }}
-              aria-current={isActive ? "page" : undefined}
-              tabIndex={0}
-              style={{
-                ...categoryBtnBase,
-                fontSize: isActive ? (isMobile ? 14 : 16) : categoryBtnBase.fontSize,
-                fontWeight: isActive ? 350 : 280,
-                color: isActive ? "#e6dbb9" : "#6c6c6a",
-                textDecoration: isActive ? "underline" : "none",
-                textUnderlineOffset: "3px",
-                textDecorationThickness: "1.5px"
-              }}
-            >
-              {cat.label}
-            </button>
-          );
-        })}
-      </nav>
+      {/* Category tabs inside white bar */}
+      <div className="nav-card-mid">
+        <nav style={categoryTabsStyle} aria-label="3D Printing categories">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.value;
+            return (
+              <button
+                key={cat.value}
+                onClick={() => {
+                  setActiveCategory(cat.value);
+                  setConference("ALL");
+                  setDivision("ALL");
+                  setShowFilterBar(true); // persist visible bar
+                }}
+                aria-current={isActive ? "page" : undefined}
+                tabIndex={0}
+                style={{
+                  ...categoryBtnBase,
+                  fontSize: isActive ? (isMobile ? 14 : 16) : categoryBtnBase.fontSize,
+                  fontWeight: isActive ? 350 : 280,
+                  color: isActive ? "#e6dbb9" : "#6c6c6a",
+                  textDecoration: isActive ? "underline" : "none",
+                  textUnderlineOffset: "3px",
+                  textDecorationThickness: "1.5px"
+                }}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
 
       {/* Logo rows and filter bar */}
-      {renderLogoRow()}
-      {renderCenteredLogo()}
-      {renderFilterRow()}
+      <LogoRow />
+      <CenteredLogo />
+      <FilterRow />
 
       {/* Grid */}
       <div ref={gridRef} style={gridWrapStyle}>
