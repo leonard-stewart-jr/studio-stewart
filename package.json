@@ -8,21 +8,28 @@
     "start": "next start"
   },
   "dependencies": {
-    "framer-motion": "^12.12.1",
+    "framer-motion": "^12.25.0",
     "leaflet": "^1.9.4",
-    "next": "^14.2.4",
-    "react": "^18.2.0",
+    "next": "^16.1.1",
+    "react": "^19.2.3",
     "react-compare-slider": "^3.1.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.2.3",
     "react-globe.gl": "^2.33.2",
     "react-leaflet": "^4.2.1",
     "react-pdf": "^10.0.1",
     "styled-components": "^6.1.18",
     "swiper": "^11.2.10",
-    "three": "^0.177.0"
+    "three": "^0.182.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
-    "shx": "^0.3.4"
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@types/styled-components": "^5.1.36",
+    "@types/three": "^0.182.0",
+    "shx": "^0.3.4",
+    "typescript": "^5.9.3"
   }
 }

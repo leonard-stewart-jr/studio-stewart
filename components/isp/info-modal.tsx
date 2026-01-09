@@ -1,0 +1,106 @@
+'use client';
+
+import dynamic from "next/dynamic";
+import ShareButton from "./sharebutton";
+
+const FloatingModal = dynamic(
+    () => import("./modal/floatingmodal"),
+    { ssr: false }
+);
+
+interface InfoModalProps {
+    open: boolean;
+    onClose: () => void;
+    marker: any;
+}
+
+export default function InfoModal({ open, onClose, marker }: InfoModalProps) {
+    if (open && marker && marker.name) {
+        let slug = marker.name.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+        let src = `/models/world/${slug}/index.html`;
+
+        let width = marker.modalWidth || 2436;
+        let height = marker.modalHeight || 720;
+
+        if (marker.name.toLowerCase().includes("british penal colonies")) {
+            src = "/models/world/british_penal_colonies/index.html";
+        } else if (marker.name.toLowerCase().includes("eastern state")) {
+            src = "/models/world/eastern_state/index.html";
+        } else if (marker.name.toLowerCase().includes("maison de force")) {
+            src = "/models/world/maison_de_force/index.html";
+        } else if (marker.name.toLowerCase().includes("mesopotamia")) {
+            src = "/models/world/mesopotamia-1/index.html";
+        } else if (marker.name.toLowerCase().includes("militarized architecture: control, order, and state power")) {
+            src = "/models/world/militarized_prison_architecture/index.html";
+        } else if (marker.name.toLowerCase().includes("nazi camps: slavery, terror, and genocide")) {
+            src = "/models/world/nazi_camp_system/index.html";
+        } else if (marker.name.toLowerCase().includes("newgate prison")) {
+            src = "/models/world/newgate_prison/index.html";
+        } else if (marker.name.toLowerCase().includes("panopticon")) {
+            src = "/models/world/panopticon/index.html";
+        } else if (marker.name.toLowerCase().includes("scandinavian prison: dignity, rehabilitation, and social justice")) {
+            src = "/models/world/scandinavian_prison_reform/index.html";
+        } else if (marker.name.toLowerCase().includes("the mamertine prison")) {
+            src = "/models/world/the_mamertine_prison/index.html";
+        } else if (marker.name.toLowerCase().includes("the tower of london")) {
+            src = "/models/world/the_tower_of_london/index.html";
+        }
+
+        let pdfUrl: string = "";
+        if (src.includes("mesopotamia-1")) {
+            pdfUrl = "/models/world/mesopotamia-1/mesopotamia.pdf";
+        } else {
+            const folderMatch = src.match(/\/models\/world\/([^\/]+)\/index\.html/);
+            if (folderMatch) {
+                const folder = folderMatch[1];
+                pdfUrl = `/models/world/${folder}/${folder}.pdf`;
+            } else {
+                pdfUrl = src.replace(/index\.html$/, "file.pdf");
+            }
+        }
+
+        const htmlUrl = typeof window !== "undefined"
+            ? window.location.origin + src
+            : src;
+        const shareTitle = marker.name;
+
+        return (
+            <FloatingModal
+                open={open}
+                onClose={onClose}
+                src={src}
+                width={width}
+                height={height}
+            >
+                <div
+                    style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "flex-end",
+                        margin: 0,
+                        padding: 0,
+                        position: "absolute",
+                        left: 0,
+                        bottom: 0,
+                        zIndex: 120,
+                        pointerEvents: "auto",
+                        transform: "translateX(-260px)",
+                    }}
+                >
+                    <ShareButton
+                        pdfUrl={pdfUrl}
+                        htmlUrl={htmlUrl}
+                        shareTitle={shareTitle}
+                        style={{
+                            margin: "0 0 24px 32px",
+                            maxWidth: 420,
+                        }}
+                    />
+                </div>
+            </FloatingModal>
+        );
+    }
+
+    return null;
+}

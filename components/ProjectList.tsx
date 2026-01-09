@@ -1,0 +1,187 @@
+'use client';
+
+import { useEffect, useRef, useState } from "react";
+import { Project } from "../types/project";
+
+interface ProjectListProps {
+    projects: Project[];
+    onProjectClick: (index: number) => void;
+}
+
+export default function ProjectList({ projects, onProjectClick }: ProjectListProps) {
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+            setIsMobile(w < 700);
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    function overlayLabel(project: Project) {
+        if (project.action === "route") return "View Project";
+        // @ts-ignore - modalType might not be in base Project type yet
+        if (project.action === "modal" && project.modalType === "pdf") return "Open Portfolio";
+        return "View Interactive Model";
+    }
+
+    const pageContainerStyle: React.CSSProperties = {
+        width: "min(1600px, 95vw)",
+        margin: "0 auto",
+        padding: "16px 0 48px 0",
+        display: "flex",
+        flexDirection: "column",
+        gap: isMobile ? 32 : 40,
+        boxSizing: "border-box"
+    };
+
+    const rowStyle: React.CSSProperties = {
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
+        alignItems: "center",
+        columnGap: isMobile ? 12 : 24,
+        rowGap: isMobile ? 12 : 0,
+        width: "100%"
+    };
+
+    const infoColStyle: React.CSSProperties = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: isMobile ? "flex-start" : "flex-end",
+        textAlign: isMobile ? "left" : "right",
+        gap: 3,
+        padding: isMobile ? "0 8px" : "0",
+        fontFamily: "Inter, sans-serif",
+        width: isMobile ? "auto" : 320,
+        maxWidth: isMobile ? "100%" : 320,
+        justifySelf: isMobile ? "start" : "end"
+    };
+
+    const titleStyle: React.CSSProperties = {
+        margin: 0,
+        fontFamily: "Inter, sans-serif",
+        fontWeight: 280,
+        fontSize: isMobile ? 18 : 20,
+        letterSpacing: ".02em",
+        textTransform: "uppercase",
+        lineHeight: 1.2,
+        color: "inherit"
+    };
+
+    const typeStyle: React.CSSProperties = {
+        margin: "2px 0 0 0",
+        fontFamily: "Inter, sans-serif",
+        fontWeight: 280,
+        fontSize: isMobile ? 13 : 14,
+        color: "#8a8a86",
+        letterSpacing: ".035em",
+        textTransform: "uppercase",
+        lineHeight: 1.2
+    };
+
+    const gradeStyle: React.CSSProperties = {
+        margin: "2px 0 0 0",
+        fontFamily: "Inter, sans-serif",
+        fontWeight: 280,
+        fontSize: isMobile ? 11 : 12,
+        color: "#b0afa9",
+        letterSpacing: ".06em",
+        textTransform: "uppercase",
+        lineHeight: 1.15
+    };
+
+    const imageWrapStyle: React.CSSProperties = {
+        position: "relative",
+        width: "100%",
+        maxWidth: isMobile ? "100%" : "760px",
+        margin: isMobile ? "0 auto" : "0",
+        justifySelf: "center",
+        cursor: "pointer",
+        borderRadius: 6,
+        overflow: "hidden",
+        boxShadow: "0 3px 14px rgba(0,0,0,0.10)",
+        border: "1px solid #e9e7e0",
+        background: "#f6f5f2",
+        transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s"
+    };
+
+    const imageStyle: React.CSSProperties = {
+        display: "block",
+        width: "100%",
+        height: "auto"
+    };
+
+    const overlayStyle: React.CSSProperties = {
+        position: "absolute",
+        left: 14,
+        bottom: 12,
+        padding: "6px 10px",
+        background: "rgba(0,0,0,0.35)",
+        color: "#fff",
+        fontFamily: "Inter, sans-serif",
+        fontWeight: 280,
+        fontSize: 12,
+        letterSpacing: ".06em",
+        textTransform: "uppercase",
+        borderRadius: 4,
+        userSelect: "none"
+    };
+
+    return (
+        <div style={pageContainerStyle}>
+            {projects.map((project, idx) => (
+                <div key={project.slug || idx} style={rowStyle}>
+                    <div style={infoColStyle}>
+                        <h2 style={titleStyle}>{project.title}</h2>
+                        <div style={typeStyle}>{project.type}</div>
+                        <div style={gradeStyle}>{project.grade}</div>
+                    </div>
+
+                    <div
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Open ${project.title}`}
+                        onClick={() => onProjectClick(idx)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                onProjectClick(idx);
+                            }
+                        }}
+                        onMouseEnter={() => setHoveredIndex(idx)}
+                        onMouseLeave={() =>
+                            setHoveredIndex((h) => (h === idx ? null : h))
+                        }
+                        style={{
+                            ...imageWrapStyle,
+                            transform:
+                                hoveredIndex === idx && !isMobile ? "translateY(-2px)" : "none",
+                            boxShadow:
+                                hoveredIndex === idx && !isMobile
+                                    ? "0 6px 18px rgba(0,0,0,0.12)"
+                                    : imageWrapStyle.boxShadow,
+                            border:
+                                hoveredIndex === idx && !isMobile
+                                    ? "1px solid #e6dbb9"
+                                    : imageWrapStyle.border
+                        }}
+                    >
+                        <img
+                            src={project.bannerSrc}
+                            alt={project.title}
+                            style={imageStyle}
+                        />
+                        <div style={overlayStyle}>{overlayLabel(project)}</div>
+                    </div>
+
+                    {!isMobile && <div aria-hidden="true" />}
+                </div>
+            ))}
+        </div>
+    );
+}
