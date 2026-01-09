@@ -1,17 +1,15 @@
 import styled from "styled-components";
-
-export default function SideBanner({ text, color = "#000", side = "left" }) {
+export default function SideBanner({ text, color, side = "left" }) {
   return (
     <Banner color={color} side={side}>
-      {text}
+      <span>{text}</span>
     </Banner>
   );
 }
-
 const Banner = styled.div`
   width: 80px;
   min-width: 60px;
-  background: ${(props) => props.color};
+  background: ${props => props.color};
   color: #fff;
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -23,8 +21,8 @@ const Banner = styled.div`
   justify-content: center;
   z-index: 10;
   position: sticky;
-  top: 60px; /* match thinner header */
+  top: 76px; /* <-- CHANGED FROM 0 to 76px */
   height: 100vh;
-  left: ${(props) => (props.side === "left" ? 0 : "unset")};
-  right: ${(props) => (props.side === "right" ? 0 : "unset")};
+  left: ${props => props.side === "left" ? 0 : "unset"};
+  right: ${props => props.side === "right" ? 0 : "unset"};
 `;

@@ -1,79 +1,128 @@
-import { useState } from "react";
-import GlobeSection from "../components/isp/globe-section";
-import USAMapSection from "../components/isp/usamap-section";
-import SDMapSection from "../components/isp/sdmap-section";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import SectionTabs from "../components/isp/section-tabs";
+import BottomModeNav from "../components/isp/bottommodenav";
 import InfoModal from "../components/isp/info-modal";
 
-export default function IndependentStudio() {
-  const [mode, setMode] = useState("world"); // 'world' | 'usa' | 'sd'
-  const [modalOpen, setModalOpen] = useState(false);
-  const [activeMarker, setActiveMarker] = useState(null);
+// Only GlobeSection is needed now
+const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false });
 
-  function openMarker(marker) {
-    setActiveMarker(marker);
-    setModalOpen(true);
-  }
+export default function IndependentStudio() {
+  // Tabs: "history" or "future"
+  const [mainSection, setMainSection] = useState("history");
+  // Subnav: "world", "usa", "sd" (only for history)
+  const [activeHistory, setActiveHistory] = useState("world");
+  // Info modal state
+  const [modalData, setModalData] = useState(null);
+
+  // Lock vertical scroll for this page only
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyHeight = document.body.style.height;
+    const prevHtmlHeight = document.documentElement.style.height;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.height = "100vh";
+    document.documentElement.style.height = "100vh";
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.height = prevBodyHeight;
+      document.documentElement.style.height = prevHtmlHeight;
+    };
+  }, []);
+
+  // Responsive padding for mobile
+  const [sidePadding, setSidePadding] = useState(80);
+  useEffect(() => {
+    const updatePadding = () => {
+      setSidePadding(window.innerWidth < 800 ? 24 : 80);
+    };
+    updatePadding();
+    window.addEventListener("resize", updatePadding);
+    return () => window.removeEventListener("resize", updatePadding);
+  }, []);
 
   return (
-    <div className="matter-matters-page" style={{ background: "#fff" }}>
-      {/* Primary section tabs */}
-      <div className="nav-card nav-card-mid">
-        <div className="isp-section-tabs">
-          <button
-            className={`isp-tab-btn ${mode === "world" ? "active" : ""}`}
-            onClick={() => setMode("world")}
-            aria-current={mode === "world" ? "page" : undefined}
-            title="World"
-          >
-            World
-          </button>
-          <button
-            className={`isp-tab-btn ${mode === "usa" ? "active" : ""}`}
-            onClick={() => setMode("usa")}
-            aria-current={mode === "usa" ? "page" : undefined}
-            title="USA"
-          >
-            USA
-          </button>
-          <button
-            className={`isp-tab-btn ${mode === "sd" ? "active" : ""}`}
-            onClick={() => setMode("sd")}
-            aria-current={mode === "sd" ? "page" : undefined}
-            title="South Dakota"
-          >
-            South Dakota
-          </button>
+    <>
+      {/* NAVIGATION LAYERS IN "CARD" STYLE" */}
+      <div
+        className="nav-card nav-card-mid"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          boxSizing: "border-box"
+        }}
+      >
+        <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <SectionTabs
+            activeSection={mainSection}
+            setActiveSection={setMainSection}
+          />
         </div>
+        <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
       </div>
-
-      {/* Subnav row (optional placeholder, kept for styling hooks) */}
-      <div className="nav-card nav-card-bot">
-        <div className="isp-subnav-row">
-          <span className="isp-subnav-btn active" aria-current="page">Overview</span>
-          <span className="isp-subnav-btn">Timeline</span>
-          <span className="isp-subnav-btn">References</span>
+      {/* --- CONTENT: Globe/Map, sits on background color, NO divider above --- */}
+      {mainSection === "history" && (
+        <div
+          style={{
+            width: "100vw",
+            boxSizing: "border-box",
+            paddingLeft: sidePadding,
+            paddingRight: sidePadding,
+            background: "#f9f9f7", // match your main bg
+            minHeight: 0,
+            minWidth: 0,
+          }}
+        >
+          <section className="isp-globe-section">
+            <GlobeSection mode={activeHistory} onMarkerClick={setModalData} />
+          </section>
         </div>
-      </div>
+      )}
+      {mainSection === "future" && (
+        <div
+          style={{
+            minHeight: 500,
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 32,
+            color: "#192d4b",
+            fontWeight: 700,
+            letterSpacing: ".02em",
+            opacity: 0.7,
+          }}
+        >
+          FUTURE CONTENT COMING SOON
+        </div>
+      )}
 
-      {/* Content */}
-      <div style={{ width: "min(1200px, 96vw)", margin: "0 auto", padding: "18px 0 42px 0" }}>
-        {mode === "world" && (
-          <GlobeSection onMarkerClick={openMarker} mode="world" />
-        )}
-        {mode === "usa" && (
-          <USAMapSection onMarkerClick={openMarker} />
-        )}
-        {mode === "sd" && (
-          <SDMapSection onMarkerClick={openMarker} />
-        )}
-      </div>
-
-      {/* Modal */}
+      {/* Info Modal */}
       <InfoModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        marker={activeMarker}
+        open={!!modalData}
+        onClose={() => setModalData(null)}
+        marker={modalData}
       />
-    </div>
+
+      {/* Bottom Mode Nav */}
+      {mainSection === "history" && (
+        <BottomModeNav active={activeHistory} onChange={setActiveHistory} sidePadding={sidePadding} />
+      )}
+    </>
   );
 }

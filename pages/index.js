@@ -1,77 +1,68 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
-import ProjectList from "../components/ProjectList";
-import FloatingProjectModal from "../components/floatingprojectmodal";
-const PdfBookModal = dynamic(() => import("../components/PdfBookModal"), { ssr: false });
-import projects from "../data/projects";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import LogoHamburger from "./LogoHamburger";
+import NavBar from "./NavBar";
+import Sidebar from "./Sidebar";
 
-function getProjectModalProps(project) {
-  if (project.slug === "DMA-25") {
-    return { src: "/portfolio/dma/25/index.html", width: project.modalWidth || 2436 };
-  }
-  const slugLower = (project.slug || "").toLowerCase().replace(/[^a-z0-9-]/g, "-");
-  return { src: `/portfolio/${slugLower}/index.html`, width: project.modalWidth || 2436 };
-}
+export default function HeaderBar({ fixedNav = false }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-export default function Home() {
-  const router = useRouter();
+  // Consistent sizing
+  const logoSize = 60;         // adjust logo area to match thinner header visually
+  const headerHeight = 60;     // reduced from 76 to 60
+  const sidebarPaddingLeft = 22;
 
-  const [activeHtmlIndex, setActiveHtmlIndex] = useState(null);
-  const [pdfOpen, setPdfOpen] = useState(false);
-  const [pdfFile, setPdfFile] = useState(null);
-  const [pdfTitle, setPdfTitle] = useState("UNDERGRADUATE PORTFOLIO (2020–2024)");
+  // Animation speed for hamburger fade
+  const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
-  function handleProjectClick(idx) {
-    const project = projects[idx];
-    if (!project) return;
-
-    if (project.slug === "ISP") {
-      router.push("/independent-studio");
-      return;
-    }
-
-    if (project.action === "route" && project.linkHref) {
-      router.push(project.linkHref);
-      return;
-    }
-
-    if (project.action === "modal" && project.modalType === "pdf") {
-      setPdfFile(project.pdfSrc);
-      setPdfTitle(`${project.title} (${project.grade})`);
-      setPdfOpen(true);
-      return;
-    }
-
-    if (project.action === "modal") {
-      setActiveHtmlIndex(idx);
-      return;
-    }
-  }
+  const navBarStyle = {
+    position: fixedNav ? "fixed" : "sticky",
+    top: 0,
+    zIndex: 1200,
+    width: "100vw",
+    paddingLeft: 0,
+    paddingRight: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    minHeight: headerHeight,
+    height: headerHeight,
+    background: "#fff",
+    left: 0,
+  };
 
   return (
     <>
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <ProjectList projects={projects} onProjectClick={handleProjectClick} />
+      {/* Card nav for header */}
+      <div className="nav-card nav-card-top" style={navBarStyle}>
+        {/* Left: Hamburger/Logo */}
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          transition={hamburgerTransition}
+          style={{ display: "flex", alignItems: "center", paddingLeft: sidebarPaddingLeft }}
+        >
+          <LogoHamburger
+            logoSize={logoSize}
+            onOpenSidebar={() => setSidebarOpen(true)}
+          />
+        </motion.div>
+
+        {/* Center: NavBar */}
+        <NavBar headerHeight={headerHeight} />
+
+        {/* Right: Reserved for future use, maintains space for symmetry */}
+        <div style={{ width: logoSize, paddingRight: sidebarPaddingLeft }} />
       </div>
 
-      {activeHtmlIndex !== null && (
-        <FloatingProjectModal
-          onClose={() => setActiveHtmlIndex(null)}
-          {...getProjectModalProps(projects[activeHtmlIndex])}
-          height={785}
-          navOffset={60}
-        />
-      )}
-
-      {pdfOpen && (
-        <PdfBookModal
-          onClose={() => setPdfOpen(false)}
-          file={pdfFile}
-          title={pdfTitle}
-          spreadsMode={true}
-        />
-      )}
+      {/* Sidebar with separate close button */}
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        logoSize={logoSize}
+        sidebarPaddingLeft={sidebarPaddingLeft}
+        headerHeight={headerHeight}
+      />
     </>
   );
 }
