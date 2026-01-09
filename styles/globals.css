@@ -297,11 +297,11 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   outline: 2px solid #e6dbb9;
 }
 
-/* Desktop-only visual centering tweak: shift tab/subnav labels down by 6px */
+/* Desktop-only visual centering tweak: shift tab/subnav labels down by 8px */
 @media (min-width: 701px) {
   .isp-tab-btn,
   .isp-subnav-btn {
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
 }
 
@@ -399,9 +399,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 /* Sticky nav only for matter-matters page */
 .matter-matters-page .nav-card-top {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
+  top: 0,
+  left: 0,
+  width: 100vw,
   z-index: 1200;
 }
 .isp-globe-section {
