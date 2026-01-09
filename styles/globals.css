@@ -305,6 +305,13 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
+/* 3D Printing page override: move category tabs (isp-tab-btn) up by 8px relative to global shift */
+@media (min-width: 701px) {
+  .three-d-printing-page .isp-section-tabs .isp-tab-btn {
+    transform: translateY(0); /* cancels the global +8px, effectively moving up by 8px */
+  }
+}
+
 /* ====== Divider hidden ====== */
 .nav-divider {
   display: none !important;
