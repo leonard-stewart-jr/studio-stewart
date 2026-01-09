@@ -1,8 +1,8 @@
 import styled from "styled-components";
 export default function SideBanner({ text, color, side = "left" }) {
   return (
-    <Banner color={color} side={side}>
-      <span>{text}</span>
+    <Banner color={color} side={side} aria-label="Section banner">
+      {text}
     </Banner>
   );
 }
@@ -13,7 +13,8 @@ const Banner = styled.div`
   color: #fff;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-weight: bold;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  font-weight: 300; /* thinner than bold */
   font-size: 2rem;
   letter-spacing: 2px;
   display: flex;
@@ -21,8 +22,8 @@ const Banner = styled.div`
   justify-content: center;
   z-index: 10;
   position: sticky;
-  top: 76px; /* <-- CHANGED FROM 0 to 76px */
+  top: 76px;
   height: 100vh;
-  left: ${props => props.side === "left" ? 0 : "unset"};
-  right: ${props => props.side === "right" ? 0 : "unset"};
+  left: ${props => (props.side === "left" ? 0 : "unset")};
+  right: ${props => (props.side === "right" ? 0 : "unset")};
 `;
