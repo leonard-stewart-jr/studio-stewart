@@ -2,14 +2,17 @@
   "title": "Undergraduate Portfolio",
   "headerHeight": 60,
   "pages": [
-    { "id": "cover",     "src": "/portfolio/undergraduate/cover.html" },
-    { "id": "blank",     "src": "/portfolio/undergraduate/blank.html" },
+    { "id": "cover",      "src": "/portfolio/undergraduate/cover.html" },
 
-    { "id": "fall2024",  "src": "/portfolio/undergraduate/fall2024.html" },
-    { "id": "spring2024","src": "/portfolio/undergraduate/spring2024.html" },
-    { "id": "spring2021","src": "/portfolio/undergraduate/spring2021.html" },
-    { "id": "fall2021",  "src": "/portfolio/undergraduate/fall2021.html" },
-    { "id": "spring2022","src": "/portfolio/undergraduate/spring2022.html" },
-    { "id": "spring2023","src": "/portfolio/undergraduate/spring2023.html" }
+    { "id": "blank",      "src": "/portfolio/undergraduate/blank.html" },
+
+    { "id": "fall2024",   "src": "/portfolio/undergraduate/fall2024.html" },
+    { "id": "spring2024", "src": "/portfolio/undergraduate/spring2024.html" },
+    { "id": "spring2021", "src": "/portfolio/undergraduate/spring2021.html" },
+    { "id": "fall2021",   "src": "/portfolio/undergraduate/fall2021.html" },
+    { "id": "spring2022", "src": "/portfolio/undergraduate/spring2022.html" },
+    { "id": "spring2023", "src": "/portfolio/undergraduate/spring2023.html" },
+
+    { "id": "backcover",  "src": "/portfolio/undergraduate/blank.html" }
   ]
 }
