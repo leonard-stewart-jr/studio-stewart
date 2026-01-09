@@ -41,8 +41,8 @@
 :root {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
   --font-fallback: "coolvetica", "Open Sans", sans-serif;
-  --weight-thin: 200;   /* site-wide base */
-  --weight-hover: 300;  /* subtle emphasis on hover/active */
+  --weight-thin: 280;   /* site-wide base */
+  --weight-hover: 350;  /* hover/active emphasis */
 }
 
 /* ====== GLOBAL RESETS ====== */
@@ -76,7 +76,7 @@ html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
 
-/* ====== GLOBAL HEADINGS: Inter 200, uppercase by default ====== */
+/* ====== GLOBAL HEADINGS: Inter base (280), uppercase by default ====== */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
   font-weight: var(--weight-thin);
@@ -124,7 +124,7 @@ h1, h2, h3, h4, h5, h6 {
   background: #fff;
 }
 
-/* ====== NAVIGATION (LINKS) — Inter 200 base, 300 on hover/active ====== */
+/* ====== NAVIGATION (LINKS) — base 280, hover/active 350 ====== */
 nav.main-nav {
   display: flex;
   flex-direction: row;
@@ -169,7 +169,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   text-decoration: none;
 }
 
-/* ====== ISP PAGE NAV HIERARCHY — Inter 200 base, 300 on hover/active ====== */
+/* ====== ISP PAGE NAV HIERARCHY — base 280, hover/active 350 ====== */
 .isp-section-tabs {
   display: flex;
   justify-content: center;
@@ -281,7 +281,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   font-weight: var(--weight-hover);
 }
 .isp-subnav-btn.active:hover,
-.isp-subnav-btn[aria-current="page"]:hover,
+.isp-subnav-btn[aria-current="page"]:{hover},
 .isp-subnav-btn.active:focus,
 .isp-subnav-btn[aria-current="page"]:.focus {
   text-decoration: none;
