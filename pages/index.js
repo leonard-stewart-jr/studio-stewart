@@ -4,19 +4,11 @@ import ProjectList from "../components/ProjectList";
 import FloatingProjectModal from "../components/floatingprojectmodal";
 import projects from "../data/projects";
 
-// Helper: Derive the HTML5 export path and width from project (adjust per project)
+// Helper: Derive the HTML5 export path and width from project (used only for non-route projects)
 function getProjectModalProps(project) {
-  let src = "";
-  if (project.slug === "DMA-25") {
-    src = "/portfolio/dma/25/index";
-  } else if (project.slug === "MPSC-24") {
-    src = "/portfolio/mpsc/24/index";
-  } else if (project.slug === "BPL-24") {
-    src = "/portfolio/bpl/24/index";
-  } else {
-    // fallback: use slug-lower
-    src = `/portfolio/${String(project.slug || "").toLowerCase()}/index`;
-  }
+  // Generic fallback: build path from slug
+  const slug = String(project.slug || "").toLowerCase();
+  const src = `/portfolio/${slug}/index`;
   const width = project.modalWidth || 2436;
   return { src, width };
 }
@@ -27,10 +19,12 @@ export default function Home() {
 
   function handleProjectClick(idx) {
     const project = projects[idx];
+    // Route-only projects go to their pages
     if (project && project.action === "route" && project.linkHref) {
       router.push(project.linkHref);
       return;
     }
+    // Non-route projects fallback to modal
     setActiveIndex(idx);
   }
 
