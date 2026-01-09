@@ -42,39 +42,47 @@ export default function ThreeDPrinting() {
 
   // Build grid data and logo states
   let gridData = [];
-  let showAfcNfcLogos = false; // show both logos row (AFC + NFC)
-  let showCenteredLogo = null; // show one centered logo (AFC or NFC)
+  let showAfcNfcLogos = false; // show both logos row (AFC + NFC) when conference === "ALL"
+  let showCenteredLogo = null; // show one centered logo (AFC or NFC) when a specific conference is chosen
 
   if (activeCategory === "hueforge") {
-    if (conference === "ALL" && division === "ALL") {
-      // Show both logos above the filter bar and interleave AFC/NFC teams in the grid
+    if (conference === "ALL") {
+      // Always show the two conference logos any time conference === "ALL"
       showAfcNfcLogos = true;
-      const afcTeams = [];
-      const nfcTeams = [];
-      for (let divIdx = 0; divIdx < 4; divIdx++) {
-        for (let teamIdx = 0; teamIdx < 4; teamIdx++) {
-          afcTeams.push(DIVISIONS.AFC[divisionNames[divIdx]][teamIdx]);
-          nfcTeams.push(DIVISIONS.NFC[divisionNames[divIdx]][teamIdx]);
+
+      if (division === "ALL") {
+        // Interleave AFC/NFC teams across all divisions
+        const afcTeams = [];
+        const nfcTeams = [];
+        for (let divIdx = 0; divIdx < 4; divIdx++) {
+          for (let teamIdx = 0; teamIdx < 4; teamIdx++) {
+            afcTeams.push(DIVISIONS.AFC[divisionNames[divIdx]][teamIdx]);
+            nfcTeams.push(DIVISIONS.NFC[divisionNames[divIdx]][teamIdx]);
+          }
         }
+        gridData = [];
+        for (let i = 0; i < afcTeams.length; i++) {
+          gridData.push([afcTeams[i], nfcTeams[i]]);
+        }
+      } else {
+        // ALL conferences, specific division
+        gridData = [
+          ...DIVISIONS.AFC[division],
+          ...DIVISIONS.NFC[division]
+        ];
       }
-      gridData = [];
-      for (let i = 0; i < afcTeams.length; i++) {
-        gridData.push([afcTeams[i], nfcTeams[i]]);
+    } else {
+      // Specific conference (AFC or NFC)
+      showAfcNfcLogos = false;
+      showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
+
+      if (division === "ALL") {
+        // Conference selected, all divisions
+        gridData = divisionNames.flatMap(div => DIVISIONS[conference][div]);
+      } else {
+        // Specific conference and division
+        gridData = DIVISIONS[conference][division];
       }
-    } else if (conference !== "ALL" && division === "ALL") {
-      // A conference selected, all divisions
-      showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
-      gridData = divisionNames.flatMap((div) => DIVISIONS[conference][div]);
-    } else if (conference === "ALL" && division !== "ALL") {
-      // All conferences, specific division
-      gridData = [
-        ...DIVISIONS.AFC[division],
-        ...DIVISIONS.NFC[division]
-      ];
-    } else if (conference !== "ALL" && division !== "ALL") {
-      // Specific conference and division
-      showCenteredLogo = conference === "AFC" ? AFC_LOGO : NFC_LOGO;
-      gridData = DIVISIONS[conference][division];
     }
   }
 
@@ -101,14 +109,15 @@ export default function ThreeDPrinting() {
     marginBottom: 8
   };
 
-  // Row between the two navs for AFC/NFC logos; centered vertically with equal margins
+  // Row between the two navs for AFC/NFC logos; centered with equal margins
+  // Shifted DOWN by 18px from previous position (10px -> 28px)
   const logoRowStyle = {
     display: "grid",
     gridTemplateColumns: showAfcNfcLogos ? "1fr 1fr" : "1fr",
     alignItems: "center",
     justifyItems: "center",
     minHeight: "120px",
-    marginTop: "10px",
+    marginTop: "28px",     // was 10px; +18px as requested
     marginBottom: "10px",
     width: "100%"
   };
@@ -171,7 +180,7 @@ export default function ThreeDPrinting() {
       <div style={logoRowStyle}>
         <ConferenceLogo
           logo={AFC_LOGO}
-          style={{ height: isMobile ? 72 : 106 }} // updated to 106 on desktop, 72 on mobile
+          style={{ height: isMobile ? 72 : 106 }}
           onClick={() => {
             setConference("AFC");
             setDivision("ALL");
@@ -180,7 +189,7 @@ export default function ThreeDPrinting() {
         />
         <ConferenceLogo
           logo={NFC_LOGO}
-          style={{ height: isMobile ? 72 : 106 }} // updated to 106 on desktop, 72 on mobile
+          style={{ height: isMobile ? 72 : 106 }}
           onClick={() => {
             setConference("NFC");
             setDivision("ALL");
