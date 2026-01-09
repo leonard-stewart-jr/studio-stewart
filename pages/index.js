@@ -4,11 +4,8 @@ import ProjectList from "../components/ProjectList";
 import FloatingProjectModal from "../components/floatingprojectmodal";
 import projects from "../data/projects";
 
-// Helper: Derive the HTML5 export path and width from project (add these in your data if not present)
+// Helper: Derive the HTML5 export path and width from project (adjust per project)
 function getProjectModalProps(project) {
-  // Use your desired file structure:
-  // For DMA-25: /portfolio/dma/25/index
-  // For other projects, adjust as needed!
   let src = "";
   if (project.slug === "DMA-25") {
     src = "/portfolio/dma/25/index";
