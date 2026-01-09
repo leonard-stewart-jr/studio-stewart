@@ -21,8 +21,9 @@ export default function ProjectList({ projects, onProjectClick }) {
     return "View Interactive Model";
   }
 
+  // Widened container so the centered image + 320px info block fit comfortably
   const pageContainerStyle = {
-    width: "min(1100px, 90vw)",
+    width: "min(1600px, 95vw)",
     margin: "0 auto",
     padding: "16px 0 48px 0",
     display: "flex",
@@ -36,7 +37,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     display: "grid",
     gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
     alignItems: "center",
-    columnGap: isMobile ? 12 : 24, // requested 24px gap on desktop
+    columnGap: isMobile ? 12 : 24, // 24px gap on desktop
     rowGap: isMobile ? 12 : 0,
     width: "100%"
   };
@@ -51,7 +52,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     gap: 3,
     padding: isMobile ? "0 8px" : "0",
     fontFamily: "Inter, sans-serif",
-    width: isMobile ? "auto" : 320,    // requested 320px info block width
+    width: isMobile ? "auto" : 320,    // 320px info block width
     maxWidth: isMobile ? "100%" : 320,
     justifySelf: isMobile ? "start" : "end"
   };
