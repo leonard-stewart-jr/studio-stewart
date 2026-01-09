@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import ProjectList from "../components/ProjectList";
 import FloatingProjectModal from "../components/floatingprojectmodal";
 import projects from "../data/projects";
@@ -17,34 +18,37 @@ function getProjectModalProps(project) {
     src = "/portfolio/bpl/24/index";
   } else {
     // fallback: use slug-lower
-    src = `/portfolio/${project.slug.toLowerCase()}/index`;
+    src = `/portfolio/${String(project.slug || "").toLowerCase()}/index`;
   }
   const width = project.modalWidth || 2436;
   return { src, width };
 }
 
 export default function Home() {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(null);
 
+  function handleProjectClick(idx) {
+    const project = projects[idx];
+    if (project && project.action === "route" && project.linkHref) {
+      router.push(project.linkHref);
+      return;
+    }
+    setActiveIndex(idx);
+  }
+
   return (
-    <main style={{
-      minHeight: "100vh",
-      background: "#fff",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    }}>
-      <ProjectList projects={projects} onProjectClick={setActiveIndex} />
+    <>
+      <ProjectList projects={projects} onProjectClick={handleProjectClick} />
+
       {activeIndex !== null && (
         <FloatingProjectModal
-          open={true}
           onClose={() => setActiveIndex(null)}
-          // Get src/width for the selected project:
           {...getProjectModalProps(projects[activeIndex])}
           height={785}
           navOffset={76}
         />
       )}
-    </main>
+    </>
   );
 }
