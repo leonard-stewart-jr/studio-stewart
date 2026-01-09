@@ -88,8 +88,16 @@ export default function ThreeDPrinting() {
   const pageStyle = {
     width: "min(1600px, 95vw)",
     margin: "0 auto",
-    padding: "12px 0 48px 0",
+    padding: "0 0 48px 0", // remove top padding so the subnav touches the main nav
     boxSizing: "border-box"
+  };
+
+  const fullBleedBarStyle = {
+    width: "100vw",
+    marginLeft: "calc(50% - 50vw)",
+    marginRight: "calc(50% - 50vw)",
+    marginTop: 0,         // override .nav-card-mid negative margin
+    marginBottom: 8
   };
 
   const categoryTabsStyle = {
@@ -181,51 +189,50 @@ export default function ThreeDPrinting() {
 
   function FilterRow() {
     if (activeCategory !== "hueforge" || !showFilterBar) return null;
+    // No white bar wrapper here (divisions row stays transparent)
     return (
-      <div className="nav-card-bot">
-        <div style={filterRowStyle}>
-          {FILTER_BUTTONS.map((btn) => {
-            const isActive =
-              btn.type === "conference" ? conference === btn.value : division === btn.value;
+      <div style={filterRowStyle}>
+        {FILTER_BUTTONS.map((btn) => {
+          const isActive =
+            btn.type === "conference" ? conference === btn.value : division === btn.value;
 
-            const style = {
-              ...filterBtnBase,
-              color: isActive ? "#e6dbb9" : filterBtnBase.color,
-              textDecoration: isActive ? "underline" : "none",
-              textUnderlineOffset: "3px",
-              textDecorationThickness: "1.5px",
-              fontWeight: isActive ? 350 : 280
-            };
+          const style = {
+            ...filterBtnBase,
+            color: isActive ? "#e6dbb9" : filterBtnBase.color,
+            textDecoration: isActive ? "underline" : "none",
+            textUnderlineOffset: "3px",
+            textDecorationThickness: "1.5px",
+            fontWeight: isActive ? 350 : 280
+          };
 
-            return (
-              <button
-                key={`${btn.type}-${btn.value}`}
-                style={style}
-                onClick={() => {
+          return (
+            <button
+              key={`${btn.type}-${btn.value}`}
+              style={style}
+              onClick={() => {
+                if (btn.type === "conference") {
+                  setConference(btn.value);
+                  if (btn.value === "ALL") setDivision("ALL");
+                } else {
+                  setDivision(btn.value);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
                   if (btn.type === "conference") {
                     setConference(btn.value);
                     if (btn.value === "ALL") setDivision("ALL");
                   } else {
                     setDivision(btn.value);
                   }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    if (btn.type === "conference") {
-                      setConference(btn.value);
-                      if (btn.value === "ALL") setDivision("ALL");
-                    } else {
-                      setDivision(btn.value);
-                    }
-                  }
-                }}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {btn.label}
-              </button>
-            );
-          })}
-        </div>
+                }
+              }}
+              aria-current={isActive ? "page" : undefined}
+            >
+              {btn.label}
+            </button>
+          );
+        })}
       </div>
     );
   }
@@ -276,8 +283,8 @@ export default function ThreeDPrinting() {
 
   return (
     <div style={pageStyle}>
-      {/* Category tabs inside white bar */}
-      <div className="nav-card-mid">
+      {/* Category tabs inside full-bleed white bar touching the main nav */}
+      <div className="nav-card-mid" style={fullBleedBarStyle}>
         <nav style={categoryTabsStyle} aria-label="3D Printing categories">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.value;
@@ -309,7 +316,7 @@ export default function ThreeDPrinting() {
         </nav>
       </div>
 
-      {/* Logo rows and filter bar */}
+      {/* Logo rows and filter row */}
       <LogoRow />
       <CenteredLogo />
       <FilterRow />
