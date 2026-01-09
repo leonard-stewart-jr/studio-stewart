@@ -1,116 +1,116 @@
 import { useState } from "react";
 
 export default function LogoHamburger({
-  logoSize = 66,
+  logoSize = 60,
   onOpenSidebar,
-  color = "#181818", // Default matches sidebar/nav text color
+  color = "#181818",
+  title = "Open menu"
 }) {
   const [hovered, setHovered] = useState(false);
 
-  // Triangle points from SVG: (30,100), (60,30), (90,100)
-  // Account for stroke width on the triangle (6px): avoid extremes.
-  // We'll nudge all lines down by 2px for better centering.
   const triangle = [
-    { x: 30, y: 96 }, // 100 - 4, nudged up for stroke
-    { x: 60, y: 34 }, // 30 + 4, nudged down for stroke
-    { x: 90, y: 96 }, // 100 - 4, nudged up for stroke
+    { x: 30, y: 96 },
+    { x: 60, y: 34 },
+    { x: 90, y: 96 }
   ];
   const viewBoxWidth = 120;
   const viewBoxHeight = 120;
+
   const lineCount = 4;
-  const minT = 0.04;
-  const maxT = 0.96;
-  const yNudge = 4; // move hamburger down 4px
+  const minT = 0.10;
+  const maxT = 0.90;
   const lines = [];
   for (let i = 0; i < lineCount; ++i) {
     const t = minT + (i / (lineCount - 1)) * (maxT - minT);
-    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y) + yNudge;
+    const y = triangle[1].y + t * (triangle[0].y - triangle[1].y);
     const leftX = triangle[1].x + t * (triangle[0].x - triangle[1].x);
     const rightX = triangle[1].x + t * (triangle[2].x - triangle[1].x);
     lines.push({ x1: leftX, x2: rightX, y });
   }
-  const lineThickness = 6; // matches triangle stroke
+  const stroke = 6;
+
+  const wrapStyle = {
+    width: `${logoSize}px`,
+    height: `${logoSize}px`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    cursor: "pointer",
+    userSelect: "none",
+    touchAction: "manipulation"
+  };
+
+  const imgStyle = {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    opacity: hovered ? 0 : 1,
+    transition: "opacity 0.18s",
+    pointerEvents: "none"
+  };
+
+  const svgStyle = {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    opacity: hovered ? 1 : 0,
+    transition: "opacity 0.18s",
+    pointerEvents: "none"
+  };
 
   return (
     <div
-      className="logo-hamburger-wrap"
-      style={{
-        position: "relative",
-        width: logoSize,
-        height: logoSize,
-        cursor: "pointer",
-        zIndex: 1200,
-        userSelect: "none",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={onOpenSidebar}
+      style={wrapStyle}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => onOpenSidebar && onOpenSidebar()}
       tabIndex={0}
-      onKeyDown={e => {
+      onKeyDown={(e) => {
         if (onOpenSidebar && (e.key === "Enter" || e.key === " ")) {
           e.preventDefault();
           onOpenSidebar();
         }
       }}
-      title="Open menu"
-      aria-label="Open menu"
+      title={title}
+      aria-label={title}
       role="button"
     >
-      {/* Logo mark (visible when not hovered or not active) */}
       <img
         src="/assets/logo-mark-only.svg"
         alt="Studio Stewart Logo"
-        draggable={false}
-        style={{
-          width: logoSize,
-          height: logoSize,
-          position: "absolute",
-          left: 0,
-          top: 0,
-          opacity: hovered ? 0 : 1,
-          transition: "opacity 0.18s",
-          pointerEvents: "none",
-          userSelect: "none",
-        }}
+        style={imgStyle}
       />
 
-      {/* Hamburger SVG (visible only when hovered/active) */}
-      <div
-        className="hamburger-svg"
-        style={{
-          opacity: hovered ? 1 : 0,
-          transition: "opacity 0.18s",
-          width: logoSize,
-          height: logoSize,
-          position: "absolute",
-          left: 0,
-          top: 0,
-          pointerEvents: "none",
-        }}
+      <svg
+        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+        style={svgStyle}
       >
-        <svg
-          width={logoSize}
-          height={logoSize}
-          viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+        <polygon
+          points={`${triangle[0].x},${triangle[0].y} ${triangle[1].x},${triangle[1].y} ${triangle[2].x},${triangle[2].y}`}
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {lines.map((line, i) => (
-            <rect
-              key={i}
-              x={line.x1}
-              y={line.y - lineThickness / 2}
-              width={line.x2 - line.x1}
-              height={lineThickness}
-              fill={color}
-              rx={2}
-            />
-          ))}
-        </svg>
-      </div>
+          stroke={color}
+          strokeWidth={stroke}
+          strokeLinejoin="round"
+        />
+        {lines.map((line, i) => (
+          <line
+            key={i}
+            x1={line.x1}
+            y1={line.y}
+            x2={line.x2}
+            y2={line.y}
+            stroke={color}
+            strokeWidth={stroke}
+            strokeLinecap="round"
+          />
+        ))}
+      </svg>
     </div>
   );
 }
