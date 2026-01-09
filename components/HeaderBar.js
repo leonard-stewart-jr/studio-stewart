@@ -8,8 +8,8 @@ export default function HeaderBar({ fixedNav = false }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Consistent sizing
-  const logoSize = 66;
-  const headerHeight = 76;
+  const logoSize = 60;
+  const headerHeight = 60; // reduced from 76
   const sidebarPaddingLeft = 22;
 
   // Animation speed for hamburger fade
@@ -19,7 +19,7 @@ export default function HeaderBar({ fixedNav = false }) {
     position: fixedNav ? "fixed" : "sticky",
     top: 0,
     zIndex: 1200,
-    width: "100vw", // fixed needs 100vw, sticky can use 100%
+    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, sticky can use 100%
     paddingLeft: 0,
     paddingRight: 0,
     display: "flex",
@@ -63,6 +63,7 @@ export default function HeaderBar({ fixedNav = false }) {
             />
           </motion.div>
         </div>
+
         {/* Center: NavBar */}
         <div
           style={{
@@ -74,9 +75,11 @@ export default function HeaderBar({ fixedNav = false }) {
         >
           <NavBar headerHeight={headerHeight} />
         </div>
+
         {/* Right: Reserved for future use, maintains space for symmetry */}
         <div style={{ flex: "0 0 auto", width: logoSize, minWidth: logoSize }} />
       </div>
+
       {/* Sidebar with separate close button */}
       <Sidebar
         open={sidebarOpen}
