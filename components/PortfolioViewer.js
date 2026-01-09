@@ -147,7 +147,7 @@ export default function PortfolioViewer({
             letterSpacing: ".02em",
           }}
         >
-          {page?.title || page?.id || `Page ${index + 1}`} • {index + 1}/{total}
+          {page?.id || `Page ${index + 1}`} • {index + 1}/{total}
         </div>
       </div>
 
@@ -155,7 +155,7 @@ export default function PortfolioViewer({
       <iframe
         key={page?.src || index}
         src={page?.src}
-        title={page?.title || page?.id || `Page ${index + 1}`}
+        title={page?.id || `Page ${index + 1}`}
         style={{
           position: "absolute",
           top: 44,
