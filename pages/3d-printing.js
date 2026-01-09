@@ -88,11 +88,11 @@ export default function ThreeDPrinting() {
   const pageStyle = {
     width: "min(1600px, 95vw)",
     margin: "0 auto",
-    padding: "0 0 48px 0", // remove top padding so the subnav touches the main nav
+    padding: "0 0 48px 0", // subnav touches main nav
     boxSizing: "border-box"
   };
 
-  // Full-bleed wrapper to match ISP's white banner spanning the whole screen and touching main nav
+  // Full-bleed white banner touching main nav (matches ISP)
   const fullBleedBarStyle = {
     width: "100vw",
     marginLeft: "calc(50% - 50vw)",
@@ -101,14 +101,15 @@ export default function ThreeDPrinting() {
     marginBottom: 8
   };
 
+  // Row between the two navs for AFC/NFC logos; centered vertically with equal margins
   const logoRowStyle = {
     display: "grid",
     gridTemplateColumns: showAfcNfcLogos ? "1fr 1fr" : "1fr",
     alignItems: "center",
     justifyItems: "center",
     minHeight: "120px",
-    marginTop: "0",             // upward nudge removed
-    marginBottom: isMobile ? "6px" : "4px",
+    marginTop: "10px",
+    marginBottom: "10px",
     width: "100%"
   };
 
@@ -170,7 +171,7 @@ export default function ThreeDPrinting() {
       <div style={logoRowStyle}>
         <ConferenceLogo
           logo={AFC_LOGO}
-          style={{ height: isMobile ? 66 : 84 }}
+          style={{ height: isMobile ? 72 : 106 }} // updated to 106 on desktop, 72 on mobile
           onClick={() => {
             setConference("AFC");
             setDivision("ALL");
@@ -179,7 +180,7 @@ export default function ThreeDPrinting() {
         />
         <ConferenceLogo
           logo={NFC_LOGO}
-          style={{ height: isMobile ? 66 : 84 }}
+          style={{ height: isMobile ? 72 : 106 }} // updated to 106 on desktop, 72 on mobile
           onClick={() => {
             setConference("NFC");
             setDivision("ALL");
@@ -196,7 +197,7 @@ export default function ThreeDPrinting() {
       <div style={{ ...logoRowStyle, gridTemplateColumns: "1fr" }}>
         <ConferenceLogo
           logo={showCenteredLogo}
-          style={{ height: isMobile ? 72 : 96 }}
+          style={{ height: isMobile ? 72 : 96 }} // single centered logo unchanged
           onClick={() => {
             // Clicking the centered logo returns to ALL
             setConference("ALL");
