@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ProjectList({ projects, onProjectClick }) {
   const showCaptionOnce = useRef(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -15,14 +15,14 @@ export default function ProjectList({ projects, onProjectClick }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  function overlayLabel(project: any) {
+  function overlayLabel(project) {
     if (project.action === "route") return "View Project";
     if (project.action === "modal" && project.modalType === "pdf") return "Open Portfolio";
     return "View Interactive Model";
   }
 
   // Widened container so the centered image + 320px info block fit comfortably
-  const pageContainerStyle: React.CSSProperties = {
+  const pageContainerStyle = {
     width: "min(1600px, 95vw)",
     margin: "0 auto",
     padding: "16px 0 48px 0",
@@ -33,7 +33,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   // Center the image in the middle column on desktop
-  const rowStyle: React.CSSProperties = {
+  const rowStyle = {
     display: "grid",
     gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
     alignItems: "center",
@@ -43,7 +43,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   // Info block: left of image (desktop), above image (mobile)
-  const infoColStyle: React.CSSProperties = {
+  const infoColStyle = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -58,7 +58,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   // Row 1 — Title
-  const titleStyle: React.CSSProperties = {
+  const titleStyle = {
     margin: 0,
     fontFamily: "Inter, sans-serif",
     fontWeight: 280,
@@ -70,7 +70,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   // Row 2 — Type
-  const typeStyle: React.CSSProperties = {
+  const typeStyle = {
     margin: "2px 0 0 0",
     fontFamily: "Inter, sans-serif",
     fontWeight: 280,
@@ -82,7 +82,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   // Row 3 — Grade (semester + year)
-  const gradeStyle: React.CSSProperties = {
+  const gradeStyle = {
     margin: "2px 0 0 0",
     fontFamily: "Inter, sans-serif",
     fontWeight: 280,
@@ -93,7 +93,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     lineHeight: 1.15
   };
 
-  const descStyle: React.CSSProperties = {
+  const descStyle = {
     margin: "6px 0 0 0",
     fontFamily: "Inter, sans-serif",
     fontWeight: 280,
@@ -103,7 +103,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   };
 
   // Image card (centered in middle grid column)
-  const imageWrapStyle: React.CSSProperties = {
+  const imageWrapStyle = {
     position: "relative",
     width: "100%",
     maxWidth: isMobile ? "100%" : "760px", // reduced from 900px to 760px on desktop
@@ -118,13 +118,13 @@ export default function ProjectList({ projects, onProjectClick }) {
     transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s"
   };
 
-  const imageStyle: React.CSSProperties = {
+  const imageStyle = {
     display: "block",
     width: "100%",
     height: "auto"
   };
 
-  const overlayStyle: React.CSSProperties = {
+  const overlayStyle = {
     position: "absolute",
     left: 14,
     bottom: 12,
@@ -142,7 +142,7 @@ export default function ProjectList({ projects, onProjectClick }) {
 
   return (
     <div style={pageContainerStyle}>
-      {projects.map((project: any, idx: number) => (
+      {projects.map((project, idx) => (
         <div key={project.slug || idx} style={rowStyle}>
           {/* Left: Info block */}
           <div style={infoColStyle}>
