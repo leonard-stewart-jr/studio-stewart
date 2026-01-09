@@ -130,8 +130,8 @@ export default function ThreeDPrinting() {
     gridTemplateColumns: showAfcNfcLogos ? "1fr 1fr" : "1fr",
     alignItems: "center",
     justifyItems: "center",
-    minHeight: "120px",           // requested dedicated logo row height
-    marginTop: "-6px",             // nudge up toward the horizontal line as requested
+    minHeight: "120px",           // dedicated logo row height
+    marginTop: "-6px",            // nudge up toward the horizontal line
     marginBottom: isMobile ? "6px" : "4px",
     width: "100%"
   };
@@ -196,7 +196,7 @@ export default function ThreeDPrinting() {
             fontWeight: isActive ? 350 : 280
           };
 
-        return (
+          return (
             <button
               key={`${btn.type}-${btn.value}`}
               style={style}
