@@ -4,16 +4,9 @@ import LogoHamburger from "./LogoHamburger";
 import NavBar from "./NavBar";
 import Sidebar from "./Sidebar";
 
-/**
- * Original pattern:
- * - Header shows the logo; on hover the triangle/hamburger appears; click opens sidebar.
- * - Sidebar has its own X close button (separate from the logo).
- * - Header text stays centered.
- */
 export default function HeaderBar({ fixedNav = false }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Sizing to match your 60px header
   const logoSize = 60;
   const headerHeight = 60;
   const sidePad = 22;
@@ -35,7 +28,7 @@ export default function HeaderBar({ fixedNav = false }) {
   return (
     <>
       <div className="nav-card nav-card-top" style={navBarStyle}>
-        {/* Left: Logo/Hamburger (opens sidebar) */}
+        {/* Left: Logo/Hamburger */}
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
@@ -56,7 +49,7 @@ export default function HeaderBar({ fixedNav = false }) {
         <div style={{ width: logoSize, paddingRight: sidePad }} />
       </div>
 
-      {/* Sidebar (with separate X button) */}
+      {/* Sidebar */}
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
