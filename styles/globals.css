@@ -281,9 +281,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   font-weight: var(--weight-hover);
 }
 .isp-subnav-btn.active:hover,
-.isp-subnav-btn[aria-current="page"]:hover,
+.isp-subnav-btn[aria-current="page"]::hover,
 .isp-subnav-btn.active:focus,
-.isp-subnav-btn[aria-current="page"]:focus {
+.isp-subnav-btn[aria-current="page"]::focus {
   text-decoration: none;
 }
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
@@ -305,10 +305,10 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* 3D Printing page override: move category tabs (isp-tab-btn) up by 8px relative to global shift */
+/* 3D Printing page override: move category tabs up by 2px more (relative to global) */
 @media (min-width: 701px) {
   .three-d-printing-page .isp-section-tabs .isp-tab-btn {
-    transform: translateY(0); /* cancels the global +8px, effectively moving up by 8px */
+    transform: translateY(-2px);
   }
 }
 
