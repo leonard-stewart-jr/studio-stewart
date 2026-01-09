@@ -18,6 +18,8 @@
   overscroll-behavior: contain;
   padding-top: env(safe-area-inset-top, 0);
   padding-bottom: env(safe-area-inset-bottom, 0);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
 }
 
 /* Custom Scrollbar Styles */
@@ -25,16 +27,13 @@
   width: 8px;
   background: #f0f0ed;
 }
-
 .sidebar::-webkit-scrollbar-thumb {
-  background: #e6dbb9; /* Matches active nav color */
+  background: #e6dbb9;
   border-radius: 6px;
 }
-
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
-
 .sidebar {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
@@ -63,14 +62,13 @@
 /* ====== LOGO-HAMBURGER ====== */
 .logo-hamburger-wrap {
   position: relative;
-  width: 60px;   /* 60 to match 60px header */
-  height: 60px;  /* 60 to match 60px header */
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: manipulation;
 }
-
 .logo-hamburger-wrap img,
 .logo-hamburger-wrap .hamburger-svg {
   position: absolute;
@@ -81,16 +79,13 @@
   transition: opacity 0.18s;
   pointer-events: none;
 }
-
 .logo-hamburger-wrap .hamburger-svg {
   opacity: 0;
 }
-
 .logo-hamburger-wrap:hover img,
 .logo-hamburger-wrap:focus img {
   opacity: 0;
 }
-
 .logo-hamburger-wrap:hover .hamburger-svg,
 .logo-hamburger-wrap:focus .hamburger-svg {
   opacity: 1;
@@ -121,15 +116,13 @@ nav.sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  font-family: "coolvetica", sans-serif;
+  font-family: var(--font-sans);
 }
-
-/* Match top nav bar base style */
 .sidebarNavLink {
-  color: #6c6c6a;                   /* match nav.main-nav base color */
-  font-family: "coolvetica", sans-serif;
-  font-weight: 300;                 /* thinner appearance to match nav */
-  font-size: 14px;                  /* match nav base size */
+  color: #6c6c6a;
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-decoration: none;
@@ -141,26 +134,20 @@ nav.sidebar-nav {
   display: block;
   cursor: pointer;
 }
-
-/* Match top nav bar active style: thin + underline + larger size */
 .active {
   color: #e6dbb9;
   background: none;
   text-decoration: underline;
   cursor: default;
-  font-size: 16px;                  /* larger when active, same as nav */
-  font-weight: 300;                 /* keep thin, do not bold */
+  font-size: 16px;
+  font-weight: var(--weight-hover);
 }
-
-/* Match top nav bar hover/focus style: thin + color change, no underline */
 .sidebarNavLink:not(.active):hover,
 .sidebarNavLink:not(.active):focus {
   color: #e6dbb9;
-  font-weight: 300;                 /* do not bold on hover */
+  font-weight: var(--weight-hover);
   text-decoration: none;
 }
-
-/* Accessibility: focus visible outline */
 .sidebarNavLink:focus-visible {
   outline: 2px solid #e6dbb9;
 }
@@ -170,28 +157,27 @@ nav.sidebar-nav {
   margin-top: auto;
   font-size: 14px;
   color: #888;
+  font-weight: var(--weight-thin);
 }
-
 .sidebar .sidebar-footer h3 {
   font-size: 17px;
   margin: 10px 0 6px 0;
   color: #181818;
+  font-weight: var(--weight-thin);
 }
-
 .sidebar .sidebar-footer ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .sidebar .sidebar-footer li {
   margin-bottom: 5px;
 }
-
 .sidebar .sidebar-footer a {
   color: #181818;
   text-decoration: underline;
   font-size: 15.5px;
+  font-weight: var(--weight-thin);
 }
 
 /* ====== INFO BOX ====== */
@@ -199,10 +185,10 @@ nav.sidebar-nav {
   margin: 18px 0 8px 0;
   font-size: 17px;
   color: #555;
+  font-weight: var(--weight-thin);
 }
-
 .sidebar .sidebar-info b {
-  font-weight: bold;
+  font-weight: var(--weight-hover);
 }
 
 /* ====== OVERLAY ====== */
@@ -213,7 +199,6 @@ nav.sidebar-nav {
   z-index: 2000;
   display: none;
 }
-
 .sidebar-overlay.open {
   display: block;
   pointer-events: auto;
