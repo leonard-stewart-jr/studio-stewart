@@ -106,8 +106,8 @@ export default function ThreeDPrinting() {
     gridTemplateColumns: showAfcNfcLogos ? "1fr 1fr" : "1fr",
     alignItems: "center",
     justifyItems: "center",
-    minHeight: "120px",           // dedicated logo row height
-    marginTop: "-6px",            // nudge up toward the horizontal line
+    minHeight: "120px",
+    marginTop: "0",             // upward nudge removed
     marginBottom: isMobile ? "6px" : "4px",
     width: "100%"
   };
