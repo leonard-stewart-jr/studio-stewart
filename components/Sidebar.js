@@ -51,7 +51,6 @@ export default function Sidebar({
     closed: { x: "-100%", transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } },
     open:   { x: 0,      transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
   };
-  const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   return (
     <>
@@ -82,7 +81,6 @@ export default function Sidebar({
           <button
             aria-label="Close sidebar"
             onClick={onClose}
-            style={{}}
           >
             ×
           </button>
@@ -100,35 +98,6 @@ export default function Sidebar({
               {item.label}
             </Link>
           ))}
-
-          {/* Extra content for scrolling demonstration */}
-          Step 1: Extra Links
-          {[...Array(15)].map((_, i) => (
-            <a key={`ex-${i}`} href="#">
-              Example Link {i + 1}
-            </a>
-          ))}
-
-          Step 2: Even more content
-          <ul>
-            {[...Array(10)].map((_, i) => (
-              <li key={`li-${i}`}>
-                <a href="#">
-                  Item {i + 1}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          Step 3: Placeholder Section
-          <p>
-            This section exists to make the sidebar content long enough to require scrolling on mobile and desktop. You can add or remove items as needed.
-          </p>
-
-          Step 4: Final Section
-          <p>
-            If you can scroll this sidebar, the overflow-y: auto is working as intended.
-          </p>
         </nav>
 
         <div className="sidebar-info">
