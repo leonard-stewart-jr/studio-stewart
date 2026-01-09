@@ -4,13 +4,68 @@
   "pages": [
     {
       "id": "cover",
-      "title": "Cover",
+      "title": "cover",
       "src": "/portfolio/undergraduate/cover/index.html"
     },
     {
-      "id": "page-5",
-      "title": "Page 5",
-      "src": "/portfolio/undergraduate/page-5/index.html"
+      "id": "intro-pg-2-3",
+      "title": "intro",
+      "src": "/portfolio/undergraduate/index-resume/index.html"
+    },
+    {
+      "id": "fall2024-pg-4-5",
+      "title": "fall2024",
+      "src": "/portfolio/undergraduate/fall2024-project-1-pg-4-5/index.html"
+    },
+    {
+      "id": "fall2024-pg-6-7",
+      "title": "fall2024",
+      "src": "/portfolio/undergraduate/fall2024-project-1-pg-6-7/index.html"
+    },
+    {
+      "id": "spring2024-pg-8-9",
+      "title": "spring2024",
+      "src": "/portfolio/undergraduate/spring2024-project-2-pg-8-9/index.html"
+    },
+    {
+      "id": "spring2024-pg-10-11",
+      "title": "spring2024",
+      "src": "/portfolio/undergraduate/spring2024-project-2-pg-10-11/index.html"
+    },
+    {
+      "id": "spring2021-pg-12-13",
+      "title": "spring2021",
+      "src": "/portfolio/undergraduate/spring2021-project-3-pg-12-13/index.html"
+    },
+    {
+      "id": "fall2021-pg-14-15",
+      "title": "fall2021",
+      "src": "/portfolio/undergraduate/fall2021-project-4-pg-14-15/index.html"
+    },
+    {
+      "id": "spring2022-pg-16-17",
+      "title": "spring2022",
+      "src": "/portfolio/undergraduate/spring2022-project-5-pg-16-17/index.html"
+    },
+    {
+      "id": "spring2022-pg-18-19",
+      "title": "spring2022",
+      "src": "/portfolio/undergraduate/spring2022-project-5-pg-18-19/index.html"
+    },
+    {
+      "id": "spring2023-pg-20-21",
+      "title": "spring2023",
+      "src": "/portfolio/undergraduate/spring2023-project-6-pg-20-21/index.html"
+    },
+    {
+      "id": "spring2023-pg-22-23",
+      "title": "spring2023",
+      "src": "/portfolio/undergraduate/spring2023-project-6-pg-22-23/index.html"
+    },
+    {
+      "id": "back-cover",
+      "title": "back-cover",
+      "src": "/portfolio/undergraduate/back-cover/index.html"
     }
   ]
 }
