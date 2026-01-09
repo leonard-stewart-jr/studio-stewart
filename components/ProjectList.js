@@ -54,7 +54,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   const titleStyle = {
     margin: 0,
     fontFamily: "Inter, sans-serif",
-    fontWeight: 200,
+    fontWeight: 280,
     fontSize: isMobile ? 18 : 20,
     letterSpacing: ".02em",
     textTransform: "uppercase",
@@ -66,7 +66,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   const typeStyle = {
     margin: "2px 0 0 0",
     fontFamily: "Inter, sans-serif",
-    fontWeight: 200,
+    fontWeight: 280,
     fontSize: isMobile ? 13 : 14,
     color: "#8a8a86",
     letterSpacing: ".035em",
@@ -78,7 +78,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   const gradeStyle = {
     margin: "2px 0 0 0",
     fontFamily: "Inter, sans-serif",
-    fontWeight: 200,
+    fontWeight: 280,
     fontSize: isMobile ? 11 : 12,
     color: "#b0afa9",
     letterSpacing: ".06em",
@@ -89,7 +89,7 @@ export default function ProjectList({ projects, onProjectClick }) {
   const descStyle = {
     margin: "6px 0 0 0",
     fontFamily: "Inter, sans-serif",
-    fontWeight: 200,
+    fontWeight: 280,
     fontSize: isMobile ? 12 : 13,
     color: "#888",
     letterSpacing: ".01em"
@@ -123,7 +123,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     background: "rgba(0,0,0,0.35)",
     color: "#fff",
     fontFamily: "Inter, sans-serif",
-    fontWeight: 200,
+    fontWeight: 280,
     fontSize: 12,
     letterSpacing: ".06em",
     textTransform: "uppercase",
