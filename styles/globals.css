@@ -1,4 +1,4 @@
-/* ====== COOLVETICA CUSTOM LOCAL FONTS ====== */
+/* ====== COOLVETICA CUSTOM LOCAL FONTS (kept as fallback) ====== */
 @font-face {
   font-family: 'coolvetica';
   src: url('/fonts/coolvetica/Coolvetica Rg.otf') format('opentype');
@@ -37,16 +37,28 @@
   font-display: swap;
 }
 
+/* ====== TYPOGRAPHY TOKENS ====== */
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --font-fallback: "coolvetica", "Open Sans", sans-serif;
+  --weight-thin: 200;   /* site-wide base */
+  --weight-hover: 300;  /* subtle emphasis on hover/active */
+}
+
 /* ====== GLOBAL RESETS ====== */
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: "coolvetica", "Open Sans", sans-serif;
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
   background: #f9f9f7;
   color: #181818;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 
   /* Custom scrollbar for entire page */
   scrollbar-width: thin;
@@ -64,13 +76,14 @@ html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
 
-/* ====== GLOBAL HEADINGS: thin coolvetica site-wide ====== */
+/* ====== GLOBAL HEADINGS: Inter 200, uppercase by default ====== */
 h1, h2, h3, h4, h5, h6 {
-  font-family: "coolvetica", "Open Sans", sans-serif;
-  font-weight: 300;         /* thin look across headings */
-  letter-spacing: 0.04em;   /* subtle spacing to match site vibe */
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  letter-spacing: 0.02em;
   margin: 0;
   color: inherit;
+  text-transform: uppercase;
 }
 
 /* ====== CARD NAV STYLES ====== */
@@ -85,8 +98,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 .nav-card-top {
   box-shadow: 0 5px 24px 0 rgba(0,0,0,0.13);
-  min-height: 60px; /* reduced from 76 */
-  height: 60px;     /* reduced from 76 */
+  min-height: 60px;
+  height: 60px;
   padding: 0;
   background: #fff;
 }
@@ -111,20 +124,19 @@ h1, h2, h3, h4, h5, h6 {
   background: #fff;
 }
 
-/* ====== NAVIGATION (LINKS) ====== */
+/* ====== NAVIGATION (LINKS) — Inter 200 base, 300 on hover/active ====== */
 nav.main-nav {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 28px;
-  height: 60px; /* reduced from 76 */
-  font-family: "coolvetica", sans-serif;
+  height: 60px;
+  font-family: var(--font-sans);
 }
-
 nav.main-nav a {
-  color: #6c6c6a;            /* darker gray than before */
-  font-weight: 300;          /* thinner appearance */
+  color: #6c6c6a;
+  font-weight: var(--weight-thin);
   font-size: 14px;
   text-transform: uppercase;
   text-decoration: none;
@@ -138,30 +150,26 @@ nav.main-nav a {
   margin: 0 20px;
   cursor: pointer;
 }
-
 nav.main-nav a.active,
 nav.main-nav a[aria-current="page"] {
   color: #e6dbb9;
   text-decoration: underline;
   cursor: default;
-  font-size: 16px; /* Keep larger size when active */
-  font-weight: 300; /* stay thin even when active */
+  font-size: 16px;
+  font-weight: var(--weight-hover); /* active emphasis */
 }
-
 nav.main-nav a.active:hover,
 nav.main-nav a[aria-current="page"]:hover {
   text-decoration: none;
 }
-
-/* Hover/focus: keep thin, change color */
 nav.main-nav a:not(.active):not([aria-current="page"]):hover,
 nav.main-nav a:not(.active):not([aria-current="page"]):focus {
-  font-weight: 300; /* do not bold on hover */
+  font-weight: var(--weight-hover);
   color: #e6dbb9;
   text-decoration: none;
 }
 
-/* ====== ISP PAGE NAV HIERARCHY ====== */
+/* ====== ISP PAGE NAV HIERARCHY — Inter 200 base, 300 on hover/active ====== */
 .isp-section-tabs {
   display: flex;
   justify-content: center;
@@ -171,26 +179,25 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   padding: 0;
   min-height: 60px;
   height: auto;
-  margin: -12px 0 0 0; /* scoot up by 12px to compensate for thinner header */
+  margin: -12px 0 0 0;
   box-shadow: none;
   border-bottom: none;
   width: 100%;
 }
-
 .isp-tab-btn {
   background: none;
   border: none;
-  font-family: "coolvetica", sans-serif;
-  font-weight: 300;           /* thinner */
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
   font-size: 12px;
   letter-spacing: 0.5px;
-  color: #6c6c6a;             /* darker gray */
+  color: #6c6c6a;
   text-transform: uppercase;
-  padding: 8px 20px;          /* equal top/bottom for vertical centering */
+  padding: 8px 20px;
   margin: 0 12px;
   height: auto;
-  display: inline-flex;       /* center text vertically */
-  align-items: center;        /* center text vertically */
+  display: inline-flex;
+  align-items: center;
   vertical-align: middle;
   cursor: pointer;
   text-decoration: none;
@@ -201,7 +208,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   box-shadow: none;
   position: relative;
 }
-
 .isp-tab-btn.active,
 .isp-tab-btn[aria-current="page"] {
   color: #e6dbb9;
@@ -209,21 +215,18 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
   cursor: default;
-  font-size: 14px; /* Increase font size when active */
-  font-weight: 300; /* keep thin */
+  font-size: 14px;
+  font-weight: var(--weight-hover);
 }
-
 .isp-tab-btn.active:hover,
 .isp-tab-btn[aria-current="page"]:hover,
 .isp-tab-btn.active:focus,
 .isp-tab-btn[aria-current="page"]:.focus {
   text-decoration: none;
 }
-
-/* Hover non-active: thin, no underline */
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
-  font-weight: 300;
+  font-weight: var(--weight-hover);
   color: #e6dbb9;
   text-decoration: none;
 }
@@ -237,26 +240,25 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   padding: 0;
   min-height: 40px;
   height: auto;
-  margin: 0px 0 0 0; /* scoot up by 12px as well */
+  margin: 0px 0 0 0;
   box-shadow: none;
   border-bottom: none;
   width: 100%;
 }
-
 .isp-subnav-btn {
   background: none;
   border: none;
-  font-family: inherit;
-  font-weight: 300;          /* thinner */
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
   font-size: 10px;
-  color: #6c6c6a;            /* darker gray */
+  color: #6c6c6a;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 7px 18px;         /* equal top/bottom for vertical centering */
+  padding: 7px 18px;
   margin: 0 4px;
   height: auto;
-  display: inline-flex;      /* center text vertically */
-  align-items: center;       /* center text vertically */
+  display: inline-flex;
+  align-items: center;
   vertical-align: middle;
   cursor: pointer;
   text-decoration: none;
@@ -268,7 +270,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   transition: color 0.18s, text-decoration 0.18s, font-weight 0.16s;
   position: relative;
 }
-
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
   color: #e6dbb9;
@@ -277,24 +278,20 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   text-decoration-thickness: 1.5px;
   cursor: default;
   font-size: 12px;
-  font-weight: 300; /* keep thin */
+  font-weight: var(--weight-hover);
 }
-
 .isp-subnav-btn.active:hover,
 .isp-subnav-btn[aria-current="page"]:hover,
 .isp-subnav-btn.active:focus,
 .isp-subnav-btn[aria-current="page"]:.focus {
   text-decoration: none;
 }
-
-/* Hover non-active subnav: thin, no underline */
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
-  font-weight: 300;
+  font-weight: var(--weight-hover);
   color: #e6dbb9;
   text-decoration: none;
 }
-
 .isp-tab-btn:focus-visible,
 .isp-subnav-btn:focus-visible {
   outline: 2px solid #e6dbb9;
@@ -310,12 +307,11 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     display: none !important;
   }
 }
-
 @media (min-width: 701px) and (max-width: 1024px) {
   nav.main-nav {
     gap: 18px;
     font-size: 14px;
-    height: 60px; /* keep 60 on tablet */
+    height: 60px;
   }
   nav.main-nav a {
     font-size: 14px;
@@ -340,21 +336,21 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .isp-section-tabs {
     gap: 11px;
     min-height: 36px;
-    margin-top: 0px; /* maintain upward nudge on mobile */
+    margin-top: 0px;
   }
   .isp-tab-btn {
     font-size: 11px;
     margin: 0 7px;
-    padding: 6px 10px;      /* equal top/bottom for vertical centering */
+    padding: 6px 10px;
   }
   .isp-subnav-row {
     gap: 7px;
     min-height: 24px;
-    margin-top: 0px; /* maintain upward nudge on mobile */
+    margin-top: 0px;
   }
   .isp-subnav-btn {
     font-size: 9px;
-    padding: 6px 8px;       /* equal top/bottom for vertical centering */
+    padding: 6px 8px;
     min-width: 32px;
     pointer-events: auto !important;
     opacity: 1 !important;
@@ -374,16 +370,13 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   height: 14px;
   background: transparent;
 }
-
 .mesopotamia-scrollbar::-webkit-scrollbar-thumb {
   background: #e6dbb9;
   border-radius: 0;
 }
-
 .mesopotamia-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #d6c08e;
 }
-
 .mesopotamia-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
