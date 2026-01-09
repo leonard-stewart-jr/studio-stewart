@@ -92,45 +92,13 @@ export default function ThreeDPrinting() {
     boxSizing: "border-box"
   };
 
+  // Full-bleed wrapper to match ISP's white banner spanning the whole screen and touching main nav
   const fullBleedBarStyle = {
     width: "100vw",
     marginLeft: "calc(50% - 50vw)",
     marginRight: "calc(50% - 50vw)",
-    marginTop: 0,         // override .nav-card-mid negative margin
+    marginTop: 0,
     marginBottom: 8
-  };
-
-  const categoryTabsStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: isMobile ? 16 : 26,
-    padding: "0",
-    minHeight: "44px",
-    height: "44px",
-    margin: "0",
-    background: "transparent"
-  };
-
-  const categoryBtnBase = {
-    background: "none",
-    border: "none",
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 280,
-    fontSize: isMobile ? 13 : 14,
-    letterSpacing: ".035em",
-    color: "#6c6c6a",
-    textTransform: "uppercase",
-    padding: "6px 14px",
-    margin: "0 8px",
-    display: "inline-flex",
-    alignItems: "center",
-    cursor: "pointer",
-    textDecoration: "none",
-    outline: "none",
-    borderRadius: 0,
-    transition: "color 0.18s, font-weight 0.16s",
-    position: "relative"
   };
 
   const logoRowStyle = {
@@ -144,40 +112,6 @@ export default function ThreeDPrinting() {
     width: "100%"
   };
 
-  const filterRowStyle = {
-    display: activeCategory === "hueforge" && showFilterBar ? "flex" : "none",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: isMobile ? 10 : 16,
-    minHeight: "40px",
-    height: "40px",
-    margin: "0",
-    background: "transparent",
-    width: "100%"
-  };
-
-  const filterBtnBase = {
-    background: "none",
-    border: "none",
-    fontFamily: "Inter, sans-serif", // Inter for consistency
-    fontWeight: 280,
-    fontSize: isMobile ? "13px" : "15px", // +2px on desktop
-    letterSpacing: ".06em",
-    textTransform: "uppercase",
-    padding: "6px 18px",
-    margin: "0 4px",
-    display: "inline-flex",
-    alignItems: "center",
-    cursor: "pointer",
-    textDecoration: "none",
-    outline: "none",
-    borderRadius: "6px",
-    boxShadow: "none",
-    transition: "color 0.18s, font-weight 0.16s, text-decoration 0.18s",
-    position: "relative",
-    color: "#bcbcb6"
-  };
-
   const gridWrapStyle = {
     display: "grid",
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
@@ -187,28 +121,21 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  function FilterRow() {
+  // ISP-matching divisions row (transparent, no white bar)
+  function DivisionsRow() {
     if (activeCategory !== "hueforge" || !showFilterBar) return null;
-    // No white bar wrapper here (divisions row stays transparent)
     return (
-      <div style={filterRowStyle}>
+      <nav className="isp-subnav-row" aria-label="NFL divisions filter">
         {FILTER_BUTTONS.map((btn) => {
           const isActive =
             btn.type === "conference" ? conference === btn.value : division === btn.value;
 
-          const style = {
-            ...filterBtnBase,
-            color: isActive ? "#e6dbb9" : filterBtnBase.color,
-            textDecoration: isActive ? "underline" : "none",
-            textUnderlineOffset: "3px",
-            textDecorationThickness: "1.5px",
-            fontWeight: isActive ? 350 : 280
-          };
+          const className = `isp-subnav-btn${isActive ? " active" : ""}`;
 
           return (
             <button
               key={`${btn.type}-${btn.value}`}
-              style={style}
+              className={className}
               onClick={() => {
                 if (btn.type === "conference") {
                   setConference(btn.value);
@@ -233,7 +160,7 @@ export default function ThreeDPrinting() {
             </button>
           );
         })}
-      </div>
+      </nav>
     );
   }
 
@@ -283,31 +210,24 @@ export default function ThreeDPrinting() {
 
   return (
     <div style={pageStyle}>
-      {/* Category tabs inside full-bleed white bar touching the main nav */}
+      {/* Category tabs inside full-bleed white banner to match ISP */}
       <div className="nav-card-mid" style={fullBleedBarStyle}>
-        <nav style={categoryTabsStyle} aria-label="3D Printing categories">
+        <nav className="isp-section-tabs" aria-label="3D Printing categories">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.value;
+            const className = `isp-tab-btn${isActive ? " active" : ""}`;
             return (
               <button
                 key={cat.value}
+                className={className}
                 onClick={() => {
                   setActiveCategory(cat.value);
                   setConference("ALL");
                   setDivision("ALL");
-                  setShowFilterBar(true); // persist visible bar
+                  setShowFilterBar(true); // keep visible
                 }}
                 aria-current={isActive ? "page" : undefined}
                 tabIndex={0}
-                style={{
-                  ...categoryBtnBase,
-                  fontSize: isActive ? (isMobile ? 14 : 16) : categoryBtnBase.fontSize,
-                  fontWeight: isActive ? 350 : 280,
-                  color: isActive ? "#e6dbb9" : "#6c6c6a",
-                  textDecoration: isActive ? "underline" : "none",
-                  textUnderlineOffset: "3px",
-                  textDecorationThickness: "1.5px"
-                }}
               >
                 {cat.label}
               </button>
@@ -316,10 +236,10 @@ export default function ThreeDPrinting() {
         </nav>
       </div>
 
-      {/* Logo rows and filter row */}
+      {/* Logo rows and divisions row */}
       <LogoRow />
       <CenteredLogo />
-      <FilterRow />
+      <DivisionsRow />
 
       {/* Grid */}
       <div ref={gridRef} style={gridWrapStyle}>
@@ -398,6 +318,9 @@ function PrintCard({ print, isMobile }) {
   const cardSize = isMobile ? 120 : hovered ? 320 : 288;
   const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
 
+  // Derive image path from team id if no image provided in data
+  const imgSrc = print.image || `/images/prints/nfl/${print.id}.png`;
+
   const cardStyle = {
     width: cardSize,
     height: cardSize,
@@ -443,7 +366,7 @@ function PrintCard({ print, isMobile }) {
       title={print.name}
     >
       <img
-        src={print.image}
+        src={imgSrc}
         alt={print.name}
         style={{ width: imageSize, height: "auto", display: "block" }}
       />
