@@ -399,9 +399,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 /* Sticky nav only for matter-matters page */
 .matter-matters-page .nav-card-top {
   position: fixed;
-  top: 0,
-  left: 0,
-  width: 100vw,
+  top: 0;
+  left: 0;
+  width: 100vw;
   z-index: 1200;
 }
 .isp-globe-section {
