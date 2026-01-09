@@ -209,7 +209,7 @@ export default function ThreeDPrinting() {
   }
 
   return (
-    <div style={pageStyle}>
+    <div className="three-d-printing-page" style={pageStyle}>
       {/* Category tabs inside full-bleed white banner to match ISP */}
       <div className="nav-card-mid" style={fullBleedBarStyle}>
         <nav className="isp-section-tabs" aria-label="3D Printing categories">
