@@ -31,14 +31,17 @@ export default function ProjectList({ projects, onProjectClick }) {
     boxSizing: "border-box"
   };
 
+  // Grid centers the image (middle column) on desktop
   const rowStyle = {
     display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "minmax(260px, 320px) 1fr",
+    gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
     alignItems: "center",
-    gap: isMobile ? 12 : 16,
+    columnGap: isMobile ? 12 : 24,
+    rowGap: isMobile ? 12 : 0,
     width: "100%"
   };
 
+  // Info block (left of image on desktop, above on mobile)
   const infoColStyle = {
     display: "flex",
     flexDirection: "column",
@@ -46,8 +49,11 @@ export default function ProjectList({ projects, onProjectClick }) {
     alignItems: isMobile ? "flex-start" : "flex-end",
     textAlign: isMobile ? "left" : "right",
     gap: 3,
-    padding: isMobile ? "0 8px" : "0 6px 0 0",
-    fontFamily: "Inter, sans-serif"
+    padding: isMobile ? "0 8px" : "0",
+    fontFamily: "Inter, sans-serif",
+    width: isMobile ? "auto" : 320,
+    maxWidth: isMobile ? "100%" : 320,
+    justifySelf: isMobile ? "start" : "end"
   };
 
   // Row 1 — Title
@@ -95,11 +101,13 @@ export default function ProjectList({ projects, onProjectClick }) {
     letterSpacing: ".01em"
   };
 
+  // Image column (centered in middle grid column)
   const imageWrapStyle = {
     position: "relative",
     width: "100%",
     maxWidth: "900px",
     margin: isMobile ? "0 auto" : "0",
+    justifySelf: isMobile ? "center" : "center",
     cursor: "pointer",
     borderRadius: 6,
     overflow: "hidden",
@@ -135,7 +143,7 @@ export default function ProjectList({ projects, onProjectClick }) {
     <div style={pageContainerStyle}>
       {projects.map((project, idx) => (
         <div key={project.slug || idx} style={rowStyle}>
-          {/* Info column */}
+          {/* Left: Info block */}
           <div style={infoColStyle}>
             <h2 style={titleStyle}>{project.title}</h2>
             <div style={typeStyle}>{project.type}</div>
@@ -143,7 +151,7 @@ export default function ProjectList({ projects, onProjectClick }) {
             {project.description && <p style={descStyle}>{project.description}</p>}
           </div>
 
-          {/* Image column */}
+          {/* Middle: Image (centered) */}
           <div
             role="button"
             tabIndex={0}
@@ -180,6 +188,9 @@ export default function ProjectList({ projects, onProjectClick }) {
             />
             <div style={overlayStyle}>{overlayLabel(project)}</div>
           </div>
+
+          {/* Right: empty column to keep image perfectly centered */}
+          {!isMobile && <div aria-hidden="true" />}
         </div>
       ))}
     </div>
