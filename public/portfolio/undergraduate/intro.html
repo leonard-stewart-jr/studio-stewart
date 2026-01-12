@@ -5,6 +5,27 @@
 		<title>publication-1</title>
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="/portfolio/undergraduate/css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
+		<style>
+  /* Force Google Open Sans on all InDesign text runs so spacing matches export */
+  body[id^="publication-"] [class^="CharOverride-"],
+  body[id^="publication-"] [class*=" CharOverride-"],
+  body[id^="publication-"] .DoArch-Template_Project-Title,
+  body[id^="publication-"] p,
+  body[id^="publication-"] span {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: inherit;   /* keep 300/400/700 declared by export */
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Ensure any inline “Light” weights resolve to the loaded 300 cut */
+  body[id^="publication-"] [style*="font-weight: 300"],
+  body[id^="publication-"] [style*="font-weight:300"] {
+    font-weight: 300 !important;
+  }
+</style>
 	</head>
 	<body id="publication-1" style="width:1224px;height:792px;background-color:transparent; margin:0 auto;">
 		<div style="position:absolute;overflow:hidden;left:0px;top:0px;-webkit-transform:translate(0.00px,0.00px);-ms-transform:translate(0.00px,0.00px);transform:translate(0.00px,0.00px);width:613.00px;height:792.00px;background-color:white">
