@@ -155,7 +155,9 @@ export default function PortfolioViewer({
         const leftPx = parsePx(cs.left);
 
         const tiny = w <= 40 && h <= 140;
-        const pinnedRight = (rightPx !== null && rightPx <= 10) || (leftPx !== null && leftPx >= (doc.body.offsetWidth - 10));
+        const pinnedRight =
+          (rightPx !== null && rightPx <= 10) ||
+          (leftPx !== null && leftPx >= (doc.body.offsetWidth - 10));
         if ((pos === "fixed" || pos === "absolute") && tiny && pinnedRight) {
           el.style.display = "none";
           el.style.visibility = "hidden";
@@ -329,8 +331,7 @@ export default function PortfolioViewer({
   const scaledHeight = pageSize.height * scale;
   const allowVerticalScroll = fitMode === "width";
 
-  // IMPORTANT: Only add the difference between scaled height and the original layout height.
-  // The canvas contributes pageSize.height to layout; transform doesn't change layout height.
+  // Spacer should only add the difference between scaled height and original layout height.
   const spacerHeight = allowVerticalScroll
     ? Math.max(0, Math.round(scaledHeight - pageSize.height))
     : 0;
@@ -446,15 +447,16 @@ export default function PortfolioViewer({
         }}
       />
 
-      {/* Controls: Fit toggle + arrows */}
+      {/* Controls: Fit toggle + arrows — FIXED to viewport bottom-right */}
       <div
         style={{
-          position: "absolute",
-          bottom: 16,
+          position: "fixed",
           right: 16,
+          bottom: "calc(16px + env(safe-area-inset-bottom, 0))",
           display: "flex",
           gap: 8,
-          zIndex: 2,
+          zIndex: 2000,           // Above iframe/click zones
+          pointerEvents: "auto",  // Ensure clickable
         }}
       >
         {/* Fit mode toggle */}
