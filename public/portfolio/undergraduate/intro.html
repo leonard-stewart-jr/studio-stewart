@@ -6,7 +6,15 @@
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="/portfolio/undergraduate/css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
 		<style>
-  /* Force Google Open Sans on all InDesign text runs so spacing matches export */
+  /* Center fixed-width InDesign export pages (intro + backcover) */
+  html, body { margin: 0; height: 100%; }
+  body[id^="publication-"] {
+    /* Body already has a fixed width from the export (e.g., 1224px). */
+    margin: 0 auto !important;     /* center horizontally */
+    display: block !important;      /* ensure margins apply */
+    background: transparent !important;
+  }
+	/* Force Google Open Sans on all InDesign text runs so spacing matches export */
   body[id^="publication-"] [class^="CharOverride-"],
   body[id^="publication-"] [class*=" CharOverride-"],
   body[id^="publication-"] .DoArch-Template_Project-Title,
