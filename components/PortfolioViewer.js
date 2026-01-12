@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
  * - Measures natural page width/height
  * - Scales to fit viewer HEIGHT (default) or WIDTH (toggle)
  * - No cropping; scales text, images, and blocks uniformly
+ * - Removes ai2html internal scrollbars/hints so only the outer viewer scrolls
  * - Navigation: left/right, keyboard arrows, click zones
  * - Optional deep-linking via ?page=<id> and ?fit=height|width
  *
@@ -168,6 +169,37 @@ export default function PortfolioViewer({
     }
   }
 
+  // NEW: Disable inner scrollbars in ai2html pages (so only outer viewer scrolls)
+  function disableInnerScrollbars(doc) {
+    try {
+      const styleEl = doc.createElement("style");
+      styleEl.textContent = `
+        html, body, .ai2html, .g-artboard {
+          overflow: hidden !important;
+          overscroll-behavior: contain !important;
+        }
+        /* Hide scrollbars across browsers */
+        html, body {
+          scrollbar-width: none !important;        /* Firefox */
+          -ms-overflow-style: none !important;     /* IE/Edge legacy */
+        }
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+          width: 0 !important;
+          height: 0 !important;
+          display: none !important;
+          background: transparent !important;
+        }
+      `;
+      doc.head && doc.head.appendChild(styleEl);
+
+      // Defensive: inline hide in case author styles override
+      doc.documentElement.style.overflow = "hidden";
+      doc.body.style.overflow = "hidden";
+    } catch {
+      // ignore silently
+    }
+  }
+
   // Measure page's natural size inside the iframe (type-aware)
   const measureIframePage = useCallback(() => {
     const iframe = iframeRef.current;
@@ -201,6 +233,7 @@ export default function PortfolioViewer({
         }
 
         setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
+        // No inner scrollbars expected on these, but safe to remove hints
         removeScrollHints(doc);
         return;
       }
@@ -235,7 +268,9 @@ export default function PortfolioViewer({
       if (!h || h <= 0) h = 792;
 
       setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
+      // Ensure inner scrollbars and hints are removed for ai2html pages
       removeScrollHints(doc);
+      disableInnerScrollbars(doc);
     } catch {
       // keep defaults silently
     }
