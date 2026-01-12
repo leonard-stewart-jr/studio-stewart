@@ -6,17 +6,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="/portfolio/undergraduate/css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
     <style>
-  /* Center the outer InDesign canvas on intro/backcover */
-  html, body { margin: 0; height: 100%; }
-  body[id^="publication-"] { position: relative; }
-
-  /* The export's first top-level absolute container is the canvas */
+  /* Reset the earlier centering tweak to avoid overlap */
   body[id^="publication-"] > div:first-of-type {
-    position: absolute !important;
-    left: 50% !important;
-    transform: translate(-50%, 0) !important;
-    -webkit-transform: translate(-50%, 0) !important;
-    -ms-transform: translate(-50%, 0) !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  /* Center the whole fixed-width page by centering BODY as a flex child */
+  html {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    height: 100%;
+    margin: 0;
+  }
+
+  body[id^="publication-"] {
+    width: 1224px !important;  /* your exported width */
+    margin: 0 !important;
+    background: transparent !important;
+    position: relative !important;
   }
   /* Force Google Open Sans on all InDesign text runs so spacing matches export */
   body[id^="publication-"] [class^="CharOverride-"],
