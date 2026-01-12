@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
 /**
- * PortfolioViewer
- * - Fetches /portfolio/undergraduate/manifest.json
- * - Renders current page in an iframe
- * - Scales the entire page to fit the viewer height (no cropping)
- * - Navigation: left/right buttons, keyboard arrows, and click zones
+ * PortfolioViewer (type-aware fit-to-height)
+ * - Detects page type inside the iframe (InDesign vs ai2html spread)
+ * - Measures natural page width/height, then scales the whole page to fit viewer height
+ * - No cropping; scales text, images, and blocks uniformly
+ * - Navigation: left/right, keyboard, click zones
  * - Optional deep-linking via ?page=<id>
  *
  * To add/remove/reorder pages, edit public/portfolio/undergraduate/manifest.json.
@@ -25,7 +25,7 @@ export default function PortfolioViewer({
   // Scaling state
   const iframeRef = useRef(null);
   const viewerRef = useRef(null);
-  const [pageSize, setPageSize] = useState({ width: 612, height: 792 }); // default letter
+  const [pageSize, setPageSize] = useState({ width: 1224, height: 792 }); // default spread size
   const [scale, setScale] = useState(1);
 
   // Load manifest
@@ -95,7 +95,18 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goPrev, goNext, total]);
 
-  // Measure the page's natural size inside the iframe (plain JS, no TS assertions)
+  function isInDesignPage(doc) {
+    const body = doc?.body;
+    const id = body?.id || "";
+    return /^publication-/i.test(id);
+  }
+
+  function parsePx(value) {
+    const n = parseFloat(String(value || "").replace(/[^0-9.\-]/g, ""));
+    return Number.isFinite(n) ? n : null;
+  }
+
+  // Measure page's natural size inside the iframe (type-aware)
   const measureIframePage = useCallback(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
@@ -105,40 +116,79 @@ export default function PortfolioViewer({
         iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
       if (!doc || !doc.body) return;
 
-      // Start with body offset size
-      let w = doc.body.offsetWidth || 612;
-      let h = doc.body.offsetHeight || 792;
+      // InDesign export pages (intro/backcover)
+      if (isInDesignPage(doc)) {
+        let w = doc.body.offsetWidth || 612;
+        let h = doc.body.offsetHeight || 792;
 
-      // If body has inline style width/height (e.g., "width:612px;height:792px")
-      const inlineStyle = doc.body.getAttribute("style") || "";
-      const wMatch = inlineStyle.match(/width:\s*([0-9.]+)px/i);
-      const hMatch = inlineStyle.match(/height:\s*([0-9.]+)px/i);
-      if (wMatch) w = parseFloat(wMatch[1]) || w;
-      if (hMatch) h = parseFloat(hMatch[1]) || h;
+        const inlineStyle = doc.body.getAttribute("style") || "";
+        const wMatch = inlineStyle.match(/width:\s*([0-9.]+)px/i);
+        const hMatch = inlineStyle.match(/height:\s*([0-9.]+)px/i);
+        if (wMatch) w = parseFloat(wMatch[1]) || w;
+        if (hMatch) h = parseFloat(hMatch[1]) || h;
 
-      // Some exports use an absolute first container with explicit width/height
-      const firstDiv = doc.body.firstElementChild;
-      if (firstDiv) {
-        const cs = firstDiv.style || {};
-        const w2 =
-          (cs.width && parseFloat(cs.width)) ||
-          (firstDiv instanceof HTMLElement ? firstDiv.offsetWidth : w);
-        const h2 =
-          (cs.height && parseFloat(cs.height)) ||
-          (firstDiv instanceof HTMLElement ? firstDiv.offsetHeight : h);
-        if (w2 && h2) {
-          w = w2 || w;
-          h = h2 || h;
+        // Some exports wrap everything in a first absolute container with explicit size
+        const firstDiv = doc.body.firstElementChild;
+        if (firstDiv && firstDiv instanceof HTMLElement) {
+          const w2 = parsePx(firstDiv.style.width) || firstDiv.offsetWidth || w;
+          const h2 = parsePx(firstDiv.style.height) || firstDiv.offsetHeight || h;
+          if (w2 && h2) {
+            w = w2;
+            h = h2;
+          }
+        }
+
+        setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
+        return;
+      }
+
+      // ai2html spread pages
+      // Strategy: try artboard styles first, then image natural size
+      let w = 1224; // typical spread width
+      let h = 792;  // typical height
+
+      const artboards = doc.querySelectorAll(".ai2html .g-artboard");
+      if (artboards && artboards.length > 0) {
+        // If multiple artboards existed, we pick the largest by max-height/width.
+        let bestW = 0;
+        let bestH = 0;
+        artboards.forEach((el) => {
+          const styleAttr = el.getAttribute("style") || "";
+          const mwMatch = styleAttr.match(/max-width:\s*([0-9.]+)px/i);
+          const mhMatch = styleAttr.match(/max-height:\s*([0-9.]+)px/i);
+          const mw = mwMatch ? parseFloat(mwMatch[1]) : 0;
+          const mh = mhMatch ? parseFloat(mhMatch[1]) : 0;
+          if (mw > bestW) bestW = mw;
+          if (mh > bestH) bestH = mh;
+        });
+        if (bestW > 0) w = bestW;
+        if (bestH > 0) h = bestH;
+      }
+
+      // Fallback: use the first ai2html image's natural size
+      if (!w || !h || w <= 0 || h <= 0) {
+        const img = doc.querySelector(".ai2html .g-aiImg, img.g-aiImg");
+        if (img && img instanceof HTMLImageElement) {
+          const nw = img.naturalWidth || img.width;
+          const nh = img.naturalHeight || img.height;
+          if (nw && nh) {
+            w = nw;
+            h = nh;
+          }
         }
       }
 
+      // Last fallback defaults
+      if (!w || w <= 0) w = 1224;
+      if (!h || h <= 0) h = 792;
+
       setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
     } catch {
-      // silently ignore cross-origin or timing issues; keep defaults
+      // silently ignore timing issues; keep defaults
     }
   }, []);
 
-  // Compute scale to fit viewer height
+  // Compute scale to fit viewer height (no cropping)
   const recomputeScale = useCallback(() => {
     if (!viewerRef.current) return;
     const viewerEl = viewerRef.current;
@@ -151,19 +201,24 @@ export default function PortfolioViewer({
   // Recompute scale when page changes, iframe loads, or window resizes
   useEffect(() => {
     function onResize() {
+      // Re-measure then scale
       measureIframePage();
-      // allow layout to settle, then scale
       setTimeout(recomputeScale, 0);
     }
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, [measureIframePage, recomputeScale]);
 
-  // After index changes, re-measure on next load
+  // After iframe load, measure and scale
   const handleIframeLoad = useCallback(() => {
     measureIframePage();
-    // let fonts/layout settle
+    // Allow images/fonts to settle, then scale
     setTimeout(recomputeScale, 0);
+    // Re-check once more shortly after, in case images finalize later
+    setTimeout(() => {
+      measureIframePage();
+      recomputeScale();
+    }, 200);
   }, [measureIframePage, recomputeScale]);
 
   if (error) {
@@ -199,7 +254,7 @@ export default function PortfolioViewer({
     willChange: "transform",
     zIndex: 0,
     pointerEvents: "auto",
-    background: "transparent"
+    background: "transparent",
   };
 
   return (
@@ -210,7 +265,7 @@ export default function PortfolioViewer({
         height: viewerHeight,
         position: "relative",
         background: "#fff",
-        overflow: "hidden"
+        overflow: "hidden",
       }}
     >
       {/* Top info bar (optional; default hidden) */}
@@ -268,7 +323,7 @@ export default function PortfolioViewer({
             height: `${pageSize.height}px`,
             border: "none",
             background: "#fff",
-            display: "block"
+            display: "block",
           }}
         />
       </div>
