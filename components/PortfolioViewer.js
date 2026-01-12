@@ -169,7 +169,7 @@ export default function PortfolioViewer({
     }
   }
 
-  // NEW: Disable inner scrollbars in ai2html pages (so only outer viewer scrolls)
+  // Disable inner scrollbars in ai2html pages (so only outer viewer scrolls)
   function disableInnerScrollbars(doc) {
     try {
       const styleEl = doc.createElement("style");
@@ -482,14 +482,14 @@ export default function PortfolioViewer({
         }}
       />
 
-      {/* Controls: Fit toggle + arrows — FIXED to viewport bottom-right */}
+      {/* Controls: Fit toggle + arrows — FIXED to viewport top-right (25% smaller) */}
       <div
         style={{
           position: "fixed",
           right: 16,
-          bottom: "calc(16px + env(safe-area-inset-bottom, 0))",
+          top: `calc(${headerHeight}px + 12px + env(safe-area-inset-top, 0))`,
           display: "flex",
-          gap: 8,
+          gap: 6,                 // reduced spacing
           zIndex: 2000,           // Above iframe/click zones
           pointerEvents: "auto",  // Ensure clickable
         }}
@@ -504,7 +504,7 @@ export default function PortfolioViewer({
           {fitMode === "height" ? "Fit: Height" : "Fit: Width"}
         </button>
 
-        {/* Arrow controls (unchanged) */}
+        {/* Arrow controls */}
         <button
           onClick={() => setIndex(0)}
           disabled={index === 0}
@@ -550,9 +550,9 @@ const arrowBtnStyle = {
   background: "#fff",
   color: "#181818",
   border: "1px solid #ddd",
-  borderRadius: 6,
-  padding: "8px 10px",
+  borderRadius: 4,         // reduced from 6
+  padding: "6px 8px",      // reduced ~25%
   cursor: "pointer",
   fontFamily: "coolvetica, sans-serif",
-  fontSize: 14,
+  fontSize: 11,            // reduced from 14 (~21% to 25% smaller)
 };
