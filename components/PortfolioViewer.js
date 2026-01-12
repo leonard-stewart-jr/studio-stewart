@@ -1,9 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 /**
  * PortfolioViewer
  * - Fetches /portfolio/undergraduate/manifest.json
  * - Renders current page in an iframe
+ * - Scales the entire page to fit the viewer height (no cropping)
  * - Navigation: left/right buttons, keyboard arrows, and click zones
  * - Optional deep-linking via ?page=<id>
  *
@@ -20,6 +21,12 @@ export default function PortfolioViewer({
   const [manifest, setManifest] = useState(null);
   const [index, setIndex] = useState(0);
   const [error, setError] = useState(null);
+
+  // Scaling state
+  const iframeRef = useRef(null);
+  const viewerRef = useRef(null);
+  const [pageSize, setPageSize] = useState({ width: 612, height: 792 }); // default letter
+  const [scale, setScale] = useState(1);
 
   // Load manifest
   useEffect(() => {
@@ -59,7 +66,7 @@ export default function PortfolioViewer({
   }, [manifestUrl]);
 
   const total = manifest?.pages?.length || 0;
-  const headerHeight = manifest?.headerHeight ?? 60; // main site header height above the viewer
+  const headerHeight = manifest?.headerHeight ?? 60; // site header above viewer
 
   const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
   const goNext = useCallback(
@@ -88,6 +95,74 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goPrev, goNext, total]);
 
+  // Measure the page's natural size inside the iframe
+  const measureIframePage = useCallback(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    try {
+      const doc =
+        iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+      if (!doc || !doc.body) return;
+
+      // Try to read explicit width/height set by InDesign export
+      let w = doc.body.offsetWidth || 612;
+      let h = doc.body.offsetHeight || 792;
+
+      // If body has inline style width/height (e.g., "width:612px;height:792px")
+      const style = doc.body.getAttribute("style") || "";
+      const wMatch = style.match(/width:\s*([0-9.]+)px/i);
+      const hMatch = style.match(/height:\s*([0-9.]+)px/i);
+      if (wMatch) w = parseFloat(wMatch[1]) || w;
+      if (hMatch) h = parseFloat(hMatch[1]) || h;
+
+      // Some exports use an absolute first container with explicit width/height
+      const firstDiv = doc.body.firstElementChild;
+      if (firstDiv) {
+        const cs = (firstDiv as HTMLElement).style || {};
+        const w2 = (cs.width && parseFloat(cs.width)) || (firstDiv as HTMLElement).offsetWidth;
+        const h2 = (cs.height && parseFloat(cs.height)) || (firstDiv as HTMLElement).offsetHeight;
+        if (w2 && h2) {
+          // Pick the larger reliable measurement
+          if (h2 > 0) h = h2;
+          if (w2 > 0) w = w2;
+        }
+      }
+
+      setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
+    } catch {
+      // silently ignore cross-origin or timing issues; keep defaults
+    }
+  }, []);
+
+  // Compute scale to fit viewer height
+  const recomputeScale = useCallback(() => {
+    if (!viewerRef.current) return;
+    const viewerEl = viewerRef.current;
+    const availableHeight = viewerEl.clientHeight; // already excludes site header via container style
+    const naturalHeight = pageSize.height || 792;
+    const s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
+    setScale(s);
+  }, [pageSize.height]);
+
+  // Recompute scale when page changes, iframe loads, or window resizes
+  useEffect(() => {
+    function onResize() {
+      measureIframePage();
+      // allow layout to settle, then scale
+      setTimeout(recomputeScale, 0);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [measureIframePage, recomputeScale]);
+
+  // After index changes, re-measure on next load
+  const handleIframeLoad = useCallback(() => {
+    measureIframePage();
+    // let fonts/layout settle
+    setTimeout(recomputeScale, 0);
+  }, [measureIframePage, recomputeScale]);
+
   if (error) {
     return (
       <div style={{ padding: "20px" }}>
@@ -106,16 +181,33 @@ export default function PortfolioViewer({
 
   const page = manifest.pages[index];
   const viewerHeight = `calc(100vh - ${headerHeight}px)`;
-  const TOP_BAR_HEIGHT = 44; // previous info bar height
+  const TOP_BAR_HEIGHT = 44; // optional info bar height
   const topOffset = showInfoBar ? TOP_BAR_HEIGHT : 0;
+
+  // Wrapper for the scaled iframe: center horizontally, scale to fit height
+  const canvasWrapStyle = {
+    position: "absolute",
+    top: topOffset,
+    left: "50%",
+    transform: `translateX(-50%) scale(${scale})`,
+    transformOrigin: "top center",
+    width: `${pageSize.width}px`,
+    height: `${pageSize.height}px`,
+    willChange: "transform",
+    zIndex: 0,
+    pointerEvents: "auto",
+    background: "transparent"
+  };
 
   return (
     <div
+      ref={viewerRef}
       style={{
         width: "100%",
         height: viewerHeight,
         position: "relative",
         background: "#fff",
+        overflow: "hidden"
       }}
     >
       {/* Top info bar (optional; default hidden) */}
@@ -160,23 +252,25 @@ export default function PortfolioViewer({
         </div>
       )}
 
-      {/* Iframe viewer */}
-      <iframe
-        key={page?.src || index}
-        src={page?.src}
-        title={page?.id || `Page ${index + 1}`}
-        style={{
-          position: "absolute",
-          top: topOffset, // 0 when info bar hidden
-          left: 0,
-          width: "100%",
-          height: `calc(100% - ${topOffset}px)`,
-          border: "none",
-          background: "#fff",
-        }}
-      />
+      {/* Scaled iframe canvas */}
+      <div style={canvasWrapStyle}>
+        <iframe
+          ref={iframeRef}
+          key={page?.src || index}
+          src={page?.src}
+          title={page?.id || `Page ${index + 1}`}
+          onLoad={handleIframeLoad}
+          style={{
+            width: `${pageSize.width}px`,
+            height: `${pageSize.height}px`,
+            border: "none",
+            background: "#fff",
+            display: "block"
+          }}
+        />
+      </div>
 
-      {/* Click zones for navigation */}
+      {/* Click zones for navigation (full viewer area) */}
       <button
         aria-label="Previous page"
         onClick={goPrev}
@@ -184,7 +278,7 @@ export default function PortfolioViewer({
         style={{
           position: "absolute",
           left: 0,
-          top: topOffset, // 0 when info bar hidden
+          top: topOffset,
           width: "50%",
           height: `calc(100% - ${topOffset}px)`,
           background: "transparent",
@@ -200,7 +294,7 @@ export default function PortfolioViewer({
         style={{
           position: "absolute",
           right: 0,
-          top: topOffset, // 0 when info bar hidden
+          top: topOffset,
           width: "50%",
           height: `calc(100% - ${topOffset}px)`,
           background: "transparent",
