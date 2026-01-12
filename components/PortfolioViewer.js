@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
 /**
- * PortfolioViewer (type-aware fit-to-height/width + scroll-hint removal)
+ * PortfolioViewer (fit-to-height/width + ai2html scroll-hint removal)
  * - Detects page type inside the iframe (InDesign vs ai2html spread)
  * - Measures natural page width/height
  * - Scales to fit viewer HEIGHT (default) or WIDTH (toggle)
@@ -10,9 +10,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
  * - Navigation: left/right, keyboard arrows, click zones
  * - Optional deep-linking via ?page=<id> and ?fit=height|width
  *
- * Props:
- * - manifestUrl: string (default "/portfolio/undergraduate/manifest.json")
- * - showInfoBar: boolean (default false) — top info bar remains hidden unless enabled
+ * Extra: On fit toggle, the iframe is reloaded (cache-busted) to keep images/text crisp.
  */
 export default function PortfolioViewer({
   manifestUrl = "/portfolio/undergraduate/manifest.json",
@@ -28,6 +26,9 @@ export default function PortfolioViewer({
   const [pageSize, setPageSize] = useState({ width: 1224, height: 792 }); // default single-spread size
   const [scale, setScale] = useState(1);
   const [fitMode, setFitMode] = useState("height"); // "height" or "width"
+
+  // Bump this to force iframe reloads (fit toggle or explicit)
+  const [reloadCounter, setReloadCounter] = useState(0);
 
   // Load manifest and initialize page/fit from URL
   useEffect(() => {
@@ -84,7 +85,7 @@ export default function PortfolioViewer({
     [total]
   );
 
-  // Keyboard navigation + Fit toggle ("f")
+  // Keyboard navigation + Fit toggle ("f") with reload
   useEffect(() => {
     function onKeyDown(e) {
       if (e.key === "ArrowLeft") {
@@ -102,6 +103,7 @@ export default function PortfolioViewer({
       } else if (e.key.toLowerCase() === "f") {
         e.preventDefault();
         setFitMode((m) => (m === "height" ? "width" : "height"));
+        setReloadCounter((n) => n + 1); // force iframe reload on toggle
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -268,7 +270,8 @@ export default function PortfolioViewer({
       if (!h || h <= 0) h = 792;
 
       setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
-      // Ensure inner scrollbars and hints are removed for ai2html pages
+
+      // ai2html-only fixes
       removeScrollHints(doc);
       disableInnerScrollbars(doc);
     } catch {
@@ -304,7 +307,7 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("resize", onResize);
   }, [measureIframePage, recomputeScale]);
 
-  // Update URL when fitMode changes (without reload)
+  // Update URL when fitMode changes (without reload) and recompute scale
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
@@ -313,7 +316,6 @@ export default function PortfolioViewer({
         window.history.replaceState({}, "", url.toString());
       }
     } catch { /* ignore */ }
-    // Also recompute scale on mode change
     recomputeScale();
   }, [fitMode, recomputeScale]);
 
@@ -370,6 +372,11 @@ export default function PortfolioViewer({
   const spacerHeight = allowVerticalScroll
     ? Math.max(0, Math.round(scaledHeight - pageSize.height))
     : 0;
+
+  // Iframe src with cache-busting on reloadCounter
+  const rawSrc = page?.src || "";
+  const srcWithBuster =
+    rawSrc + (rawSrc.includes("?") ? "&" : "?") + "v=" + reloadCounter;
 
   return (
     <div
@@ -429,8 +436,8 @@ export default function PortfolioViewer({
       <div style={canvasWrapStyle}>
         <iframe
           ref={iframeRef}
-          key={page?.src || index}
-          src={page?.src}
+          key={`${srcWithBuster}|${pageSize.width}x${pageSize.height}`} // ensure remounts on reloads
+          src={srcWithBuster}
           title={page?.id || `Page ${index + 1}`}
           onLoad={handleIframeLoad}
           style={{
@@ -494,9 +501,12 @@ export default function PortfolioViewer({
           pointerEvents: "auto",  // Ensure clickable
         }}
       >
-        {/* Fit mode toggle */}
+        {/* Fit mode toggle — also reloads */}
         <button
-          onClick={() => setFitMode((m) => (m === "height" ? "width" : "height"))}
+          onClick={() => {
+            setFitMode((m) => (m === "height" ? "width" : "height"));
+            setReloadCounter((n) => n + 1); // reload iframe for crispness
+          }}
           style={arrowBtnStyle}
           aria-label="Toggle fit mode"
           title="Toggle fit mode (F)"
@@ -554,5 +564,5 @@ const arrowBtnStyle = {
   padding: "6px 8px",      // reduced ~25%
   cursor: "pointer",
   fontFamily: "coolvetica, sans-serif",
-  fontSize: 11,            // reduced from 14 (~21% to 25% smaller)
+  fontSize: 11,            // reduced from 14 (~25% smaller)
 };
