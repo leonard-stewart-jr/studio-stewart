@@ -1,18 +1,17 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
 /**
- * PortfolioViewer (type-aware fit-to-height)
+ * PortfolioViewer (type-aware fit-to-height/width + scroll-hint removal)
  * - Detects page type inside the iframe (InDesign vs ai2html spread)
- * - Measures natural page width/height, then scales the whole page to fit viewer height
+ * - Measures natural page width/height
+ * - Scales to fit viewer HEIGHT (default) or WIDTH (toggle)
  * - No cropping; scales text, images, and blocks uniformly
- * - Navigation: left/right, keyboard, click zones
- * - Optional deep-linking via ?page=<id>
- *
- * To add/remove/reorder pages, edit public/portfolio/undergraduate/manifest.json.
+ * - Navigation: left/right, keyboard arrows, click zones
+ * - Optional deep-linking via ?page=<id> and ?fit=height|width
  *
  * Props:
  * - manifestUrl: string (default "/portfolio/undergraduate/manifest.json")
- * - showInfoBar: boolean (default false) — when true, shows the top info bar
+ * - showInfoBar: boolean (default false) — top info bar remains hidden unless enabled
  */
 export default function PortfolioViewer({
   manifestUrl = "/portfolio/undergraduate/manifest.json",
@@ -22,13 +21,14 @@ export default function PortfolioViewer({
   const [index, setIndex] = useState(0);
   const [error, setError] = useState(null);
 
-  // Scaling state
+  // Page measurement + scaling
   const iframeRef = useRef(null);
   const viewerRef = useRef(null);
-  const [pageSize, setPageSize] = useState({ width: 1224, height: 792 }); // default spread size
+  const [pageSize, setPageSize] = useState({ width: 1224, height: 792 }); // default single-spread size
   const [scale, setScale] = useState(1);
+  const [fitMode, setFitMode] = useState("height"); // "height" or "width"
 
-  // Load manifest
+  // Load manifest and initialize page/fit from URL
   useEffect(() => {
     let isMounted = true;
     fetch(manifestUrl)
@@ -43,17 +43,26 @@ export default function PortfolioViewer({
         }
         setManifest(data);
 
-        // Optional: read ?page=<id> to start at a specific page
         const params =
           typeof window !== "undefined"
             ? new URLSearchParams(window.location.search)
             : null;
+
+        // Page deep-link
         const startId = params ? params.get("page") : null;
         if (startId) {
           const startIndex = data.pages.findIndex((p) => p.id === startId);
           setIndex(startIndex >= 0 ? startIndex : 0);
         } else {
           setIndex(0);
+        }
+
+        // Fit deep-link (?fit=width|height)
+        const fitParam = params ? params.get("fit") : null;
+        if (fitParam === "width" || fitParam === "height") {
+          setFitMode(fitParam);
+        } else {
+          setFitMode("height");
         }
       })
       .catch((err) => {
@@ -74,7 +83,7 @@ export default function PortfolioViewer({
     [total]
   );
 
-  // Keyboard navigation
+  // Keyboard navigation + Fit toggle ("f")
   useEffect(() => {
     function onKeyDown(e) {
       if (e.key === "ArrowLeft") {
@@ -89,6 +98,9 @@ export default function PortfolioViewer({
       } else if (e.key === "End") {
         e.preventDefault();
         setIndex(total > 0 ? total - 1 : 0);
+      } else if (e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        setFitMode((m) => (m === "height" ? "width" : "height"));
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -104,6 +116,54 @@ export default function PortfolioViewer({
   function parsePx(value) {
     const n = parseFloat(String(value || "").replace(/[^0-9.\-]/g, ""));
     return Number.isFinite(n) ? n : null;
+  }
+
+  // Remove right-side scroll hint arrow from ai2html pages (safe selectors + heuristic)
+  function removeScrollHints(doc) {
+    try {
+      const styleEl = doc.createElement("style");
+      styleEl.textContent = `
+        /* Common scroll hint classes */
+        .g-aiScrollArrow,
+        .scroll-arrow,
+        .scrollHint,
+        .scroll-hint,
+        [data-role="scroll-hint"],
+        [data-scroll="hint"],
+        .ai2html-arrow {
+          display: none !important;
+          visibility: hidden !important;
+        }
+      `;
+      doc.head && doc.head.appendChild(styleEl);
+
+      const candidates = doc.querySelectorAll(
+        ".g-aiScrollArrow, .scroll-arrow, .scrollHint, .scroll-hint, [data-role='scroll-hint'], [data-scroll='hint'], .ai2html-arrow"
+      );
+      candidates.forEach((el) => el.remove());
+
+      // Heuristic: hide tiny fixed/absolute elements pinned near the right edge (possible arrow)
+      const allNodes = doc.querySelectorAll("div,span,svg,img,button");
+      allNodes.forEach((el) => {
+        const win = doc.defaultView || window;
+        const cs = win.getComputedStyle ? win.getComputedStyle(el) : null;
+        if (!cs) return;
+        const pos = cs.position;
+        const w = el.offsetWidth;
+        const h = el.offsetHeight;
+        const rightPx = parsePx(cs.right);
+        const leftPx = parsePx(cs.left);
+
+        const tiny = w <= 40 && h <= 140;
+        const pinnedRight = (rightPx !== null && rightPx <= 10) || (leftPx !== null && leftPx >= (doc.body.offsetWidth - 10));
+        if ((pos === "fixed" || pos === "absolute") && tiny && pinnedRight) {
+          el.style.display = "none";
+          el.style.visibility = "hidden";
+        }
+      });
+    } catch {
+      // ignore failures silently
+    }
   }
 
   // Measure page's natural size inside the iframe (type-aware)
@@ -139,69 +199,67 @@ export default function PortfolioViewer({
         }
 
         setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
+        removeScrollHints(doc);
         return;
       }
 
-      // ai2html spread pages
-      // Strategy: try artboard styles first, then image natural size
+      // ai2html spread pages (single spread per HTML)
+      // Prefer the first ai2html image's natural size; fallback to artboard max-*
       let w = 1224; // typical spread width
       let h = 792;  // typical height
 
-      const artboards = doc.querySelectorAll(".ai2html .g-artboard");
-      if (artboards && artboards.length > 0) {
-        // If multiple artboards existed, we pick the largest by max-height/width.
-        let bestW = 0;
-        let bestH = 0;
-        artboards.forEach((el) => {
-          const styleAttr = el.getAttribute("style") || "";
+      const img = doc.querySelector(".ai2html .g-aiImg, img.g-aiImg");
+      if (img && img instanceof HTMLImageElement) {
+        const nw = img.naturalWidth || img.width;
+        const nh = img.naturalHeight || img.height;
+        if (nw && nh) {
+          w = nw;
+          h = nh;
+        }
+      } else {
+        const artboard = doc.querySelector(".ai2html .g-artboard");
+        if (artboard) {
+          const styleAttr = artboard.getAttribute("style") || "";
           const mwMatch = styleAttr.match(/max-width:\s*([0-9.]+)px/i);
           const mhMatch = styleAttr.match(/max-height:\s*([0-9.]+)px/i);
           const mw = mwMatch ? parseFloat(mwMatch[1]) : 0;
           const mh = mhMatch ? parseFloat(mhMatch[1]) : 0;
-          if (mw > bestW) bestW = mw;
-          if (mh > bestH) bestH = mh;
-        });
-        if (bestW > 0) w = bestW;
-        if (bestH > 0) h = bestH;
-      }
-
-      // Fallback: use the first ai2html image's natural size
-      if (!w || !h || w <= 0 || h <= 0) {
-        const img = doc.querySelector(".ai2html .g-aiImg, img.g-aiImg");
-        if (img && img instanceof HTMLImageElement) {
-          const nw = img.naturalWidth || img.width;
-          const nh = img.naturalHeight || img.height;
-          if (nw && nh) {
-            w = nw;
-            h = nh;
-          }
+          if (mw > 0) w = mw;
+          if (mh > 0) h = mh;
         }
       }
 
-      // Last fallback defaults
       if (!w || w <= 0) w = 1224;
       if (!h || h <= 0) h = 792;
 
       setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
+      removeScrollHints(doc);
     } catch {
-      // silently ignore timing issues; keep defaults
+      // keep defaults silently
     }
   }, []);
 
-  // Compute scale to fit viewer height (no cropping)
+  // Compute scale to fit viewer HEIGHT or WIDTH (no cropping)
   const recomputeScale = useCallback(() => {
     if (!viewerRef.current) return;
     const viewerEl = viewerRef.current;
     const availableHeight = viewerEl.clientHeight; // excludes site header via container style
+    const availableWidth = viewerEl.clientWidth;
     const naturalHeight = pageSize.height || 792;
-    const s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
-    setScale(s);
-  }, [pageSize.height]);
+    const naturalWidth = pageSize.width || 1224;
 
-  // Recompute scale when page changes, iframe loads, or window resizes
+    let s = 1;
+    if (fitMode === "width") {
+      s = availableWidth > 0 ? availableWidth / naturalWidth : 1;
+    } else {
+      s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
+    }
+    setScale(s);
+  }, [pageSize.height, pageSize.width, fitMode]);
+
+  // Recompute when window resizes, page changes, or fit mode toggles
   useEffect(() => {
     function onResize() {
-      // Re-measure then scale
       measureIframePage();
       setTimeout(recomputeScale, 0);
     }
@@ -209,12 +267,23 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("resize", onResize);
   }, [measureIframePage, recomputeScale]);
 
-  // After iframe load, measure and scale
+  // Update URL when fitMode changes (without reload)
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("fit", fitMode);
+        window.history.replaceState({}, "", url.toString());
+      }
+    } catch { /* ignore */ }
+    // Also recompute scale on mode change
+    recomputeScale();
+  }, [fitMode, recomputeScale]);
+
+  // After iframe load, measure and scale (with second pass after assets settle)
   const handleIframeLoad = useCallback(() => {
     measureIframePage();
-    // Allow images/fonts to settle, then scale
     setTimeout(recomputeScale, 0);
-    // Re-check once more shortly after, in case images finalize later
     setTimeout(() => {
       measureIframePage();
       recomputeScale();
@@ -242,10 +311,11 @@ export default function PortfolioViewer({
   const TOP_BAR_HEIGHT = 44; // optional info bar height
   const topOffset = showInfoBar ? TOP_BAR_HEIGHT : 0;
 
-  // Wrapper for the scaled iframe: center horizontally, scale to fit height
+  // Wrapper for scaled iframe: center horizontally; scale to fit
+  // Note: transform doesn't affect layout height, so we add a spacer for Fit Width mode.
   const canvasWrapStyle = {
-    position: "absolute",
-    top: topOffset,
+    position: "relative",
+    marginTop: topOffset,
     left: "50%",
     transform: `translateX(-50%) scale(${scale})`,
     transformOrigin: "top center",
@@ -254,8 +324,11 @@ export default function PortfolioViewer({
     willChange: "transform",
     zIndex: 0,
     pointerEvents: "auto",
-    background: "transparent",
+    background: "#fff"
   };
+
+  const scaledHeight = pageSize.height * scale;
+  const allowVerticalScroll = fitMode === "width";
 
   return (
     <div
@@ -265,7 +338,8 @@ export default function PortfolioViewer({
         height: viewerHeight,
         position: "relative",
         background: "#fff",
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: allowVerticalScroll ? "auto" : "hidden"
       }}
     >
       {/* Top info bar (optional; default hidden) */}
@@ -323,10 +397,15 @@ export default function PortfolioViewer({
             height: `${pageSize.height}px`,
             border: "none",
             background: "#fff",
-            display: "block",
+            display: "block"
           }}
         />
       </div>
+
+      {/* Spacer to enable vertical scroll in Fit Width mode (transform doesn't change layout height) */}
+      {allowVerticalScroll && (
+        <div aria-hidden="true" style={{ height: `${scaledHeight + topOffset}px` }} />
+      )}
 
       {/* Click zones for navigation (full viewer area) */}
       <button
@@ -362,7 +441,7 @@ export default function PortfolioViewer({
         }}
       />
 
-      {/* Arrow controls (unchanged) */}
+      {/* Controls: Fit toggle + arrows */}
       <div
         style={{
           position: "absolute",
@@ -373,6 +452,17 @@ export default function PortfolioViewer({
           zIndex: 2,
         }}
       >
+        {/* Fit mode toggle */}
+        <button
+          onClick={() => setFitMode((m) => (m === "height" ? "width" : "height"))}
+          style={arrowBtnStyle}
+          aria-label="Toggle fit mode"
+          title="Toggle fit mode (F)"
+        >
+          {fitMode === "height" ? "Fit: Height" : "Fit: Width"}
+        </button>
+
+        {/* Arrow controls (unchanged) */}
         <button
           onClick={() => setIndex(0)}
           disabled={index === 0}
