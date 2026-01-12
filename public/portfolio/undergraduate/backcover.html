@@ -6,13 +6,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="/portfolio/undergraduate/css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
     <style>
-  /* Center fixed-width InDesign export pages (intro + backcover) */
+  /* Center the outer InDesign canvas on intro/backcover */
   html, body { margin: 0; height: 100%; }
-  body[id^="publication-"] {
-    /* Body already has a fixed width from the export (e.g., 1224px). */
-    margin: 0 auto !important;     /* center horizontally */
-    display: block !important;      /* ensure margins apply */
-    background: transparent !important;
+  body[id^="publication-"] { position: relative; }
+
+  /* The export's first top-level absolute container is the canvas */
+  body[id^="publication-"] > div:first-of-type {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translate(-50%, 0) !important;
+    -webkit-transform: translate(-50%, 0) !important;
+    -ms-transform: translate(-50%, 0) !important;
   }
   /* Force Google Open Sans on all InDesign text runs so spacing matches export */
   body[id^="publication-"] [class^="CharOverride-"],
