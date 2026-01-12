@@ -83,7 +83,7 @@
       }
     </style>
 
-    <!-- Font and vertical-scale fixes (no origin change) -->
+    <!-- Font and vertical-scale fixes (scale headings only; no origin change) -->
     <style>
       /* Force Open Sans everywhere to stabilize spacing */
       #g-cover-box p,
@@ -102,14 +102,15 @@
         font-weight: 300 !important;
       }
 
-      /* Recreate InDesign's 250% Vertical Scale for the colored letters */
-      /* Note: origin intentionally left at default (center) per your request */
-      #g-cover-Artboard_1 .g-cstyle0,
-      #g-cover-Artboard_1 .g-cstyle1 {
+      /* Recreate InDesign's 250% Vertical Scale for entire heading lines */
+      /* Note: transform-origin left at default as requested */
+      #g-cover-Artboard_1 .g-pstyle0,
+      #g-cover-Artboard_1 .g-pstyle1 {
         display: inline-block;
         transform: scaleY(2.5);
         line-height: 1;
       }
+      /* Do NOT scale individual colored letters; they inherit from the heading */
     </style>
   </head>
 
