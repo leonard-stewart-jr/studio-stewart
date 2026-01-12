@@ -311,8 +311,7 @@ export default function PortfolioViewer({
   const TOP_BAR_HEIGHT = 44; // optional info bar height
   const topOffset = showInfoBar ? TOP_BAR_HEIGHT : 0;
 
-  // Wrapper for scaled iframe: center horizontally; scale to fit
-  // Note: transform doesn't affect layout height, so we add a spacer for Fit Width mode.
+  // Wrapper for scaled iframe: center horizontally, scale to fit
   const canvasWrapStyle = {
     position: "relative",
     marginTop: topOffset,
@@ -329,6 +328,12 @@ export default function PortfolioViewer({
 
   const scaledHeight = pageSize.height * scale;
   const allowVerticalScroll = fitMode === "width";
+
+  // IMPORTANT: Only add the difference between scaled height and the original layout height.
+  // The canvas contributes pageSize.height to layout; transform doesn't change layout height.
+  const spacerHeight = allowVerticalScroll
+    ? Math.max(0, Math.round(scaledHeight - pageSize.height))
+    : 0;
 
   return (
     <div
@@ -403,8 +408,8 @@ export default function PortfolioViewer({
       </div>
 
       {/* Spacer to enable vertical scroll in Fit Width mode (transform doesn't change layout height) */}
-      {allowVerticalScroll && (
-        <div aria-hidden="true" style={{ height: `${scaledHeight + topOffset}px` }} />
+      {allowVerticalScroll && spacerHeight > 0 && (
+        <div aria-hidden="true" style={{ height: `${spacerHeight}px` }} />
       )}
 
       {/* Click zones for navigation (full viewer area) */}
