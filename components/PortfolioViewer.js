@@ -8,9 +8,14 @@ import { useEffect, useState, useCallback } from "react";
  * - Optional deep-linking via ?page=<id>
  *
  * To add/remove/reorder pages, edit public/portfolio/undergraduate/manifest.json.
+ *
+ * Props:
+ * - manifestUrl: string (default "/portfolio/undergraduate/manifest.json")
+ * - showInfoBar: boolean (default false) — when true, shows the top info bar
  */
 export default function PortfolioViewer({
-  manifestUrl = "/portfolio/undergraduate/manifest.json"
+  manifestUrl = "/portfolio/undergraduate/manifest.json",
+  showInfoBar = false
 }) {
   const [manifest, setManifest] = useState(null);
   const [index, setIndex] = useState(0);
@@ -54,7 +59,7 @@ export default function PortfolioViewer({
   }, [manifestUrl]);
 
   const total = manifest?.pages?.length || 0;
-  const headerHeight = manifest?.headerHeight ?? 60;
+  const headerHeight = manifest?.headerHeight ?? 60; // main site header height above the viewer
 
   const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
   const goNext = useCallback(
@@ -101,6 +106,8 @@ export default function PortfolioViewer({
 
   const page = manifest.pages[index];
   const viewerHeight = `calc(100vh - ${headerHeight}px)`;
+  const TOP_BAR_HEIGHT = 44; // previous info bar height
+  const topOffset = showInfoBar ? TOP_BAR_HEIGHT : 0;
 
   return (
     <div
@@ -111,45 +118,47 @@ export default function PortfolioViewer({
         background: "#fff",
       }}
     >
-      {/* Top info bar */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 44,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px",
-          background: "rgba(255,255,255,0.9)",
-          borderBottom: "1px solid #eee",
-          zIndex: 2,
-        }}
-      >
+      {/* Top info bar (optional; default hidden) */}
+      {showInfoBar && (
         <div
           style={{
-            fontFamily: "coolvetica, sans-serif",
-            fontSize: 14,
-            color: "#6c6c6a",
-            textTransform: "uppercase",
-            letterSpacing: ".04em",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: TOP_BAR_HEIGHT,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 16px",
+            background: "rgba(255,255,255,0.9)",
+            borderBottom: "1px solid #eee",
+            zIndex: 2,
           }}
         >
-          {manifest.title || "Undergraduate Portfolio"}
+          <div
+            style={{
+              fontFamily: "coolvetica, sans-serif",
+              fontSize: 14,
+              color: "#6c6c6a",
+              textTransform: "uppercase",
+              letterSpacing: ".04em",
+            }}
+          >
+            {manifest.title || "Undergraduate Portfolio"}
+          </div>
+          <div
+            style={{
+              fontFamily: "coolvetica, sans-serif",
+              fontSize: 12,
+              color: "#6c6c6a",
+              letterSpacing: ".02em",
+            }}
+          >
+            {page?.id || `Page ${index + 1}`} • {index + 1}/{total}
+          </div>
         </div>
-        <div
-          style={{
-            fontFamily: "coolvetica, sans-serif",
-            fontSize: 12,
-            color: "#6c6c6a",
-            letterSpacing: ".02em",
-          }}
-        >
-          {page?.id || `Page ${index + 1}`} • {index + 1}/{total}
-        </div>
-      </div>
+      )}
 
       {/* Iframe viewer */}
       <iframe
@@ -158,10 +167,10 @@ export default function PortfolioViewer({
         title={page?.id || `Page ${index + 1}`}
         style={{
           position: "absolute",
-          top: 44,
+          top: topOffset, // 0 when info bar hidden
           left: 0,
           width: "100%",
-          height: `calc(100% - 44px)`,
+          height: `calc(100% - ${topOffset}px)`,
           border: "none",
           background: "#fff",
         }}
@@ -175,9 +184,9 @@ export default function PortfolioViewer({
         style={{
           position: "absolute",
           left: 0,
-          top: 44,
+          top: topOffset, // 0 when info bar hidden
           width: "50%",
-          height: "calc(100% - 44px)",
+          height: `calc(100% - ${topOffset}px)`,
           background: "transparent",
           border: "none",
           cursor: index > 0 ? "pointer" : "not-allowed",
@@ -191,9 +200,9 @@ export default function PortfolioViewer({
         style={{
           position: "absolute",
           right: 0,
-          top: 44,
+          top: topOffset, // 0 when info bar hidden
           width: "50%",
-          height: "calc(100% - 44px)",
+          height: `calc(100% - ${topOffset}px)`,
           background: "transparent",
           border: "none",
           cursor: index < total - 1 ? "pointer" : "not-allowed",
@@ -201,7 +210,7 @@ export default function PortfolioViewer({
         }}
       />
 
-      {/* Arrow controls */}
+      {/* Arrow controls (unchanged) */}
       <div
         style={{
           position: "absolute",
