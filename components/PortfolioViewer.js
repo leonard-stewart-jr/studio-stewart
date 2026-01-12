@@ -1,15 +1,18 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
 /**
- * PortfolioViewer (type-aware fit-to-height/width + ai2html fixes)
+ * PortfolioViewer (type-aware fit-to-height/width + scroll-hint removal)
  * - Detects page type inside the iframe (InDesign vs ai2html spread)
  * - Measures natural page width/height
  * - Scales to fit viewer HEIGHT (default) or WIDTH (toggle)
  * - No cropping; scales text, images, and blocks uniformly
  * - Removes ai2html internal scrollbars/hints so only the outer viewer scrolls
- * - Injects Google Open Sans (300/400/700) into ai2html pages and applies scoped font overrides
  * - Navigation: left/right, keyboard arrows, click zones
  * - Optional deep-linking via ?page=<id> and ?fit=height|width
+ *
+ * Props:
+ * - manifestUrl: string (default "/portfolio/undergraduate/manifest.json")
+ * - showInfoBar: boolean (default false) — top info bar remains hidden unless enabled
  */
 export default function PortfolioViewer({
   manifestUrl = "/portfolio/undergraduate/manifest.json",
@@ -57,7 +60,11 @@ export default function PortfolioViewer({
 
         // Fit deep-link (?fit=width|height)
         const fitParam = params ? params.get("fit") : null;
-        setFitMode(fitParam === "width" || fitParam === "height" ? fitParam : "height");
+        if (fitParam === "width" || fitParam === "height") {
+          setFitMode(fitParam);
+        } else {
+          setFitMode("height");
+        }
       })
       .catch((err) => {
         if (!isMounted) return;
@@ -162,7 +169,7 @@ export default function PortfolioViewer({
     }
   }
 
-  // Disable inner scrollbars in ai2html pages (so only outer viewer scrolls)
+  // NEW: Disable inner scrollbars in ai2html pages (so only outer viewer scrolls)
   function disableInnerScrollbars(doc) {
     try {
       const styleEl = doc.createElement("style");
@@ -188,52 +195,6 @@ export default function PortfolioViewer({
       // Defensive: inline hide in case author styles override
       doc.documentElement.style.overflow = "hidden";
       doc.body.style.overflow = "hidden";
-    } catch {
-      // ignore silently
-    }
-  }
-
-  // Inject Google Open Sans (300/400/700) and apply scoped overrides inside iframe
-  function injectOpenSans(doc) {
-    try {
-      // Avoid duplicate injection
-      if (doc.querySelector('link[data-injected="open-sans"]')) return;
-
-      // Preconnect for faster font load
-      const preconnect = doc.createElement("link");
-      preconnect.setAttribute("rel", "preconnect");
-      preconnect.setAttribute("href", "https://fonts.gstatic.com");
-      preconnect.setAttribute("crossorigin", "");
-      doc.head && doc.head.appendChild(preconnect);
-
-      const link = doc.createElement("link");
-      link.setAttribute("rel", "stylesheet");
-      link.setAttribute("href", "https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap");
-      link.setAttribute("data-injected", "open-sans");
-      doc.head && doc.head.appendChild(link);
-
-      const styleEl = doc.createElement("style");
-      styleEl.textContent = `
-        /* Enforce Open Sans family inside ai2html pages */
-        .ai2html, .ai2html * ,
-        .g-aiText, .g-aiPointText,
-        body, p, span {
-          font-family: 'Open Sans', sans-serif !important;
-          font-style: normal !important;
-          -webkit-font-smoothing: antialiased !important;
-          -moz-osx-font-smoothing: grayscale !important;
-          text-rendering: optimizeLegibility !important;
-        }
-        /* Preserve and normalize weights used by exports */
-        [style*="font-weight: 300"], [style*="font-weight:300"] { font-weight: 300 !important; }
-        [style*="font-weight: 400"], [style*="font-weight:400"] { font-weight: 400 !important; }
-        [style*="font-weight: 700"], [style*="font-weight:700"] { font-weight: 700 !important; }
-        /* Common class names occasionally used by ai2html text blocks */
-        .weight-300 { font-weight: 300 !important; }
-        .weight-400 { font-weight: 400 !important; }
-        .weight-700 { font-weight: 700 !important; }
-      `;
-      doc.head && doc.head.appendChild(styleEl);
     } catch {
       // ignore silently
     }
@@ -272,7 +233,8 @@ export default function PortfolioViewer({
         }
 
         setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
-        // Fonts are already set on these pages individually; do not override letter-spacing
+        // No inner scrollbars expected on these, but safe to remove hints
+        removeScrollHints(doc);
         return;
       }
 
@@ -306,11 +268,9 @@ export default function PortfolioViewer({
       if (!h || h <= 0) h = 792;
 
       setPageSize({ width: Math.max(1, w), height: Math.max(1, h) });
-
-      // ai2html-only fixes
+      // Ensure inner scrollbars and hints are removed for ai2html pages
       removeScrollHints(doc);
       disableInnerScrollbars(doc);
-      injectOpenSans(doc);
     } catch {
       // keep defaults silently
     }
