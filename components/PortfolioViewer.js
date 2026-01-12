@@ -95,7 +95,7 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goPrev, goNext, total]);
 
-  // Measure the page's natural size inside the iframe
+  // Measure the page's natural size inside the iframe (plain JS, no TS assertions)
   const measureIframePage = useCallback(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
@@ -105,27 +105,30 @@ export default function PortfolioViewer({
         iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
       if (!doc || !doc.body) return;
 
-      // Try to read explicit width/height set by InDesign export
+      // Start with body offset size
       let w = doc.body.offsetWidth || 612;
       let h = doc.body.offsetHeight || 792;
 
       // If body has inline style width/height (e.g., "width:612px;height:792px")
-      const style = doc.body.getAttribute("style") || "";
-      const wMatch = style.match(/width:\s*([0-9.]+)px/i);
-      const hMatch = style.match(/height:\s*([0-9.]+)px/i);
+      const inlineStyle = doc.body.getAttribute("style") || "";
+      const wMatch = inlineStyle.match(/width:\s*([0-9.]+)px/i);
+      const hMatch = inlineStyle.match(/height:\s*([0-9.]+)px/i);
       if (wMatch) w = parseFloat(wMatch[1]) || w;
       if (hMatch) h = parseFloat(hMatch[1]) || h;
 
       // Some exports use an absolute first container with explicit width/height
       const firstDiv = doc.body.firstElementChild;
       if (firstDiv) {
-        const cs = (firstDiv as HTMLElement).style || {};
-        const w2 = (cs.width && parseFloat(cs.width)) || (firstDiv as HTMLElement).offsetWidth;
-        const h2 = (cs.height && parseFloat(cs.height)) || (firstDiv as HTMLElement).offsetHeight;
+        const cs = firstDiv.style || {};
+        const w2 =
+          (cs.width && parseFloat(cs.width)) ||
+          (firstDiv instanceof HTMLElement ? firstDiv.offsetWidth : w);
+        const h2 =
+          (cs.height && parseFloat(cs.height)) ||
+          (firstDiv instanceof HTMLElement ? firstDiv.offsetHeight : h);
         if (w2 && h2) {
-          // Pick the larger reliable measurement
-          if (h2 > 0) h = h2;
-          if (w2 > 0) w = w2;
+          w = w2 || w;
+          h = h2 || h;
         }
       }
 
@@ -139,7 +142,7 @@ export default function PortfolioViewer({
   const recomputeScale = useCallback(() => {
     if (!viewerRef.current) return;
     const viewerEl = viewerRef.current;
-    const availableHeight = viewerEl.clientHeight; // already excludes site header via container style
+    const availableHeight = viewerEl.clientHeight; // excludes site header via container style
     const naturalHeight = pageSize.height || 792;
     const s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
     setScale(s);
