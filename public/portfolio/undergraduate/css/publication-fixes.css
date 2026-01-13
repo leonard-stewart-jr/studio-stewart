@@ -1,0 +1,63 @@
+/* name=public/portfolio/undergraduate/css/publication-fixes.css
+   Add this file to the repo at:
+   public/portfolio/undergraduate/css/publication-fixes.css
+   (This CSS is intentionally scoped to body ids used by ai2html exports:
+    rules only apply to documents with body id starting with "publication-"
+    so it won't affect your main Next site.) */
+
+/* Center exported artboards in the viewport so absolute coordinates line up */
+html {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Target only ai2html/InDesign exports (they use body ids like publication-1, publication-12, etc.) */
+body[id^="publication-"] {
+  /* Force the artboard width used by the export so absolute positions and percentages align.
+     spring2023.ai exported at 1224px; keep this page-scoped so other pages are unaffected. */
+  width: 1224px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  position: relative !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Some ai2html exports wrap everything in an inner translated div.
+   Remove left/transform so the body width anchoring works predictably. */
+body[id^="publication-"] > div:first-of-type {
+  left: 0 !important;
+  transform: none !important;
+}
+
+/* Force Open Sans (ai2html uses Open Sans on export) for text runs so font metrics match. */
+body[id^="publication-"] p,
+body[id^="publication-"] span,
+body[id^="publication-"] [class^="g-"],
+body[id^="publication-"] [class*=" CharOverride-"],
+body[id^="publication-"] .DoArch-Template_Project-Title {
+  font-family: "Open Sans", "OpenSans", sans-serif !important;
+  font-style: normal !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Keep any light weights resolving to the loaded 300 cut */
+body[id^="publication-"] [style*="font-weight: 300"],
+body[id^="publication-"] [style*="font-weight:300"] {
+  font-weight: 300 !important;
+}
+
+/* A small helper to avoid exported images being constrained by outer site rules:
+   if the image inside the artboard is set to width:100% by ai2html, keep that, but
+   ensure it cannot be limited by unexpected max-width from embedding contexts. */
+body[id^="publication-"] img {
+  max-width: none !important;
+  box-sizing: border-box;
+}
