@@ -432,3 +432,58 @@
 </div>
 
 <!-- End ai2html - 2026-01-13 23:20 -->
+  <!-- Inline toggle script: shows only Artboard_1 or Artboard_2 based on ?ab=1|2 -->
+    <script>
+      (function () {
+        function onReady(fn) {
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", fn, { once: true });
+          } else {
+            fn();
+          }
+        }
+        onReady(function () {
+          try {
+            var params = new URLSearchParams(location.search);
+            var ab = params.get("ab") === "2" ? "2" : "1"; // default to 1
+
+            // Slug from filename, e.g., "spring2024"
+            var m = location.pathname.match(/\/([^\/]+)\.html$/);
+            var slug = m ? m[1] : "spring2024";
+
+            // Try common ai2html ID patterns
+            var a1 =
+              document.getElementById(slug + "-Artboard_1") ||
+              document.getElementById("g-" + slug + "-Artboard_1");
+            var a2 =
+              document.getElementById(slug + "-Artboard_2") ||
+              document.getElementById("g-" + slug + "-Artboard_2");
+
+            function hide(el) { if (el && el.style) el.style.display = "none"; }
+            function show(el) { if (el && el.style) el.style.display = ""; }
+
+            if (a1 || a2) {
+              if (ab === "1") { show(a1); hide(a2); }
+              else { show(a2); hide(a1); }
+              return;
+            }
+
+            // Fallback: hide images by filename suffix if wrappers aren't present
+            var imgs = Array.prototype.slice.call(document.querySelectorAll("img"));
+            var re1 = /-Artboard_1\.(png|jpg|jpeg|webp)$/i;
+            var re2 = /-Artboard_2\.(png|jpg|jpeg|webp)$/i;
+
+            imgs.forEach(function (img) {
+              var p = "";
+              try { p = new URL(img.src, location.href).pathname; } catch (_) { p = img.src || ""; }
+              if (ab === "1") { if (re2.test(p)) hide(img); }
+              else { if (re1.test(p)) hide(img); }
+            });
+          } catch (e) {
+            console.warn("ab toggle error:", e);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
