@@ -1,14 +1,26 @@
-/* Page-scoped fixes for ai2html exports (spring2023)
-   - Uses local Open Sans files from public/fonts/OpenSans/
-   - Centers the exported artboard, resets inner wrapper transforms,
-     forces artboard width (1224px), and ensures Open Sans is used.
-   - This file is intended to be included only in exported HTML pages
-     (spring2023.html). Do NOT add this to site-wide/global CSS. */
+/* publication-fixes.css
+   Path: public/portfolio/undergraduate/css/publication-fixes.css
+
+   Purpose:
+   - Load local Open Sans TTF files so the exported ai2html text uses the exact font metrics.
+   - Center the exported artboard, reset the inner translated wrapper, and anchor the export
+     to the artboard width (1224px) so image & text scale together.
+   - Apply a few rendering/kerning/rounding tweaks for very small text to better match InDesign.
+   - This file is intended to be linked only inside exported pages (spring2023.html). Do NOT
+     include this file in site-global CSS. If you do, rules are intentionally conservative but
+     may affect other pages.
+
+   Notes:
+   - Relative paths assume this file lives at:
+     public/portfolio/undergraduate/css/publication-fixes.css
+     and your fonts are at:
+     public/fonts/OpenSans/OpenSans-*.ttf
+     Therefore the font URLs use ../../../fonts/OpenSans/...
+*/
 
 /* -------------------------
-   Local Open Sans @font-face
-   (relative path from this file: ../../../fonts/OpenSans/)
-   Replace filenames if yours differ.
+   Local Open Sans @font-face declarations
+   (ttf fallbacks provided; convert to .woff2 later for best performance)
    ------------------------- */
 @font-face {
   font-family: "Open Sans";
@@ -32,8 +44,32 @@
   font-display: swap;
 }
 
+/* Also expose the family without the space (some exports reference 'OpenSans') */
+@font-face {
+  font-family: "OpenSans";
+  src: url("../../../fonts/OpenSans/OpenSans-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenSans";
+  src: url("../../../fonts/OpenSans/OpenSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenSans";
+  src: url("../../../fonts/OpenSans/OpenSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* -------------------------
-   Center artboard in viewport (page-scoped)
+   Layout anchoring + centering
+   (safe: intended to be used only on standalone exported pages; keep link only in those files)
    ------------------------- */
 html {
   display: flex !important;
@@ -45,12 +81,12 @@ html {
   box-sizing: border-box;
 }
 
-/* Scope the main rules to exported pages — but since you'll include this file
-   only in spring2023.html it's safe to apply body rules directly. */
+/* Force the exported page to the artboard width so absolute/percentage coordinates align.
+   Change this value if you use a different artboard width on other pages. */
 body {
-  /* Force artboard width for spring2023 export */
-  width: 1224px !important; /* <-- change if the artboard is different */
+  width: 1224px !important; /* spring2023 export width */
   margin: 0 !important;
+  padding: 0 !important;
   background: transparent !important;
   position: relative !important;
   -webkit-font-smoothing: antialiased;
@@ -59,63 +95,98 @@ body {
   box-sizing: border-box;
 }
 
-/* Some ai2html exports wrap the artboard in an inner translated DIV.
-   Reset the first wrapper so the body anchoring works predictably. */
+/* Reset inner translated wrapper that some ai2html exports include */
 body > div:first-of-type {
   left: 0 !important;
   transform: none !important;
   margin: 0 !important;
+  box-sizing: border-box;
 }
 
-/* Ensure artboard image does not get constrained by outer site rules */
+/* Ensure artboard image isn't limited by outer site rules; allow natural sizing */
 img {
   max-width: none !important;
-  box-sizing: border-box;
+  width: auto !important;
   display: block;
+  box-sizing: border-box;
 }
 
-/* Make sure exported text uses the same Open Sans metrics as the export */
+/* -------------------------
+   Force Open Sans for exported text runs so metrics match InDesign/ai2html
+   (these selectors cover typical ai2html classes and general text nodes)
+   ------------------------- */
 body,
 body * {
-  /* limit the broad selector impact to this page only by adding the CSS
-     only to the exported page's head (recommended). */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  text-rendering: geometricPrecision;
+  font-kerning: normal;
+  font-feature-settings: "liga" 1, "kern" 1;
+  -webkit-text-size-adjust: 100%;
+  box-sizing: border-box;
 }
 
-/* Apply Open Sans to common exported text nodes (ai2html uses many custom classes) */
+/* Apply the Open Sans family to likely exported text classes and elements.
+   This is intentionally broad inside the page because the CSS file will be linked only
+   on the exported HTML. If you later reuse this CSS site-wide, narrow these selectors. */
 body p,
 body span,
 body div,
 body [class*="g-"],
 body [class*="CharOverride"],
-body [id^="g-"] {
+body [id^="g-"],
+body [class*="pstyle"],
+body .g-aiImg,
+body .g-TEXT {
   font-family: "Open Sans", "OpenSans", sans-serif !important;
   font-style: normal !important;
-  font-weight: 400 !important;
 }
 
-/* Keep light weights resolving to 300 where the export expects them */
+/* Preserve light weights where used in the export */
 body [style*="font-weight: 300"],
 body [style*="font-weight:300"] {
   font-weight: 300 !important;
 }
 
-/* Utility: prevent unexpected max-width on inner wrappers */
+/* -------------------------
+   Small / fractional-size rounding tweaks
+   These are micro-adjustments to reduce rewraps at fractional px sizes used by Illustrator/Indesign exports.
+   ------------------------- */
+
+/* Use geometricPrecision to favor exact glyph outlines and reduce subtle rounding differences */
+body * {
+  text-rendering: geometricPrecision !important;
+}
+
+/* Increase kerning precision and avoid browser ligature surprises at tiny sizes */
+body [class*="g-pstyle"], body [class*="g-pstyle"] * {
+  font-kerning: normal !important;
+  font-variant-ligatures: common-ligatures;
+  letter-spacing: 0.01em !important; /* tiny nudge to stabilize wrap on micro-labels */
+}
+
+/* For very small sizes (often converted from fractional pt values), ensure subpixel rendering */
+body [style*="font-size"] {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Slight fallback when browser substitutes a different font: slightly tighten tracking to reduce wrap differences */
+body:not([data-no-fontfix]) [class*="g-"], body:not([data-no-fontfix]) p, body:not([data-no-fontfix]) span {
+  letter-spacing: 0.0em;
+}
+
+/* Utility: remove max-width inline constraints ai2html sometimes writes */
 body [style*="max-width"] {
   max-width: none !important;
 }
 
-/* Small tweak: ensure absolute-positioned text uses the body as reference */
-body [style*="position: absolute"] {
-  position: absolute !important;
-  box-sizing: border-box !important;
-}
-
-/* If you later add this stylesheet to multiple exported pages with different artboard
-   widths, add per-page overrides here like:
-   body#publication-12 { width: 612px !important; }
-   or
-   body#publication-spring2023 { width: 1224px !important; }
+/* Safety notes:
+   - If you test this file and any part of your main site is affected, remove the <link> from global pages
+     and keep the link only in the exported HTML page head for each ai2html export.
+   - If some tiny labels still differ after this, inspect them in DevTools → Rendered Fonts to confirm the browser
+     is actually using the local OpenSans files. If DevTools shows a fallback, check Network for font 404s and confirm
+     the relative paths are correct (../../../fonts/OpenSans/...). Converting the TTFs to WOFF2 and adding WOFF2
+     sources will also improve consistency and load priority.
 */
