@@ -439,3 +439,46 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     max-width: unset !important;
   }
 }
+
+/* ====== 3D PRINTING PAGE: subnav thickness / visual tuning to match ISP page ======
+   We apply a page-specific override so only the 3D Printing page gets the thinner
+   "subnav white bar" thickness (26px) like the ISP page, without affecting other pages.
+   This keeps box-shadow and spacing consistent with your ISP screenshot. */
+@media (min-width: 701px) {
+  .three-d-printing-page .nav-card-mid {
+    /* Match the nav-card-bot thickness used on ISP */
+    min-height: 26px;
+    height: 26px;
+    margin-top: -6px;
+    margin-bottom: 8px;
+    /* Use the lighter shadow to visually match the ISP thin bar */
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
+  }
+
+  /* Make the tab container align to the smaller bar */
+  .three-d-printing-page .isp-section-tabs {
+    min-height: 26px;
+    margin: -6px 0 0 0;
+    gap: 18px;
+  }
+
+  /* Ensure tab label vertical alignment matches ISP (same transform as global) */
+  .three-d-printing-page .isp-section-tabs .isp-tab-btn,
+  .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
+    transform: translateY(8px) !important;
+  }
+}
+
+/* ====== Divider hidden ====== */
+.nav-divider {
+  display: none !important;
+}
+
+/* ====== RESPONSIVE: HEADER & NAVIGATION (repeated for safety) ====== */
+@media (max-width: 700px) {
+  nav.main-nav {
+    display: none !important;
+  }
+}
+
+/* Rest of file unchanged... */
