@@ -1,9 +1,9 @@
 // New: data/nba-logos.js
 // Modeled after your nfl-logos.js style. Filenames are expected in:
-//   public/images/prints/nba/{id}.jpg
+//   public/images/prints/nba/{id}.png
 // Conference logos:
-//   public/images/prints/nba/eastern.jpg
-//   public/images/prints/nba/western.jpg
+//   public/images/prints/nba/eastern.png
+//   public/images/prints/nba/western.png
 
 // --- NBA DIVISION DATA ---
 export const DIVISIONS = {
@@ -67,13 +67,13 @@ export const divisionNames = [
 // Conference logo objects (used like AFC_LOGO / NFC_LOGO)
 export const EAST_LOGO = {
   id: "nba-east-logo",
-  image: "/images/prints/nba/eastern.jpg",
+  image: "/images/prints/nba/eastern.png",
   name: "Eastern Conference"
 };
 
 export const WEST_LOGO = {
   id: "nba-west-logo",
-  image: "/images/prints/nba/western.jpg",
+  image: "/images/prints/nba/western.png",
   name: "Western Conference"
 };
 
