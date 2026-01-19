@@ -305,10 +305,11 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* 3D Printing page override: move category tabs up by 2px more (relative to global) */
+/* 3D Printing page tab alignment (ensure same vertical placement as ISP) */
 @media (min-width: 701px) {
-  .three-d-printing-page .isp-section-tabs .isp-tab-btn {
-    transform: translateY(-2px);
+  .three-d-printing-page .isp-section-tabs .isp-tab-btn,
+  .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
+    transform: translateY(8px);
   }
 }
 
@@ -440,29 +441,27 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* ====== 3D PRINTING PAGE: subnav thickness / visual tuning to match ISP page ======
-   We apply a page-specific override so only the 3D Printing page gets the thinner
-   "subnav white bar" thickness (26px) like the ISP page, without affecting other pages.
-   This keeps box-shadow and spacing consistent with your ISP screenshot. */
+/* ====== 3D PRINTING PAGE: subnav tuning to match ISP page (nav-card-mid = 44px) ======
+   Scope: .three-d-printing-page only so other pages remain unchanged.
+*/
 @media (min-width: 701px) {
+  /* Match the ISP nav-card-mid numeric values so computed height is identical */
   .three-d-printing-page .nav-card-mid {
-    /* Match the nav-card-bot thickness used on ISP */
-    min-height: 26px;
-    height: 26px;
-    margin-top: -6px;
+    min-height: 44px;
+    height: 44px;
+    margin-top: -8px;
     margin-bottom: 8px;
-    /* Use the lighter shadow to visually match the ISP thin bar */
-    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
+    box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   }
 
-  /* Make the tab container align to the smaller bar */
+  /* Make the tab container align and use ISP spacing */
   .three-d-printing-page .isp-section-tabs {
-    min-height: 26px;
-    margin: -6px 0 0 0;
-    gap: 18px;
+    min-height: 60px;
+    margin: -12px 0 0 0;
+    gap: 22px;
   }
 
-  /* Ensure tab label vertical alignment matches ISP (same transform as global) */
+  /* Ensure tab label vertical alignment matches ISP */
   .three-d-printing-page .isp-section-tabs .isp-tab-btn,
   .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
     transform: translateY(8px) !important;
@@ -481,4 +480,119 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* Rest of file unchanged... */
+@media (min-width: 701px) and (max-width: 1024px) {
+  nav.main-nav {
+    gap: 18px;
+    font-size: 14px;
+    height: 60px;
+  }
+  nav.main-nav a {
+    font-size: 14px;
+    padding: 4px 0;
+  }
+}
+
+/* ====== RESPONSIVE: GENERAL ====== */
+@media (max-width: 700px) {
+  html, body {
+    font-size: 15px;
+  }
+}
+
+/* ====== ISP NAVS ====== */
+@media (max-width: 700px) {
+  .nav-card-mid,
+  .nav-card-bot {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .isp-section-tabs {
+    gap: 11px;
+    min-height: 36px;
+    margin-top: 0px;
+  }
+  .isp-tab-btn {
+    font-size: 11px;
+    margin: 0 7px;
+    padding: 6px 10px;
+  }
+  .isp-subnav-row {
+    gap: 7px;
+    min-height: 24px;
+    margin-top: 0px;
+  }
+  .isp-subnav-btn {
+    font-size: 9px;
+    padding: 6px 8px;
+    min-width: 32px;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    z-index: 1000 !important;
+    position: relative !important;
+    transform: none; /* no shift on mobile */
+  }
+}
+
+/* ====== GLOBE SECTION PADDING ====== */
+.isp-globe-section {
+  margin-top: 0px !important; 
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+/* ====== CUSTOM FLOATING MODAL SCROLLBAR ====== */
+.mesopotamia-scrollbar::-webkit-scrollbar {
+  height: 14px;
+  background: transparent;
+}
+.mesopotamia-scrollbar::-webkit-scrollbar-thumb {
+  background: #e6dbb9;
+  border-radius: 0;
+}
+.mesopotamia-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #d6c08e;
+}
+.mesopotamia-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e6dbb9 #f0f0ed;
+}
+.matter-matters-page {
+  background: #fff !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+/* Sticky nav only for matter-matters page */
+.matter-matters-page .nav-card-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1200;
+}
+.isp-globe-section {
+  align-items: stretch !important;
+}
+.isp-globe-section > div:first-child {
+  flex-shrink: 0 !important;
+  min-width: 340px !important;
+  max-width: 1050px !important;
+  width: 1050px !important;
+  height: 845px !important;
+}
+.isp-globe-section nav {
+  flex-shrink: 0 !important;
+  min-width: 340px !important;
+  max-width: 900px !important;
+  width: 700px !important;
+}
+@media (max-width: 800px) {
+  .isp-globe-section {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .isp-globe-section > div:first-child,
+  .isp-globe-section nav {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+}
