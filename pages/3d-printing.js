@@ -599,7 +599,7 @@ function ConferenceLogo({ logo, style = {}, onClick, isMobile, sizeVariant }) {
   const mobileCap = 100;
   let desktopHeight = 84;
 
-  if (sizeVariant === "nba") desktopHeight = 240;
+  if (sizeVariant === "nba") desktopHeight = 200;
   else if (sizeVariant === "nfl") desktopHeight = 140;
 
   const height = isMobile ? Math.min(mobileCap, desktopHeight) : desktopHeight;
