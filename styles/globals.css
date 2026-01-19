@@ -454,9 +454,22 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   }
 
-  /* Make the tab container align and use ISP spacing */
+  /* Mirror ISP inner wrapper spacing so the bar's final computed height matches:
+     many pages include an extra inner DIV with side padding that affects layout.
+     We target that immediate child and apply the same left/right padding and
+     box-sizing so the 3D Printing nav renders like ISP. */
+  .three-d-printing-page .nav-card-mid > div {
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 80px;
+    padding-right: 80px;
+    /* subtle matching background tint if ISP uses it */
+    background: rgb(249, 249, 247);
+  }
+
+  /* Make the tab container align and use ISP spacing (same as .isp-section-tabs rules) */
   .three-d-printing-page .isp-section-tabs {
-    min-height: 44px;
+    min-height: 60px;
     margin: -12px 0 0 0;
     gap: 22px;
   }
