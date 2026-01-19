@@ -32,12 +32,12 @@ export default function ThreeDPrinting() {
   const [activeCategory, setActiveCategory] = useState("sports");
 
   // For SPORTS: which league is selected (nfl | nba | mlb | nhl | ncaa)
-  const [sportsOpen, setSportsOpen] = useState(false); // click-to-open subnav
+  const [sportsOpen, setSportsOpen] = useState(false); // click-to-open dropbox
   const [currentLeague, setCurrentLeague] = useState("nfl"); // default to nfl
 
   // Filters
   const [conference, setConference] = useState("ALL"); // ALL, AFC/EAST, NFC/WEST (league mapped)
-  const [division, setDivision] = useState("ALL");     // ALL or one of division keys
+  const [division, setDivision] = useState("ALL"); // ALL or one of division keys
 
   // Show filter bar by default on page load
   const [showFilterBar, setShowFilterBar] = useState(true);
@@ -59,12 +59,38 @@ export default function ThreeDPrinting() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Reset sports subnav when switching away from SPORTS
+  // Reset sports dropdown when switching away from SPORTS
   useEffect(() => {
     if (activeCategory !== "sports") {
       setSportsOpen(false);
     }
   }, [activeCategory]);
+
+  // Refs for placing the dropbox under the SPORTS tab
+  const sportsBtnRef = useRef(null);
+  const [dropdownPos, setDropdownPos] = useState(null);
+
+  useEffect(() => {
+    function updatePosition() {
+      const btn = sportsBtnRef.current;
+      if (!btn) {
+        setDropdownPos(null);
+        return;
+      }
+      const rect = btn.getBoundingClientRect();
+      const left = rect.left + rect.width / 2;
+      const top = rect.bottom + window.scrollY + 6; // slight gap
+      setDropdownPos({ left, top, width: rect.width });
+    }
+    // Update when dropdown opens and on resize/scroll
+    if (sportsOpen) updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition);
+    };
+  }, [sportsOpen]);
 
   // Helper: current league data pointers
   const leagueIsNFL = activeCategory === "sports" && currentLeague === "nfl";
@@ -175,12 +201,13 @@ export default function ThreeDPrinting() {
   if (activeCategory === "custom cad") filteredPrints = [CUSTOM_CAD];
   if (activeCategory === "more") filteredPrints = [MORE_SAMPLE];
 
-  // Styles (kept from your existing file)
+  // Styles (kept from your existing file) — page container is relative so the dropbox can position absolute
   const pageStyle = {
     width: "min(1600px, 95vw)",
     margin: "0 auto",
     padding: "0 0 48px 0",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
+    position: "relative" // important for absolute dropbox
   };
 
   const fullBleedBarStyle = {
@@ -224,18 +251,17 @@ export default function ThreeDPrinting() {
               className={className}
               onClick={() => {
                 setActiveCategory(cat.value);
-                // reset sports subnav state when switching categories
+                // reset sports dropdown state when switching categories
                 if (cat.value !== "sports") {
                   setSportsOpen(false);
                 } else {
-                  // keep sports open if user clicked SPORTS explicitly
-                  setSportsOpen((s) => s || true);
+                  // if user clicks SPORTS category, open dropbox
+                  setSportsOpen(true);
                 }
                 // reset filters
                 setConference("ALL");
                 setDivision("ALL");
                 setShowFilterBar(true);
-                // if switching to non-sports, leave currentLeague as-is (so returning preserves selection)
               }}
               tabIndex={0}
               aria-current={isActive ? "page" : undefined}
@@ -248,10 +274,12 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // League subnav when SPORTS is open
-  function SportsSubnav() {
-    if (activeCategory !== "sports" || !sportsOpen) return null;
+  // Vertical dropbox for SPORTS (click-to-open)
+  function SportsDropdown() {
+    // only show when sportsOpen and activeCategory === 'sports'
+    if (!sportsOpen || activeCategory !== "sports") return null;
 
+    // leagues list — display vertically, same font size as isp-tab-btn by reusing class
     const leagues = [
       { key: "nfl", label: "NFL", enabled: true },
       { key: "nba", label: "NBA", enabled: true },
@@ -260,22 +288,68 @@ export default function ThreeDPrinting() {
       { key: "ncaa", label: "NCAA", enabled: false }
     ];
 
+    // Dropdown positioning computed from dropdownPos state (which uses sportsBtnRef)
+    const width = 180;
+    const left = dropdownPos ? dropdownPos.left - width / 2 : "50%";
+    const top = dropdownPos ? dropdownPos.top : 120;
+
+    const dropdownStyle = {
+      position: "absolute",
+      left: typeof left === "number" ? left : left,
+      top: top,
+      transform: "translateX(0)",
+      zIndex: 2200,
+      background: "#fff",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+      borderRadius: 6,
+      padding: 6,
+      width: width,
+      display: "flex",
+      flexDirection: "column",
+      gap: 6,
+      alignItems: "stretch",
+      pointerEvents: "auto"
+    };
+
+    const itemStyle = {
+      background: "transparent",
+      border: "none",
+      padding: "10px 12px",
+      textAlign: "left",
+      fontSize: 12,
+      letterSpacing: "0.04em",
+      textTransform: "uppercase",
+      cursor: "pointer",
+      color: "#6c6c6a",
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 280
+    };
+
+    const disabledStyle = {
+      opacity: 0.5,
+      cursor: "not-allowed"
+    };
+
     return (
-      <div className="isp-subnav-row" style={{ marginTop: 6 }}>
+      <div style={dropdownStyle} role="menu" aria-label="Sports leagues">
         {leagues.map((l) => {
           const isActive = currentLeague === l.key && activeCategory === "sports";
-          const className = `isp-subnav-btn${isActive ? " active" : ""}`;
           return (
             <button
               key={l.key}
-              className={className}
+              ref={l.key === "nfl" ? sportsBtnRef : undefined}
+              style={{
+                ...itemStyle,
+                ...(isActive ? { color: "#e6dbb9", fontWeight: 350 } : {}),
+                ...(!l.enabled ? disabledStyle : {})
+              }}
               onClick={() => {
                 if (!l.enabled) return;
                 setCurrentLeague(l.key);
-                // reset filters to ALL
                 setConference("ALL");
                 setDivision("ALL");
                 setShowFilterBar(true);
+                setSportsOpen(false); // close dropdown after selection
               }}
               onKeyDown={(e) => {
                 if ((e.key === "Enter" || e.key === " ") && l.enabled) {
@@ -283,13 +357,12 @@ export default function ThreeDPrinting() {
                   setConference("ALL");
                   setDivision("ALL");
                   setShowFilterBar(true);
+                  setSportsOpen(false);
                 }
               }}
               aria-current={isActive ? "page" : undefined}
               aria-disabled={!l.enabled}
               title={!l.enabled ? "In progress" : undefined}
-              tabIndex={0}
-              style={!l.enabled ? { opacity: 0.5, cursor: "not-allowed" } : {}}
             >
               {l.label}
             </button>
@@ -355,7 +428,6 @@ export default function ThreeDPrinting() {
             logo={leftLogo}
             style={{ height: 84 }}
             onClick={() => {
-              // map clicked logo to conference value
               if (leagueIsNFL) setConference("AFC");
               else setConference("EAST");
               setDivision("ALL");
@@ -446,14 +518,15 @@ export default function ThreeDPrinting() {
       {/* Category tabs (full-bleed white banner like ISP) */}
       <div style={fullBleedBarStyle} className="nav-card nav-card-mid">
         <CategoriesRow />
-        {/* Sports toggle helper */}
+        {/* Sports toggle helper (small controller that sits below the tabs) */}
         <div style={{ display: "flex", justifyContent: "center", marginTop: 6 }}>
           {activeCategory === "sports" && (
             <button
+              ref={sportsBtnRef}
               className="isp-tab-btn"
               onClick={() => setSportsOpen((s) => !s)}
               aria-expanded={sportsOpen}
-              aria-controls="sports-subnav"
+              aria-controls="sports-dropdown"
               style={{ marginTop: 6 }}
             >
               Sports {sportsOpen ? "▴" : "▾"}
@@ -462,10 +535,12 @@ export default function ThreeDPrinting() {
         </div>
       </div>
 
-      {/* Sports subnav (leagues), then divisions */}
+      {/* Vertical dropdown (absolutely positioned overlay) */}
+      <SportsDropdown />
+
+      {/* Sports area: conference logos + filters */}
       <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <div style={{ width: "min(1200px, 95%)" }}>
-          <SportsSubnav />
           <LogoRow />
           <CenteredLogo />
           <DivisionsRow />
@@ -526,11 +601,11 @@ function PrintCard({ print, isMobile, league }) {
   let ext = "png";
   if (league === "nba") {
     baseFolder = "nba";
-    ext = "jpg";
+    ext = "png"; // changed to png per your request
   } else if (league === "sports") {
     // fallback
     baseFolder = "prints";
-    ext = "jpg";
+    ext = "png";
   } else if (league === "lithophanes" || league === "custom cad" || league === "more") {
     // if the data item provides a full image path, use it
     baseFolder = "";
