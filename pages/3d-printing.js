@@ -460,11 +460,16 @@ export default function ThreeDPrinting() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
     const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
+
+    // determine sizeVariant based on currently selected league
+    const sizeVariant = leagueIsNBA ? "nba" : leagueIsNFL ? "nfl" : undefined;
+
     return (
       <div style={logoRowStyle}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
           <ConferenceLogo
             logo={leftLogo}
+            sizeVariant={sizeVariant}
             isMobile={isMobile}
             onClick={() => {
               if (leagueIsNFL) setConference("AFC");
@@ -478,6 +483,7 @@ export default function ThreeDPrinting() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
           <ConferenceLogo
             logo={rightLogo}
+            sizeVariant={sizeVariant}
             isMobile={isMobile}
             onClick={() => {
               if (leagueIsNFL) setConference("NFC");
@@ -494,10 +500,12 @@ export default function ThreeDPrinting() {
   // Centered logo for a selected conference
   function CenteredLogo() {
     if (!leagueIsSupported || !showCenteredLogo) return null;
+    const sizeVariant = leagueIsNBA ? "nba" : leagueIsNFL ? "nfl" : undefined;
     return (
       <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
         <ConferenceLogo
           logo={showCenteredLogo}
+          sizeVariant={sizeVariant}
           isMobile={isMobile}
           onClick={() => {
             setConference("ALL");
@@ -580,12 +588,21 @@ export default function ThreeDPrinting() {
   );
 }
 
-// ConferenceLogo component — larger sizes per request (200px desktop, ~100px mobile)
-function ConferenceLogo({ logo, style = {}, onClick, isMobile }) {
+// ConferenceLogo component — uses sizeVariant to determine dimensions
+function ConferenceLogo({ logo, style = {}, onClick, isMobile, sizeVariant }) {
   const [hovered, setHovered] = useState(false);
-  const desktopHeight = 200; // per your request
-  const mobileHeight = 100; // cap on mobile
-  const height = isMobile ? mobileHeight : desktopHeight;
+
+  // Sizes per your request:
+  // NBA: 240px desktop, cap ~100px mobile
+  // NFL: 140px desktop, cap ~100px mobile
+  // fallback: 84px desktop (if not specified)
+  const mobileCap = 100;
+  let desktopHeight = 84;
+
+  if (sizeVariant === "nba") desktopHeight = 240;
+  else if (sizeVariant === "nfl") desktopHeight = 140;
+
+  const height = isMobile ? Math.min(mobileCap, desktopHeight) : desktopHeight;
 
   const base = {
     display: "block",
