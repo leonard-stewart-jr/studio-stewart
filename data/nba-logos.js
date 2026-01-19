@@ -46,7 +46,7 @@ export const DIVISIONS = {
       { id: "kings", name: "Sacramento Kings" }
     ],
     SOUTHWEST: [
-      { id: "mavs", name: "Dallas Mavericks" },
+      { id: "mavericks", name: "Dallas Mavericks" },
       { id: "rockets", name: "Houston Rockets" },
       { id: "pelicans", name: "New Orleans Pelicans" },
       { id: "spurs", name: "San Antonio Spurs" },
