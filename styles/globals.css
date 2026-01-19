@@ -456,7 +456,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 
   /* Make the tab container align and use ISP spacing */
   .three-d-printing-page .isp-section-tabs {
-    min-height: 60px;
+    min-height: 44px;
     margin: -12px 0 0 0;
     gap: 22px;
   }
