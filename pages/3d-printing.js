@@ -235,10 +235,6 @@ export default function ThreeDPrinting() {
   // Convert LEAGUE_FILTER_BUTTONS to items for SectionTabs (key/label)
   const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
 
-  // Remove the four specific keys requested (AFC, NFC, EAST, WEST) — case-insensitive
-  const HIDE_FILTER_KEYS = new Set(["AFC", "NFC", "EAST", "WEST"]);
-  const visibleLeagueFilterItems = leagueFilterItems.filter(i => !HIDE_FILTER_KEYS.has(String(i.key).toUpperCase()));
-
   // Render helpers
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
@@ -591,7 +587,7 @@ export default function ThreeDPrinting() {
         <div style={{ ...contentBleedContainer(0), paddingLeft: 0, paddingRight: 0 }}>
           {leagueIsSupported && showFilterBar && (
             <SectionTabs
-              items={visibleLeagueFilterItems}
+              items={leagueFilterItems}
               active={division !== "ALL" ? division : conference}
               onChange={handleFilterChange}
               variant="sub"
