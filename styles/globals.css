@@ -107,8 +107,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   min-height: 44px;
   height: 44px;
-  /* Position the mid nav 60px down from the top so it aligns with the header */
-  margin-top: 60px;
+  /* mid nav will be positioned via sticky/top rules in desktop media query */
+  margin-top: 0;
   margin-bottom: 0;
   padding: 0;
   z-index: 20;
@@ -435,22 +435,23 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* ====== NAV CHILD WRAPPER: CENTERED PAGE WIDTH (DESKTOP) ======
-   Use a centered page-width wrapper for nav-card-mid immediate children so
-   both Independent Studio and 3D Printing compute the same box model.
-   We set the child width to the page container and remove side padding so the mid bar
-   visually aligns flush under the header and keeps the exact centered width.
+/* ====== DESKTOP: Sticky placement for mid nav + centered child wrapper ======
+   Make the mid nav position predictable by sticking it at top: 60px (header height).
+   Also ensure the immediate child uses the centered container width and no side padding.
 */
 @media (min-width: 701px) {
   /* Keep the nav-card-mid numeric values so computed height is identical */
   .nav-card.nav-card-mid {
     min-height: 44px;
     height: 44px;
-    /* margin-top purposely set to 60px so mid nav sits exactly below header */
-    margin-top: 60px;
+    margin-top: 0; /* ensure no extra offset from flow */
     margin-bottom: 0;
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
     background: #fff;
+    /* Position the mid nav exactly under the header */
+    position: sticky;
+    top: 60px;
+    z-index: 1100; /* below header (header uses 1200) but above page content */
   }
 
   /* Center the immediate child content to the page container width, no side padding */
@@ -550,45 +551,4 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 .mesopotamia-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
-}
-.matter-matters-page {
-  background: #fff !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-/* Sticky nav only for matter-matters page */
-.matter-matters-page .nav-card-top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  z-index: 1200;
-}
-.isp-globe-section {
-  align-items: stretch !important;
-}
-.isp-globe-section > div:first-child {
-  flex-shrink: 0 !important;
-  min-width: 340px !important;
-  max-width: 1050px !important;
-  width: 1050px !important;
-  height: 845px !important;
-}
-.isp-globe-section nav {
-  flex-shrink: 0 !important;
-  min-width: 340px !important;
-  max-width: 900px !important;
-  width: 700px !important;
-}
-@media (max-width: 800px) {
-  .isp-globe-section {
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-  .isp-globe-section > div:first-child,
-  .isp-globe-section nav {
-    width: 100% !important;
-    min-width: unset !important;
-    max-width: unset !important;
-  }
 }
