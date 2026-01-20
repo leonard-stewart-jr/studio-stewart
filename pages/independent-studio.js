@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import SectionTabs from "../components/isp/section-tabs";
+import SectionTabs from "../components/section-tabs";
 import BottomModeNav from "../components/isp/bottommodenav";
 import InfoModal from "../components/isp/info-modal";
 
 // Only GlobeSection is needed now
 const GlobeSection = dynamic(() => import("../components/isp/globe-section"), { ssr: false });
+
+// Main tabs for Independent Studio
+const ISP_MAIN_TABS = [
+  { key: "history", label: "HISTORY" },
+  { key: "future", label: "FUTURE" },
+];
 
 export default function IndependentStudio() {
   // Tabs: "history" or "future"
@@ -69,8 +75,11 @@ export default function IndependentStudio() {
           }}
         >
           <SectionTabs
-            activeSection={mainSection}
-            setActiveSection={setMainSection}
+            items={ISP_MAIN_TABS}
+            active={mainSection}
+            onChange={setMainSection}
+            variant="top"
+            ariaLabel="Independent Studio main tabs"
           />
         </div>
         <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
