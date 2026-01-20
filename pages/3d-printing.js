@@ -254,8 +254,8 @@ export default function ThreeDPrinting() {
           alignItems: "center",
           justifyItems: "center",
           minHeight: 120,
-          marginTop: 28,
-          marginBottom: 10,
+          marginTop: 14,
+          marginBottom: 5,
           width: "100%"
         }}
       >
