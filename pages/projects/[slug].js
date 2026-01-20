@@ -12,10 +12,7 @@ export default function ProjectDetail() {
   const [modalOpen, setModalOpen] = useState(false);
 
   if (!project) return (
-    <div>
-      <NavBar />
-      <div style={{ padding: 32 }}>Project not found.</div>
-    </div>
+    <div style={{ padding: 24 }}>Project not found.</div>
   );
 
   // Construct your src and width for the modal (customize as needed)
@@ -24,85 +21,45 @@ export default function ProjectDetail() {
   const width = project.modalWidth || 2436;
 
   return (
-    <div>
-      <NavBar />
-      <main
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "64px 12px",
-          display: "flex",
-          gap: 48,
-          alignItems: "flex-start",
-        }}
-      >
-        {/* Clickable Image/Card area */}
-        <div style={{ width: 360, minWidth: 260, maxWidth: 480 }}>
-          <div
-            onClick={() => setModalOpen(true)}
-            style={{
-              cursor: "pointer",
-              borderRadius: 8,
-              boxShadow: "0 2px 12px rgba(32,32,32,0.12)",
-              overflow: "hidden",
-              border: "2px solid #e6dbb9",
-              transition: "box-shadow 0.18s, border-color 0.18s",
-              position: "relative",
-            }}
-            tabIndex={0}
-            aria-label={`Open interactive modal for ${project.title}`}
-            onKeyDown={e => {
-              if (e.key === "Enter" || e.key === " ") setModalOpen(true);
-            }}
-          >
-            <img
-              src={project.bannerSrc}
-              alt={project.title + " banner"}
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-                filter: modalOpen ? "brightness(0.85)" : "none",
-                transition: "filter 0.18s"
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                bottom: 0,
-                padding: "10px 0",
-                background: "rgba(32,32,32,0.64)",
-                color: "#e6dbb9",
-                fontWeight: 600,
-                fontSize: 18,
-                textAlign: "center",
-                letterSpacing: ".04em"
-              }}
-            >
-              View Interactive Model
-            </div>
+    <>
+      <div style={{ width: "min(1200px, 95vw)", margin: "24px auto", padding: 16 }}>
+        <div
+          onClick={() => setModalOpen(true)}
+          style={{
+            cursor: "pointer",
+            borderRadius: 8,
+            boxShadow: "0 2px 12px rgba(32,32,32,0.12)",
+            overflow: "hidden",
+            border: "2px solid #e6dbb9",
+            transition: "box-shadow 0.18s, border-color 0.18s",
+            position: "relative",
+          }}
+          tabIndex={0}
+          aria-label={`Open interactive modal for ${project.title}`}
+          onKeyDown={e => {
+            if (e.key === "Enter" || e.key === " ") setModalOpen(true);
+          }}
+        >
+          <img src={project.bannerSrc} alt={project.title} style={{ display: "block", width: "100%" }} />
+          <div style={{ position: "absolute", left: 12, bottom: 12, padding: "6px 10px", background: "rgba(0,0,0,0.35)", color: "#fff", borderRadius: 4 }}>
+            View Interactive Model
           </div>
         </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h1 style={{ fontSize: 32, fontWeight: 700 }}>{project.title}</h1>
-          <div style={{ marginBottom: 12, color: "#888" }}>
-            {project.grade} &middot; {project.type}
-          </div>
-          <div style={{ margin: "32px 0", fontSize: 18 }}>{project.description}</div>
-        </div>
-      </main>
+
+        <h1 style={{ marginTop: 18 }}>{project.title}</h1>
+        <div style={{ color: "#8a8a86", marginBottom: 12 }}>{project.grade} · {project.type}</div>
+        <div style={{ color: "#666" }}>{project.description}</div>
+      </div>
+
       {modalOpen && (
         <FloatingProjectModal
-          open={modalOpen}
           onClose={() => setModalOpen(false)}
           src={src}
           width={width}
           height={785}
-          navOffset={76}
+          navOffset={60}
         />
       )}
-    </div>
+    </>
   );
 }
