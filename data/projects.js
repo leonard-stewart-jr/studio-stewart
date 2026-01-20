@@ -23,7 +23,7 @@ const projects = [
     title: "UNDERGRADUATE PORTFOLIO",
     type: "SELECTED WORKS",
     slug: "UG-PORTFOLIO",
-    bannerSrc: "/images/placeholders/blank.svg",
+    bannerSrc: "/images/portfolio/undergradportfolio.png",
     action: "route",
     linkHref: "/undergraduate-portfolio"
   }
