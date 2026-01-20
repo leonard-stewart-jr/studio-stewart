@@ -59,8 +59,7 @@ export const divisionNames = ["EAST", "WEST", "SOUTH", "NORTH"];
 export const CATEGORIES = [
   { label: "NFL LOGOS", value: "hueforge" },
   { label: "LITHOPHANES", value: "lithophanes" },
-  { label: "CUSTOM CAD", value: "custom cad" },
-  { label: "MORE", value: "more" }
+  { label: "OTHER", value: "custom cad" }
 ];
 
 export const AFC_LOGO = {
