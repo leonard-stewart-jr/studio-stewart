@@ -9,7 +9,7 @@ const navItems = [
   { label: "ABOUT ME", href: "/about" },
 ];
 
-export default function NavBar({ headerHeight = 76 }) {
+export default function NavBar({ headerHeight = 60 }) {
   const router = useRouter();
 
   function isActive(href) {
@@ -18,15 +18,10 @@ export default function NavBar({ headerHeight = 76 }) {
   }
 
   return (
-    <nav className="main-nav" style={{ height: headerHeight }}>
+    <nav className="main-nav" style={{ height: headerHeight, alignItems: "center" }}>
       {navItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={isActive(item.href) ? "active" : undefined}
-          aria-current={isActive(item.href) ? "page" : undefined}
-        >
-          {item.label}
+        <Link key={item.href} href={item.href}>
+          <a className={isActive(item.href) ? "active" : ""}>{item.label}</a>
         </Link>
       ))}
     </nav>
