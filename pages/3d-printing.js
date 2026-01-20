@@ -336,15 +336,19 @@ export default function ThreeDPrinting() {
       width: "100%"
     };
 
+    // Tooltip state: show brief "In progress" when hovering disabled items
     const [tooltip, setTooltip] = useState({ visible: false, left: 0, top: 0, text: "" });
 
     function showTooltipFor(el, text) {
       if (!el) return;
       const r = el.getBoundingClientRect();
+      // Position tooltip to the right of the hovered element (viewport coords)
+      const left = r.right + 10; // 10px gap to the right
+      const top = r.top + r.height / 2; // vertically center on the element
       setTooltip({
         visible: true,
-        left: r.left + r.width / 2,
-        top: r.top - 8,
+        left,
+        top,
         text
       });
     }
@@ -409,9 +413,30 @@ export default function ThreeDPrinting() {
         </div>
 
         {typeof document !== "undefined" && (
-          <div style={{ position: "fixed", left: tooltip.left, top: tooltip.top, transform: "translate(-50%, -100%)", pointerEvents: "none", zIndex: 2300 }}>
+          <div
+            style={{
+              position: "fixed",
+              left: tooltip.left,
+              top: tooltip.top,
+              transform: "translate(0, -50%)", // center vertically alongside the element
+              pointerEvents: "none",
+              zIndex: 2300
+            }}
+            aria-hidden={!tooltip.visible}
+          >
             {tooltip.visible && (
-              <div style={{ background: "rgba(0,0,0,0.8)", color: "#fff", padding: "6px 10px", borderRadius: 6, fontSize: 12 }}>
+              <div
+                style={{
+                  background: "#e6dbb9", // tan background
+                  color: "#181818", // dark gray text
+                  padding: "6px 10px",
+                  borderRadius: 6,
+                  fontSize: 12,
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: 280,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+                }}
+              >
                 {tooltip.text}
               </div>
             )}
