@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
+import SectionTabs from "../components/section-tabs";
+
 import {
   DIVISIONS as NFL_DIVISIONS,
   AFC_LOGO,
@@ -17,12 +19,12 @@ import {
   FILTER_BUTTONS as FILTER_BUTTONS_NBA
 } from "../data/nba-logos";
 
-// Local categories — "SPORTS" parent
+// Local categories — "SPORTS" parent (keys must be stable strings)
 const CATEGORIES = [
-  { label: "SPORTS", value: "sports" },
-  { label: "LITHOPHANES", value: "lithophanes" },
-  { label: "CUSTOM CAD", value: "custom cad" },
-  { label: "MORE", value: "more" }
+  { key: "sports", label: "SPORTS" },
+  { key: "lithophanes", label: "LITHOPHANES" },
+  { key: "custom cad", label: "CUSTOM CAD" },
+  { key: "more", label: "MORE" }
 ];
 
 export default function ThreeDPrinting() {
@@ -118,7 +120,7 @@ export default function ThreeDPrinting() {
   const LEAGUE_FILTER_BUTTONS = leagueIsNFL ? FILTER_BUTTONS_NFL : leagueIsNBA ? FILTER_BUTTONS_NBA : [];
   const LEAGUE_CONFERENCE_LOGOS = leagueIsNFL ? [AFC_LOGO, NFC_LOGO] : leagueIsNBA ? [NBA_EAST_LOGO, NBA_WEST_LOGO] : [];
 
-  // Build gridData depending on conference/division
+  // Build gridData depending on conference/division (same logic)
   let gridData = [];
   let showConferenceLogos = false;
   let showCenteredLogo = null;
@@ -213,58 +215,23 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  // Categories (render inline inside nav-card-mid center column)
-  function CategoriesRow() {
-    return (
-      <div className="isp-section-tabs" role="tablist" aria-label="3D printing categories">
-        {CATEGORIES.map((cat) => {
-          const isActive = activeCategory === cat.value;
-          const className = `isp-tab-btn${isActive ? " active" : ""}`;
-          const ref = cat.value === "sports" ? sportsTabRef : undefined;
-          return (
-            <button
-              key={cat.value}
-              ref={ref}
-              className={className}
-              onClick={() => {
-                if (cat.value === "sports") {
-                  setActiveCategory("sports");
-                  setSportsOpen((s) => !s);
-                } else {
-                  setActiveCategory(cat.value);
-                  setSportsOpen(false);
-                }
-                setConference("ALL");
-                setDivision("ALL");
-                setShowFilterBar(true);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  if (cat.value === "sports") {
-                    setActiveCategory("sports");
-                    setSportsOpen((s) => !s);
-                  } else {
-                    setActiveCategory(cat.value);
-                    setSportsOpen(false);
-                  }
-                  setConference("ALL");
-                  setDivision("ALL");
-                  setShowFilterBar(true);
-                }
-              }}
-              tabIndex={0}
-              aria-current={isActive ? "page" : undefined}
-              role="tab"
-            >
-              {cat.label}
-            </button>
-          );
-        })}
-      </div>
-    );
+  // Handlers for subnav changes (LEAGUE_FILTER_BUTTONS items)
+  function handleFilterChange(key) {
+    // find the button that matches key
+    const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
+    if (!btn) return;
+    if (btn.type === "conference") {
+      setConference(btn.value);
+      if (btn.value === "ALL") setDivision("ALL");
+    } else {
+      setDivision(btn.value);
+    }
   }
 
-  // Conference logos row
+  // Convert LEAGUE_FILTER_BUTTONS to items for SectionTabs (key/label)
+  const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
+
+  // Render helpers
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
@@ -317,48 +284,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Subnav / Filters (kept below the logos)
-  function DivisionsRow() {
-    if (!leagueIsSupported || !showFilterBar) return null;
-    return (
-      <div className="isp-subnav-row" role="tablist" aria-label="League filters">
-        {LEAGUE_FILTER_BUTTONS.map((btn) => {
-          const isActive = btn.type === "conference" ? conference === btn.value : division === btn.value;
-          return (
-            <button
-              key={btn.value}
-              className={`isp-subnav-btn${isActive ? " active" : ""}`}
-              onClick={() => {
-                if (btn.type === "conference") {
-                  setConference(btn.value);
-                  if (btn.value === "ALL") setDivision("ALL");
-                } else {
-                  setDivision(btn.value);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  if (btn.type === "conference") {
-                    setConference(btn.value);
-                    if (btn.value === "ALL") setDivision("ALL");
-                  } else {
-                    setDivision(btn.value);
-                  }
-                }
-              }}
-              aria-current={isActive ? "page" : undefined}
-              tabIndex={0}
-              role="tab"
-            >
-              {btn.label}
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  // Sports dropdown anchored under SPORTS tab
+  // Sports dropdown anchored under SPORTS tab (kept exactly as before)
   function SportsDropdown() {
     if (!sportsOpen || activeCategory !== "sports") return null;
 
@@ -485,7 +411,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // PrintCard component (minimal, consistent with earlier code)
+  // PrintCard component (kept similar to before)
   function PrintCard({ print, isMobile, league }) {
     const [hovered, setHovered] = useState(false);
     const cardSize = isMobile ? 120 : hovered ? 320 : 288;
@@ -589,21 +515,48 @@ export default function ThreeDPrinting() {
         <div className="nav-card nav-card-mid" aria-hidden={false}>
           <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
           <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}>
+            {/* Render tabs directly (no inner padded wrapper) */}
             <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <CategoriesRow />
+              <SectionTabs
+                items={CATEGORIES}
+                active={activeCategory}
+                onChange={(key) => {
+                  if (key === "sports") {
+                    setActiveCategory("sports");
+                    setSportsOpen((s) => !s);
+                  } else {
+                    setActiveCategory(key);
+                    setSportsOpen(false);
+                  }
+                  setConference("ALL");
+                  setDivision("ALL");
+                  setShowFilterBar(true);
+                }}
+                variant="top"
+                tabRefMap={{ sports: sportsTabRef }}
+                ariaLabel="3D printing categories"
+              />
             </div>
           </div>
           <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
         </div>
 
-        {/* Logo area — placed below the nav strip and aligned with page bleed/padding */}
+        {/* Logo area — placed below the nav-card-mid and matched to the page bleed/padding */}
         <div style={contentBleedContainer(8)}>
           {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
         </div>
 
         {/* Subnav / Filters — below logos, aligned with same bleed/padding */}
         <div style={contentBleedContainer(0)}>
-          <DivisionsRow />
+          {leagueIsSupported && showFilterBar && (
+            <SectionTabs
+              items={leagueFilterItems}
+              active={division !== "ALL" ? division : conference}
+              onChange={handleFilterChange}
+              variant="sub"
+              ariaLabel="League filters"
+            />
+          )}
         </div>
 
         {/* Dropdown anchored to SPORTS tab */}
