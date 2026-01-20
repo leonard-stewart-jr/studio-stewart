@@ -19,11 +19,11 @@ import {
   FILTER_BUTTONS as FILTER_BUTTONS_NBA
 } from "../data/nba-logos";
 
-// Local categories — "SPORTS" parent (keys must be stable strings)
+// Local categories — three items as you adjusted
 const CATEGORIES = [
   { key: "sports", label: "SPORTS" },
   { key: "lithophanes", label: "LITHOPHANES" },
-  { key: "other", label: "CUSTOM CAD" },
+  { key: "other", label: "CUSTOM CAD" }
 ];
 
 export default function ThreeDPrinting() {
@@ -186,7 +186,7 @@ export default function ThreeDPrinting() {
   // Non-sports categories fallback
   let filteredPrints = [];
   if (activeCategory === "lithophanes") filteredPrints = [LITHOPHANE];
-  if (activeCategory === "custom cad") filteredPrints = [CUSTOM_CAD];
+  if (activeCategory === "other") filteredPrints = [CUSTOM_CAD];
   if (activeCategory === "more") filteredPrints = [MORE_SAMPLE];
 
   // Styles (page-level)
@@ -235,14 +235,13 @@ export default function ThreeDPrinting() {
   const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
 
   // Render helpers
-  // LogoRow now lays out logos in a 4-column grid and centers them above the midpoint of each half.
-  // Small positional nudges: left logos moved +40px (right) and right logos moved -40px (left).
+  // LogoRow lays out logos in a 4-column grid and applies nudges + overlap z-index so logos sit above the isp-subnav-row.
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
     const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
 
-    // horizontal nudge values
+    // horizontal nudge values (you requested 34px)
     const leftNudge = 34; // pixels to move left logo to the right
     const rightNudge = -34; // pixels to move right logo to the left
 
@@ -254,9 +253,11 @@ export default function ThreeDPrinting() {
           alignItems: "center",
           justifyItems: "center",
           minHeight: 120,
-          marginTop: 14,
-          marginBottom: 5,
-          width: "100%"
+          marginTop: 28,
+          marginBottom: -12, // negative bottom margin so logos overlap the isp-subnav-row beneath
+          width: "100%",
+          position: "relative", // so zIndex applies within this flow
+          zIndex: 1150 // sit above mid nav (1100) but below header (1200)
         }}
       >
         {/* Left half: span columns 1-2 and center the logo, then nudge it right */}
@@ -268,7 +269,7 @@ export default function ThreeDPrinting() {
               cursor: "pointer",
               height: leagueIsNFL ? 140 : 200,
               width: "auto",
-              transform: `translateX(${leftNudge}px)`
+              transform: `translateX(${leftNudge}px)` // horizontal nudge
             }}
             onClick={() => {
               if (leagueIsNFL) setConference("AFC");
@@ -288,7 +289,7 @@ export default function ThreeDPrinting() {
               cursor: "pointer",
               height: leagueIsNFL ? 140 : 200,
               width: "auto",
-              transform: `translateX(${rightNudge}px)`
+              transform: `translateX(${rightNudge}px)` // horizontal nudge
             }}
             onClick={() => {
               if (leagueIsNFL) setConference("NFC");
@@ -302,7 +303,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Centered logo for a selected conference
+  // Centered logo for a selected conference (keeps existing behavior)
   function CenteredLogo() {
     if (!leagueIsSupported || !showCenteredLogo) return null;
     return (
@@ -334,7 +335,7 @@ export default function ThreeDPrinting() {
     ];
 
     const dropdownStyle = {
-      position: "fixed", // switch to fixed so it's positioned relative to the viewport
+      position: "fixed", // positioned relative to viewport
       left: dropdownPos.left,
       top: dropdownPos.top,
       zIndex: 2200,
@@ -355,7 +356,7 @@ export default function ThreeDPrinting() {
       background: "transparent",
       border: "none",
       padding: "8px 10px",
-      textAlign: "center", // center text
+      textAlign: "center",
       fontSize: 12,
       letterSpacing: "0.04em",
       textTransform: "uppercase",
@@ -369,15 +370,14 @@ export default function ThreeDPrinting() {
       width: "100%"
     };
 
-    // Tooltip state: show brief "In progress" when hovering disabled items
+    // Tooltip state for disabled items
     const [tooltip, setTooltip] = useState({ visible: false, left: 0, top: 0, text: "" });
 
     function showTooltipFor(el, text) {
       if (!el) return;
       const r = el.getBoundingClientRect();
-      // Position tooltip to the right of the hovered element (viewport coords)
-      const left = r.right + 10; // 10px gap to the right
-      const top = r.top + r.height / 2; // vertically center on the element
+      const left = r.right + 10; // show to the right
+      const top = r.top + r.height / 2;
       setTooltip({
         visible: true,
         left,
@@ -446,30 +446,9 @@ export default function ThreeDPrinting() {
         </div>
 
         {typeof document !== "undefined" && (
-          <div
-            style={{
-              position: "fixed",
-              left: tooltip.left,
-              top: tooltip.top,
-              transform: "translate(0, -50%)", // center vertically alongside the element
-              pointerEvents: "none",
-              zIndex: 2300
-            }}
-            aria-hidden={!tooltip.visible}
-          >
+          <div style={{ position: "fixed", left: tooltip.left, top: tooltip.top, transform: "translate(0, -50%)", pointerEvents: "none", zIndex: 2300 }}>
             {tooltip.visible && (
-              <div
-                style={{
-                  background: "#e6dbb9", // tan background
-                  color: "#181818", // dark gray text
-                  padding: "6px 10px",
-                  borderRadius: 6,
-                  fontSize: 12,
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 280,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
-                }}
-              >
+              <div style={{ background: "#e6dbb9", color: "#181818", padding: "6px 10px", borderRadius: 6, fontSize: 12, fontFamily: "Inter, sans-serif", fontWeight: 280, boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}>
                 {tooltip.text}
               </div>
             )}
@@ -479,7 +458,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // PrintCard component (kept similar to before)
+  // PrintCard component
   function PrintCard({ print, isMobile, league }) {
     const [hovered, setHovered] = useState(false);
     const cardSize = isMobile ? 120 : hovered ? 320 : 288;
@@ -493,7 +472,7 @@ export default function ThreeDPrinting() {
     } else if (league === "sports") {
       baseFolder = "prints";
       ext = "png";
-    } else if (league === "lithophanes" || league === "custom cad" || league === "more") {
+    } else if (league === "lithophanes" || league === "other" || league === "more") {
       baseFolder = "";
       ext = "";
     }
@@ -615,8 +594,7 @@ export default function ThreeDPrinting() {
           {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
         </div>
 
-        {/* Subnav / Filters — below logos, aligned with same bleed/padding.
-            Removed side padding here so subnav spans the full centered page width. */}
+        {/* Subnav / Filters — below logos, aligned with same bleed/padding. */}
         <div style={{ ...contentBleedContainer(0), paddingLeft: 0, paddingRight: 0 }}>
           {leagueIsSupported && showFilterBar && (
             <SectionTabs
