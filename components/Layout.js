@@ -25,9 +25,10 @@ export default function Layout({ children }) {
         onClose={() => setSidebarOpen(false)}
         logoSize={logoSize}
         sidebarPaddingLeft={sidebarPaddingLeft}
+        headerHeight={HEADER_HEIGHT}
       />
       {/* ISPSubNav REMOVED from here */}
-      <main style={{ paddingTop: HEADER_HEIGHT }}>
+      <main style={{ paddingTop: 0 }}>
         {children}
       </main>
     </>
