@@ -213,7 +213,7 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  // Top tabs (categories) - render directly inside nav-card-mid center column (no inner wrapper/padding)
+  // Categories (render inline inside nav-card-mid center column)
   function CategoriesRow() {
     return (
       <div className="isp-section-tabs" role="tablist" aria-label="3D printing categories">
@@ -264,7 +264,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Conference logos row (keeps same behavior)
+  // Conference logos row
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
@@ -485,7 +485,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // PrintCard component
+  // PrintCard component (minimal, consistent with earlier code)
   function PrintCard({ print, isMobile, league }) {
     const [hovered, setHovered] = useState(false);
     const cardSize = isMobile ? 120 : hovered ? 320 : 288;
@@ -585,19 +585,10 @@ export default function ThreeDPrinting() {
   return (
     <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
       <div style={pageStyle}>
-        {/* Single nav-card-mid containing only the tabs (matches IndependentStudio structure) */}
+        {/* Single nav-card-mid that contains only the tabs (structure matches IndependentStudio) */}
         <div className="nav-card nav-card-mid" aria-hidden={false}>
           <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              boxSizing: "border-box"
-            }}
-          >
-            {/* Render tabs directly (no inner padded wrapper) */}
+          <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}>
             <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <CategoriesRow />
             </div>
@@ -605,7 +596,7 @@ export default function ThreeDPrinting() {
           <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
         </div>
 
-        {/* Logo area — placed below the nav-card-mid and matched to the page bleed/padding */}
+        {/* Logo area — placed below the nav strip and aligned with page bleed/padding */}
         <div style={contentBleedContainer(8)}>
           {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
         </div>
