@@ -307,14 +307,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* 3D Printing page tab alignment (ensure same vertical placement as ISP) */
-@media (min-width: 701px) {
-  .three-d-printing-page .isp-section-tabs .isp-tab-btn,
-  .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
-    transform: none !important;
-  }
-}
-
 /* ====== Divider hidden ====== */
 .nav-divider {
   display: none !important;
@@ -479,19 +471,8 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     background: #fff;
   }
 
-  /* Make the tab container align and use ISP spacing (44px and no vertical shift) */
-  .three-d-printing-page .isp-section-tabs {
-    min-height: 44px;
-    margin: 0;
-    gap: 22px;
-    align-items: center;
-  }
-
-  /* Ensure tab label vertical alignment matches ISP (no translate shifts) */
-  .three-d-printing-page .isp-section-tabs .isp-tab-btn,
-  .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
-    transform: none !important;
-  }
+  /* Note: page-scoped .three-d-printing-page .isp-section-tabs rules removed so
+     the page uses the global .isp-section-tabs styles (min-height: 44px; align-items:center). */
 }
 
 /* ====== Divider hidden ====== */
@@ -525,7 +506,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* ====== ISP NAVS ====== */
+/* ====== ISP NAVS (mobile adjustments kept unchanged) ====== */
 @media (max-width: 700px) {
   .nav-card-mid,
   .nav-card-bot {
