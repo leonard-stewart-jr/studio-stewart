@@ -87,6 +87,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ====== CARD NAV STYLES ====== */
+/* Base nav-card keeps flex layout; we use a separate rule to make the cards full-bleed */
 .nav-card {
   margin: 0 auto;
   display: flex;
@@ -96,6 +97,8 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 10;
   box-sizing: border-box;
 }
+
+/* Visual/top/mid/bot numeric values */
 .nav-card-top {
   box-shadow: 0 5px 24px 0 rgba(0,0,0,0.13);
   min-height: 60px;
@@ -107,7 +110,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   min-height: 44px;
   height: 44px;
-  /* mid nav will be positioned via sticky/top rules in desktop media query */
+  /* placement for mid nav is handled with sticky/top in desktop media query */
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
@@ -123,6 +126,35 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
   z-index: 15;
   background: #fff;
+}
+
+/* ====== FULL-BLEED NAV CARDS ======
+   Make the nav card elements themselves span the viewport (full-bleed).
+   Keep their inner child wrappers centered to the page container (min(1600px,95vw)).
+   This makes the white nav bars full width while the tab content remains centered.
+*/
+.nav-card-top,
+.nav-card-mid,
+.nav-card-bot {
+  /* Force the white "card" to span the viewport */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  left: 0;
+  background: #fff;
+}
+
+/* Center the inner content of each nav-card to the page container width.
+   No side padding here — tabs and inner content control their own spacing. */
+.nav-card-top > div,
+.nav-card-mid > div,
+.nav-card-bot > div {
+  width: min(1600px, 95vw);
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+  background: transparent;
 }
 
 /* ====== NAVIGATION (LINKS) — base 280, hover/active 350 ====== */
@@ -435,12 +467,12 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* ====== DESKTOP: Sticky placement for mid nav + centered child wrapper ======
+/* ====== DESKTOP: Sticky placement for mid nav + ensure full-bleed nav cards ======
    Make the mid nav position predictable by sticking it at top: 60px (header height).
-   Also ensure the immediate child uses the centered container width and no side padding.
+   Ensure nav-card elements are full-bleed while their immediate children remain centered.
 */
 @media (min-width: 701px) {
-  /* Keep the nav-card-mid numeric values so computed height is identical */
+  /* Mid nav numeric values remain identical */
   .nav-card.nav-card-mid {
     min-height: 44px;
     height: 44px;
@@ -454,14 +486,24 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     z-index: 1100; /* below header (header uses 1200) but above page content */
   }
 
-  /* Center the immediate child content to the page container width, no side padding */
-  .nav-card.nav-card-mid > div {
+  /* Top nav sticky placement (header) — keep full-bleed */
+  .nav-card.nav-card-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+  }
+
+  /* Keep inner child centered to the page container and remove side padding */
+  .nav-card.nav-card-mid > div,
+  .nav-card.nav-card-top > div,
+  .nav-card.nav-card-bot > div {
     width: min(1600px, 95vw);
     margin: 0 auto;
     box-sizing: border-box;
     padding-left: 0;
     padding-right: 0;
-    background: transparent; /* let the nav-card provide the white background */
+    background: transparent; /* nav-card supplies the white background */
   }
 }
 
