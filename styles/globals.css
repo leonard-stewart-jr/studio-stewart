@@ -107,9 +107,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   min-height: 44px;
   height: 44px;
-  /* Position the mid nav 60px down from the top so it aligns with the header */
-  margin-top: 60px;
-  margin-bottom: 0;
+  margin-top: -8px;
+  margin-bottom: 8px;
   padding: 0;
   z-index: 20;
   background: #fff;
@@ -178,10 +177,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   gap: 22px;
   background: transparent;
   padding: 0;
-  /* changed per request: use 44px on desktop and remove vertical shift */
-  min-height: 44px;
+  min-height: 60px;
   height: auto;
-  margin: 0;
+  margin: -12px 0 0 0;
   box-shadow: none;
   border-bottom: none;
   width: 100%;
