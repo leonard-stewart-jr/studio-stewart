@@ -462,11 +462,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     margin: 0 calc(50% - 50vw) 0;
     box-sizing: border-box;
 
-    /* match ISP paddings exactly */
-    padding-top: 8px;
-    padding-left: 80px;
-    padding-right: 80px;
-
     /* ensure pure white background so the strip reads the same */
     background: #fff;
   }
