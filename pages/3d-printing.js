@@ -229,7 +229,7 @@ export default function ThreeDPrinting() {
   // Component: Categories row (SPORTS tab toggles dropdown)
   function CategoriesRow() {
     return (
-      <div className="isp-section-tabs" style={fullBleedBarStyle}>
+      <div style={fullBleedBarStyle}>
         {CATEGORIES.map((cat) => {
           const isActive = activeCategory === cat.value;
           const className = `isp-tab-btn${isActive ? " active" : ""}`;
@@ -253,6 +253,21 @@ export default function ThreeDPrinting() {
                 setConference("ALL");
                 setDivision("ALL");
                 setShowFilterBar(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  // same behavior for keyboard
+                  if (cat.value === "sports") {
+                    setActiveCategory("sports");
+                    setSportsOpen((s) => !s);
+                  } else {
+                    setActiveCategory(cat.value);
+                    setSportsOpen(false);
+                  }
+                  setConference("ALL");
+                  setDivision("ALL");
+                  setShowFilterBar(true);
+                }
               }}
               tabIndex={0}
               aria-current={isActive ? "page" : undefined}
@@ -327,7 +342,7 @@ export default function ThreeDPrinting() {
 
     return (
       <>
-        <div ref={dropdownRef} style={dropdownStyle} role="menu" aria-label="Sports leagues">
+        <div ref={dropdownRef} style={dropdownStyle}>
           {leagues.map((l) => {
             const isActive = currentLeague === l.key && activeCategory === "sports";
             const itemStyle = {
@@ -339,7 +354,6 @@ export default function ThreeDPrinting() {
             return (
               <button
                 key={l.key}
-                className="isp-tab-btn"
                 style={itemStyle}
                 onClick={() => {
                   if (!l.enabled) return;
@@ -374,6 +388,7 @@ export default function ThreeDPrinting() {
                   if (!l.enabled) showTooltipFor(e.currentTarget, "In progress");
                 }}
                 onBlur={() => hideTooltip()}
+                tabIndex={0}
               >
                 {l.label}
               </button>
@@ -383,28 +398,9 @@ export default function ThreeDPrinting() {
 
         {/* Simple tooltip for disabled items (positioned absolutely) */}
         {typeof document !== "undefined" && (
-          <div
-            aria-hidden={!tooltip.visible}
-            style={{
-              position: "absolute",
-              left: tooltip.left ? tooltip.left - 80 : -9999,
-              top: tooltip.top ? tooltip.top - 40 : -9999,
-              transform: "translateX(-50%)",
-              zIndex: 2300,
-              pointerEvents: "none"
-            }}
-          >
+          <div style={{ position: "absolute", left: tooltip.left, top: tooltip.top, transform: "translate(-50%, -100%)", pointerEvents: "none", zIndex: 2300 }}>
             {tooltip.visible && (
-              <div
-                style={{
-                  padding: "6px 10px",
-                  background: "#222",
-                  color: "#fff",
-                  borderRadius: 6,
-                  fontSize: 12,
-                  letterSpacing: "0.02em"
-                }}
-              >
+              <div style={{ background: "rgba(0,0,0,0.8)", color: "#fff", padding: "6px 10px", borderRadius: 6, fontSize: 12 }}>
                 {tooltip.text}
               </div>
             )}
@@ -419,7 +415,7 @@ export default function ThreeDPrinting() {
     if (!leagueIsSupported || !showFilterBar) return null;
     const buttons = LEAGUE_FILTER_BUTTONS;
     return (
-      <div className="isp-subnav-row" aria-label="Filters">
+      <div className="isp-subnav-row">
         {buttons.map((btn) => {
           const isActive = btn.type === "conference" ? conference === btn.value : division === btn.value;
 
@@ -446,6 +442,7 @@ export default function ThreeDPrinting() {
                 }
               }}
               aria-current={isActive ? "page" : undefined}
+              tabIndex={0}
             >
               {btn.label}
             </button>
@@ -466,33 +463,28 @@ export default function ThreeDPrinting() {
 
     return (
       <div style={logoRowStyle}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <ConferenceLogo
-            logo={leftLogo}
-            sizeVariant={sizeVariant}
-            isMobile={isMobile}
-            onClick={() => {
-              if (leagueIsNFL) setConference("AFC");
-              else setConference("EAST");
-              setDivision("ALL");
-              setShowFilterBar(true);
-            }}
-          />
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <ConferenceLogo
-            logo={rightLogo}
-            sizeVariant={sizeVariant}
-            isMobile={isMobile}
-            onClick={() => {
-              if (leagueIsNFL) setConference("NFC");
-              else setConference("WEST");
-              setDivision("ALL");
-              setShowFilterBar(true);
-            }}
-          />
-        </div>
+        <img
+          src={leftLogo?.image}
+          alt={leftLogo?.name}
+          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+          onClick={() => {
+            if (leagueIsNFL) setConference("AFC");
+            else setConference("EAST");
+            setDivision("ALL");
+            setShowFilterBar(true);
+          }}
+        />
+        <img
+          src={rightLogo?.image}
+          alt={rightLogo?.name}
+          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+          onClick={() => {
+            if (leagueIsNFL) setConference("NFC");
+            else setConference("WEST");
+            setDivision("ALL");
+            setShowFilterBar(true);
+          }}
+        />
       </div>
     );
   }
@@ -503,10 +495,10 @@ export default function ThreeDPrinting() {
     const sizeVariant = leagueIsNBA ? "nba" : leagueIsNFL ? "nfl" : undefined;
     return (
       <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-        <ConferenceLogo
-          logo={showCenteredLogo}
-          sizeVariant={sizeVariant}
-          isMobile={isMobile}
+        <img
+          src={showCenteredLogo?.image}
+          alt={showCenteredLogo?.name}
+          style={{ height: leagueIsNFL ? 140 : 200, width: "auto", cursor: "pointer" }}
           onClick={() => {
             setConference("ALL");
             setDivision("ALL");
@@ -530,56 +522,54 @@ export default function ThreeDPrinting() {
     ) {
       if (isMobile) {
         return gridData.map(([left, right], idx) => (
-          <div key={`row-${idx}`} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, width: "100%" }}>
-            <div>{left ? <PrintCard print={left} isMobile={isMobile} league={currentLeague} /> : null}</div>
-            <div>{right ? <PrintCard print={right} isMobile={isMobile} league={currentLeague} /> : null}</div>
+          <div key={idx} style={{ display: "flex", gap: 12, width: "100%" }}>
+            {left ? <PrintCard key={left.id} print={left} isMobile={isMobile} league={currentLeague} /> : null}
+            {right ? <PrintCard key={right.id} print={right} isMobile={isMobile} league={currentLeague} /> : null}
           </div>
         ));
       }
       return gridData.flat().map((item, idx) => {
         if (!item) return null;
-        return <PrintCard key={`card-${idx}`} print={item} isMobile={isMobile} league={currentLeague} />;
+        return <PrintCard key={item.id || idx} print={item} isMobile={isMobile} league={currentLeague} />;
       });
     }
 
     if (leagueIsSupported && Array.isArray(gridData)) {
       return gridData.map((item, idx) => {
         if (!item) return null;
-        return <PrintCard key={`card-${idx}`} print={item} isMobile={isMobile} league={currentLeague} />;
+        return <PrintCard key={item.id || idx} print={item} isMobile={isMobile} league={currentLeague} />;
       });
     }
 
     // non-sports categories
     if (activeCategory !== "sports") {
       if (filteredPrints.length === 0) {
-        return <div style={{ padding: 24, color: "#777" }}>No prints yet in this category.</div>;
+        return <div>No prints yet in this category.</div>;
       }
-      return filteredPrints.map((p, i) => <PrintCard key={`p-${i}`} print={p} isMobile={isMobile} league={activeCategory} />);
+      return filteredPrints.map((p, i) => <PrintCard key={p.id || i} print={p} isMobile={isMobile} league={activeCategory} />);
     }
 
     return null;
   }
 
   return (
-    <div className="three-d-printing-page" style={pageStyle}>
-      <div style={fullBleedBarStyle} className="nav-card nav-card-mid">
+    <div style={{ width: "100%", background: "#f9f9f7" }}>
+      <div style={pageStyle}>
+        {/* Categories row */}
         <CategoriesRow />
-      </div>
 
-      {/* dropdown anchored to SPORTS tab */}
-      <SportsDropdown />
+        {/* Dropdown anchored to SPORTS tab */}
+        <SportsDropdown />
 
-      {/* Sports area */}
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "min(1200px, 95%)" }}>
-          <LogoRow />
-          <CenteredLogo />
+        {/* Sports area: conference logos / centered logo */}
+        {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
+
+        {/* Filter row */}
+        <div style={{ marginTop: 12 }}>
           <DivisionsRow />
         </div>
-      </div>
 
-      {/* Grid */}
-      <div style={{ width: "min(1200px, 95%)", margin: "0 auto", paddingTop: 8 }}>
+        {/* Grid */}
         <div ref={gridRef} style={gridWrapStyle}>
           {renderGridItems()}
         </div>
@@ -616,10 +606,7 @@ function ConferenceLogo({ logo, style = {}, onClick, isMobile, sizeVariant }) {
   };
   const src = logo?.image || "";
   return (
-    <img
-      src={src}
-      alt={logo?.name || "Conference Logo"}
-      style={{ ...base, ...style }}
+    <img src={src} alt={logo?.name} style={base}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => onClick && onClick()}
@@ -703,19 +690,9 @@ function PrintCard({ print, isMobile, league }) {
       title={print.name}
     >
       {imgSrc ? (
-        <img
-          src={imgSrc}
-          alt={print.name}
-          style={{
-            width: imageSize,
-            height: "auto",
-            display: "block",
-            objectFit: "contain",
-            transition: "width 0.18s, height 0.18s"
-          }}
-        />
+        <img src={imgSrc} alt={print.name} style={{ width: imageSize, height: "auto", display: "block" }} />
       ) : (
-        <div style={{ padding: 12, color: "#666" }}>{print.name}</div>
+        <div>{print.name}</div>
       )}
 
       <div style={nameStyle}>{print.name}</div>
