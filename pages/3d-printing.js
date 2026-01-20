@@ -63,7 +63,10 @@ export default function ThreeDPrinting() {
   // refs for dropdown anchoring
   const sportsTabRef = useRef(null);
   const dropdownRef = useRef(null);
-  const [dropdownPos, setDropdownPos] = useState({ left: 0, top: 0, width: 180 });
+
+  // Use half width: original 180 -> now 90
+  const DROPDOWN_WIDTH = 90;
+  const [dropdownPos, setDropdownPos] = useState({ left: 0, top: 0, width: DROPDOWN_WIDTH });
 
   // compute dropdown position aligned under SPORTS tab
   useEffect(() => {
@@ -71,7 +74,7 @@ export default function ThreeDPrinting() {
       const btn = sportsTabRef.current;
       if (!btn) return;
       const rect = btn.getBoundingClientRect();
-      const width = 180;
+      const width = DROPDOWN_WIDTH;
       const left = rect.left + window.scrollX + rect.width / 2 - width / 2;
       const top = rect.bottom + window.scrollY + 6;
       setDropdownPos({ left, top, width });
@@ -284,7 +287,7 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Sports dropdown anchored under SPORTS tab (kept exactly as before)
+  // Sports dropdown anchored under SPORTS tab
   function SportsDropdown() {
     if (!sportsOpen || activeCategory !== "sports") return null;
 
@@ -310,21 +313,27 @@ export default function ThreeDPrinting() {
       flexDirection: "column",
       gap: 6,
       alignItems: "stretch",
-      pointerEvents: "auto"
+      pointerEvents: "auto",
+      // small transform to keep crisp pixel alignment on some displays
+      transform: "translateZ(0)"
     };
 
     const itemStyleBase = {
       background: "transparent",
       border: "none",
-      padding: "10px 12px",
-      textAlign: "left",
+      padding: "8px 10px",
+      textAlign: "center", // center text
       fontSize: 12,
       letterSpacing: "0.04em",
       textTransform: "uppercase",
       cursor: "pointer",
       color: "#6c6c6a",
       fontFamily: "Inter, sans-serif",
-      fontWeight: 280
+      fontWeight: 280,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%"
     };
 
     const [tooltip, setTooltip] = useState({ visible: false, left: 0, top: 0, text: "" });
@@ -345,7 +354,7 @@ export default function ThreeDPrinting() {
 
     return (
       <>
-        <div ref={dropdownRef} style={dropdownStyle}>
+        <div ref={dropdownRef} style={dropdownStyle} role="menu" aria-label="Select league">
           {leagues.map((l) => {
             const isActive = currentLeague === l.key && activeCategory === "sports";
             const itemStyle = {
@@ -391,6 +400,7 @@ export default function ThreeDPrinting() {
                 }}
                 onBlur={() => hideTooltip()}
                 tabIndex={0}
+                role="menuitem"
               >
                 {l.label}
               </button>
@@ -522,6 +532,7 @@ export default function ThreeDPrinting() {
                 active={activeCategory}
                 onChange={(key) => {
                   if (key === "sports") {
+                    // toggle dropdown when clicking sports
                     setActiveCategory("sports");
                     setSportsOpen((s) => !s);
                   } else {
