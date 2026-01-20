@@ -235,12 +235,16 @@ export default function ThreeDPrinting() {
   const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
 
   // Render helpers
-  // LogoRow now lays out logos in a 4-column grid and centers them above the midpoint of each half:
-  // left logo spans columns 1-2 and is centered there; right logo spans columns 3-4 and is centered there.
+  // LogoRow now lays out logos in a 4-column grid and centers them above the midpoint of each half.
+  // Small positional nudges: left logos moved +40px (right) and right logos moved -40px (left).
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
     const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
+
+    // horizontal nudge values
+    const leftNudge = 40; // pixels to move left logo to the right
+    const rightNudge = -40; // pixels to move right logo to the left
 
     return (
       <div
@@ -255,12 +259,17 @@ export default function ThreeDPrinting() {
           width: "100%"
         }}
       >
-        {/* Left half: span columns 1-2 and center the logo */}
+        {/* Left half: span columns 1-2 and center the logo, then nudge it right */}
         <div style={{ gridColumn: "1 / span 2", display: "flex", justifyContent: "center" }}>
           <img
             src={leftLogo?.image}
             alt={leftLogo?.name}
-            style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+            style={{
+              cursor: "pointer",
+              height: leagueIsNFL ? 140 : 200,
+              width: "auto",
+              transform: `translateX(${leftNudge}px)`
+            }}
             onClick={() => {
               if (leagueIsNFL) setConference("AFC");
               else setConference("EAST");
@@ -270,12 +279,17 @@ export default function ThreeDPrinting() {
           />
         </div>
 
-        {/* Right half: span columns 3-4 and center the logo */}
+        {/* Right half: span columns 3-4 and center the logo, then nudge it left */}
         <div style={{ gridColumn: "3 / span 2", display: "flex", justifyContent: "center" }}>
           <img
             src={rightLogo?.image}
             alt={rightLogo?.name}
-            style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+            style={{
+              cursor: "pointer",
+              height: leagueIsNFL ? 140 : 200,
+              width: "auto",
+              transform: `translateX(${rightNudge}px)`
+            }}
             onClick={() => {
               if (leagueIsNFL) setConference("NFC");
               else setConference("WEST");
