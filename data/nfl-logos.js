@@ -98,8 +98,6 @@ export const MORE_SAMPLE = {
 
 export const FILTER_BUTTONS = [
   { label: "ALL", value: "ALL", type: "conference" },
-  { label: "AFC", value: "AFC", type: "conference" },
-  { label: "NFC", value: "NFC", type: "conference" },
   { label: "EAST", value: "EAST", type: "division" },
   { label: "WEST", value: "WEST", type: "division" },
   { label: "SOUTH", value: "SOUTH", type: "division" },
