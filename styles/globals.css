@@ -443,6 +443,8 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 
 /* ====== 3D PRINTING PAGE: subnav tuning to match ISP page (nav-card-mid = 44px) ======
    Scope: .three-d-printing-page only so other pages remain unchanged.
+   This block mirrors the ISP structure exactly (parent + immediate child wrapper)
+   so the computed height and visual alignment match across pages.
 */
 @media (min-width: 701px) {
   /* Match the ISP nav-card-mid numeric values so computed height is identical */
@@ -452,19 +454,25 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     margin-top: -8px;
     margin-bottom: 8px;
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
+    background: #fff; /* ensure pure white like ISP */
   }
 
-  /* Mirror ISP inner wrapper spacing so the bar's final computed height matches:
-     many pages include an extra inner DIV with side padding that affects layout.
-     We target that immediate child and apply the same left/right padding and
-     box-sizing so the 3D Printing nav renders like ISP. */
+  /* Mirror the ISP immediate child wrapper (same width/margins/paddings)
+     so its box model matches what the ISP page uses. This reproduces the
+     exact computed height and content placement. */
   .three-d-printing-page .nav-card-mid > div {
-    width: 100%;
+    /* full-bleed width + centering via calc() — matches the inline wrapper ISP uses */
+    width: 100vw;
+    margin: 0 calc(50% - 50vw) 8px;
     box-sizing: border-box;
+
+    /* match ISP paddings exactly */
+    padding-top: 8px;
     padding-left: 80px;
     padding-right: 80px;
-    /* subtle matching background tint if ISP uses it */
-    background: rgb(249, 249, 247);
+
+    /* ensure pure white background so the strip reads the same */
+    background: #fff;
   }
 
   /* Make the tab container align and use ISP spacing (same as .isp-section-tabs rules) */
@@ -567,45 +575,4 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 .mesopotamia-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
-}
-.matter-matters-page {
-  background: #fff !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-/* Sticky nav only for matter-matters page */
-.matter-matters-page .nav-card-top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  z-index: 1200;
-}
-.isp-globe-section {
-  align-items: stretch !important;
-}
-.isp-globe-section > div:first-child {
-  flex-shrink: 0 !important;
-  min-width: 340px !important;
-  max-width: 1050px !important;
-  width: 1050px !important;
-  height: 845px !important;
-}
-.isp-globe-section nav {
-  flex-shrink: 0 !important;
-  min-width: 340px !important;
-  max-width: 900px !important;
-  width: 700px !important;
-}
-@media (max-width: 800px) {
-  .isp-globe-section {
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-  .isp-globe-section > div:first-child,
-  .isp-globe-section nav {
-    width: 100% !important;
-    min-width: unset !important;
-    max-width: unset !important;
-  }
 }
