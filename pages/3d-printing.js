@@ -235,7 +235,7 @@ export default function ThreeDPrinting() {
   const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
 
   // Render helpers
-  // LogoRow lays out logos in a 4-column grid and applies nudges + overlap z-index so logos sit above the isp-subnav-row.
+  // LogoRow lays out logos in a 4-column grid and applies nudges + overlap so logos visually sit over the subnav area.
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
@@ -255,9 +255,7 @@ export default function ThreeDPrinting() {
           minHeight: 120,
           marginTop: 24,
           marginBottom: -28, // negative bottom margin so logos overlap the isp-subnav-row beneath
-          width: "100%",
-          position: "relative", // so zIndex applies within this flow
-          zIndex: 1150 // sit above mid nav (1100) but below header (1200)
+          width: "100%"
         }}
       >
         {/* Left half: span columns 1-2 and center the logo, then nudge it right */}
@@ -376,8 +374,9 @@ export default function ThreeDPrinting() {
     function showTooltipFor(el, text) {
       if (!el) return;
       const r = el.getBoundingClientRect();
-      const left = r.right + 10; // show to the right
-      const top = r.top + r.height / 2;
+      // Position tooltip to the right of the hovered element (viewport coords)
+      const left = r.right + 10; // 10px gap to the right
+      const top = r.top + r.height / 2; // vertically center on the element
       setTooltip({
         visible: true,
         left,
@@ -446,9 +445,30 @@ export default function ThreeDPrinting() {
         </div>
 
         {typeof document !== "undefined" && (
-          <div style={{ position: "fixed", left: tooltip.left, top: tooltip.top, transform: "translate(0, -50%)", pointerEvents: "none", zIndex: 2300 }}>
+          <div
+            style={{
+              position: "fixed",
+              left: tooltip.left,
+              top: tooltip.top,
+              transform: "translate(0, -50%)", // center vertically alongside the element
+              pointerEvents: "none",
+              zIndex: 2300
+            }}
+            aria-hidden={!tooltip.visible}
+          >
             {tooltip.visible && (
-              <div style={{ background: "#e6dbb9", color: "#181818", padding: "6px 10px", borderRadius: 6, fontSize: 12, fontFamily: "Inter, sans-serif", fontWeight: 280, boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}>
+              <div
+                style={{
+                  background: "#e6dbb9", // tan background
+                  color: "#181818", // dark gray text
+                  padding: "6px 10px",
+                  borderRadius: 6,
+                  fontSize: 12,
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: 280,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+                }}
+              >
                 {tooltip.text}
               </div>
             )}
