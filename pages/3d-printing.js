@@ -253,7 +253,7 @@ export default function ThreeDPrinting() {
           alignItems: "center",
           justifyItems: "center",
           minHeight: 120,
-          marginTop: 12,
+          marginTop: 16,
           marginBottom: -32, // negative bottom margin so logos overlap the isp-subnav-row beneath
           width: "100%"
         }}
