@@ -107,8 +107,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   min-height: 44px;
   height: 44px;
-  /* Keep the mid bar the same height but remove the negative overlap so it sits flush */
-  margin-top: 0;
+  /* Position the mid nav 60px down from the top so it aligns with the header */
+  margin-top: 60px;
   margin-bottom: 0;
   padding: 0;
   z-index: 20;
@@ -438,31 +438,30 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 /* ====== NAV CHILD WRAPPER: CENTERED PAGE WIDTH (DESKTOP) ======
    Use a centered page-width wrapper for nav-card-mid immediate children so
    both Independent Studio and 3D Printing compute the same box model.
-   This replaces page-scoped full-bleed wrapping that caused a visible gap.
+   We set the child width to the page container and remove side padding so the mid bar
+   visually aligns flush under the header and keeps the exact centered width.
 */
 @media (min-width: 701px) {
   /* Keep the nav-card-mid numeric values so computed height is identical */
   .nav-card.nav-card-mid {
     min-height: 44px;
     height: 44px;
-    margin-top: 0;
+    /* margin-top purposely set to 60px so mid nav sits exactly below header */
+    margin-top: 60px;
     margin-bottom: 0;
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
     background: #fff;
   }
 
-  /* Center the immediate child content to the page container width */
+  /* Center the immediate child content to the page container width, no side padding */
   .nav-card.nav-card-mid > div {
     width: min(1600px, 95vw);
     margin: 0 auto;
     box-sizing: border-box;
-    padding-left: 80px;
-    padding-right: 80px;
+    padding-left: 0;
+    padding-right: 0;
     background: transparent; /* let the nav-card provide the white background */
   }
-
-  /* If a page specifically needs to override these paddings, it can apply a page-scoped rule.
-     The rule above ensures both ISP and 3D printing pages share the same centered width/padding. */
 }
 
 /* ====== Divider hidden ====== */
