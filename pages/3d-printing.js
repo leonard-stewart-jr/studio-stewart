@@ -193,30 +193,16 @@ export default function ThreeDPrinting() {
     position: "relative"
   };
 
-  // This inner wrapper is targeted by .three-d-printing-page .nav-card-mid > div in globals.css
-  const fullBleedBarStyle = {
+  const contentBleedContainer = (extraTop = 0) => ({
     width: "100vw",
     marginLeft: "calc(50% - 50vw)",
     marginRight: "calc(50% - 50vw)",
-    marginTop: 0,
-    marginBottom: 8,
     boxSizing: "border-box",
-    paddingTop: 8,
     paddingLeft: 80,
     paddingRight: 80,
-    background: "#fff"
-  };
-
-  const logoRowStyle = {
-    display: "grid",
-    gridTemplateColumns: showConferenceLogos ? "1fr 1fr" : "1fr",
-    alignItems: "center",
-    justifyItems: "center",
-    minHeight: "120px",
-    marginTop: "28px",
-    marginBottom: "10px",
-    width: "100%"
-  };
+    marginTop: extraTop,
+    background: "transparent"
+  });
 
   const gridWrapStyle = {
     display: "grid",
@@ -227,7 +213,7 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  // Top tabs (categories) are rendered inside the shared nav-card-mid inner wrapper
+  // Top tabs (categories) - render directly inside nav-card-mid center column (no inner wrapper/padding)
   function CategoriesRow() {
     return (
       <div className="isp-section-tabs" role="tablist" aria-label="3D printing categories">
@@ -285,7 +271,7 @@ export default function ThreeDPrinting() {
     const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
 
     return (
-      <div style={logoRowStyle}>
+      <div style={{ display: "grid", gridTemplateColumns: showConferenceLogos ? "1fr 1fr" : "1fr", alignItems: "center", justifyItems: "center", minHeight: 120, marginTop: 28, marginBottom: 10, width: "100%" }}>
         <img
           src={leftLogo?.image}
           alt={leftLogo?.name}
@@ -599,7 +585,7 @@ export default function ThreeDPrinting() {
   return (
     <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
       <div style={pageStyle}>
-        {/* Single nav-card-mid that contains categories (isp-section-tabs), logos, and the subnav below logos */}
+        {/* Single nav-card-mid containing only the tabs (matches IndependentStudio structure) */}
         <div className="nav-card nav-card-mid" aria-hidden={false}>
           <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
           <div
@@ -611,20 +597,22 @@ export default function ThreeDPrinting() {
               boxSizing: "border-box"
             }}
           >
-            <div style={fullBleedBarStyle}>
-              {/* Categories row */}
+            {/* Render tabs directly (no inner padded wrapper) */}
+            <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <CategoriesRow />
-
-              {/* Logo area (conference logos or centered) */}
-              {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
-
-              {/* Subnav / Filters (below the logo area) */}
-              <div style={{ marginTop: 6 }}>
-                <DivisionsRow />
-              </div>
             </div>
           </div>
           <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+        </div>
+
+        {/* Logo area — placed below the nav-card-mid and matched to the page bleed/padding */}
+        <div style={contentBleedContainer(8)}>
+          {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
+        </div>
+
+        {/* Subnav / Filters — below logos, aligned with same bleed/padding */}
+        <div style={contentBleedContainer(0)}>
+          <DivisionsRow />
         </div>
 
         {/* Dropdown anchored to SPORTS tab */}
