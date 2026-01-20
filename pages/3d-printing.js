@@ -344,7 +344,7 @@ export default function ThreeDPrinting() {
       width: dropdownPos.width,
       display: "flex",
       flexDirection: "column",
-      gap: 6,
+      gap: 2,
       alignItems: "stretch",
       pointerEvents: "auto",
       transform: "translateZ(0)"
