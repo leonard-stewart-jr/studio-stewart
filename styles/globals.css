@@ -107,8 +107,9 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   min-height: 44px;
   height: 44px;
-  margin-top: -8px;
-  margin-bottom: 8px;
+  /* Keep the mid bar the same height but remove the negative overlap so it sits flush */
+  margin-top: 0;
+  margin-bottom: 0;
   padding: 0;
   z-index: 20;
   background: #fff;
@@ -452,8 +453,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .three-d-printing-page .nav-card-mid {
     min-height: 44px;
     height: 44px;
-    margin-top: -8px;
-    margin-bottom: 8px;
+    /* keep margin-top 0 so the mid bar sits flush with the top bar */
+    margin-top: 0;
+    margin-bottom: 0;
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
     background: #fff; /* ensure pure white like ISP */
   }
@@ -464,7 +466,8 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   .three-d-printing-page .nav-card-mid > div {
     /* full-bleed width + centering via calc() — matches the inline wrapper ISP uses */
     width: 100vw;
-    margin: 0 calc(50% - 50vw) 8px;
+    /* remove the bottom margin so it doesn't create a visible gap between nav rows */
+    margin: 0 calc(50% - 50vw) 0;
     box-sizing: border-box;
 
     /* match ISP paddings exactly */
@@ -476,7 +479,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     background: #fff;
   }
 
-  /* Make the tab container align and use ISP spacing (changed to 44px and no vertical shift) */
+  /* Make the tab container align and use ISP spacing (44px and no vertical shift) */
   .three-d-printing-page .isp-section-tabs {
     min-height: 44px;
     margin: 0;
