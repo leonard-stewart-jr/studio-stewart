@@ -546,8 +546,9 @@ export default function ThreeDPrinting() {
           {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
         </div>
 
-        {/* Subnav / Filters — below logos, aligned with same bleed/padding */}
-        <div style={contentBleedContainer(0)}>
+        {/* Subnav / Filters — below logos, aligned with same bleed/padding.
+            Removed side padding here so subnav spans the full centered page width. */}
+        <div style={{ ...contentBleedContainer(0), paddingLeft: 0, paddingRight: 0 }}>
           {leagueIsSupported && showFilterBar && (
             <SectionTabs
               items={leagueFilterItems}
