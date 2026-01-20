@@ -229,53 +229,67 @@ export default function ThreeDPrinting() {
   // Component: Categories row (SPORTS tab toggles dropdown)
   function CategoriesRow() {
     return (
-      <div style={fullBleedBarStyle}>
-        {CATEGORIES.map((cat) => {
-          const isActive = activeCategory === cat.value;
-          const className = `isp-tab-btn${isActive ? " active" : ""}`;
-          // Attach ref only to SPORTS tab to anchor dropdown
-          const ref = cat.value === "sports" ? sportsTabRef : undefined;
-          return (
-            <button
-              key={cat.value}
-              ref={ref}
-              className={className}
-              onClick={() => {
-                // Toggle dropdown only when clicking SPORTS tab; otherwise switch categories
-                if (cat.value === "sports") {
-                  setActiveCategory("sports");
-                  setSportsOpen((s) => !s);
-                } else {
-                  setActiveCategory(cat.value);
-                  setSportsOpen(false);
-                }
-                // reset filters
-                setConference("ALL");
-                setDivision("ALL");
-                setShowFilterBar(true);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  // same behavior for keyboard
-                  if (cat.value === "sports") {
-                    setActiveCategory("sports");
-                    setSportsOpen((s) => !s);
-                  } else {
-                    setActiveCategory(cat.value);
-                    setSportsOpen(false);
-                  }
-                  setConference("ALL");
-                  setDivision("ALL");
-                  setShowFilterBar(true);
-                }
-              }}
-              tabIndex={0}
-              aria-current={isActive ? "page" : undefined}
-            >
-              {cat.label}
-            </button>
-          );
-        })}
+      <div className="nav-card nav-card-mid" aria-hidden={false}>
+        <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            boxSizing: "border-box"
+          }}
+        >
+          <div className="isp-section-tabs" style={fullBleedBarStyle}>
+            {CATEGORIES.map((cat) => {
+              const isActive = activeCategory === cat.value;
+              const className = `isp-tab-btn${isActive ? " active" : ""}`;
+              // Attach ref only to SPORTS tab to anchor dropdown
+              const ref = cat.value === "sports" ? sportsTabRef : undefined;
+              return (
+                <button
+                  key={cat.value}
+                  ref={ref}
+                  className={className}
+                  onClick={() => {
+                    // Toggle dropdown only when clicking SPORTS tab; otherwise switch categories
+                    if (cat.value === "sports") {
+                      setActiveCategory("sports");
+                      setSportsOpen((s) => !s);
+                    } else {
+                      setActiveCategory(cat.value);
+                      setSportsOpen(false);
+                    }
+                    // reset filters
+                    setConference("ALL");
+                    setDivision("ALL");
+                    setShowFilterBar(true);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      // same behavior for keyboard
+                      if (cat.value === "sports") {
+                        setActiveCategory("sports");
+                        setSportsOpen((s) => !s);
+                      } else {
+                        setActiveCategory(cat.value);
+                        setSportsOpen(false);
+                      }
+                      setConference("ALL");
+                      setDivision("ALL");
+                      setShowFilterBar(true);
+                    }
+                  }}
+                  tabIndex={0}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
       </div>
     );
   }
@@ -410,12 +424,12 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Filter row
+  // Filter row (subnav) — uses isp-subnav-row / isp-subnav-btn classes to match ISP
   function DivisionsRow() {
     if (!leagueIsSupported || !showFilterBar) return null;
     const buttons = LEAGUE_FILTER_BUTTONS;
     return (
-      <div className="isp-subnav-row">
+      <div className="isp-subnav-row" role="tablist" aria-label="League filters">
         {buttons.map((btn) => {
           const isActive = btn.type === "conference" ? conference === btn.value : division === btn.value;
 
@@ -509,9 +523,62 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Grid rendering
+  // PrintCard component — simplified rendering to match existing project patterns
+  function PrintCard({ print, isMobile, league }) {
+    const [hovered, setHovered] = useState(false);
+    const cardSize = isMobile ? 120 : hovered ? 320 : 288;
+    const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
+
+    let baseFolder = "nfl";
+    let ext = "png";
+    if (league === "nba") {
+      baseFolder = "nba";
+      ext = "png";
+    } else if (league === "sports") {
+      baseFolder = "prints";
+      ext = "png";
+    } else if (league === "lithophanes" || league === "custom cad" || league === "more") {
+      baseFolder = "";
+      ext = "";
+    }
+
+    const imgSrc = print.image ? print.image : baseFolder ? `/images/prints/${baseFolder}/${print.id}.${ext}` : "";
+
+    const cardStyle = {
+      width: cardSize,
+      height: cardSize,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "#fff",
+      borderRadius: 8,
+      boxShadow: hovered ? "0 6px 18px rgba(0,0,0,0.12)" : "0 3px 12px rgba(0,0,0,0.10)",
+      border: hovered ? "1px solid #e6dbb9" : "1px solid #eee",
+      transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s",
+      cursor: "pointer",
+      position: "relative",
+      overflow: "hidden"
+    };
+
+    return (
+      <div
+        style={cardStyle}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        tabIndex={0}
+        aria-label={print.name}
+      >
+        {imgSrc ? (
+          <img src={imgSrc} alt={print.name} style={{ width: imageSize, height: "auto", display: "block" }} />
+        ) : (
+          <div>{print.name}</div>
+        )}
+      </div>
+    );
+  }
+
+  // Render grid items (adapted, re-using gridData)
   function renderGridItems() {
-    // case: zipped pairs (ALL/ALL)
     if (
       leagueIsSupported &&
       conference === "ALL" &&
@@ -553,20 +620,24 @@ export default function ThreeDPrinting() {
   }
 
   return (
-    <div style={{ width: "100%", background: "#f9f9f7" }}>
+    <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
       <div style={pageStyle}>
-        {/* Categories row */}
+        {/* Categories row - rendered with the same nav-card/nav-card-mid -> isp-section-tabs structure as ISP */}
         <CategoriesRow />
 
         {/* Dropdown anchored to SPORTS tab */}
         <SportsDropdown />
 
-        {/* Sports area: conference logos / centered logo */}
+        {/* Conference logos / centered logo */}
         {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
 
-        {/* Filter row */}
-        <div style={{ marginTop: 12 }}>
-          <DivisionsRow />
+        {/* Subnav row inside the same stacked nav-card-mid structure to match ISP exactly */}
+        <div className="nav-card nav-card-mid" aria-hidden={false} style={{ marginTop: 0 }}>
+          <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+          <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}>
+            <DivisionsRow />
+          </div>
+          <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
         </div>
 
         {/* Grid */}
@@ -574,128 +645,6 @@ export default function ThreeDPrinting() {
           {renderGridItems()}
         </div>
       </div>
-    </div>
-  );
-}
-
-// ConferenceLogo component — uses sizeVariant to determine dimensions
-function ConferenceLogo({ logo, style = {}, onClick, isMobile, sizeVariant }) {
-  const [hovered, setHovered] = useState(false);
-
-  // Sizes per your request:
-  // NBA: 240px desktop, cap ~100px mobile
-  // NFL: 140px desktop, cap ~100px mobile
-  // fallback: 84px desktop (if not specified)
-  const mobileCap = 100;
-  let desktopHeight = 84;
-
-  if (sizeVariant === "nba") desktopHeight = 200;
-  else if (sizeVariant === "nfl") desktopHeight = 140;
-
-  const height = isMobile ? Math.min(mobileCap, desktopHeight) : desktopHeight;
-
-  const base = {
-    display: "block",
-    height: style?.height || height,
-    width: "auto",
-    cursor: "pointer",
-    filter: hovered ? "drop-shadow(0 8px 26px rgba(0,0,0,0.14))" : "drop-shadow(0 4px 14px rgba(0,0,0,0.10))",
-    transition: "filter 0.18s, transform 0.18s",
-    transform: hovered ? "translateY(-2px)" : "none",
-    userSelect: "none"
-  };
-  const src = logo?.image || "";
-  return (
-    <img src={src} alt={logo?.name} style={base}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => onClick && onClick()}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          if (onClick) onClick();
-        }
-      }}
-      tabIndex={0}
-      aria-label={`Filter by ${logo?.name || "conference"}`}
-    />
-  );
-}
-
-// PrintCard component — uses png for NBA per your request
-function PrintCard({ print, isMobile, league }) {
-  const [hovered, setHovered] = useState(false);
-  const cardSize = isMobile ? 120 : hovered ? 320 : 288;
-  const imageSize = isMobile ? "70%" : hovered ? "100%" : "90%";
-
-  // Determine base image folder/extension
-  let baseFolder = "nfl";
-  let ext = "png";
-  if (league === "nba") {
-    baseFolder = "nba";
-    ext = "png"; // png per latest request
-  } else if (league === "sports") {
-    baseFolder = "prints";
-    ext = "png";
-  } else if (league === "lithophanes" || league === "custom cad" || league === "more") {
-    baseFolder = "";
-    ext = "";
-  }
-
-  const imgSrc = print.image ? print.image : baseFolder ? `/images/prints/${baseFolder}/${print.id}.${ext}` : "";
-
-  const cardStyle = {
-    width: cardSize,
-    height: cardSize,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "#fff",
-    borderRadius: 8,
-    boxShadow: hovered ? "0 6px 18px rgba(0,0,0,0.12)" : "0 3px 12px rgba(0,0,0,0.10)",
-    border: hovered ? "1px solid #e6dbb9" : "1px solid #eee",
-    transition: "box-shadow 0.18s, border-color 0.18s, transform 0.18s",
-    cursor: "pointer",
-    position: "relative",
-    overflow: "hidden"
-  };
-
-  const nameStyle = {
-    position: "absolute",
-    left: 10,
-    bottom: 8,
-    padding: "4px 10px",
-    background: "rgba(0,0,0,0.35)",
-    color: "#fff",
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 280,
-    fontSize: 12,
-    letterSpacing: ".06em",
-    textTransform: "uppercase",
-    borderRadius: 4,
-    userSelect: "none",
-    opacity: hovered ? 1 : 0,
-    transition: "opacity 0.18s"
-  };
-
-  return (
-    <div
-      style={cardStyle}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      tabIndex={0}
-      aria-label={print.name}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") setHovered((h) => !h);
-      }}
-      title={print.name}
-    >
-      {imgSrc ? (
-        <img src={imgSrc} alt={print.name} style={{ width: imageSize, height: "auto", display: "block" }} />
-      ) : (
-        <div>{print.name}</div>
-      )}
-
-      <div style={nameStyle}>{print.name}</div>
     </div>
   );
 }
