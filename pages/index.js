@@ -37,7 +37,7 @@ export default function Home() {
           onClose={() => setActiveIndex(null)}
           {...getProjectModalProps(projects[activeIndex])}
           height={785}
-          navOffset={76}
+          navOffset={60}
         />
       )}
     </>
