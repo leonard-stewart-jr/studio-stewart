@@ -483,7 +483,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     /* Position the mid nav exactly under the header */
     position: sticky;
     top: 60px;
-    z-index: 1100; /* below header (header uses 1200) but above page content */
+    z-index: 1160; /* raised so mid-nav/subnav sit above logos (was 1100) */
   }
 
   /* Top nav sticky placement (header) — keep full-bleed */
