@@ -200,8 +200,8 @@ export default function ThreeDPrinting() {
     marginLeft: "calc(50% - 50vw)",
     marginRight: "calc(50% - 50vw)",
     boxSizing: "border-box",
-    paddingLeft: 0,
-    paddingRight: 0,
+    paddingLeft: 80,
+    paddingRight: 80,
     marginTop: extraTop,
     background: "transparent"
   });
