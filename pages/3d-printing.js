@@ -118,7 +118,7 @@ export default function ThreeDPrinting() {
   const LEAGUE_FILTER_BUTTONS = leagueIsNFL ? FILTER_BUTTONS_NFL : leagueIsNBA ? FILTER_BUTTONS_NBA : [];
   const LEAGUE_CONFERENCE_LOGOS = leagueIsNFL ? [AFC_LOGO, NFC_LOGO] : leagueIsNBA ? [NBA_EAST_LOGO, NBA_WEST_LOGO] : [];
 
-  // Build gridData depending on conference/division (same logic as before)
+  // Build gridData depending on conference/division
   let gridData = [];
   let showConferenceLogos = false;
   let showCenteredLogo = null;
@@ -227,110 +227,147 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  // Component: Categories + Subnav (rendered together inside a single nav-card-mid -> inner wrapper)
-  function CategoriesAndFilters() {
+  // Top tabs (categories) are rendered inside the shared nav-card-mid inner wrapper
+  function CategoriesRow() {
     return (
-      <div className="nav-card nav-card-mid" aria-hidden={false}>
-        <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            boxSizing: "border-box"
-          }}
-        >
-          <div style={fullBleedBarStyle}>
-            {/* Top tabs (categories) - uses same classnames as ISP */}
-            <div className="isp-section-tabs" role="tablist" aria-label="3D printing categories">
-              {CATEGORIES.map((cat) => {
-                const isActive = activeCategory === cat.value;
-                const className = `isp-tab-btn${isActive ? " active" : ""}`;
-                const ref = cat.value === "sports" ? sportsTabRef : undefined;
-                return (
-                  <button
-                    key={cat.value}
-                    ref={ref}
-                    className={className}
-                    onClick={() => {
-                      if (cat.value === "sports") {
-                        setActiveCategory("sports");
-                        setSportsOpen((s) => !s);
-                      } else {
-                        setActiveCategory(cat.value);
-                        setSportsOpen(false);
-                      }
-                      setConference("ALL");
-                      setDivision("ALL");
-                      setShowFilterBar(true);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        if (cat.value === "sports") {
-                          setActiveCategory("sports");
-                          setSportsOpen((s) => !s);
-                        } else {
-                          setActiveCategory(cat.value);
-                          setSportsOpen(false);
-                        }
-                        setConference("ALL");
-                        setDivision("ALL");
-                        setShowFilterBar(true);
-                      }
-                    }}
-                    tabIndex={0}
-                    aria-current={isActive ? "page" : undefined}
-                    role="tab"
-                  >
-                    {cat.label}
-                  </button>
-                );
-              })}
-            </div>
+      <div className="isp-section-tabs" role="tablist" aria-label="3D printing categories">
+        {CATEGORIES.map((cat) => {
+          const isActive = activeCategory === cat.value;
+          const className = `isp-tab-btn${isActive ? " active" : ""}`;
+          const ref = cat.value === "sports" ? sportsTabRef : undefined;
+          return (
+            <button
+              key={cat.value}
+              ref={ref}
+              className={className}
+              onClick={() => {
+                if (cat.value === "sports") {
+                  setActiveCategory("sports");
+                  setSportsOpen((s) => !s);
+                } else {
+                  setActiveCategory(cat.value);
+                  setSportsOpen(false);
+                }
+                setConference("ALL");
+                setDivision("ALL");
+                setShowFilterBar(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  if (cat.value === "sports") {
+                    setActiveCategory("sports");
+                    setSportsOpen((s) => !s);
+                  } else {
+                    setActiveCategory(cat.value);
+                    setSportsOpen(false);
+                  }
+                  setConference("ALL");
+                  setDivision("ALL");
+                  setShowFilterBar(true);
+                }
+              }}
+              tabIndex={0}
+              aria-current={isActive ? "page" : undefined}
+              role="tab"
+            >
+              {cat.label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
-            {/* Subnav / Filters (divisions row) — same classes as ISP */}
-            <div style={{ marginTop: 6 }}>
-              {leagueIsSupported && showFilterBar && (
-                <div className="isp-subnav-row" role="tablist" aria-label="League filters">
-                  {LEAGUE_FILTER_BUTTONS.map((btn) => {
-                    const isActive = btn.type === "conference" ? conference === btn.value : division === btn.value;
-                    return (
-                      <button
-                        key={btn.value}
-                        className={`isp-subnav-btn${isActive ? " active" : ""}`}
-                        onClick={() => {
-                          if (btn.type === "conference") {
-                            setConference(btn.value);
-                            if (btn.value === "ALL") setDivision("ALL");
-                          } else {
-                            setDivision(btn.value);
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            if (btn.type === "conference") {
-                              setConference(btn.value);
-                              if (btn.value === "ALL") setDivision("ALL");
-                            } else {
-                              setDivision(btn.value);
-                            }
-                          }
-                        }}
-                        aria-current={isActive ? "page" : undefined}
-                        tabIndex={0}
-                        role="tab"
-                      >
-                        {btn.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+  // Conference logos row (keeps same behavior)
+  function LogoRow() {
+    if (!leagueIsSupported || !showConferenceLogos) return null;
+    const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
+    const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
+
+    return (
+      <div style={logoRowStyle}>
+        <img
+          src={leftLogo?.image}
+          alt={leftLogo?.name}
+          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+          onClick={() => {
+            if (leagueIsNFL) setConference("AFC");
+            else setConference("EAST");
+            setDivision("ALL");
+            setShowFilterBar(true);
+          }}
+        />
+        <img
+          src={rightLogo?.image}
+          alt={rightLogo?.name}
+          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+          onClick={() => {
+            if (leagueIsNFL) setConference("NFC");
+            else setConference("WEST");
+            setDivision("ALL");
+            setShowFilterBar(true);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Centered logo for a selected conference
+  function CenteredLogo() {
+    if (!leagueIsSupported || !showCenteredLogo) return null;
+    return (
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+        <img
+          src={showCenteredLogo?.image}
+          alt={showCenteredLogo?.name}
+          style={{ height: leagueIsNFL ? 140 : 200, width: "auto", cursor: "pointer" }}
+          onClick={() => {
+            setConference("ALL");
+            setDivision("ALL");
+            setShowFilterBar(true);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Subnav / Filters (kept below the logos)
+  function DivisionsRow() {
+    if (!leagueIsSupported || !showFilterBar) return null;
+    return (
+      <div className="isp-subnav-row" role="tablist" aria-label="League filters">
+        {LEAGUE_FILTER_BUTTONS.map((btn) => {
+          const isActive = btn.type === "conference" ? conference === btn.value : division === btn.value;
+          return (
+            <button
+              key={btn.value}
+              className={`isp-subnav-btn${isActive ? " active" : ""}`}
+              onClick={() => {
+                if (btn.type === "conference") {
+                  setConference(btn.value);
+                  if (btn.value === "ALL") setDivision("ALL");
+                } else {
+                  setDivision(btn.value);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  if (btn.type === "conference") {
+                    setConference(btn.value);
+                    if (btn.value === "ALL") setDivision("ALL");
+                  } else {
+                    setDivision(btn.value);
+                  }
+                }
+              }}
+              aria-current={isActive ? "page" : undefined}
+              tabIndex={0}
+              role="tab"
+            >
+              {btn.label}
+            </button>
+          );
+        })}
       </div>
     );
   }
@@ -462,61 +499,6 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // Conference logos row
-  function LogoRow() {
-    if (!leagueIsSupported || !showConferenceLogos) return null;
-    const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
-    const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
-
-    const sizeVariant = leagueIsNBA ? "nba" : leagueIsNFL ? "nfl" : undefined;
-
-    return (
-      <div style={logoRowStyle}>
-        <img
-          src={leftLogo?.image}
-          alt={leftLogo?.name}
-          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
-          onClick={() => {
-            if (leagueIsNFL) setConference("AFC");
-            else setConference("EAST");
-            setDivision("ALL");
-            setShowFilterBar(true);
-          }}
-        />
-        <img
-          src={rightLogo?.image}
-          alt={rightLogo?.name}
-          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
-          onClick={() => {
-            if (leagueIsNFL) setConference("NFC");
-            else setConference("WEST");
-            setDivision("ALL");
-            setShowFilterBar(true);
-          }}
-        />
-      </div>
-    );
-  }
-
-  // Centered logo for a selected conference
-  function CenteredLogo() {
-    if (!leagueIsSupported || !showCenteredLogo) return null;
-    return (
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-        <img
-          src={showCenteredLogo?.image}
-          alt={showCenteredLogo?.name}
-          style={{ height: leagueIsNFL ? 140 : 200, width: "auto", cursor: "pointer" }}
-          onClick={() => {
-            setConference("ALL");
-            setDivision("ALL");
-            setShowFilterBar(true);
-          }}
-        />
-      </div>
-    );
-  }
-
   // PrintCard component
   function PrintCard({ print, isMobile, league }) {
     const [hovered, setHovered] = useState(false);
@@ -617,14 +599,36 @@ export default function ThreeDPrinting() {
   return (
     <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
       <div style={pageStyle}>
-        {/* Single nav-card-mid that contains both categories (isp-section-tabs) and subnav (isp-subnav-row) */}
-        <CategoriesAndFilters />
+        {/* Single nav-card-mid that contains categories (isp-section-tabs), logos, and the subnav below logos */}
+        <div className="nav-card nav-card-mid" aria-hidden={false}>
+          <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              boxSizing: "border-box"
+            }}
+          >
+            <div style={fullBleedBarStyle}>
+              {/* Categories row */}
+              <CategoriesRow />
+
+              {/* Logo area (conference logos or centered) */}
+              {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
+
+              {/* Subnav / Filters (below the logo area) */}
+              <div style={{ marginTop: 6 }}>
+                <DivisionsRow />
+              </div>
+            </div>
+          </div>
+          <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+        </div>
 
         {/* Dropdown anchored to SPORTS tab */}
         <SportsDropdown />
-
-        {/* Conference logos / centered logo */}
-        {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
 
         {/* Grid */}
         <div ref={gridRef} style={gridWrapStyle}>
