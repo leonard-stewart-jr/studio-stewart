@@ -243,8 +243,8 @@ export default function ThreeDPrinting() {
     const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
 
     // horizontal nudge values
-    const leftNudge = 40; // pixels to move left logo to the right
-    const rightNudge = -40; // pixels to move right logo to the left
+    const leftNudge = 34; // pixels to move left logo to the right
+    const rightNudge = -34; // pixels to move right logo to the left
 
     return (
       <div
