@@ -6,11 +6,11 @@ export default function Layout({ children }) {
   // Keep sidebar state here so both HeaderBar and Sidebar can access it.
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const logoSize = 66;
+  const logoSize = 60;
   const sidebarPaddingLeft = 22;
 
   // Header height
-  const HEADER_HEIGHT = 76;
+  const HEADER_HEIGHT = 60;
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function Layout({ children }) {
         sidebarPaddingLeft={sidebarPaddingLeft}
       />
       {/* ISPSubNav REMOVED from here */}
-      <main style={{ paddingTop: 0 }}>
+      <main style={{ paddingTop: HEADER_HEIGHT }}>
         {children}
       </main>
     </>
