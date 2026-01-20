@@ -235,35 +235,55 @@ export default function ThreeDPrinting() {
   const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
 
   // Render helpers
+  // LogoRow now lays out logos in a 4-column grid and centers them above the midpoint of each half:
+  // left logo spans columns 1-2 and is centered there; right logo spans columns 3-4 and is centered there.
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
     const rightLogo = LEAGUE_CONFERENCE_LOGOS[1];
 
     return (
-      <div style={{ display: "grid", gridTemplateColumns: showConferenceLogos ? "1fr 1fr" : "1fr", alignItems: "center", justifyItems: "center", minHeight: 120, marginTop: 28, marginBottom: 10, width: "100%" }}>
-        <img
-          src={leftLogo?.image}
-          alt={leftLogo?.name}
-          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
-          onClick={() => {
-            if (leagueIsNFL) setConference("AFC");
-            else setConference("EAST");
-            setDivision("ALL");
-            setShowFilterBar(true);
-          }}
-        />
-        <img
-          src={rightLogo?.image}
-          alt={rightLogo?.name}
-          style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
-          onClick={() => {
-            if (leagueIsNFL) setConference("NFC");
-            else setConference("WEST");
-            setDivision("ALL");
-            setShowFilterBar(true);
-          }}
-        />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          alignItems: "center",
+          justifyItems: "center",
+          minHeight: 120,
+          marginTop: 28,
+          marginBottom: 10,
+          width: "100%"
+        }}
+      >
+        {/* Left half: span columns 1-2 and center the logo */}
+        <div style={{ gridColumn: "1 / span 2", display: "flex", justifyContent: "center" }}>
+          <img
+            src={leftLogo?.image}
+            alt={leftLogo?.name}
+            style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+            onClick={() => {
+              if (leagueIsNFL) setConference("AFC");
+              else setConference("EAST");
+              setDivision("ALL");
+              setShowFilterBar(true);
+            }}
+          />
+        </div>
+
+        {/* Right half: span columns 3-4 and center the logo */}
+        <div style={{ gridColumn: "3 / span 2", display: "flex", justifyContent: "center" }}>
+          <img
+            src={rightLogo?.image}
+            alt={rightLogo?.name}
+            style={{ cursor: "pointer", height: leagueIsNFL ? 140 : 200, width: "auto" }}
+            onClick={() => {
+              if (leagueIsNFL) setConference("NFC");
+              else setConference("WEST");
+              setDivision("ALL");
+              setShowFilterBar(true);
+            }}
+          />
+        </div>
       </div>
     );
   }
