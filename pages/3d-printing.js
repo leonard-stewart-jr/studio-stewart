@@ -75,13 +75,14 @@ export default function ThreeDPrinting() {
       if (!btn) return;
       const rect = btn.getBoundingClientRect();
       const width = DROPDOWN_WIDTH;
-      const left = rect.left + window.scrollX + rect.width / 2 - width / 2;
-      const top = rect.bottom + window.scrollY + 6;
+      // Use viewport coords (no scroll offsets) and fixed positioning so dropdown sits correctly
+      const left = rect.left + rect.width / 2 - width / 2;
+      const top = rect.bottom + 6; // rect.bottom is viewport-relative
       setDropdownPos({ left, top, width });
     }
     if (sportsOpen) updatePosition();
     window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition);
+    window.addEventListener("scroll", updatePosition); // keep it updated while scrolling
     return () => {
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition);
@@ -300,7 +301,7 @@ export default function ThreeDPrinting() {
     ];
 
     const dropdownStyle = {
-      position: "absolute",
+      position: "fixed", // switch to fixed so it's positioned relative to the viewport
       left: dropdownPos.left,
       top: dropdownPos.top,
       zIndex: 2200,
@@ -314,7 +315,6 @@ export default function ThreeDPrinting() {
       gap: 6,
       alignItems: "stretch",
       pointerEvents: "auto",
-      // small transform to keep crisp pixel alignment on some displays
       transform: "translateZ(0)"
     };
 
@@ -343,8 +343,8 @@ export default function ThreeDPrinting() {
       const r = el.getBoundingClientRect();
       setTooltip({
         visible: true,
-        left: r.left + window.scrollX + r.width / 2,
-        top: r.top + window.scrollY - 8,
+        left: r.left + r.width / 2,
+        top: r.top - 8,
         text
       });
     }
@@ -409,7 +409,7 @@ export default function ThreeDPrinting() {
         </div>
 
         {typeof document !== "undefined" && (
-          <div style={{ position: "absolute", left: tooltip.left, top: tooltip.top, transform: "translate(-50%, -100%)", pointerEvents: "none", zIndex: 2300 }}>
+          <div style={{ position: "fixed", left: tooltip.left, top: tooltip.top, transform: "translate(-50%, -100%)", pointerEvents: "none", zIndex: 2300 }}>
             {tooltip.visible && (
               <div style={{ background: "rgba(0,0,0,0.8)", color: "#fff", padding: "6px 10px", borderRadius: 6, fontSize: 12 }}>
                 {tooltip.text}
