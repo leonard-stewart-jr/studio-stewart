@@ -177,9 +177,10 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   gap: 22px;
   background: transparent;
   padding: 0;
-  min-height: 60px;
+  /* changed per request: use 44px on desktop and remove vertical shift */
+  min-height: 44px;
   height: auto;
-  margin: -12px 0 0 0;
+  margin: 0;
   box-shadow: none;
   border-bottom: none;
   width: 100%;
@@ -297,11 +298,11 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   outline: 2px solid #e6dbb9;
 }
 
-/* Desktop-only visual centering tweak: shift tab/subnav labels down by 8px */
+/* Desktop: ensure buttons are vertically centered with no translateY shift */
 @media (min-width: 701px) {
   .isp-tab-btn,
   .isp-subnav-btn {
-    transform: translateY(8px);
+    transform: none;
   }
 }
 
@@ -309,7 +310,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 @media (min-width: 701px) {
   .three-d-printing-page .isp-section-tabs .isp-tab-btn,
   .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
-    transform: translateY(8px);
+    transform: none !important;
   }
 }
 
@@ -475,17 +476,18 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     background: #fff;
   }
 
-  /* Make the tab container align and use ISP spacing (same as .isp-section-tabs rules) */
+  /* Make the tab container align and use ISP spacing (changed to 44px and no vertical shift) */
   .three-d-printing-page .isp-section-tabs {
-    min-height: 60px;
-    margin: -12px 0 0 0;
+    min-height: 44px;
+    margin: 0;
     gap: 22px;
+    align-items: center;
   }
 
-  /* Ensure tab label vertical alignment matches ISP */
+  /* Ensure tab label vertical alignment matches ISP (no translate shifts) */
   .three-d-printing-page .isp-section-tabs .isp-tab-btn,
   .three-d-printing-page .isp-section-tabs .isp-subnav-btn {
-    transform: translateY(8px) !important;
+    transform: none !important;
   }
 }
 
