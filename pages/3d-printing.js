@@ -253,7 +253,7 @@ export default function ThreeDPrinting() {
           alignItems: "center",
           justifyItems: "center",
           minHeight: 120,
-          marginTop: 28,
+          marginTop: 14,
           marginBottom: -12, // negative bottom margin so logos overlap the isp-subnav-row beneath
           width: "100%",
           position: "relative", // so zIndex applies within this flow
