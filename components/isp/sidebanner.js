@@ -1,7 +1,7 @@
 import styled from "styled-components";
 export default function SideBanner({ text, color, side = "left" }) {
   return (
-    <Banner color={color} side={side} aria-label="Section banner">
+    <Banner color={color} side={side}>
       {text}
     </Banner>
   );
@@ -22,7 +22,7 @@ const Banner = styled.div`
   justify-content: center;
   z-index: 10;
   position: sticky;
-  top: 76px;
+  top: 60px;
   height: 100vh;
   left: ${props => (props.side === "left" ? 0 : "unset")};
   right: ${props => (props.side === "right" ? 0 : "unset")};
