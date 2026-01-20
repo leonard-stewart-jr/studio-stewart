@@ -269,7 +269,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   background: transparent;
   padding: 0;
   min-height: 40px;
