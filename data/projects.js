@@ -1,6 +1,15 @@
 const projects = [
   {
-    grade: "SPRING 25'",
+        grade: "2020–2024",
+    title: "UNDERGRADUATE PORTFOLIO",
+    type: "SELECTED WORKS",
+    slug: "UG-PORTFOLIO",
+    bannerSrc: "/images/portfolio/undergradportfolio.png",
+    action: "route",
+    linkHref: "/undergraduate-portfolio"
+  },
+  {
+        grade: "SPRING 25'",
     title: "DES MOINES ACADAMY OF ARTS AND ATHLETICS",
     type: "EDUCATION, SPORTS, RESIDENTIAL",
     slug: "DMA-25",
@@ -17,15 +26,6 @@ const projects = [
     bannerSrc: "/images/placeholders/blank.svg",
     action: "route",
     linkHref: "/independent-studio"
-  },
-  {
-    grade: "2020–2024",
-    title: "UNDERGRADUATE PORTFOLIO",
-    type: "SELECTED WORKS",
-    slug: "UG-PORTFOLIO",
-    bannerSrc: "/images/portfolio/undergradportfolio.png",
-    action: "route",
-    linkHref: "/undergraduate-portfolio"
   }
 ];
 
