@@ -435,39 +435,34 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   }
 }
 
-/* ====== 3D PRINTING PAGE: subnav tuning to match ISP page (nav-card-mid = 44px) ======
-   Scope: .three-d-printing-page only so other pages remain unchanged.
-   This block mirrors the ISP structure exactly (parent + immediate child wrapper)
-   so the computed height and visual alignment match across pages.
+/* ====== NAV CHILD WRAPPER: CENTERED PAGE WIDTH (DESKTOP) ======
+   Use a centered page-width wrapper for nav-card-mid immediate children so
+   both Independent Studio and 3D Printing compute the same box model.
+   This replaces page-scoped full-bleed wrapping that caused a visible gap.
 */
 @media (min-width: 701px) {
-  /* Match the ISP nav-card-mid numeric values so computed height is identical */
-  .three-d-printing-page .nav-card-mid {
+  /* Keep the nav-card-mid numeric values so computed height is identical */
+  .nav-card.nav-card-mid {
     min-height: 44px;
     height: 44px;
-    /* keep margin-top 0 so the mid bar sits flush with the top bar */
     margin-top: 0;
     margin-bottom: 0;
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
-    background: #fff; /* ensure pure white like ISP */
-  }
-
-  /* Mirror the ISP immediate child wrapper (same width/margins/paddings)
-     so its box model matches what the ISP page uses. This reproduces the
-     exact computed height and content placement. */
-  .three-d-printing-page .nav-card-mid > div {
-    /* full-bleed width + centering via calc() — matches the inline wrapper ISP uses */
-    width: 100vw;
-    /* remove the bottom margin so it doesn't create a visible gap between nav rows */
-    margin: 0 calc(50% - 50vw) 0;
-    box-sizing: border-box;
-
-    /* ensure pure white background so the strip reads the same */
     background: #fff;
   }
 
-  /* Note: page-scoped .three-d-printing-page .isp-section-tabs rules removed so
-     the page uses the global .isp-section-tabs styles (min-height: 44px; align-items:center). */
+  /* Center the immediate child content to the page container width */
+  .nav-card.nav-card-mid > div {
+    width: min(1600px, 95vw);
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding-left: 80px;
+    padding-right: 80px;
+    background: transparent; /* let the nav-card provide the white background */
+  }
+
+  /* If a page specifically needs to override these paddings, it can apply a page-scoped rule.
+     The rule above ensures both ISP and 3D printing pages share the same centered width/padding. */
 }
 
 /* ====== Divider hidden ====== */
