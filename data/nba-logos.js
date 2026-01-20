@@ -77,11 +77,9 @@ export const WEST_LOGO = {
   name: "Western Conference"
 };
 
-// FILTER BUTTONS for the NBA view — conference first, then divisions
+// FILTER BUTTONS for the NBA view — removed EAST/WEST conference buttons as requested
 export const FILTER_BUTTONS = [
   { label: "ALL", value: "ALL", type: "conference" },
-  { label: "EAST", value: "EAST", type: "conference" },
-  { label: "WEST", value: "WEST", type: "conference" },
 
   // Eastern divisions
   { label: "ATLANTIC", value: "ATLANTIC", type: "division" },
