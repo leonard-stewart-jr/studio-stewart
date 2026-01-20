@@ -23,8 +23,7 @@ import {
 const CATEGORIES = [
   { key: "sports", label: "SPORTS" },
   { key: "lithophanes", label: "LITHOPHANES" },
-  { key: "custom cad", label: "CUSTOM CAD" },
-  { key: "more", label: "MORE" }
+  { key: "other", label: "CUSTOM CAD" },
 ];
 
 export default function ThreeDPrinting() {
