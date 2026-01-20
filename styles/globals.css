@@ -551,3 +551,44 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
 }
+.matter-matters-page {
+  background: #fff !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+/* Sticky nav only for matter-matters page */
+.matter-matters-page .nav-card-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1200;
+}
+.isp-globe-section {
+  align-items: stretch !important;
+}
+.isp-globe-section > div:first-child {
+  flex-shrink: 0 !important;
+  min-width: 340px !important;
+  max-width: 1050px !important;
+  width: 1050px !important;
+  height: 845px !important;
+}
+.isp-globe-section nav {
+  flex-shrink: 0 !important;
+  min-width: 340px !important;
+  max-width: 900px !important;
+  width: 700px !important;
+}
+@media (max-width: 800px) {
+  .isp-globe-section {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .isp-globe-section > div:first-child,
+  .isp-globe-section nav {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+}
