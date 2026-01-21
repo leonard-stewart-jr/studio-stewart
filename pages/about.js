@@ -18,7 +18,7 @@ export default function AboutPage() {
           width: "100vw",
           minHeight: "100vh",
           margin: 0,
-          padding: 0, // no top padding as requested
+          padding: 40, // no top padding as requested
           background: "#fff",
           overflow: "visible",
           display: "flex",
