@@ -223,15 +223,34 @@ function handleFilterChange(key) {
   const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
   if (!btn) return;
 
+  // If user clicked a conference control (ALL / EAST / WEST), treat as before:
   if (btn.type === "conference") {
-    // Always reset division when switching conference so a now-hidden division can't stay active
     setConference(btn.value);
+    setDivision("ALL"); // reset division when switching conference
+    return;
+  }
+
+  // If the user clicked a global "ALL" division entry (if present), reset both
+  if (btn.value === "ALL") {
     setDivision("ALL");
-  } else {
-    setDivision(btn.value);
+    setConference("ALL");
+    return;
+  }
+
+  // Otherwise this is a division button. Set the division as usual...
+  setDivision(btn.value);
+
+  // ...and for NBA only: automatically set the matching conference so the UI
+  // centers the proper conference logo and hides opposite divisions.
+  if (leagueIsNBA) {
+    if (NBA_EAST_DIVS.has(btn.value)) {
+      setConference("EAST");
+    } else if (NBA_WEST_DIVS.has(btn.value)) {
+      setConference("WEST");
+    }
+    // if the division key isn't recognized, leave conference untouched
   }
 }
-
 // --- NBA-only: hide divisions from the opposite conference when a conference is selected ---
 const NBA_EAST_DIVS = new Set(["ATLANTIC", "CENTRAL", "SOUTHEAST"]);
 const NBA_WEST_DIVS = new Set(["PACIFIC", "NORTHWEST", "SOUTHWEST"]);
