@@ -184,7 +184,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2021"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                CENTRO DE CIENCIAS VEGETALES DE MONTERREY — Spring 2021
+                AXONOMETRIC CUBE DESIGN — SPRING 2021
               </a>
             </li>
 
@@ -194,7 +194,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2021"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                Project 02 — [Fall 2021]
+                DESIGN PRACTICE "STICKPLAY" — FALL 2021
               </a>
             </li>
 
@@ -204,7 +204,17 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                Project 03 — [Spring 2022]
+                TECHNICAL VIGNETTES — SPRING 2022
+              </a>
+            </li>
+                  
+            <li>
+              <a
+                href="/undergraduate-portfolio#spring2022-2"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-2"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                SDSU AGRICULTURAL HERITAGE MUSEUM — SPRING 2022
               </a>
             </li>
 
@@ -214,7 +224,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2023-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                Project 04 — [Spring 2023]
+                SDSU INTERFAITH CENTER — SPRING 2023
               </a>
             </li>
 
@@ -224,7 +234,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2024-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                Project 05 — [Spring 2024]
+                BROOKINGS PUBLIC LIBRARY — SPRING 2024
               </a>
             </li>
 
@@ -234,7 +244,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2024-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                Project 06 — [Fall 2024]
+                CENTRO DE CIENCIAS VEGETALES DE MONTERREY — FALL 2024
               </a>
             </li>
 
