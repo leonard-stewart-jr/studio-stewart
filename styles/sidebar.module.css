@@ -152,6 +152,46 @@ nav.sidebar-nav {
   outline: 2px solid #e6dbb9;
 }
 
+/* ====== PORTFOLIO LINK STYLES ======
+   Two-line link: year above (small grey), title below (tan).
+   Title forced to one line with ellipsis.
+*/
+.portfolioLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 6px 0;
+  margin: 6px 0;
+  line-height: 1;
+  cursor: pointer;
+}
+.portfolioLink:focus,
+.portfolioLink:hover {
+  text-decoration: none;
+  outline: none;
+}
+.portfolioLinkYear {
+  display: block;
+  font-size: 12px;
+  color: #b1b1ae; /* grey */
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: var(--weight-thin);
+}
+.portfolioLinkTitle {
+  display: block;
+  font-size: 14px;
+  color: #e6dbb9; /* site tan */
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: var(--weight-hover);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 /* ====== CONTENT/FOOTER/SOCIAL ====== */
 .sidebar .sidebar-footer {
   margin-top: auto;
@@ -203,4 +243,23 @@ nav.sidebar-nav {
   display: block;
   pointer-events: auto;
   touch-action: manipulation;
+}
+
+/* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
+
+/* (The rest of your file remains as before — responsive rules and other sections) */
+@media (max-width: 700px) {
+  .sidebar {
+    left: 0 !important;
+    width: 80vw !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    padding: 0 12px 22px 12px !important;
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 1200 !important;
+    height: 100vh !important;
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
 }
