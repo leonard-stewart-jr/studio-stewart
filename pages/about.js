@@ -1,22 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeaderBar from '../components/HeaderBar';
 
-/**
- * About page (parent-controlled iframe):
- * - Disable page (parent) scroll while this page is mounted so the iframe is the single scroll surface.
- * - Let the iframe carry scrolling (fills viewport under the fixed header).
- * - Inject targeted CSS into the iframe document to:
- *     - center the exported HTML horizontally (body flex + justify-content: center)
- *     - remove top/bottom margins on html/body/wrapper and allow natural height
- *     - hide exported footer and fallback text if present
- *     - style the iframe internal scrollbar to match site tan color (#e6dbb9)
- *     - make images/svg responsive inside the iframe
- * - No transform scaling applied (content scrolls natively in iframe).
- * - Removes caption and fallback link (you asked to keep them removed).
- *
- * Drop into pages/about.js (replace existing).
- */
-
 export default function AboutPage() {
   const iframeRef = useRef(null);
 
