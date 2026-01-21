@@ -266,7 +266,6 @@ body {
           alignItems: 'center',
           justifyContent: 'flex-start',
           // Reserve header height so iframe sits below the fixed header
-          paddingTop: HEADER_HEIGHT
         }}
       >
         {/* Full-bleed iframe container */}
