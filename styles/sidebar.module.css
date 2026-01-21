@@ -154,14 +154,15 @@ nav.sidebar-nav {
 
 /* ====== PORTFOLIO LINK STYLES ======
    Two-line link: year above (small grey), title below (tan).
-   Title forced to one line with ellipsis.
+   Title wraps to multiple lines (no forced single-line ellipsis).
+   Increased gap between items by 2px (was 6px margin -> now 8px).
 */
 .portfolioLink {
   display: block;
   color: inherit;
   text-decoration: none;
   padding: 6px 0;
-  margin: 6px 0;
+  margin: 8px 0; /* increased from 6px to 8px per request */
   line-height: 1;
   cursor: pointer;
 }
@@ -172,7 +173,7 @@ nav.sidebar-nav {
 }
 .portfolioLinkYear {
   display: block;
-  font-size: 10px; /* reduced from 12px */
+  font-size: 12px; /* reverted back to 12px */
   color: #b1b1ae; /* grey */
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -181,15 +182,17 @@ nav.sidebar-nav {
 }
 .portfolioLinkTitle {
   display: block;
-  font-size: 12px; /* reduced from 14px */
+  font-size: 14px; /* reverted back to 14px */
   color: #e6dbb9; /* site tan */
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-weight: var(--weight-hover);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Allow wrapping instead of forcing single-line truncation */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
   max-width: 100%;
+  line-height: 1.15;
 }
 
 /* ====== CONTENT/FOOTER/SOCIAL ====== */
