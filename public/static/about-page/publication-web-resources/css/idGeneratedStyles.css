@@ -1,3 +1,37 @@
+/* ===== Export: ensure CharOverride-1 uses Open Sans from site fonts =====
+   Add this at the end of publication-web-resources/css/main.css (or inside index.html head).
+   Paths assume your Open Sans files are available at /fonts/OpenSans/*.ttf (as provided).
+   Hard-refresh the page after adding. */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans/OpenSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans/OpenSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans/OpenSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Alias common export family names if the exported CSS references them */
+@font-face {
+  font-family: 'OpenSans';
+  src: url('/fonts/OpenSans/OpenSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
 	margin:0;
@@ -18,7 +52,7 @@ p.ParaOverride-1 {
 }
 span.CharOverride-1 {
 	color:#333333;
-	font-family:"coolvetica", sans-serif;
+	font-family:"OpenSans", sans-serif;
 	font-size:600px;
 	font-style:normal;
 	font-weight:normal;
