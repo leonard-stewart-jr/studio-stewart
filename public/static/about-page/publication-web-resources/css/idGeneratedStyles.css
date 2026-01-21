@@ -1,96 +1,3 @@
-@font-face {
-  font-family: 'coolvetica';
-  src: url('/fonts/coolvetica/Coolvetica Rg.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'coolvetica';
-  src: url('/fonts/coolvetica/Coolvetica Rg It.otf') format('opentype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'coolvetica';
-  src: url('/fonts/coolvetica/Coolvetica Hv Comp.otf') format('opentype');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-/* Condensed / cram variants (important for CharOverride condensed text) */
-@font-face {
-  font-family: 'coolvetica-condensed';
-  src: url('/fonts/coolvetica/Coolvetica Rg Cond.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-stretch: condensed;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'coolvetica-ultracondensed';
-  src: url('/fonts/coolvetica/Coolvetica Rg Cram.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-stretch: ultra-condensed;
-  font-display: swap;
-}
-
-/* Alias the family names used inside the exported CSS to the same files.
-   This prevents the export from falling back to a different font family name. */
-@font-face {
-  font-family: 'Coolvetica Rg';
-  src: url('/fonts/coolvetica/Coolvetica Rg.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica Rg It';
-  src: url('/fonts/coolvetica/Coolvetica Rg It.otf') format('opentype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica Bk';
-  src: url('/fonts/coolvetica/Coolvetica Rg.otf') format('opentype'); /* fallback to Rg if separate Bk not available */
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica Hv';
-  src: url('/fonts/coolvetica/Coolvetica Hv Comp.otf') format('opentype');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica Lt';
-  src: url('/fonts/coolvetica/Coolvetica Rg.otf') format('opentype'); /* use Rg as fallback for light if missing */
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica Rg Cond';
-  src: url('/fonts/coolvetica/Coolvetica Rg Cond.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-stretch: condensed;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Coolvetica Rg Cram';
-  src: url('/fonts/coolvetica/Coolvetica Rg Cram.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-stretch: ultra-condensed;
-  font-display: swap;
-}
-
 
 body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote, figure {
 	margin:0;
@@ -111,7 +18,7 @@ p.ParaOverride-1 {
 }
 span.CharOverride-1 {
 	color:#333333;
-    font-family: 'coolvetica', 'Coolvetica Rg Cond', 'Coolvetica Rg', 'Coolvetica Bk', sans-serif !important;
+	font-family:"coolvetica", sans-serif;
 	font-size:600px;
 	font-style:normal;
 	font-weight:normal;
