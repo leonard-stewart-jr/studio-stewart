@@ -1,8 +1,13 @@
 import React, { useRef } from "react";
 import HeaderBar from "../components/HeaderBar";
 
+<<<<<<< Updated upstream
 const IFRAME_WIDTH = 1460;
 const IFRAME_HEIGHT = 3580;
+=======
+const IFRAME_WIDTH = 1600;
+const IFRAME_HEIGHT = 3940;
+>>>>>>> Stashed changes
 
 export default function AboutPage() {
   const iframeRef = useRef(null);
@@ -18,7 +23,11 @@ export default function AboutPage() {
           width: "100vw",
           minHeight: "100vh",
           margin: 0,
+<<<<<<< Updated upstream
           padding: 0, // you asked to remove top padding
+=======
+          padding: 0, // no top padding as requested
+>>>>>>> Stashed changes
           background: "#fff",
           overflow: "visible",
           display: "flex",
