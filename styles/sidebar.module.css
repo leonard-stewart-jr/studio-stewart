@@ -168,7 +168,7 @@ nav.sidebar-nav {
      to emulate increased line-width without changing font-size */
   font-weight: 700;                 /* use a strong font-weight */
   color: #192d4b; /* site blue */
-  -webkit-text-stroke: 0.6px #192d4b; /* thickens glyph outlines in WebKit/Blink */
+  -webkit-text-stroke: 0.2px #192d4b; /* thickens glyph outlines in WebKit/Blink */
   /* subtle text-shadow fallback for browsers that don't support text-stroke */
   text-shadow:
     0.35px 0.35px rgba(25,45,75,0.06),
