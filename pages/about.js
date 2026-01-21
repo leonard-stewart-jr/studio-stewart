@@ -1,31 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
+import HeaderBar from '../components/HeaderBar';
 
-export default function AboutIframe() {
+export default function AboutPage() {
   const iframeRef = useRef(null);
   const resizeObserverRef = useRef(null);
   const pollIntervalRef = useRef(null);
-  const [iframeHeight, setIframeHeight] = useState('900px'); // sensible initial height
+  const [iframeHeight, setIframeHeight] = useState('900px'); // initial sensible height
 
   const STATIC_PATH = '/static/about-page/index.html';
-  const FALLBACK_CAPTION = 'Selected 3D prints — logo coasters, color lithophanes, and architectural models.';
+  const HEADER_HEIGHT = 60; // matches HeaderBar headerHeight
 
-  // Safe helper to read content height from same-origin iframe
+  // Get same-origin iframe content height safely
   function getIframeContentHeight(iframeEl) {
     try {
       const doc = iframeEl.contentDocument || iframeEl.contentWindow.document;
       if (!doc) return null;
       const body = doc.body;
       const html = doc.documentElement;
-      // Use the larger of body or html scroll heights
-      const height = Math.max(
+      return Math.max(
         body ? body.scrollHeight : 0,
         body ? body.offsetHeight : 0,
         html ? html.scrollHeight : 0,
         html ? html.offsetHeight : 0
       );
-      return height;
-    } catch (err) {
-      // If cross-origin or other error, return null
+    } catch (e) {
       return null;
     }
   }
@@ -34,39 +32,34 @@ export default function AboutIframe() {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    // Resize function (debounced-ish)
     let rafId = null;
+
     function resizeToContent() {
       if (!iframe) return;
       const contentHeight = getIframeContentHeight(iframe);
       if (contentHeight) {
-        // Add a tiny buffer to avoid clipping
-        const newHeight = Math.max(400, contentHeight + 8);
-        // Avoid setting state if unchanged to limit re-renders
+        const newHeight = Math.max(400, contentHeight + 8); // small buffer
         setIframeHeight((prev) => {
           const prevVal = typeof prev === 'string' ? parseInt(prev, 10) : prev;
-          if (Math.abs(prevVal - newHeight) < 6) return prev; // small delta, skip
+          if (Math.abs(prevVal - newHeight) < 6) return prev; // skip tiny adjustments
           return `${newHeight}px`;
         });
       }
     }
 
-    // On iframe load, attempt an initial resize and attach MutationObserver
     function onLoad() {
       // initial resize
       resizeToContent();
 
-      // If same-origin, try MutationObserver to catch dynamic content changes
+      // attach MutationObserver inside iframe document if allowed
       try {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         if (doc) {
-          // Clear any existing observer
           if (resizeObserverRef.current) {
             resizeObserverRef.current.disconnect();
             resizeObserverRef.current = null;
           }
           resizeObserverRef.current = new MutationObserver(() => {
-            // Use rAF to batch DOM reads/writes
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(resizeToContent);
           });
@@ -74,20 +67,19 @@ export default function AboutIframe() {
             attributes: true,
             childList: true,
             subtree: true,
-            characterData: true
+            characterData: true,
           });
         }
       } catch (e) {
-        // If cross-origin or other error, ignore MutationObserver
+        // cross-origin or other error; ignore observer
       }
 
-      // Start a short-lived polling fallback for cases where MutationObserver misses something
+      // short polling fallback to capture late-loading assets (fonts/images)
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
       let polls = 0;
       pollIntervalRef.current = setInterval(() => {
         polls += 1;
         resizeToContent();
-        // stop polling after 8 seconds (32 polls at 250ms)
         if (polls > 32) {
           clearInterval(pollIntervalRef.current);
           pollIntervalRef.current = null;
@@ -95,10 +87,9 @@ export default function AboutIframe() {
       }, 250);
     }
 
-    // Attach load handler (fires when src loads)
     iframe.addEventListener('load', onLoad);
 
-    // Also call resize periodically on window resize (debounced)
+    // window resize handler (debounced)
     let resizeTimer = null;
     function onWindowResize() {
       if (resizeTimer) clearTimeout(resizeTimer);
@@ -108,16 +99,26 @@ export default function AboutIframe() {
     }
     window.addEventListener('resize', onWindowResize);
 
-    // Initial attempt in case iframe was already cached and loaded
-    if (iframe.contentDocument && (iframe.contentDocument.readyState === 'complete' || iframe.contentDocument.readyState === 'interactive')) {
-      onLoad();
+    // If iframe already loaded from cache, run onLoad
+    try {
+      if (
+        iframe.contentDocument &&
+        (iframe.contentDocument.readyState === 'complete' ||
+          iframe.contentDocument.readyState === 'interactive')
+      ) {
+        onLoad();
+      }
+    } catch (e) {
+      // ignore
     }
 
     return () => {
       iframe.removeEventListener('load', onLoad);
       window.removeEventListener('resize', onWindowResize);
       if (resizeObserverRef.current) {
-        try { resizeObserverRef.current.disconnect(); } catch (e) {}
+        try {
+          resizeObserverRef.current.disconnect();
+        } catch (e) {}
         resizeObserverRef.current = null;
       }
       if (pollIntervalRef.current) {
@@ -129,13 +130,13 @@ export default function AboutIframe() {
     };
   }, []);
 
-  // Full-bleed container technique: forces child element to span viewport width
+  // Full-bleed container technique: forces child to span viewport width
   const fullBleedWrapper = {
     width: '100vw',
     marginLeft: 'calc(50% - 50vw)',
     marginRight: 'calc(50% - 50vw)',
     boxSizing: 'border-box',
-    background: 'transparent'
+    background: 'transparent',
   };
 
   const iframeStyle = {
@@ -143,10 +144,18 @@ export default function AboutIframe() {
     height: iframeHeight,
     border: 'none',
     display: 'block',
-    // Prevent double scroll by allowing iframe to expand to content height
     overflow: 'visible',
     WebkitOverflowScrolling: 'touch',
-    background: '#ffffff'
+    background: '#ffffff',
+  };
+
+  const fallbackContainer = {
+    width: 'min(1600px,95vw)',
+    margin: '22px auto 8px',
+    padding: '0 24px',
+    boxSizing: 'border-box',
+    fontSize: 13,
+    color: '#6c6c6a',
   };
 
   const captionStyle = {
@@ -154,49 +163,81 @@ export default function AboutIframe() {
     margin: '10px auto 42px',
     color: '#6c6c6a',
     fontSize: 13,
-    textAlign: 'center'
-  };
-
-  const fallbackLinkStyle = {
-    width: 'min(1600px,95vw)',
-    margin: '22px auto 8px',
-    padding: '0 24px',
-    boxSizing: 'border-box',
-    fontSize: 13,
-    color: '#6c6c6a'
+    textAlign: 'center',
   };
 
   return (
-    <div>
-      {/* Visible fallback/legal link for screen-readers or users with iframe blocked */}
-      <div style={fallbackLinkStyle}>
-        If the frame does not load, open the About page in a new tab:&nbsp;
-        <a href={STATIC_PATH} target="_blank" rel="noopener noreferrer">
-          Open standalone export
-        </a>
-      </div>
+    <>
+      {/* Keep the normal header/navigation */}
+      <HeaderBar fixedNav={true} />
 
-      {/* Full-bleed iframe container */}
-      <div style={fullBleedWrapper} aria-hidden={false}>
-        <iframe
-          ref={iframeRef}
-          title="About — exported from InDesign"
-          src={STATIC_PATH}
-          style={iframeStyle}
-          scrolling="no"
-          role="document"
-        />
-      </div>
-
-      {/* Caption & secondary link */}
-      <div style={captionStyle}>
-        <div>{FALLBACK_CAPTION}</div>
-        <div style={{ marginTop: 8 }}>
-          <a href={STATIC_PATH} style={{ color: '#6c6c6a', textDecoration: 'underline' }}>
+      <main
+        className="matter-matters-page"
+        style={{
+          width: '100vw',
+          minHeight: '100vh',
+          margin: 0,
+          padding: 0,
+          background: '#fff',
+          overflow: 'visible',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          paddingTop: HEADER_HEIGHT, // prevents content hiding under fixed nav
+        }}
+      >
+        {/* Visible fallback link for users with iframes disabled or assistive tech */}
+        <div style={fallbackContainer}>
+          If the frame does not load, open the About page in a new tab:{' '}
+          <a href={STATIC_PATH} target="_blank" rel="noopener noreferrer">
             Open standalone export
           </a>
         </div>
-      </div>
-    </div>
+
+        {/* Full-bleed iframe container */}
+        <div
+          style={{
+            width: '100vw',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            background: '#fff',
+            margin: 0,
+            padding: 0,
+            boxShadow: 'none',
+          }}
+        >
+          <div
+            style={{
+              ...fullBleedWrapper,
+              display: 'block',
+              margin: 0,
+              padding: 0,
+              background: 'transparent',
+            }}
+          >
+            <iframe
+              ref={iframeRef}
+              src={STATIC_PATH}
+              title="About — exported from InDesign"
+              style={iframeStyle}
+              scrolling="no"
+              role="document"
+            />
+          </div>
+        </div>
+
+        {/* Caption and secondary link */}
+        <div style={captionStyle}>
+          <div>Selected 3D prints — logo coasters, color lithophanes, and architectural models.</div>
+          <div style={{ marginTop: 8 }}>
+            <a href={STATIC_PATH} style={{ color: '#6c6c6a', textDecoration: 'underline' }}>
+              Open standalone export
+            </a>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }
