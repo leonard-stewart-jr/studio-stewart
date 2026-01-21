@@ -1,3 +1,5 @@
+// NOTE: this is your existing Sidebar.js with only the portfolio link block replaced.
+// Replace the corresponding section in your file with the block below (or replace the file wholesale).
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
@@ -32,7 +34,6 @@ export default function Sidebar({
     return router.pathname === href || router.pathname.startsWith(href + "/");
   }
 
-  // Prevent background scroll when sidebar is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -44,16 +45,14 @@ export default function Sidebar({
     };
   }, [open]);
 
-  // Sidebar animation variants for framer-motion
   const sidebarVariants = {
     closed: { x: "-100%", transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } },
-    open:   { x: 0,      transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
+    open: { x: 0, transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
   };
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   return (
     <>
-      {/* Overlay uses AnimatePresence for smooth fade in/out */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -68,12 +67,13 @@ export default function Sidebar({
           />
         )}
       </AnimatePresence>
+
       <motion.aside
         className={`${styles.sidebar} ${open ? styles.open : ""}`}
         initial={false}
         animate={open ? "open" : "closed"}
         variants={sidebarVariants}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
@@ -99,6 +99,7 @@ export default function Sidebar({
             />
           </motion.div>
         )}
+
         <nav
           className={styles.sidebarNav}
           style={{
@@ -121,79 +122,76 @@ export default function Sidebar({
             </Link>
           ))}
 
-{/* Chronological Portfolio (Step 1) - oldest first */}
-<div style={{ marginTop: 32, fontWeight: "bold" }}>Chronological Portfolio</div>
+          {/* Chronological Portfolio (oldest → newest) */}
+          <div style={{ marginTop: 32, fontWeight: "bold" }}>Chronological Portfolio</div>
 
-{/* List of 8 projects (oldest → newest). 
-    - Six are sections inside the undergraduate portfolio (anchor fragments).
-    - Two are internal route pages.
-    Update the visible labels (date / project name) as you like. */}
-<ul style={{ listStyle: "none", margin: 8, padding: 0 }}>
-  <li>
-    <Link href="/undergraduate-portfolio#project-03" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Project 03 — [Spring 2021]
-      </a>
-    </Link>
-  </li>
+          <ul style={{ listStyle: "none", margin: 8, padding: 0 }}>
+            {/* Oldest first mapping — these ids correspond to the manifest page ids */}
+            <li>
+              <Link href="/undergraduate-portfolio#spring2021" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Project 01 — [Spring 2021]
+                </a>
+              </Link>
+            </li>
 
-  <li>
-    <Link href="/undergraduate-portfolio#project-04" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Project 04 — [Fall 2021]
-      </a>
-    </Link>
-  </li>
+            <li>
+              <Link href="/undergraduate-portfolio#fall2021" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Project 02 — [Fall 2021]
+                </a>
+              </Link>
+            </li>
 
-  <li>
-    <Link href="/undergraduate-portfolio#project-05" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Project 05 — [Spring 2022]
-      </a>
-    </Link>
-  </li>
+            <li>
+              <Link href="/undergraduate-portfolio#spring2022-1" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Project 03 — [Spring 2022]
+                </a>
+              </Link>
+            </li>
 
-  <li>
-    <Link href="/undergraduate-portfolio#project-06" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Project 06 — [Fall 2022]
-      </a>
-    </Link>
-  </li>
+            <li>
+              <Link href="/undergraduate-portfolio#spring2023-1" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Project 04 — [Spring 2023]
+                </a>
+              </Link>
+            </li>
 
-  <li>
-    <Link href="/undergraduate-portfolio#project-07" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Project 07 — [Spring 2023]
-      </a>
-    </Link>
-  </li>
+            <li>
+              <Link href="/undergraduate-portfolio#spring2024-1" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Project 05 — [Spring 2024]
+                </a>
+              </Link>
+            </li>
 
-  <li>
-    <Link href="/undergraduate-portfolio#project-08" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Project 08 — [Fall 2023]
-      </a>
-    </Link>
-  </li>
+            <li>
+              <Link href="/undergraduate-portfolio#fall2024-1" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Project 06 — [Fall 2024]
+                </a>
+              </Link>
+            </li>
 
-  {/* Internal route projects (kept after the undergraduate entries — adjust order if needed) */}
-  <li>
-    <Link href="/projects/dma-25" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "14px 0 10px 0" }}>
-        DMA-25 — Des Moines Academy (route)
-      </a>
-    </Link>
-  </li>
+            {/* Two internal route projects */}
+            <li>
+              <Link href="/projects/dma-25" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "14px 0 10px 0" }}>
+                  DMA-25 — Des Moines Academy (route)
+                </a>
+              </Link>
+            </li>
 
-  <li>
-    <Link href="/independent-studio" passHref legacyBehavior>
-      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-        Independent Studio — (route)
-      </a>
-    </Link>
-  </li>
-</ul>
+            <li>
+              <Link href="/independent-studio" passHref legacyBehavior>
+                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+                  Independent Studio — (route)
+                </a>
+              </Link>
+            </li>
+          </ul>
 
           <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 2: Even more content</div>
           <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
@@ -216,6 +214,7 @@ export default function Sidebar({
             If you can scroll this sidebar, the overflow-y: auto is working as intended.
           </p>
         </nav>
+
         <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
           <p>
             <b>Leonard Stewart</b> — Digital portfolio<br />
@@ -223,11 +222,12 @@ export default function Sidebar({
             Explore my work and reach out to connect!
           </p>
         </div>
+
         <div
           className={styles.sidebarFooter}
           style={{
             padding: "0 24px 24px",
-            marginBottom: "100px", // Added to ensure visibility on smaller screens
+            marginBottom: "100px",
           }}
         >
           <h3>Other Links</h3>
