@@ -184,7 +184,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2021"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                Project 01 — [Spring 2021]
+                CENTRO DE CIENCIAS VEGETALES DE MONTERREY — Spring 2021
               </a>
             </li>
 
