@@ -115,9 +115,17 @@
 nav.sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 8px; /* reduced global gap; topNavGroup preserves the original larger spacing for top links */
   font-family: var(--font-sans);
 }
+
+/* Keep large spacing for the top nav links only */
+.topNavGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* original spacing preserved for the top nav items */
+}
+
 .sidebarNavLink {
   color: #6c6c6a;
   font-family: var(--font-sans);
@@ -269,7 +277,6 @@ nav.sidebar-nav {
 
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
 
-/* (The rest of your file remains as before — responsive rules and other sections) */
 @media (max-width: 700px) {
   .sidebar {
     left: 0 !important;
