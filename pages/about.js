@@ -2,20 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import HeaderBar from '../components/HeaderBar';
 
 /**
- * About page - improved embedding for InDesign export at /static/about-page/index.html
+ * About page — parent-side fix to embed an InDesign HTML export at:
+ *   /static/about-page/index.html
  *
- * Key behaviors:
- * - Full-bleed iframe (visually spans left→right)
- * - Injects conservative normalization CSS into the iframe document to remove internal scrolling,
- *   hide export footer and known fallback text, and make content responsive where possible.
- * - If the exported HTML uses fixed px widths, the parent measures its natural width and applies
- *   a CSS transform scale to the exported document so images AND text scale proportionally to fit.
- * - Sets iframe height to the scaled content height so the parent page is the single scroll surface.
- * - Robustness: thresholds, caps, stability checks, MutationObserver + short polling fallback.
+ * Goals for this file (Option A, parent-only):
+ * - Ensure there is one scrollbar only (the site / parent scroll).
+ * - Remove exported footer and any visible "fallback" text inside the export.
+ * - Make the exported document scale so the entire page (text + images) fits the viewport width
+ *   by applying a transform scale on the exported document body (when the export is fixed-px).
+ * - Set iframe height to the scaled content height so there is no inner iframe scrollbar.
+ * - Robust guards to avoid runaway growth (thresholds, caps, stable-read stops).
  *
- * Note: this relies on same-origin access (your export lives at /static/about-page).
- * If you edit the exported HTML (option B), you can remove the injected CSS needs and make the export
- * responsive directly; this parent-side approach is safe and reversible.
+ * Drop this file into pages/about.js (replace existing). The export must be same-origin
+ * (public/static/about-page/index.html) so the parent can read and modify the iframe document.
  */
 
 export default function AboutPage() {
@@ -24,105 +23,98 @@ export default function AboutPage() {
   const pollRef = useRef(null);
   const rafRef = useRef(null);
 
+  // sensible initial height while measuring/loading
   const [iframeHeight, setIframeHeight] = useState('900px');
 
   const STATIC_PATH = '/static/about-page/index.html';
-  const HEADER_HEIGHT = 60; // header reserved space
-  const MAX_IFRAME_HEIGHT = 12000; // safety cap to stop runaway height
-  const HEIGHT_THRESHOLD_PX = 6; // only update height when change > this
-  const STABILITY_REQUIRED = 3; // number of stable reads required
+  const HEADER_HEIGHT = 60; // reserved top space for HeaderBar
+  const MAX_IFRAME_HEIGHT = 16000; // safety cap to avoid runaway height
+  const HEIGHT_THRESHOLD_PX = 6; // only apply when change exceeds this
+  const STABILITY_REQUIRED = 3; // consecutive stable reads to stop polling
   const POLL_INTERVAL_MS = 200;
-  const POLL_LIMIT = 50; // ~10s
+  const POLL_LIMIT = 60; // ~12s
 
-  // read unscaled content size of iframe (natural width/height)
+  // Helper: read natural (unscaled) document size from same-origin iframe
   function readIframeNaturalSize(iframeEl) {
     try {
       const doc = iframeEl.contentDocument || iframeEl.contentWindow.document;
       if (!doc) return null;
       const html = doc.documentElement;
       const body = doc.body;
-
-      // use scrollWidth/scrollHeight as natural document size
-      const naturalWidth = Math.max(
-        html ? html.scrollWidth : 0,
-        body ? body.scrollWidth : 0
-      );
-      const naturalHeight = Math.max(
-        html ? html.scrollHeight : 0,
-        body ? body.scrollHeight : 0
-      );
-
+      const naturalWidth = Math.max(html?.scrollWidth || 0, body?.scrollWidth || 0);
+      const naturalHeight = Math.max(html?.scrollHeight || 0, body?.scrollHeight || 0);
       return {
-        width: Number.isFinite(naturalWidth) ? naturalWidth : null,
-        height: Number.isFinite(naturalHeight) ? naturalHeight : null
+        width: Number.isFinite(naturalWidth) && naturalWidth > 0 ? naturalWidth : null,
+        height: Number.isFinite(naturalHeight) && naturalHeight > 0 ? naturalHeight : null
       };
     } catch (e) {
       return null;
     }
   }
 
-  // Inject targeted normalization CSS and hide footer / known fallback text container
-  function injectNormalizationAndHide(iframeEl) {
+  // Inject normalization CSS into exported document to disable internal scroll, allow scaling,
+  // and hide exported footer/fallback text where possible.
+  function injectNormalizationStylesAndHide(iframeEl) {
     try {
       const doc = iframeEl.contentDocument || iframeEl.contentWindow.document;
       if (!doc) return;
 
       const css = `
-        /* Normalize exported layout so it can fit and not create inner scrollbars */
+        /* Normalize exported page so it doesn't force its own scroll or fixed 100vh wrappers */
         html, body, #page, .page, .export-container, .adobe-export, .aep-export {
           width: 100% !important;
           max-width: none !important;
-          box-sizing: border-box !important;
-          overflow: visible !important;
           height: auto !important;
           min-height: 0 !important;
+          overflow: visible !important;
           margin: 0 !important;
           padding: 0 !important;
+          box-sizing: border-box !important;
         }
-        /* Make imagery and SVG scale to container width */
-        img, svg, figure, picture, video {
+        /* Make images and SVGs responsive */
+        img, svg, picture, figure {
           max-width: 100% !important;
           height: auto !important;
         }
-        /* Hide common footer selectors so parent supplies site footer */
+        /* Hide common footer selectors so the parent supplies the footer */
         footer, .site-footer, .page-footer, .export-footer {
           display: none !important;
         }
       `;
 
-      // Avoid duplicate style tag
       const existing = doc.getElementById('about-iframe-normalize');
       if (existing) {
         existing.textContent = css;
       } else {
-        const styleEl = doc.createElement('style');
-        styleEl.id = 'about-iframe-normalize';
-        styleEl.type = 'text/css';
-        styleEl.appendChild(doc.createTextNode(css));
-        if (doc.head) doc.head.insertBefore(styleEl, doc.head.firstChild);
-        else doc.documentElement.insertBefore(styleEl, doc.documentElement.firstChild);
+        const style = doc.createElement('style');
+        style.id = 'about-iframe-normalize';
+        style.type = 'text/css';
+        style.appendChild(doc.createTextNode(css));
+        if (doc.head) doc.head.insertBefore(style, doc.head.firstChild);
+        else doc.documentElement.insertBefore(style, doc.documentElement.firstChild);
       }
 
-      // Remove or hide the fallback line if present (text node that mentions "If the frame does not load")
-      // This tries to find any element containing that exact phrase and remove it safely.
-      const searchText = 'If the frame does not load';
-      const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_ELEMENT, null, false);
-      let node;
-      const toRemove = [];
-      while ((node = walker.nextNode())) {
-        try {
-          if (node.textContent && node.textContent.includes(searchText)) {
-            toRemove.push(node);
+      // Remove any element containing the fallback text if present (safe removal)
+      const fallbackText = 'If the frame does not load';
+      if (doc.body) {
+        const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_ELEMENT, null, false);
+        const toRemove = [];
+        let node;
+        while ((node = walker.nextNode())) {
+          try {
+            if (node.textContent && node.textContent.includes(fallbackText)) {
+              toRemove.push(node);
+            }
+          } catch (err) {
+            // ignore
           }
-        } catch (err) {
-          // ignore node access errors
         }
+        toRemove.forEach(n => {
+          try { n.parentNode && n.parentNode.removeChild(n); } catch (e) {}
+        });
       }
-      toRemove.forEach(n => {
-        try { n.parentNode && n.parentNode.removeChild(n); } catch (e) {}
-      });
-    } catch (err) {
-      // ignore cross-origin or other errors (shouldn't happen when export is same-origin)
+    } catch (e) {
+      // ignore cross-origin or unexpected failures
     }
   }
 
@@ -136,31 +128,29 @@ export default function AboutPage() {
     let lastAppliedScale = 1;
     let resizeTimer = null;
 
+    // Apply measured natural size by computing a scale that fits the iframe container width.
+    // This scales all content (text + images) by transforming the iframe document body.
     function applyMeasuredSize(naturalWidth, naturalHeight) {
       if (!naturalWidth || !naturalHeight) return;
 
-      // container width is iframe's current client width (full-bleed)
-      const containerWidth = iframe.getBoundingClientRect().width || window.innerWidth;
+      // containerWidth is the visible width the iframe occupies (full-bleed -> viewport width)
+      const containerWidth = iframe.getBoundingClientRect().width || window.innerWidth || 1200;
 
-      // If naturalWidth is zero, skip
-      if (!naturalWidth) return;
+      // compute scale to fit horizontally (allow upscaling so export stretches left->right)
+      // cap the scale between 0.5 and 1.6 to avoid absurd upscales
+      const rawScale = containerWidth / naturalWidth;
+      const scale = Math.max(0.5, Math.min(rawScale, 1.6));
 
-      // Compute scale to fit horizontally. If naturalWidth already <= containerWidth, scale = 1.
-      const scale = Math.min(1, containerWidth / naturalWidth);
-
-      // Compute scaled height
+      // compute scaled height to set on the iframe (so no internal scrollbar)
       const scaledHeight = Math.min(MAX_IFRAME_HEIGHT, Math.round(naturalHeight * scale));
 
-      // Safety guards: ignore spikes > 1.8x previous (likely measurement glitch)
-      if (lastAppliedHeight > 0 && scaledHeight > lastAppliedHeight * 1.8) {
-        // skip this reading
+      // ignore unrealistic spikes
+      if (lastAppliedHeight > 0 && scaledHeight > lastAppliedHeight * 2.0) {
         return;
       }
 
-      // Only update when change is significant
       const prevHeight = lastAppliedHeight || parseInt(iframeHeight, 10) || 0;
       const prevScale = lastAppliedScale || 1;
-
       const heightDiff = Math.abs(prevHeight - scaledHeight);
       const scaleDiff = Math.abs(prevScale - scale);
 
@@ -170,24 +160,25 @@ export default function AboutPage() {
         stableReads = 0;
       }
 
+      // Only apply DOM updates if there is a meaningful change
       if (heightDiff >= HEIGHT_THRESHOLD_PX || scaleDiff >= 0.01) {
-        // Apply the scale and height into the iframe's document
         try {
           const doc = iframe.contentDocument || iframe.contentWindow.document;
           if (doc && doc.body) {
-            // apply transform scale on body to scale all content including text and images
+            // set transform on body so all content including text/images scales proportionally
             doc.body.style.transformOrigin = '0 0';
             doc.body.style.transform = `scale(${scale})`;
-            // to avoid the scaled body being clipped, ensure html/body width equals naturalWidth
-            // so the transform scales it correctly
+
+            // ensure body/html width equals naturalWidth so transform scales predictable layout
             doc.documentElement.style.width = `${naturalWidth}px`;
             doc.body.style.width = `${naturalWidth}px`;
-            // ensure overflow visible inside iframe doc
-            doc.documentElement.style.overflow = 'visible';
-            doc.body.style.overflow = 'visible';
+
+            // After scaling and sizing, prevent internal scrollbars — parent will be the single scroll
+            doc.documentElement.style.overflow = 'hidden';
+            doc.body.style.overflow = 'hidden';
           }
         } catch (e) {
-          // ignore
+          // ignore cross-origin / unexpected errors
         }
 
         lastAppliedHeight = scaledHeight;
@@ -195,7 +186,7 @@ export default function AboutPage() {
         setIframeHeight(`${scaledHeight}px`);
       }
 
-      // Stop polling/observing once stable
+      // stop polling/observing when stable
       if (stableReads >= STABILITY_REQUIRED && pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
@@ -209,18 +200,18 @@ export default function AboutPage() {
       applyMeasuredSize(natural.width, natural.height);
     }
 
-    function normalizeInjectAndMeasure() {
+    function normalizeInjectMeasure() {
       try {
-        injectNormalizationAndHide(iframe);
+        injectNormalizationStylesAndHide(iframe);
       } catch (e) {}
       measureAndApply();
     }
 
     function onLoad() {
-      // On load, inject CSS to neutralize internal scroll & hide footer/fallback
-      normalizeInjectAndMeasure();
+      // Inject CSS + measure immediately
+      normalizeInjectMeasure();
 
-      // Attach MutationObserver inside the iframe document (if same-origin) to watch dynamic changes
+      // Attach a MutationObserver inside iframe document to catch DOM/late changes
       try {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         if (doc) {
@@ -231,7 +222,7 @@ export default function AboutPage() {
           observerRef.current = new MutationObserver(() => {
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
             rafRef.current = requestAnimationFrame(() => {
-              normalizeInjectAndMeasure();
+              normalizeInjectMeasure();
             });
           });
           observerRef.current.observe(doc, {
@@ -242,15 +233,15 @@ export default function AboutPage() {
           });
         }
       } catch (e) {
-        // ignore
+        // ignore if observer cannot be attached
       }
 
-      // Start polling fallback to catch late-loading fonts/images (stop when stable or after limit)
+      // Polling fallback to catch fonts/images
       if (pollRef.current) clearInterval(pollRef.current);
       polls = 0;
       pollRef.current = setInterval(() => {
         polls += 1;
-        normalizeInjectAndMeasure();
+        normalizeInjectMeasure();
         if (polls > POLL_LIMIT) {
           if (pollRef.current) {
             clearInterval(pollRef.current);
@@ -262,7 +253,7 @@ export default function AboutPage() {
 
     iframe.addEventListener('load', onLoad);
 
-    // If iframe content is already loaded (cached), call onLoad immediately
+    // If cached and already interactive/complete, run onLoad now
     try {
       if (iframe.contentDocument && (iframe.contentDocument.readyState === 'complete' || iframe.contentDocument.readyState === 'interactive')) {
         onLoad();
@@ -271,11 +262,11 @@ export default function AboutPage() {
       // ignore
     }
 
-    // parent window resize should re-measure and adjust scale
+    // On parent window resize re-measure after debounce
     function onWindowResize() {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        normalizeInjectAndMeasure();
+        normalizeInjectMeasure();
       }, 140);
     }
     window.addEventListener('resize', onWindowResize);
@@ -297,7 +288,7 @@ export default function AboutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // run once on mount
 
-  // Layout: full-bleed wrapper so iframe spans viewport width
+  // Full-bleed wrapper so the iframe stretches left->right visually
   const fullBleedWrapper = {
     width: '100vw',
     marginLeft: 'calc(50% - 50vw)',
@@ -319,6 +310,7 @@ export default function AboutPage() {
 
   return (
     <>
+      {/* Keep header + fixed nav */}
       <HeaderBar fixedNav={true} />
 
       <main
@@ -336,7 +328,7 @@ export default function AboutPage() {
           paddingTop: HEADER_HEIGHT // reserve header space
         }}
       >
-        {/* Full-bleed iframe container */}
+        {/* iframe full-bleed container */}
         <div
           style={{
             width: '100vw',
@@ -353,9 +345,10 @@ export default function AboutPage() {
             <iframe
               ref={iframeRef}
               src={STATIC_PATH}
-              title="About — exported InDesign"
+              title="About — exported from InDesign"
               style={iframeStyle}
               role="document"
+              /* no scrolling attribute set — parent will be the single scroller */
             />
           </div>
         </div>
