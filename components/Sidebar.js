@@ -269,19 +269,31 @@ export default function Sidebar({
               </a>
             </li>
 
-            {/* Two internal route projects */}
+            {/* Two internal route projects — converted to two-line layout to match the portfolio links */}
             <li>
               <Link href="/projects/dma-25" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "14px 0 10px 0" }}>
-                  DES MOINES ACADAMY OF ARTS & ATHLETICS - SPRING 2025
+                <a
+                  onClick={onClose}
+                  className={styles.portfolioLink}
+                  aria-label="Des Moines Academy of Arts & Athletics — Spring 2025"
+                  title="DES MOINES ACADEMY OF ARTS & ATHLETICS - SPRING 2025"
+                >
+                  <span className={styles.portfolioLinkYear}>SPRING 2025</span>
+                  <span className={styles.portfolioLinkTitle}>DES MOINES ACADEMY OF ARTS & ATHLETICS</span>
                 </a>
               </Link>
             </li>
 
             <li>
               <Link href="/independent-studio" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  INVESTIGATION INTO (in)JUSTICE FACILITIES - SUMMER 2025
+                <a
+                  onClick={onClose}
+                  className={styles.portfolioLink}
+                  aria-label="Investigation into (in)Justice Facilities — Summer 2025"
+                  title="INVESTIGATION INTO (IN)JUSTICE FACILITIES - SUMMER 2025"
+                >
+                  <span className={styles.portfolioLinkYear}>SUMMER 2025</span>
+                  <span className={styles.portfolioLinkTitle}>INVESTIGATION INTO (IN)JUSTICE FACILITIES</span>
                 </a>
               </Link>
             </li>
