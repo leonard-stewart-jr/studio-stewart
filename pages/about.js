@@ -1,6 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeaderBar from '../components/HeaderBar';
 
+/**
+ * About page: embeds exported InDesign HTML at /static/about-page/index.html
+ * - fixed content width: 1600px (scales down on small screens via maxWidth)
+ * - auto-height: measures same-origin iframe content and sets iframe height
+ * - injects CSS into iframe document on load to remove internal scrollbars
+ * - keeps site header/navigation (HeaderBar) and reserves top padding to avoid overlap
+ *
+ * Usage: drop this file into pages/about.js (replace existing).
+ */
+
 export default function AboutPage() {
   const iframeRef = useRef(null);
   const resizeObserverRef = useRef(null);
@@ -8,7 +18,7 @@ export default function AboutPage() {
   const [iframeHeight, setIframeHeight] = useState('900px'); // sensible initial height
 
   const STATIC_PATH = '/static/about-page/index.html';
-  const HEADER_HEIGHT = 76; // leave enough top padding so fixed header doesn't overlap content
+  const HEADER_HEIGHT = 60; // match HeaderBar headerHeight (HeaderBar uses 60)
   const CONTENT_WIDTH = 1600; // fixed content width for the exported HTML
 
   // Safely read same-origin iframe content height
@@ -19,17 +29,72 @@ export default function AboutPage() {
       const body = doc.body;
       const html = doc.documentElement;
 
-      // try to account for exported CSS that may set min-height/100vh etc.
-      const scrollHeight = Math.max(
+      // Use maximum of common height measures
+      const h = Math.max(
         body ? body.scrollHeight : 0,
         body ? body.offsetHeight : 0,
         html ? html.scrollHeight : 0,
         html ? html.offsetHeight : 0
       );
-      return scrollHeight;
+      return h;
     } catch (err) {
       // cross-origin or other read error
       return null;
+    }
+  }
+
+  // Inject CSS into the exported document to neutralize internal scrolling and forced 100vh behavior
+  function injectNormalizationCSS(iframeEl) {
+    try {
+      const doc = iframeEl.contentDocument || iframeEl.contentWindow.document;
+      if (!doc) return;
+
+      // Create a style element to override problematic export rules.
+      // These rules use !important to override inline or exported CSS that forces internal scrollbars.
+      const css = `
+        html, body {
+          overflow: visible !important;
+          height: auto !important;
+          min-height: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        /* If the InDesign export put the whole layout inside a wrapper with fixed height/overflow,
+           try to neutralize common wrapper selectors. */
+        #page, .page, .export-container, .adobe-export, .aep-export {
+          overflow: visible !important;
+          height: auto !important;
+          min-height: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        /* Prevent nested elements from forcing internal scrollbars */
+        * {
+          overflow: visible !important;
+          box-sizing: border-box !important;
+        }
+      `;
+
+      // Avoid adding duplicate style elements
+      const existing = doc.getElementById('studio-stewart-iframe-normalize');
+      if (existing) {
+        existing.textContent = css;
+        return;
+      }
+
+      const styleEl = doc.createElement('style');
+      styleEl.id = 'studio-stewart-iframe-normalize';
+      styleEl.type = 'text/css';
+      styleEl.appendChild(doc.createTextNode(css));
+      // Insert at top of head (or at documentElement if head not present)
+      if (doc.head) {
+        doc.head.insertBefore(styleEl, doc.head.firstChild);
+      } else {
+        doc.documentElement.insertBefore(styleEl, doc.documentElement.firstChild);
+      }
+    } catch (e) {
+      // ignore cross-origin / permission errors
+      // (shouldn't happen because export is under /static and same-origin)
     }
   }
 
@@ -40,12 +105,13 @@ export default function AboutPage() {
     let rafId = null;
     let resizeTimer = null;
 
-    // Resize the iframe to match its content height (if same-origin)
+    // Measure and apply iframe height based on inner content
     function resizeToContent() {
       if (!iframe) return;
       const contentHeight = getIframeContentHeight(iframe);
       if (contentHeight) {
-        const newHeight = Math.max(400, contentHeight + 8); // small buffer
+        // add a small buffer to avoid clipping
+        const newHeight = Math.max(400, contentHeight + 8);
         setIframeHeight((prev) => {
           const prevVal = typeof prev === 'string' ? parseInt(prev, 10) : prev;
           if (Math.abs(prevVal - newHeight) < 6) return prev; // skip tiny adjustments
@@ -54,47 +120,22 @@ export default function AboutPage() {
       }
     }
 
-    // Attempt to remove internal scrolling inside the exported HTML (overrides same-origin styles)
-    function normalizeIframeDocumentStyles() {
+    // Normalize styles inside iframe (remove internal scrollbars, fixed 100vh usage)
+    function normalizeAndResize() {
       try {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!doc) return;
-
-        // Clear restrictive layout that may cause internal scrolling
-        const html = doc.documentElement;
-        const body = doc.body;
-
-        // Remove any inline height/overflow that the export may have set
-        if (html) {
-          html.style.overflow = 'visible';
-          html.style.height = 'auto';
-          html.style.minHeight = '0';
-          html.style.margin = '0';
-        }
-        if (body) {
-          body.style.overflow = 'visible';
-          body.style.height = 'auto';
-          body.style.minHeight = '0';
-          body.style.margin = '0';
-        }
-
-        // If exported CSS included <meta name="viewport"> missing or content scaling,
-        // we don't alter it here. We just ensure no internal scrollbar is forced by CSS.
+        injectNormalizationCSS(iframe);
+        resizeToContent();
       } catch (e) {
-        // ignore cross-origin / permission errors
+        // ignore
       }
     }
 
-    // Handler called when iframe finishes loading (or is cached)
+    // Called when iframe finishes loading
     function onLoad() {
-      // Force the exported document to use visible overflow so the parent can size correctly
-      normalizeIframeDocumentStyles();
+      // Inject normalization CSS immediately, then measure
+      normalizeAndResize();
 
-      // Do an initial resize
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(resizeToContent);
-
-      // Attach a MutationObserver inside the iframe to detect dynamic changes
+      // Attach a MutationObserver inside iframe to detect DOM changes that affect height
       try {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         if (doc) {
@@ -105,8 +146,7 @@ export default function AboutPage() {
           resizeObserverRef.current = new MutationObserver(() => {
             if (rafId) cancelAnimationFrame(rafId);
             rafId = requestAnimationFrame(() => {
-              normalizeIframeDocumentStyles();
-              resizeToContent();
+              normalizeAndResize();
             });
           });
           resizeObserverRef.current.observe(doc, {
@@ -117,16 +157,15 @@ export default function AboutPage() {
           });
         }
       } catch (e) {
-        // cross-origin or other errors — observer not attached
+        // cross-origin or other error; ignore
       }
 
-      // Short polling fallback to catch late-loading fonts/images (stop after a few seconds)
+      // Short polling fallback to capture late-loading fonts/images and other late layout shifts
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
       let polls = 0;
       pollIntervalRef.current = setInterval(() => {
         polls += 1;
-        normalizeIframeDocumentStyles();
-        resizeToContent();
+        normalizeAndResize();
         if (polls > 40) {
           clearInterval(pollIntervalRef.current);
           pollIntervalRef.current = null;
@@ -137,7 +176,7 @@ export default function AboutPage() {
     // Attach load handler
     iframe.addEventListener('load', onLoad);
 
-    // If the iframe has already loaded (cached), call onLoad immediately
+    // If iframe already loaded from cache, run onLoad immediately
     try {
       if (
         iframe.contentDocument &&
@@ -150,13 +189,11 @@ export default function AboutPage() {
       // ignore
     }
 
-    // Recompute on parent window resize (debounced)
+    // Window resize handler (debounced)
     function onWindowResize() {
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        // re-run normalization in case layout rules inside export adapt to width changes
-        normalizeIframeDocumentStyles();
-        resizeToContent();
+        normalizeAndResize();
       }, 140);
     }
     window.addEventListener('resize', onWindowResize);
@@ -179,7 +216,7 @@ export default function AboutPage() {
     };
   }, []);
 
-  // Full-bleed wrapper forces a block to span the viewport while inner content remains centered
+  // Styles for layout: full-bleed wrapper + centered 1600px container
   const fullBleedWrapper = {
     width: '100vw',
     marginLeft: 'calc(50% - 50vw)',
@@ -188,22 +225,19 @@ export default function AboutPage() {
     background: 'transparent',
   };
 
-  // Inner centered container that constrains the exported content to 1600px (but allows max-width on small screens)
   const centeredContainer = {
-    width: CONTENT_WIDTH,
-    maxWidth: '100%',
+    width: CONTENT_WIDTH, // numeric -> px
+    maxWidth: '100%', // scale down on small viewports
     margin: '0 auto',
     boxSizing: 'border-box',
-    // no side padding — the exported HTML already includes its bleed
   };
 
-  // Iframe styling: fixed content width (100% of centeredContainer), and auto height from iframeHeight
   const iframeStyle = {
-    width: '100%',
+    width: '100%', // fill centeredContainer (so on desktop it will be 1600px)
     height: iframeHeight,
     border: 'none',
     display: 'block',
-    overflow: 'visible',
+    overflow: 'visible', // allow parent to scroll
     WebkitOverflowScrolling: 'touch',
     background: '#ffffff',
     boxSizing: 'content-box',
@@ -244,11 +278,11 @@ export default function AboutPage() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          // Match matter-matters: leave space so fixed nav doesn't overlay content
+          // Reserve space so the fixed header doesn't overlap the top of the content.
           paddingTop: HEADER_HEIGHT,
         }}
       >
-        {/* Fallback visible link for users with iframes disabled or for assistive tech */}
+        {/* Visible fallback link for users with iframes disabled or assistive tech */}
         <div style={fallbackContainer}>
           If the frame does not load, open the About page in a new tab:{' '}
           <a href={STATIC_PATH} target="_blank" rel="noopener noreferrer">
@@ -256,7 +290,7 @@ export default function AboutPage() {
           </a>
         </div>
 
-        {/* Full-bleed container (so the white nav/top bars can extend full width) */}
+        {/* Full-bleed container so the white nav bars can extend full width */}
         <div
           style={{
             width: '100vw',
@@ -276,9 +310,8 @@ export default function AboutPage() {
                 src={STATIC_PATH}
                 title="About — exported from InDesign"
                 style={iframeStyle}
-                scrolling="no"
+                scrolling="no" // we want parent page scrollbar only
                 role="document"
-                // allow same-origin access for auto-resize (assets are served from same origin)
               />
             </div>
           </div>
