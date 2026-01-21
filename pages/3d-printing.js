@@ -19,7 +19,7 @@ import {
   FILTER_BUTTONS as FILTER_BUTTONS_NBA
 } from "../data/nba-logos";
 
-// Local categories — three items as you adjusted
+// Local categories — three items
 const CATEGORIES = [
   { key: "sports", label: "SPORTS" },
   { key: "lithophanes", label: "LITHOPHANES" },
@@ -123,7 +123,7 @@ export default function ThreeDPrinting() {
   const LEAGUE_FILTER_BUTTONS = leagueIsNFL ? FILTER_BUTTONS_NFL : leagueIsNBA ? FILTER_BUTTONS_NBA : [];
   const LEAGUE_CONFERENCE_LOGOS = leagueIsNFL ? [AFC_LOGO, NFC_LOGO] : leagueIsNBA ? [NBA_EAST_LOGO, NBA_WEST_LOGO] : [];
 
-  // Build gridData depending on conference/division (same logic)
+  // Build gridData depending on conference/division
   let gridData = [];
   let showConferenceLogos = false;
   let showCenteredLogo = null;
@@ -224,18 +224,50 @@ export default function ThreeDPrinting() {
     const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
     if (!btn) return;
     if (btn.type === "conference") {
+      // When changing conference reset division to ALL to avoid stale (now-hidden) division
       setConference(btn.value);
-      if (btn.value === "ALL") setDivision("ALL");
+      setDivision("ALL");
     } else {
       setDivision(btn.value);
     }
   }
 
-  // Convert LEAGUE_FILTER_BUTTONS to items for SectionTabs (key/label)
-  const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
+  // --- NBA-specific hiding logic for divisions when a conference is selected ---
+  // Confirmed: hide the opposite-conference divisions only for NBA.
+  const NBA_EAST_DIVS = new Set(["ATLANTIC", "CENTRAL", "SOUTHEAST"]);
+  const NBA_WEST_DIVS = new Set(["PACIFIC", "NORTHWEST", "SOUTHWEST"]);
+
+  // Build a filtered copy of the league filter buttons that removes divisions not part of the selected conference (NBA only).
+  let filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS;
+
+  if (leagueIsNBA && conference !== "ALL") {
+    if (conference === "EAST") {
+      filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
+        // keep conference controls and the universal ALL, and keep east divisions
+        if (!b || !b.value) return false;
+        if (b.type === "conference") return true;
+        if (b.value === "ALL") return true;
+        return NBA_EAST_DIVS.has(b.value);
+      });
+    } else if (conference === "WEST") {
+      filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
+        if (!b || !b.value) return false;
+        if (b.type === "conference") return true;
+        if (b.value === "ALL") return true;
+        return NBA_WEST_DIVS.has(b.value);
+      });
+    }
+  }
+
+  // Convert filtered buttons to items for SectionTabs (key/label)
+  const leagueFilterItems = filteredLeagueFilterButtons.map((b) => ({ key: b.value, label: b.label }));
+
+  // Helper to compute active key for the subnav SectionTabs:
+  // - If a division is selected (not "ALL") use division so that division gets highlighted.
+  // - Otherwise use conference so conference (ALL/EAST/WEST) can appear active.
+  const subnavActiveKey = division && division !== "ALL" ? division : conference || "ALL";
 
   // Render helpers
-  // LogoRow lays out logos in a 4-column grid and applies nudges + overlap so logos visually sit over the subnav area.
   function LogoRow() {
     if (!leagueIsSupported || !showConferenceLogos) return null;
     const leftLogo = LEAGUE_CONFERENCE_LOGOS[0];
@@ -245,236 +277,71 @@ export default function ThreeDPrinting() {
     const leftNudge = 34; // pixels to move left logo to the right
     const rightNudge = -34; // pixels to move right logo to the left
 
+    const logoStyle = (nudge) => ({
+      width: 200,
+      height: 140,
+      objectFit: "contain",
+      cursor: "pointer",
+      transform: `translateX(${nudge}px)`,
+      transition: "transform 0.18s"
+    });
+
     return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          alignItems: "center",
-          justifyItems: "center",
-          minHeight: 120,
-          marginTop: 16,
-          marginBottom: -32, // negative bottom margin so logos overlap the isp-subnav-row beneath
-          width: "100%"
-        }}
-      >
-        {/* Left half: span columns 1-2 and center the logo, then nudge it right */}
-        <div style={{ gridColumn: "1 / span 2", display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, alignItems: "center", marginTop: 18 }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <img
             src={leftLogo?.image}
-            alt={leftLogo?.name}
-            style={{
-              cursor: "pointer",
-              height: leagueIsNFL ? 140 : 200,
-              width: "auto",
-              transform: `translateX(${leftNudge}px)` // horizontal nudge
-            }}
+            alt={leftLogo?.name || "left"}
+            style={logoStyle(leftNudge)}
             onClick={() => {
               if (leagueIsNFL) setConference("AFC");
               else setConference("EAST");
               setDivision("ALL");
               setShowFilterBar(true);
             }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === "Enter") { if (leagueIsNFL) setConference("AFC"); else setConference("EAST"); setDivision("ALL"); setShowFilterBar(true); } }}
           />
         </div>
 
-        {/* Right half: span columns 3-4 and center the logo, then nudge it left */}
-        <div style={{ gridColumn: "3 / span 2", display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <img
             src={rightLogo?.image}
-            alt={rightLogo?.name}
-            style={{
-              cursor: "pointer",
-              height: leagueIsNFL ? 140 : 200,
-              width: "auto",
-              transform: `translateX(${rightNudge}px)` // horizontal nudge
-            }}
+            alt={rightLogo?.name || "right"}
+            style={logoStyle(rightNudge)}
             onClick={() => {
               if (leagueIsNFL) setConference("NFC");
               else setConference("WEST");
               setDivision("ALL");
               setShowFilterBar(true);
             }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === "Enter") { if (leagueIsNFL) setConference("NFC"); else setConference("WEST"); setDivision("ALL"); setShowFilterBar(true); } }}
           />
         </div>
       </div>
     );
   }
 
-  // Centered logo for a selected conference (keeps existing behavior)
   function CenteredLogo() {
     if (!leagueIsSupported || !showCenteredLogo) return null;
     return (
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 18 }}>
         <img
           src={showCenteredLogo?.image}
-          alt={showCenteredLogo?.name}
-          style={{ height: leagueIsNFL ? 140 : 200, width: "auto", cursor: "pointer" }}
+          alt={showCenteredLogo?.name || "center"}
+          style={{ width: 220, height: 160, objectFit: "contain", cursor: "pointer" }}
           onClick={() => {
             setConference("ALL");
             setDivision("ALL");
             setShowFilterBar(true);
           }}
+          role="button"
+          tabIndex={0}
         />
       </div>
-    );
-  }
-
-  // Sports dropdown anchored under SPORTS tab
-  function SportsDropdown() {
-    if (!sportsOpen || activeCategory !== "sports") return null;
-
-    const leagues = [
-      { key: "nfl", label: "NFL", enabled: true },
-      { key: "nba", label: "NBA", enabled: true },
-      { key: "mlb", label: "MLB", enabled: false },
-      { key: "nhl", label: "NHL", enabled: false },
-      { key: "ncaa", label: "NCAA", enabled: false }
-    ];
-
-    const dropdownStyle = {
-      position: "fixed", // positioned relative to viewport
-      left: dropdownPos.left,
-      top: dropdownPos.top,
-      zIndex: 2200,
-      background: "#fff",
-      boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-      borderRadius: 6,
-      padding: 6,
-      width: dropdownPos.width,
-      display: "flex",
-      flexDirection: "column",
-      gap: 2,
-      alignItems: "stretch",
-      pointerEvents: "auto",
-      transform: "translateZ(0)"
-    };
-
-    const itemStyleBase = {
-      background: "transparent",
-      border: "none",
-      padding: "8px 10px",
-      textAlign: "center",
-      fontSize: 12,
-      letterSpacing: "0.04em",
-      textTransform: "uppercase",
-      cursor: "pointer",
-      color: "#6c6c6a",
-      fontFamily: "Inter, sans-serif",
-      fontWeight: 280,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "100%"
-    };
-
-    // Tooltip state for disabled items
-    const [tooltip, setTooltip] = useState({ visible: false, left: 0, top: 0, text: "" });
-
-    function showTooltipFor(el, text) {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      // Position tooltip to the right of the hovered element (viewport coords)
-      const left = r.right + 10; // 10px gap to the right
-      const top = r.top + r.height / 2; // vertically center on the element
-      setTooltip({
-        visible: true,
-        left,
-        top,
-        text
-      });
-    }
-    function hideTooltip() {
-      setTooltip({ visible: false, left: 0, top: 0, text: "" });
-    }
-
-    return (
-      <>
-        <div ref={dropdownRef} style={dropdownStyle} role="menu" aria-label="Select league">
-          {leagues.map((l) => {
-            const isActive = currentLeague === l.key && activeCategory === "sports";
-            const itemStyle = {
-              ...itemStyleBase,
-              ...(isActive ? { color: "#e6dbb9", fontWeight: 350 } : {}),
-              ...(!l.enabled ? { opacity: 0.6 } : {})
-            };
-
-            return (
-              <button
-                key={l.key}
-                style={itemStyle}
-                onClick={() => {
-                  if (!l.enabled) return;
-                  setCurrentLeague(l.key);
-                  setConference("ALL");
-                  setDivision("ALL");
-                  setShowFilterBar(true);
-                  setSportsOpen(false);
-                }}
-                onKeyDown={(e) => {
-                  if ((e.key === "Enter" || e.key === " ") && l.enabled) {
-                    setCurrentLeague(l.key);
-                    setConference("ALL");
-                    setDivision("ALL");
-                    setShowFilterBar(true);
-                    setSportsOpen(false);
-                  }
-                }}
-                aria-current={isActive ? "page" : undefined}
-                aria-disabled={!l.enabled}
-                title={!l.enabled ? "In progress" : undefined}
-                onMouseEnter={(e) => {
-                  if (!l.enabled) {
-                    showTooltipFor(e.currentTarget, "In progress");
-                  }
-                }}
-                onMouseLeave={() => {
-                  hideTooltip();
-                }}
-                onFocus={(e) => {
-                  if (!l.enabled) showTooltipFor(e.currentTarget, "In progress");
-                }}
-                onBlur={() => hideTooltip()}
-                tabIndex={0}
-                role="menuitem"
-              >
-                {l.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {typeof document !== "undefined" && (
-          <div
-            style={{
-              position: "fixed",
-              left: tooltip.left,
-              top: tooltip.top,
-              transform: "translate(0, -50%)", // center vertically alongside the element
-              pointerEvents: "none",
-              zIndex: 2300
-            }}
-            aria-hidden={!tooltip.visible}
-          >
-            {tooltip.visible && (
-              <div
-                style={{
-                  background: "#e6dbb9", // tan background
-                  color: "#181818", // dark gray text
-                  padding: "6px 10px",
-                  borderRadius: 6,
-                  fontSize: 12,
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 280,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
-                }}
-              >
-                {tooltip.text}
-              </div>
-            )}
-          </div>
-        )}
-      </>
     );
   }
 
@@ -525,7 +392,7 @@ export default function ThreeDPrinting() {
         title={print.name}
       >
         {imgSrc ? (
-          <img src={imgSrc} alt={print.name} style={{ width: imageSize, height: "auto", display: "block" }} />
+          <img src={imgSrc} alt={print.name} style={{ width: imageSize, height: "auto" }} />
         ) : (
           <div>{print.name}</div>
         )}
@@ -545,22 +412,22 @@ export default function ThreeDPrinting() {
     ) {
       if (isMobile) {
         return gridData.map(([left, right], idx) => (
-          <div key={idx} style={{ display: "flex", gap: 12, width: "100%" }}>
-            {left ? <PrintCard key={left.id} print={left} isMobile={isMobile} league={currentLeague} /> : null}
-            {right ? <PrintCard key={right.id} print={right} isMobile={isMobile} league={currentLeague} /> : null}
+          <div key={`row-${idx}`} style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center", marginBottom: 12 }}>
+            {left ? <PrintCard print={left} isMobile={isMobile} league={currentLeague} /> : <div style={{ width: 120 }} />}
+            {right ? <PrintCard print={right} isMobile={isMobile} league={currentLeague} /> : <div style={{ width: 120 }} />}
           </div>
         ));
       }
       return gridData.flat().map((item, idx) => {
-        if (!item) return null;
-        return <PrintCard key={item.id || idx} print={item} isMobile={isMobile} league={currentLeague} />;
+        if (!item) return <div key={`gap-${idx}`} />;
+        return <div key={item.name || idx}><PrintCard print={item} isMobile={isMobile} league={currentLeague} /></div>;
       });
     }
 
     if (leagueIsSupported && Array.isArray(gridData)) {
       return gridData.map((item, idx) => {
         if (!item) return null;
-        return <PrintCard key={item.id || idx} print={item} isMobile={isMobile} league={currentLeague} />;
+        return <div key={item.name || idx}><PrintCard print={item} isMobile={isMobile} league={currentLeague} /></div>;
       });
     }
 
@@ -569,68 +436,136 @@ export default function ThreeDPrinting() {
       if (filteredPrints.length === 0) {
         return <div>No prints yet in this category.</div>;
       }
-      return filteredPrints.map((p, i) => <PrintCard key={p.id || i} print={p} isMobile={isMobile} league={activeCategory} />);
+      return filteredPrints.map((p, i) => <div key={i}><PrintCard print={p} isMobile={isMobile} league={activeCategory} /></div>);
     }
 
     return null;
   }
 
   return (
-    <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
-      <div style={pageStyle}>
-        {/* Single nav-card-mid that contains only the tabs (structure matches IndependentStudio) */}
-        <div className="nav-card nav-card-mid" aria-hidden={false}>
-          <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
-          <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}>
-            {/* Render tabs directly (no inner padded wrapper) */}
-            <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <SectionTabs
-                items={CATEGORIES}
-                active={activeCategory}
-                onChange={(key) => {
-                  if (key === "sports") {
-                    // toggle dropdown when clicking sports
-                    setActiveCategory("sports");
-                    setSportsOpen((s) => !s);
-                  } else {
-                    setActiveCategory(key);
-                    setSportsOpen(false);
-                  }
+    <div style={pageStyle}>
+      {/* nav-card-mid containing main category tabs */}
+      <div className="nav-card nav-card-mid" style={{ boxSizing: "border-box" }}>
+        <div style={{ width: "min(1600px, 95vw)", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <SectionTabs
+            items={CATEGORIES}
+            active={activeCategory}
+            onChange={(key) => {
+              if (key === "sports") {
+                setActiveCategory("sports");
+                setSportsOpen((s) => !s);
+              } else {
+                setActiveCategory(key);
+                setSportsOpen(false);
+              }
+              setConference("ALL");
+              setDivision("ALL");
+              setShowFilterBar(true);
+            }}
+            variant="top"
+            tabRefMap={{ sports: sportsTabRef }}
+            ariaLabel="3D printing categories"
+          />
+        </div>
+      </div>
+
+      {/* Logo area */}
+      <div style={contentBleedContainer(12)}>
+        {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
+      </div>
+
+      {/* Subnav / Filters */}
+      <div style={contentBleedContainer(8)}>
+        {leagueIsSupported && showFilterBar && (
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+            <SectionTabs
+              items={leagueFilterItems}
+              active={subnavActiveKey}
+              onChange={handleFilterChange}
+              variant="top"
+              ariaLabel="League filters"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Sports dropdown anchored to SPORTS tab */}
+      {sportsOpen && activeCategory === "sports" && (
+        <div
+          ref={dropdownRef}
+          style={{
+            position: "fixed",
+            left: dropdownPos.left,
+            top: dropdownPos.top,
+            zIndex: 2200,
+            background: "#fff",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+            borderRadius: 6,
+            padding: 6,
+            width: dropdownPos.width,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            alignItems: "stretch",
+            pointerEvents: "auto",
+            transform: "translateZ(0)"
+          }}
+        >
+          {[
+            { key: "nfl", label: "NFL", enabled: true },
+            { key: "nba", label: "NBA", enabled: true },
+            { key: "mlb", label: "MLB", enabled: false },
+            { key: "nhl", label: "NHL", enabled: false },
+            { key: "ncaa", label: "NCAA", enabled: false }
+          ].map((l) => {
+            const isActive = currentLeague === l.key && activeCategory === "sports";
+            return (
+              <button
+                key={l.key}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  padding: "8px 10px",
+                  textAlign: "center",
+                  fontSize: 12,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  cursor: l.enabled ? "pointer" : "default",
+                  color: isActive ? "#e6dbb9" : "#6c6c6a",
+                  fontWeight: isActive ? 350 : 280,
+                  opacity: l.enabled ? 1 : 0.6
+                }}
+                onClick={() => {
+                  if (!l.enabled) return;
+                  setCurrentLeague(l.key);
                   setConference("ALL");
                   setDivision("ALL");
                   setShowFilterBar(true);
+                  setSportsOpen(false);
                 }}
-                variant="top"
-                tabRefMap={{ sports: sportsTabRef }}
-                ariaLabel="3D printing categories"
-              />
-            </div>
-          </div>
-          <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+                onKeyDown={(e) => {
+                  if ((e.key === "Enter" || e.key === " ") && l.enabled) {
+                    setCurrentLeague(l.key);
+                    setConference("ALL");
+                    setDivision("ALL");
+                    setShowFilterBar(true);
+                    setSportsOpen(false);
+                  }
+                }}
+                aria-current={isActive ? "page" : undefined}
+                aria-disabled={!l.enabled}
+                title={!l.enabled ? "In progress" : undefined}
+                tabIndex={0}
+              >
+                {l.label}
+              </button>
+            );
+          })}
         </div>
+      )}
 
-        {/* Logo area — placed below the nav-card-mid and matched to the page bleed/padding */}
-        <div style={contentBleedContainer(8)}>
-          {showConferenceLogos ? <LogoRow /> : showCenteredLogo ? <CenteredLogo /> : null}
-        </div>
-
-        {/* Subnav / Filters — below logos, aligned with same bleed/padding. */}
-        <div style={{ ...contentBleedContainer(0), paddingLeft: 0, paddingRight: 0 }}>
-          {leagueIsSupported && showFilterBar && (
-            <SectionTabs
-              items={leagueFilterItems}
-              active={division !== "ALL" ? division : conference}
-              onChange={handleFilterChange}
-              variant="sub"
-              ariaLabel="League filters"
-            />
-          )}
-        </div>
-
-        {/* Dropdown anchored to SPORTS tab */}
-        <SportsDropdown />
-
-        {/* Grid */}
+      {/* Grid */}
+      <div style={{ ...contentBleedContainer(8), marginTop: 8 }}>
         <div ref={gridRef} style={gridWrapStyle}>
           {renderGridItems()}
         </div>
