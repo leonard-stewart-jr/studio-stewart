@@ -174,7 +174,7 @@ export default function Sidebar({
           {/* Chronological Portfolio (oldest → newest) */}
           <div className={styles.sidebarSectionTitle}>Chronological Portfolio</div>
 
-          <ul style={{ listStyle: "none", margin: "8px 0", padding: 0 }}>
+          <ul style={{ listStyle: "none", margin: "0px 0", padding: 0 }}>
             {/* Oldest first mapping — these ids correspond exactly to your manifest page ids.
                 We use direct hash updates when already on the viewer page so PortfolioViewer responds in-place. */}
 
