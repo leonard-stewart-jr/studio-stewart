@@ -1,5 +1,5 @@
-// NOTE: this is your existing Sidebar.js with only the portfolio link block replaced.
-// Replace the corresponding section in your file with the block below (or replace the file wholesale).
+// NOTE: this is your existing Sidebar.js with the portfolio link block updated
+// to programmatically push the hash (router.push) so PortfolioViewer responds in-place.
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
@@ -50,6 +50,24 @@ export default function Sidebar({
     open: { x: 0, transition: { duration: 0.7, ease: [0.7, 0.2, 0.3, 1] } }
   };
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
+
+  // Helper to navigate to the portfolio viewer with a hash and close the sidebar.
+  // Uses router.push with shallow:true so it doesn't trigger a full navigation; PortfolioViewer listens for hash changes.
+  const navigateToPortfolioHash = (hash) => {
+    try {
+      const url = `/undergraduate-portfolio#${hash}`;
+      // Use shallow to avoid unnecessary page-level data fetches (safe here)
+      router.push(url, undefined, { shallow: true }).catch(() => {
+        // fallback: still set location.hash if router push fails for any reason
+        if (typeof window !== "undefined") window.location.hash = hash;
+      });
+    } catch {
+      if (typeof window !== "undefined") window.location.hash = hash;
+    } finally {
+      // close sidebar after initiating navigation
+      if (typeof onClose === "function") onClose();
+    }
+  };
 
   return (
     <>
@@ -126,53 +144,68 @@ export default function Sidebar({
           <div style={{ marginTop: 32, fontWeight: "bold" }}>Chronological Portfolio</div>
 
           <ul style={{ listStyle: "none", margin: 8, padding: 0 }}>
-            {/* Oldest first mapping — these ids correspond to the manifest page ids */}
+            {/* Oldest first mapping — these ids correspond exactly to your manifest page ids.
+                We use programmatic navigation so PortfolioViewer (which listens to hashchange)
+                will respond in-place even when already on /undergraduate-portfolio. */}
+
             <li>
-              <Link href="/undergraduate-portfolio#spring2021" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Project 01 — [Spring 2021]
-                </a>
-              </Link>
+              <a
+                href="/undergraduate-portfolio#spring2021"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2021"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                Project 01 — [Spring 2021]
+              </a>
             </li>
 
             <li>
-              <Link href="/undergraduate-portfolio#fall2021" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Project 02 — [Fall 2021]
-                </a>
-              </Link>
+              <a
+                href="/undergraduate-portfolio#fall2021"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2021"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                Project 02 — [Fall 2021]
+              </a>
             </li>
 
             <li>
-              <Link href="/undergraduate-portfolio#spring2022-1" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Project 03 — [Spring 2022]
-                </a>
-              </Link>
+              <a
+                href="/undergraduate-portfolio#spring2022-1"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-1"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                Project 03 — [Spring 2022]
+              </a>
             </li>
 
             <li>
-              <Link href="/undergraduate-portfolio#spring2023-1" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Project 04 — [Spring 2023]
-                </a>
-              </Link>
+              <a
+                href="/undergraduate-portfolio#spring2023-1"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2023-1"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                Project 04 — [Spring 2023]
+              </a>
             </li>
 
             <li>
-              <Link href="/undergraduate-portfolio#spring2024-1" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Project 05 — [Spring 2024]
-                </a>
-              </Link>
+              <a
+                href="/undergraduate-portfolio#spring2024-1"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2024-1"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                Project 05 — [Spring 2024]
+              </a>
             </li>
 
             <li>
-              <Link href="/undergraduate-portfolio#fall2024-1" passHref legacyBehavior>
-                <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Project 06 — [Fall 2024]
-                </a>
-              </Link>
+              <a
+                href="/undergraduate-portfolio#fall2024-1"
+                onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2024-1"); }}
+                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+              >
+                Project 06 — [Fall 2024]
+              </a>
             </li>
 
             {/* Two internal route projects */}
