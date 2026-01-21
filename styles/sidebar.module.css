@@ -172,7 +172,7 @@ nav.sidebar-nav {
 }
 .portfolioLinkYear {
   display: block;
-  font-size: 12px;
+  font-size: 10px; /* reduced from 12px */
   color: #b1b1ae; /* grey */
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -181,7 +181,7 @@ nav.sidebar-nav {
 }
 .portfolioLinkTitle {
   display: block;
-  font-size: 14px;
+  font-size: 12px; /* reduced from 14px */
   color: #e6dbb9; /* site tan */
   text-transform: uppercase;
   letter-spacing: 0.04em;
