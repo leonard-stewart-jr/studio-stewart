@@ -15,7 +15,6 @@ const navItems = [
 const socialLinks = [
   { label: "Email", href: "mailto:leonard.stewart@studio-stewart.com" },
   { label: "My Code Here", href: "https://github.com/leonard-stewart-jr" },
-  { label: "UNDERGRADUATE PORTFOLIO", href: "https://issuu.com/leonard.stewart/docs/architecture_portfolio" },
 ];
 
 export default function Sidebar({
@@ -122,13 +121,79 @@ export default function Sidebar({
             </Link>
           ))}
 
-          {/* Extra content for scrolling demonstration */}
-          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 1: Extra Links</div>
-          {[...Array(15)].map((_, i) => (
-            <a href="#" key={`extra-${i}`} style={{ color: "#888", fontSize: 13 }}>
-              Example Link {i + 1}
-            </a>
-          ))}
+{/* Chronological Portfolio (Step 1) - oldest first */}
+<div style={{ marginTop: 32, fontWeight: "bold" }}>Chronological Portfolio</div>
+
+{/* List of 8 projects (oldest → newest). 
+    - Six are sections inside the undergraduate portfolio (anchor fragments).
+    - Two are internal route pages.
+    Update the visible labels (date / project name) as you like. */}
+<ul style={{ listStyle: "none", margin: 8, padding: 0 }}>
+  <li>
+    <Link href="/undergraduate-portfolio#project-03" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Project 03 — [Spring 2021]
+      </a>
+    </Link>
+  </li>
+
+  <li>
+    <Link href="/undergraduate-portfolio#project-04" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Project 04 — [Fall 2021]
+      </a>
+    </Link>
+  </li>
+
+  <li>
+    <Link href="/undergraduate-portfolio#project-05" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Project 05 — [Spring 2022]
+      </a>
+    </Link>
+  </li>
+
+  <li>
+    <Link href="/undergraduate-portfolio#project-06" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Project 06 — [Fall 2022]
+      </a>
+    </Link>
+  </li>
+
+  <li>
+    <Link href="/undergraduate-portfolio#project-07" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Project 07 — [Spring 2023]
+      </a>
+    </Link>
+  </li>
+
+  <li>
+    <Link href="/undergraduate-portfolio#project-08" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Project 08 — [Fall 2023]
+      </a>
+    </Link>
+  </li>
+
+  {/* Internal route projects (kept after the undergraduate entries — adjust order if needed) */}
+  <li>
+    <Link href="/projects/dma-25" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "14px 0 10px 0" }}>
+        DMA-25 — Des Moines Academy (route)
+      </a>
+    </Link>
+  </li>
+
+  <li>
+    <Link href="/independent-studio" passHref legacyBehavior>
+      <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
+        Independent Studio — (route)
+      </a>
+    </Link>
+  </li>
+</ul>
 
           <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 2: Even more content</div>
           <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
