@@ -36,7 +36,13 @@
   font-stretch: ultra-condensed;
   font-display: swap;
 }
-
+@font-face {
+  font-family: 'coolvetica';
+  src: url('/fonts/coolvetica/Coolvetica Bk.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 /* ====== TYPOGRAPHY TOKENS ====== */
 :root {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
