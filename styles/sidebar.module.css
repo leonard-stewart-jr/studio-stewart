@@ -152,6 +152,18 @@ nav.sidebar-nav {
   outline: 2px solid #e6dbb9;
 }
 
+/* ====== SECTION TITLES (align with list items, site blue color) ====== */
+.sidebarSectionTitle {
+  margin-top: 32px;
+  margin-bottom: 4px;
+  font-weight: var(--weight-hover);
+  color: #192d4b; /* site blue */
+  font-size: 16px;
+  text-transform: none;
+  padding-left: 0;
+  line-height: 1.1;
+}
+
 /* ====== PORTFOLIO LINK STYLES ======
    Two-line link: year above (small grey), title below (tan).
    Title wraps to multiple lines (no forced single-line ellipsis).
