@@ -1,17 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
-/**
- * PortfolioViewer (fit-to-height/width + ai2html scroll-hint removal)
- * - Detects page type inside the iframe (InDesign vs ai2html spread)
- * - Measures natural page width/height
- * - Scales to fit viewer HEIGHT (default) or WIDTH (toggle)
- * - No cropping; scales text, images, and blocks uniformly
- * - Removes ai2html internal scrollbars/hints so only the outer viewer scrolls
- * - Navigation: left/right, keyboard arrows, click zones
- * - Optional deep-linking via ?page=<id> and ?fit=height|width
- *
- * Extra: On fit toggle, the iframe is reloaded (cache-busted) to keep images/text crisp.
- */
 export default function PortfolioViewer({
   manifestUrl = "/portfolio/undergraduate/manifest.json",
   showInfoBar = false
@@ -30,86 +18,133 @@ export default function PortfolioViewer({
   // Bump this to force iframe reloads (fit toggle or explicit)
   const [reloadCounter, setReloadCounter] = useState(0);
 
-  // Load manifest and initialize page/fit from URL
+  // Helper: strip leading '#' from hash
+  const getHashId = () => {
+    if (typeof window === "undefined") return "";
+    return (window.location.hash || "").replace(/^#/, "").trim();
+  };
+
+  // Helper: find the best page id in the manifest for a requested id or prefix
+  const findBestManifestId = (pages, requestedId) => {
+    if (!pages || pages.length === 0) return null;
+    if (!requestedId) return pages[0].id || null;
+
+    // 1) exact match
+    const exact = pages.find((p) => p.id === requestedId);
+    if (exact) return exact.id;
+
+    // 2) prefix matches (e.g. requestedId = "spring2022" -> spring2022-1, spring2022-2)
+    const prefixMatches = pages.filter((p) => p.id && p.id.startsWith(requestedId));
+    if (prefixMatches.length === 0) {
+      // No prefix matches — try contains matches
+      const containsMatches = pages.filter((p) => p.id && p.id.includes(requestedId));
+      if (containsMatches.length === 0) return null;
+      return containsMatches[0].id;
+    }
+
+    // Prefer a variant ending with "-1"
+    const variantOne = prefixMatches.find((p) => /-1$/.test(p.id));
+    if (variantOne) return variantOne.id;
+
+    // Otherwise return the first prefix match
+    return prefixMatches[0].id;
+  };
+
+  // Given a page id, return the page.src value found in the manifest (or null)
+  const getSrcForId = (pages, pageId) => {
+    if (!pages || !pageId) return null;
+    const page = pages.find((p) => p.id === pageId);
+    return page ? page.src : null;
+  };
+
+  // Map manifest id -> index
+  const getIndexForId = (pages, pageId) => {
+    if (!pages || !pageId) return -1;
+    return pages.findIndex((p) => p.id === pageId);
+  };
+
+  // Load manifest on mount and pick initial page using hash or ?page=
   useEffect(() => {
-    let isMounted = true;
-    fetch(manifestUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to load manifest: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        if (!isMounted) return;
-        if (!data || !Array.isArray(data.pages) || data.pages.length === 0) {
-          throw new Error("Manifest missing 'pages' array or it is empty.");
-        }
-        setManifest(data);
+    let cancelled = false;
+    async function loadManifest() {
+      try {
+        const res = await fetch(manifestUrl, { cache: "no-cache" });
+        if (!res.ok) throw new Error(`Manifest request failed: ${res.status}`);
+        const json = await res.json();
+        if (cancelled) return;
+        setManifest(json);
 
-        const params =
-          typeof window !== "undefined"
-            ? new URLSearchParams(window.location.search)
-            : null;
+        // Determine initial page id:
+        // Priority: hash (#id) -> ?page=id -> manifest first page
+        const rawHash = getHashId();
+        const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+        const pageParam = params ? params.get("page") : null;
 
-        // Page deep-link
-        const startId = params ? params.get("page") : null;
-        if (startId) {
-          const startIndex = data.pages.findIndex((p) => p.id === startId);
-          setIndex(startIndex >= 0 ? startIndex : 0);
-        } else {
-          setIndex(0);
-        }
+        const preferred = rawHash || pageParam || "";
+        const chosenId = findBestManifestId(json.pages || [], preferred);
+        const chosenIndex = getIndexForId(json.pages || [], chosenId) >= 0 ? getIndexForId(json.pages || [], chosenId) : 0;
 
-        // Fit deep-link (?fit=width|height)
-        const fitParam = params ? params.get("fit") : null;
-        if (fitParam === "width" || fitParam === "height") {
-          setFitMode(fitParam);
-        } else {
-          setFitMode("height");
-        }
-      })
-      .catch((err) => {
-        if (!isMounted) return;
-        setError(err.message || "Error loading manifest.");
-      });
+        setIndex(chosenIndex);
+      } catch (err) {
+        console.error("PortfolioViewer manifest load error", err);
+        if (!cancelled) setError(err.message || String(err));
+      }
+    }
+    loadManifest();
     return () => {
-      isMounted = false;
+      cancelled = true;
     };
   }, [manifestUrl]);
 
-  const total = manifest?.pages?.length || 0;
-  const headerHeight = manifest?.headerHeight ?? 60; // site header above viewer
-
-  const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
-  const goNext = useCallback(
-    () => setIndex((i) => Math.min(total - 1, i + 1)),
-    [total]
-  );
-
-  // Keyboard navigation + Fit toggle ("f") with reload
+  // Update iframe src when index changes (or manifest changes)
   useEffect(() => {
-    function onKeyDown(e) {
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        goPrev();
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        goNext();
-      } else if (e.key === "Home") {
-        e.preventDefault();
-        setIndex(0);
-      } else if (e.key === "End") {
-        e.preventDefault();
-        setIndex(total > 0 ? total - 1 : 0);
-      } else if (e.key.toLowerCase() === "f") {
-        e.preventDefault();
-        setFitMode((m) => (m === "height" ? "width" : "height"));
-        setReloadCounter((n) => n + 1); // force iframe reload on toggle
+    if (!manifest || !manifest.pages || !manifest.pages[index]) return;
+    const src = getSrcForId(manifest.pages || [], manifest.pages[index].id);
+    if (!src) return;
+    if (iframeRef.current) {
+      iframeRef.current.src = src;
+    }
+    // After setting iframe src, measurements will occur in onLoad handler
+  }, [manifest, index]);
+
+  // Listen for hash changes so clicking sidebar links updates viewer in-place.
+  useEffect(() => {
+    function onHashChange() {
+      if (!manifest || !manifest.pages) return;
+      const rawHash = getHashId();
+      const chosenId = findBestManifestId(manifest.pages || [], rawHash || "");
+      const chosenIndex = getIndexForId(manifest.pages || [], chosenId);
+      if (chosenIndex >= 0 && chosenIndex !== index) {
+        setIndex(chosenIndex);
       }
     }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [goPrev, goNext, total]);
+    window.addEventListener("hashchange", onHashChange, false);
 
+    return () => {
+      window.removeEventListener("hashchange", onHashChange, false);
+    };
+  }, [manifest, index]);
+
+  // Whenever the viewer index changes, update the URL hash using pushState (so Back/Forward navigates pages).
+  useEffect(() => {
+    if (!manifest || !manifest.pages || !manifest.pages[index]) return;
+    const id = manifest.pages[index].id;
+    if (!id) return;
+    const currentHash = (typeof window !== "undefined" ? window.location.hash.replace(/^#/, "") : "");
+    if (currentHash !== id) {
+      try {
+        const url = new URL(window.location.href);
+        url.hash = `#${id}`;
+        // Use pushState so Back/Forward navigates through viewer pages
+        window.history.pushState({}, "", url.toString());
+      } catch {
+        // fallback: set location.hash (adds entry)
+        window.location.hash = id;
+      }
+    }
+  }, [index, manifest]);
+
+  // Helper functions used by measurement logic
   function isInDesignPage(doc) {
     const body = doc?.body;
     const id = body?.id || "";
@@ -328,6 +363,41 @@ export default function PortfolioViewer({
       recomputeScale();
     }, 200);
   }, [measureIframePage, recomputeScale]);
+
+  // Navigation helpers
+  const total = manifest?.pages?.length || 0;
+  const headerHeight = manifest?.headerHeight ?? 60; // site header above viewer
+
+  const goPrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
+  const goNext = useCallback(
+    () => setIndex((i) => Math.min(total - 1, i + 1)),
+    [total]
+  );
+
+  // Keyboard navigation + Fit toggle ("f") with reload
+  useEffect(() => {
+    function onKeyDown(e) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        setIndex(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        setIndex(total > 0 ? total - 1 : 0);
+      } else if (e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        setFitMode((m) => (m === "height" ? "width" : "height"));
+        setReloadCounter((n) => n + 1); // force iframe reload on toggle
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [goPrev, goNext, total]);
 
   if (error) {
     return (
