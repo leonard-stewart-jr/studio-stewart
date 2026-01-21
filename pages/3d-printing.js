@@ -218,21 +218,49 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-  // Handlers for subnav changes (LEAGUE_FILTER_BUTTONS items)
-  function handleFilterChange(key) {
-    // find the button that matches key
-    const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
-    if (!btn) return;
-    if (btn.type === "conference") {
-      setConference(btn.value);
-      if (btn.value === "ALL") setDivision("ALL");
-    } else {
-      setDivision(btn.value);
-    }
-  }
+function handleFilterChange(key) {
+  // find the button that matches key
+  const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
+  if (!btn) return;
 
-  // Convert LEAGUE_FILTER_BUTTONS to items for SectionTabs (key/label)
-  const leagueFilterItems = LEAGUE_FILTER_BUTTONS.map((b) => ({ key: b.value, label: b.label }));
+  if (btn.type === "conference") {
+    // Always reset division when switching conference so a now-hidden division can't stay active
+    setConference(btn.value);
+    setDivision("ALL");
+  } else {
+    setDivision(btn.value);
+  }
+}
+
+// --- NBA-only: hide divisions from the opposite conference when a conference is selected ---
+const NBA_EAST_DIVS = new Set(["ATLANTIC", "CENTRAL", "SOUTHEAST"]);
+const NBA_WEST_DIVS = new Set(["PACIFIC", "NORTHWEST", "SOUTHWEST"]);
+
+// Start with the full list
+let filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS;
+
+// If we're in NBA mode and a specific conference is selected, remove the divisions
+// that belong to the other conference (keep conference controls + "ALL")
+if (leagueIsNBA && conference !== "ALL") {
+  if (conference === "EAST") {
+    filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
+      if (!b || !b.value) return false;
+      if (b.type === "conference") return true; // keep conference buttons (ALL / EAST / WEST)
+      if (b.value === "ALL") return true;       // keep global ALL
+      return NBA_EAST_DIVS.has(b.value);        // keep only east divisions
+    });
+  } else if (conference === "WEST") {
+    filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
+      if (!b || !b.value) return false;
+      if (b.type === "conference") return true;
+      if (b.value === "ALL") return true;
+      return NBA_WEST_DIVS.has(b.value);        // keep only west divisions
+    });
+  }
+}
+
+// Map to SectionTabs items (same shape as before)
+const leagueFilterItems = filteredLeagueFilterButtons.map((b) => ({ key: b.value, label: b.label }));
 
   // Render helpers
   // LogoRow lays out logos in a 4-column grid and applies nudges + overlap so logos visually sit over the subnav area.
