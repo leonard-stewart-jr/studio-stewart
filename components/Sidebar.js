@@ -184,7 +184,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2021"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                AXONOMETRIC CUBE DESIGN — SPRING 2021
+                AXONOMETRIC CUBE DESIGN - SPRING 2021
               </a>
             </li>
 
@@ -194,7 +194,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2021"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                DESIGN PRACTICE "STICKPLAY" — FALL 2021
+                DESIGN PRACTICE "STICKPLAY" - FALL 2021
               </a>
             </li>
 
@@ -204,7 +204,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                TECHNICAL VIGNETTES — SPRING 2022
+                TECHNICAL VIGNETTES - SPRING 2022
               </a>
             </li>
                   
@@ -214,7 +214,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-2"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                SDSU AGRICULTURAL HERITAGE MUSEUM — SPRING 2022
+                SDSU AGRICULTURAL HERITAGE MUSEUM - SPRING 2022
               </a>
             </li>
 
@@ -224,7 +224,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2023-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                SDSU INTERFAITH CENTER — SPRING 2023
+                SDSU INTERFAITH CENTER - SPRING 2023
               </a>
             </li>
 
@@ -234,7 +234,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2024-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                BROOKINGS PUBLIC LIBRARY — SPRING 2024
+                BROOKINGS PUBLIC LIBRARY - SPRING 2024
               </a>
             </li>
 
@@ -244,7 +244,7 @@ export default function Sidebar({
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2024-1"); }}
                 style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
               >
-                CENTRO DE CIENCIAS VEGETALES DE MONTERREY — FALL 2024
+                CENTRO DE CIENCIAS VEGETALES DE MONTERREY - FALL 2024
               </a>
             </li>
 
@@ -252,7 +252,7 @@ export default function Sidebar({
             <li>
               <Link href="/projects/dma-25" passHref legacyBehavior>
                 <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "14px 0 10px 0" }}>
-                  DMA-25 — Des Moines Academy (route)
+                  DES MOINES ACADAMY OF ARTS & ATHLETICS - SPRING 2025
                 </a>
               </Link>
             </li>
@@ -260,7 +260,7 @@ export default function Sidebar({
             <li>
               <Link href="/independent-studio" passHref legacyBehavior>
                 <a onClick={onClose} style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}>
-                  Independent Studio — (route)
+                  INVESTIGATION INTO (in)JUSTICE FACILITIES - SUMMER 2025
                 </a>
               </Link>
             </li>
