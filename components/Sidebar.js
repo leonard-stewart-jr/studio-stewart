@@ -1,5 +1,6 @@
 // NOTE: this is your existing Sidebar.js with the portfolio link block updated
-// to programmatically push the hash (router.push) so PortfolioViewer responds in-place.
+// to programmatically set window.location.hash when already on the viewer page.
+// This guarantees PortfolioViewer's hashchange listener runs reliably.
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
@@ -52,19 +53,49 @@ export default function Sidebar({
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   // Helper to navigate to the portfolio viewer with a hash and close the sidebar.
-  // Uses router.push with shallow:true so it doesn't trigger a full navigation; PortfolioViewer listens for hash changes.
+  // Behavior:
+  // - If already on /undergraduate-portfolio, set window.location.hash = hash (always fires hashchange).
+  // - Otherwise, navigate with router.push to /undergraduate-portfolio#hash (shallow).
+  // - Fallback to location.href if router push fails.
   const navigateToPortfolioHash = (hash) => {
+    const url = `/undergraduate-portfolio#${hash}`;
     try {
-      const url = `/undergraduate-portfolio#${hash}`;
-      // Use shallow to avoid unnecessary page-level data fetches (safe here)
-      router.push(url, undefined, { shallow: true }).catch(() => {
-        // fallback: still set location.hash if router push fails for any reason
-        if (typeof window !== "undefined") window.location.hash = hash;
-      });
-    } catch {
+      if (typeof window !== "undefined") {
+        // If we're already on the viewer page, setting location.hash ensures the browser fires a hashchange event
+        // even when there's no full navigation — this is the most reliable behavior for in-place viewer updates.
+        if (window.location.pathname === "/undergraduate-portfolio") {
+          // If the hash is already identical, force a small history push so hashchange triggers:
+          const currentHash = (window.location.hash || "").replace(/^#/, "");
+          if (currentHash === hash) {
+            // Force a new history entry with pushState so hashchange handlers run predictably.
+            try {
+              const newUrl = `${window.location.pathname}#${hash}`;
+              window.history.pushState({}, "", newUrl);
+              // Manually dispatch a hashchange event to be 100% certain listeners run.
+              window.dispatchEvent(new HashChangeEvent("hashchange"));
+            } catch {
+              // fallback
+              window.location.hash = hash;
+            }
+          } else {
+            // Normal case: different hash — set it (triggers hashchange)
+            window.location.hash = hash;
+          }
+        } else {
+          // Not currently on the viewer page — navigate there with shallow push so page routing is minimal.
+          router.push(url, undefined, { shallow: true }).catch(() => {
+            // As a robust fallback, do a full navigation
+            window.location.href = url;
+          });
+        }
+      } else {
+        // Server-side or unknown environment — attempt router navigation
+        router.push(url, undefined, { shallow: true }).catch(() => {});
+      }
+    } catch (err) {
+      // Final fallback: set hash directly
       if (typeof window !== "undefined") window.location.hash = hash;
     } finally {
-      // close sidebar after initiating navigation
       if (typeof onClose === "function") onClose();
     }
   };
@@ -145,8 +176,7 @@ export default function Sidebar({
 
           <ul style={{ listStyle: "none", margin: 8, padding: 0 }}>
             {/* Oldest first mapping — these ids correspond exactly to your manifest page ids.
-                We use programmatic navigation so PortfolioViewer (which listens to hashchange)
-                will respond in-place even when already on /undergraduate-portfolio. */}
+                We use direct hash updates when already on the viewer page so PortfolioViewer responds in-place. */}
 
             <li>
               <a
