@@ -182,9 +182,12 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#spring2021"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2021"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label="Axonometric Cube Design — Spring 2021"
+                title="AXONOMETRIC CUBE DESIGN - SPRING 2021"
               >
-                AXONOMETRIC CUBE DESIGN - SPRING 2021
+                <span className={styles.portfolioLinkYear}>SPRING 2021</span>
+                <span className={styles.portfolioLinkTitle}>AXONOMETRIC CUBE DESIGN</span>
               </a>
             </li>
 
@@ -192,9 +195,12 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#fall2021"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2021"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label='Design Practice "Stickplay" — Fall 2021'
+                title='DESIGN PRACTICE "STICKPLAY" - FALL 2021'
               >
-                DESIGN PRACTICE "STICKPLAY" - FALL 2021
+                <span className={styles.portfolioLinkYear}>FALL 2021</span>
+                <span className={styles.portfolioLinkTitle}>DESIGN PRACTICE "STICKPLAY"</span>
               </a>
             </li>
 
@@ -202,19 +208,25 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#spring2022-1"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-1"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label="Technical Vignettes — Spring 2022"
+                title="TECHNICAL VIGNETTES - SPRING 2022"
               >
-                TECHNICAL VIGNETTES - SPRING 2022
+                <span className={styles.portfolioLinkYear}>SPRING 2022</span>
+                <span className={styles.portfolioLinkTitle}>TECHNICAL VIGNETTES</span>
               </a>
             </li>
-                  
+
             <li>
               <a
                 href="/undergraduate-portfolio#spring2022-2"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-2"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label="SDSU Agricultural Heritage Museum — Spring 2022"
+                title="SDSU AGRICULTURAL HERITAGE MUSEUM - SPRING 2022"
               >
-                SDSU AGRICULTURAL HERITAGE MUSEUM - SPRING 2022
+                <span className={styles.portfolioLinkYear}>SPRING 2022</span>
+                <span className={styles.portfolioLinkTitle}>SDSU AGRICULTURAL HERITAGE MUSEUM</span>
               </a>
             </li>
 
@@ -222,9 +234,12 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#spring2023-1"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2023-1"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label="SDSU Interfaith Center — Spring 2023"
+                title="SDSU INTERFAITH CENTER - SPRING 2023"
               >
-                SDSU INTERFAITH CENTER - SPRING 2023
+                <span className={styles.portfolioLinkYear}>SPRING 2023</span>
+                <span className={styles.portfolioLinkTitle}>SDSU INTERFAITH CENTER</span>
               </a>
             </li>
 
@@ -232,9 +247,12 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#spring2024-1"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2024-1"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label="Brookings Public Library — Spring 2024"
+                title="BROOKINGS PUBLIC LIBRARY - SPRING 2024"
               >
-                BROOKINGS PUBLIC LIBRARY - SPRING 2024
+                <span className={styles.portfolioLinkYear}>SPRING 2024</span>
+                <span className={styles.portfolioLinkTitle}>BROOKINGS PUBLIC LIBRARY</span>
               </a>
             </li>
 
@@ -242,9 +260,12 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#fall2024-1"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("fall2024-1"); }}
-                style={{ color: "#888", fontSize: 13, display: "block", margin: "10px 0" }}
+                className={styles.portfolioLink}
+                aria-label="Centro de Ciencias Vegetales de Monterrey — Fall 2024"
+                title="CENTRO DE CIENCIAS VEGETALES DE MONTERREY - FALL 2024"
               >
-                CENTRO DE CIENCIAS VEGETALES DE MONTERREY - FALL 2024
+                <span className={styles.portfolioLinkYear}>FALL 2024</span>
+                <span className={styles.portfolioLinkTitle}>CENTRO DE CIENCIAS VEGETALES DE MONTERREY</span>
               </a>
             </li>
 
