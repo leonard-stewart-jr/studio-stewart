@@ -177,7 +177,7 @@ nav.sidebar-nav {
   color: #b1b1ae; /* grey */
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
   font-weight: var(--weight-thin);
 }
 .portfolioLinkTitle {
