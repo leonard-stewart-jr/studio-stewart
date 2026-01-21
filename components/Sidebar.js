@@ -172,9 +172,9 @@ export default function Sidebar({
           ))}
 
           {/* Chronological Portfolio (oldest → newest) */}
-          <div style={{ marginTop: 32, fontWeight: "bold" }}>Chronological Portfolio</div>
+          <div className={styles.sidebarSectionTitle}>Chronological Portfolio</div>
 
-          <ul style={{ listStyle: "none", margin: 8, padding: 0 }}>
+          <ul style={{ listStyle: "none", margin: "8px 0", padding: 0 }}>
             {/* Oldest first mapping — these ids correspond exactly to your manifest page ids.
                 We use direct hash updates when already on the viewer page so PortfolioViewer responds in-place. */}
 
@@ -299,7 +299,7 @@ export default function Sidebar({
             </li>
           </ul>
 
-          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 2: Even more content</div>
+          <div className={styles.sidebarSectionTitle}>Step 2: Even more content</div>
           <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
             {[...Array(10)].map((_, i) => (
               <li key={`more-${i}`}>
@@ -310,12 +310,12 @@ export default function Sidebar({
             ))}
           </ul>
 
-          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 3: Placeholder Section</div>
+          <div className={styles.sidebarSectionTitle}>Step 3: Placeholder Section</div>
           <p style={{ fontSize: 13, color: "#888" }}>
             This section exists to make the sidebar content long enough to require scrolling on mobile and desktop. You can add or remove items as needed.
           </p>
 
-          <div style={{ marginTop: 32, fontWeight: "bold" }}>Step 4: Final Section</div>
+          <div className={styles.sidebarSectionTitle}>Step 4: Final Section</div>
           <p style={{ fontSize: 13, color: "#888" }}>
             If you can scroll this sidebar, the overflow-y: auto is working as intended.
           </p>
