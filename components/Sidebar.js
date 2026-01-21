@@ -154,27 +154,30 @@ export default function Sidebar({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 22,
+            gap: 8, // reduced global gap; .topNavGroup will preserve large spacing for top nav
             marginTop: logoSize,
             paddingLeft: sidebarPaddingLeft,
             paddingRight: sidebarPaddingLeft,
           }}
         >
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} passHref legacyBehavior>
-              <a
-                className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
-                onClick={onClose}
-              >
-                {item.label}
-              </a>
-            </Link>
-          ))}
+          {/* Top nav links grouped so we can preserve larger spacing for them only */}
+          <div className={styles.topNavGroup}>
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href} passHref legacyBehavior>
+                <a
+                  className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
+                  onClick={onClose}
+                >
+                  {item.label}
+                </a>
+              </Link>
+            ))}
+          </div>
 
           {/* Chronological Portfolio (oldest → newest) */}
           <div className={styles.sidebarSectionTitle}>Chronological Portfolio</div>
 
-          <ul style={{ listStyle: "none", margin: "0px 0", padding: 0 }}>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {/* Oldest first mapping — these ids correspond exactly to your manifest page ids.
                 We use direct hash updates when already on the viewer page so PortfolioViewer responds in-place. */}
 
