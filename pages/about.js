@@ -13,7 +13,7 @@ export default function AboutPage() {
       </Head>
 
       <main className={styles.container}>
-        {/* Header: H1 only (logo moved into intro right column so it won't affect flow) */}
+        {/* Header: H1 only */}
         <header className={styles.headerRow}>
           <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
@@ -30,8 +30,8 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Right column holds the logo but the image is positioned absolutely
-              inside this column so it does not affect the height of the header/intro */}
+          {/* Right column is the positioning context; the image inside is absolutely positioned
+              so it won't change the flow or height of the intro/header */}
           <div className={styles.introRightColumn} aria-hidden>
             <figure className={styles.introLogoFigure}>
               <img
@@ -55,7 +55,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* METHOD (H2 right-aligned) */}
+        {/* METHOD */}
         <section className={styles.methodSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
 
@@ -72,7 +72,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* SERVICES (H2 left-aligned) */}
+        {/* SERVICES */}
         <section className={styles.servicesSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>SERVICES</h2>
 
@@ -105,7 +105,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Full-bleed banner that spans the viewport width with 20px side padding */}
+          {/* Full-bleed banner */}
           <figure className={styles.fullBleedBanner} aria-hidden="true">
             <img
               src="/images/about/banner.png"
@@ -115,7 +115,7 @@ export default function AboutPage() {
           </figure>
         </section>
 
-        {/* FIRM SKILLS (H2 right-aligned) */}
+        {/* FIRM SKILLS */}
         <section className={styles.skillsSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>FIRM SKILLS</h2>
 
@@ -160,12 +160,11 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* TEAM (H2 left-aligned) */}
+        {/* TEAM */}
         <section className={styles.teamSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>TEAM</h2>
 
           <div className={styles.teamGrid}>
-            {/* Kobe / studio mascot */}
             <figure className={styles.kobeCard}>
               <img
                 src="/images/about/kobe.png"
@@ -175,7 +174,6 @@ export default function AboutPage() {
               <figcaption className={styles.kobeCaption}>KOBE</figcaption>
             </figure>
 
-            {/* Bio and portraits */}
             <div className={styles.bioCard}>
               <div className={styles.portraits}>
                 <img
@@ -207,7 +205,6 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Firm logo (kept here for larger layout) */}
             <figure className={styles.logoCard}>
               <img
                 src="/images/about/logo.png"
