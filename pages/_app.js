@@ -11,7 +11,7 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     // Only run on the client
-    const splashAlreadyShown = sessionStorage.getItem("splashShown");
+    const splashAlreadyShown = typeof window !== "undefined" && sessionStorage.getItem("splashShown");
     setShowSplash(!splashAlreadyShown);
     setReady(true);
   }, []);
