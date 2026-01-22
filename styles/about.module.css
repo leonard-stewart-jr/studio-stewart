@@ -16,26 +16,44 @@
   font-family: var(--font-sans);
 }
 
-/* Header */
+/* Header: H1 left, logo right */
 .headerRow {
+  display: flex;
+  align-items: flex-start; /* top-align H1 and logo */
+  justify-content: space-between;
+  gap: 20px;
   margin-bottom: 18px;
 }
 
-/* H1: ABOUT (coolvetica, blue, left aligned, responsive) */
+/* H1: ABOUT */
 .pageTitle {
   font-family: "coolvetica", var(--font-sans);
   color: #17324a; /* site blue */
   text-transform: uppercase;
   text-align: left;
-  margin: 0 0 24px 0; /* bottom spacing */
+  margin: 0;
   line-height: 0.95;
-  /* Fluid scaling — max ceiling set to 95px */
   font-size: clamp(48px, 6vw + 64px, 95px);
   font-weight: 400;
   letter-spacing: 0.06em;
 }
 
-/* Intro/banner (left = lead, right = logo) */
+/* Header logo (placed right of H1) */
+.headerLogo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0;
+  padding-top: 6px; /* nudge to align with H1 top */
+}
+.headerLogoImage {
+  width: 300px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Intro/banner (left content) */
 .intro {
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -46,71 +64,60 @@
 .introText {
   max-width: 740px;
 }
-
-/* Intro right column wrapper (logo only) */
-.introRightColumn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 18px;
-  padding-top: 6px;
+/* right spacer keeps grid balanced without holding the tagline/logo */
+.introSpacer {
+  display: block;
+  min-height: 1px;
 }
 
 /* Lead paragraph (intro paragraph) — unified paragraph size 24px */
 .lead {
   margin: 0 0 12px 0;
-  font-size: 24px; /* updated per request */
+  font-size: 24px;
   line-height: 1.6;
   color: #222;
 }
 
-/* Tagline row: full-width container centered to the page container */
+/* Tagline row: full-bleed row that centers an inner wrapper aligned to the page container.
+   The inner wrapper uses flex to push the tagline to the container right edge so it visually
+   sits above the METHOD/logo edge while the text can wrap left across the page. */
 .taglineRow {
-  width: min(1600px, 95vw);
-  margin: 12px auto 8px auto;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   box-sizing: border-box;
+  background: transparent;
   padding: 0;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+.taglineInner {
+  width: min(1600px, 95vw);
+  margin: 0 auto;
   display: flex;
-  justify-content: flex-end; /* keep text right-aligned to match logo/H2 edge */
+  justify-content: flex-end; /* align to the content/container right edge */
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-/* Green tagline: italic, right-aligned, clamped to two lines,
-   desktop base reduced from 50->40 and responsive values scaled proportionally */
+/* Green tagline: italic, right-aligned, clamped to up to two lines */
 .small {
   margin: 0;
   font-style: italic;
   color: #9a6f61;
-  font-size: 40px; /* desktop base (reduced from 50) */
+  font-size: 40px; /* desktop base (reduced) */
   line-height: 1.05;
-  text-align: right; /* right aligned as requested */
-  width: auto;
-  max-width: 520px; /* wider than the right column so it can stretch left across page */
+  text-align: right;
+  max-width: 520px; /* allows wrapping left, tuned for sensible two-line behavior */
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* force two lines */
+  -webkit-line-clamp: 2; /* allow up to two lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Intro right column: logo (much larger) */
-.introLogoFigure {
-  display: flex;
-  align-items: start;
-  justify-content: center;
-  padding-top: 6px;
-  margin: 0;
-}
-.introLogo {
-  width: 300px; /* large desktop size */
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
-
-/* Banner full-bleed (used below services)
-   Spans the viewport, but keeps 20px side gutters visually via internal padding.
-   Uses object-fit: cover for bold presentation. */
+/* Banner full-bleed (used below services) */
 .fullBleedBanner {
   width: 100vw;
   margin-left: calc(50% - 50vw);
@@ -179,10 +186,10 @@
 /* Method body text (unified paragraph size and right aligned) */
 .methodText {
   margin: 0;
-  font-size: 24px; /* unified paragraph size */
+  font-size: 24px;
   color: #333;
   line-height: 1.6;
-  text-align: right; /* keep right alignment */
+  text-align: right;
 }
 
 /* Services */
@@ -212,7 +219,7 @@
 }
 .serviceText {
   margin: 0;
-  font-size: 24px; /* unified paragraph size */
+  font-size: 24px;
   color: #666;
   line-height: 1.45;
 }
@@ -313,7 +320,7 @@
 }
 .bioText p {
   margin: 0 0 8px 0;
-  font-size: 24px; /* unified paragraph size */
+  font-size: 24px;
   color: #333;
   line-height: 1.5;
 }
@@ -344,6 +351,7 @@
   .intro {
     grid-template-columns: 1fr 300px;
   }
+  .headerLogoImage,
   .introLogo {
     width: 260px;
   }
@@ -351,7 +359,7 @@
     max-height: 360px;
   }
 
-  /* moderate H1/H2 sizes on narrower desktops */
+  /* moderate H1/H2 sizes */
   .pageTitle {
     font-size: clamp(48px, 7.8vw + 48px, 48px);
   }
@@ -359,7 +367,7 @@
     font-size: clamp(32px, 5.2vw + 28px, 48px);
   }
 
-  /* scale down large intro text for mid breakpoints */
+  /* scale down intro & method */
   .lead {
     font-size: 20px;
   }
@@ -368,7 +376,7 @@
     text-align: right;
   }
 
-  /* Tagline scaled proportionally: 40 -> ~27 (was 34 -> 27 approx) */
+  /* Tagline scaled proportionally */
   .small {
     font-size: 27px;
     max-width: 420px;
@@ -407,7 +415,7 @@
     padding: 0 20px;
   }
 
-  /* Tablet / small laptops */
+  /* Tablet adjustments */
   .pageTitle {
     font-size: clamp(36px, 8.5vw + 18px, 34px);
   }
@@ -422,11 +430,11 @@
     text-align: right;
   }
 
-  /* Tagline scaled proportionally: 40 -> ~22 */
   .small {
     font-size: 22px;
     text-align: right;
     max-width: 100%;
+    -webkit-line-clamp: 2;
   }
 
   .serviceText {
@@ -441,6 +449,18 @@
   .container {
     padding: 20px 10px;
   }
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .headerLogo {
+    align-self: flex-end; /* keep logo on the right when stacked */
+    padding-top: 0;
+  }
+  .headerLogoImage {
+    width: 180px;
+  }
   .pageTitle {
     font-size: clamp(28px, 9.5vw + 8px, 28px);
   }
@@ -453,14 +473,14 @@
   }
   .methodText {
     font-size: 14px;
-    text-align: left; /* on small screens, left-align for readability */
+    text-align: left; /* left-align for small screens */
   }
 
-  /* Tagline on small screens: scaled proportionally and left-aligned for stacking */
   .small {
     font-size: 18px;
-    text-align: left; /* stack-friendly on small screens */
+    text-align: left;
     max-width: 100%;
+    -webkit-line-clamp: 3; /* allow extra lines on small screens */
   }
 
   .serviceText {
