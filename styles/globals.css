@@ -293,7 +293,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   color: #6c6c6a;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 7px 18px;
+  padding: 7px 10px;
   margin: 0 4px;
   height: auto;
   display: inline-flex;
