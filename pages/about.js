@@ -13,20 +13,12 @@ export default function AboutPage() {
       </Head>
 
       <main className={styles.container}>
-        {/* Header: H1 on the left, logo on the right (aligned with H1) */}
+        {/* Header: H1 only (logo moved into intro right column so it won't affect flow) */}
         <header className={styles.headerRow}>
           <h1 className={styles.pageTitle}>ABOUT</h1>
-
-          <figure className={styles.headerLogo} aria-hidden>
-            <img
-              src="/images/about/logo.png"
-              alt="Studio Stewart logo"
-              className={styles.headerLogoImage}
-            />
-          </figure>
         </header>
 
-        {/* Intro: left = lead paragraph, right = (none) — logo moved to header */}
+        {/* Intro: left = lead paragraph, right = positioned logo (absolute inside right column) */}
         <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
             <p className={styles.lead}>
@@ -38,13 +30,22 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* placeholder right column to keep layout balanced on wider screens */}
-          <div className={styles.introSpacer} aria-hidden />
+          {/* Right column holds the logo but the image is positioned absolutely
+              inside this column so it does not affect the height of the header/intro */}
+          <div className={styles.introRightColumn} aria-hidden>
+            <figure className={styles.introLogoFigure}>
+              <img
+                src="/images/about/logo.png"
+                alt="Studio Stewart logo"
+                className={styles.introLogo}
+              />
+            </figure>
+          </div>
         </section>
 
         {/* Tagline row: full-bleed container with centered inner wrapper.
             Right-aligned to the container edge, allowed to stretch left,
-            clamped to 2 lines when needed. */}
+            clamped to up to two lines. */}
         <section className={styles.taglineRow} aria-hidden>
           <div className={styles.taglineInner}>
             <p className={styles.small}>
