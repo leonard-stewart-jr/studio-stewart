@@ -685,3 +685,7 @@ export default function ThreeDPrinting() {
     </div>
   );
 }
+
+// Opt-in flag: request that Layout pin the mid-nav for this page.
+// Layout will apply extra top padding and CSS will pin the nav-card-mid.
+ThreeDPrinting.hasFixedSubnav = true;
