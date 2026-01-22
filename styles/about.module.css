@@ -31,7 +31,7 @@
   margin: 0 0 20px 0;
   line-height: 0.95;
   /* Fluid scaling — max ceiling halved to 950px */
-  font-size: clamp(48px, 6vw + 64px, 950px);
+  font-size: clamp(48px, 6vw + 64px, 95px);
   font-weight: 400;
   letter-spacing: 0.06em;
 }
@@ -111,7 +111,7 @@
   letter-spacing: 0.06em;
   font-weight: 400;
   /* Fluid H2 sizing with max ceiling 800px (halved from 1600) */
-  font-size: clamp(36px, 4.5vw + 40px, 800px);
+  font-size: clamp(36px, 4.5vw + 40px, 70px);
   padding: 18px 0;
 }
 
