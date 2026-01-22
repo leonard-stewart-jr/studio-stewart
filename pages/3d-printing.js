@@ -685,6 +685,3 @@ export default function ThreeDPrinting() {
     </div>
   );
 }
-
-// Page flag: disable sticky header on the 3D Printing page
-ThreeDPrinting.disableStickyHeader = true;
