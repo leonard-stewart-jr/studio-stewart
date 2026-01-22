@@ -1,80 +1,209 @@
-import React, { useRef } from "react";
-import HeaderBar from "../components/HeaderBar";
-
-const IFRAME_WIDTH = 1600;
-const IFRAME_HEIGHT = 3940;
+import Head from "next/head";
+import styles from "../styles/about.module.css";
 
 export default function AboutPage() {
-  const iframeRef = useRef(null);
-
   return (
     <>
-      {/* Keep the normal header/navigation */}
-      <HeaderBar fixedNav={true} />
+      <Head>
+        <title>About — Studio Stewart</title>
+        <meta
+          name="description"
+          content="Studio Stewart — portfolio, independent studio, and 3D printing practice founded by Leonard Stewart. Architecture, research, and digital fabrication."
+        />
+      </Head>
 
-      <main
-        className="about-page"
-        style={{
-          width: "100vw",
-          minHeight: "100vh",
-          margin: 0,
-          padding: 40, // no top padding as requested
-          background: "#fff",
-          overflow: "visible",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        {/* Full-bleed wrapper so the iframe is centered but the page edge remains full-bleed */}
-        <div
-          style={{
-            width: "100vw",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            background: "#fff",
-            margin: 0,
-            padding: 0,
-            boxShadow: "none",
-          }}
-        >
-          <div
-            style={{
-              width: IFRAME_WIDTH,
-              height: IFRAME_HEIGHT,
-              position: "relative",
-              background: "#fff",
-              margin: 0,
-              padding: 0,
-              boxShadow: "none",
-              overflow: "visible",
-              border: "none",
-            }}
-          >
-            <iframe
-              ref={iframeRef}
-              src="/static/about-page/index.html"
-              title="About — Studio Stewart"
-              width={IFRAME_WIDTH}
-              height={IFRAME_HEIGHT}
-              style={{
-                width: IFRAME_WIDTH,
-                height: IFRAME_HEIGHT,
-                border: "none",
-                background: "#fff",
-                display: "block",
-                boxSizing: "content-box",
-                boxShadow: "none",
-                outline: "none",
-                overflow: "visible",
-              }}
-              scrolling="yes"
-              allowFullScreen
-            />
+      <main className={styles.container}>
+        {/* Header */}
+        <header className={styles.headerRow}>
+          <h1 className={styles.pageTitle}>ABOUT</h1>
+        </header>
+
+        {/* Intro / banner */}
+        <section className={styles.intro}>
+          <div className={styles.introText}>
+            <p className={styles.lead}>
+              Founded in 2025 when Leonard set out to learn web development for a
+              school project. He hand-coded the site to keep complete control over
+              hosting and content and to combine work and 3D prints into a single,
+              presentable hub. What started as a technical exercise is now a
+              portfolio, research hub, and an emerging 3D printing shop.
+            </p>
+
+            <p className={styles.small}>
+              Studio Stewart is a small studio working at the intersection of
+              architecture, research, and digital fabrication.
+            </p>
           </div>
-        </div>
+
+          <figure className={styles.bannerFigure}>
+            <img
+              src="/images/about/banner.png"
+              alt="Studio Stewart banner"
+              className={styles.bannerImage}
+            />
+            <figcaption className={styles.bannerCaption}>
+              Studio Stewart — architecture, research, digital fabrication
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* Method */}
+        <section className={styles.methodSection}>
+          <div className={styles.methodInner}>
+            <h2 className={styles.methodTitle}>METHOD</h2>
+            <p className={styles.methodText}>
+              Studio Stewart adapts its approach to each project, iterating
+              between quick ideation sketches, mass models, and detailed digital
+              fabrication. Ideas become visible through making — physical work and
+              clean web presentation sit side-by-side, letting form, material, and
+              process be the conversation.
+            </p>
+          </div>
+        </section>
+
+        {/* Services */}
+        <section className={styles.servicesSection}>
+          <h3 className={styles.sectionHeading}>SERVICES</h3>
+
+          <div className={styles.servicesGrid}>
+            <div className={styles.serviceCard}>
+              <h4 className={styles.serviceTitle}>DESIGN</h4>
+              <p className={styles.serviceText}>
+                Studio projects and academic proposals are developed through
+                sketches, drawings, models, and presentable working documents that
+                show ideas and intent.
+              </p>
+            </div>
+
+            <div className={styles.serviceCard}>
+              <h4 className={styles.serviceTitle}>RESEARCH</h4>
+              <p className={styles.serviceText}>
+                Independent research looks at how architecture affects environments,
+                boundaries, political systems, and human wellbeing — producing
+                visual essays, built proposals, and supporting design research.
+              </p>
+            </div>
+
+            <div className={styles.serviceCard}>
+              <h4 className={styles.serviceTitle}>3D PRINTING</h4>
+              <p className={styles.serviceText}>
+                3D printing shop for custom objects, lithophanes, and models —
+                specializing in sports logos, custom prototypes, and repeatable
+                fabrication-ready parts.
+              </p>
+            </div>
+          </div>
+
+          {/* Badge row (visual placeholders) */}
+          <div className={styles.badgeRow} aria-hidden>
+            {Array.from({ length: 36 }).map((_, i) => (
+              <span key={i} className={styles.badge} />
+            ))}
+          </div>
+        </section>
+
+        {/* Firm skills */}
+        <section className={styles.skillsSection}>
+          <h3 className={styles.sectionHeading}>FIRM SKILLS</h3>
+
+          <div className={styles.skillsGrid}>
+            <div className={styles.skillColumn}>
+              <h4 className={styles.skillHeading}>TOOLS</h4>
+              <ul className={styles.skillList}>
+                <li>Rhino</li>
+                <li>Illustrator</li>
+                <li>Fusion 360</li>
+                <li>Blender</li>
+                <li>Adobe Creative Cloud</li>
+              </ul>
+            </div>
+
+            <div className={styles.skillColumn}>
+              <h4 className={styles.skillHeading}>DESIGN</h4>
+              <ul className={styles.skillList}>
+                <li>Conceptual design</li>
+                <li>Sketching + diagrams</li>
+                <li>Physical modeling</li>
+              </ul>
+            </div>
+
+            <div className={styles.skillColumn}>
+              <h4 className={styles.skillHeading}>TECHNICAL</h4>
+              <ul className={styles.skillList}>
+                <li>Construction documentation</li>
+                <li>3D modeling & CAD</li>
+                <li>Parametric workflows</li>
+              </ul>
+            </div>
+
+            <div className={styles.skillColumn}>
+              <h4 className={styles.skillHeading}>BUILD</h4>
+              <ul className={styles.skillList}>
+                <li>FDM & resin 3D prints</li>
+                <li>Laser cutting</li>
+                <li>Rapid prototyping</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Team */}
+        <section className={styles.teamSection}>
+          <h3 className={styles.sectionHeading}>TEAM</h3>
+
+          <div className={styles.teamGrid}>
+            {/* Kobe / studio mascot */}
+            <figure className={styles.kobeCard}>
+              <img
+                src="/images/about/kobe.png"
+                alt="Kobe — studio mascot"
+                className={styles.kobeImage}
+              />
+              <figcaption className={styles.kobeCaption}>KOBE</figcaption>
+            </figure>
+
+            {/* Bio and portraits */}
+            <div className={styles.bioCard}>
+              <div className={styles.portraits}>
+                <img
+                  src="/images/about/me-young.jpeg"
+                  alt="Leonard young portrait"
+                  className={styles.portraitImage}
+                />
+                <img
+                  src="/images/about/me-now.jpg"
+                  alt="Leonard current portrait"
+                  className={styles.portraitImage}
+                />
+              </div>
+
+              <div className={styles.bioText}>
+                <h4 className={styles.name}>LEONARD STEWART</h4>
+                <p>
+                  Leonard Stewart earned a Master of Architecture from South Dakota
+                  State University and is the principal behind Studio Stewart. His work
+                  spans architecture, research, and digital fabrication — balancing
+                  design with hands-on making and web presentation.
+                </p>
+                <p className={styles.contactNote}>
+                  For commissions, prints, or collaboration:{" "}
+                  <a href="mailto:leonard.stewart@studio-stewart.com">
+                    leonard.stewart@studio-stewart.com
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            {/* Firm logo */}
+            <figure className={styles.logoCard}>
+              <img
+                src="/images/about/logo.png"
+                alt="Studio Stewart logo"
+                className={styles.logoImage}
+              />
+            </figure>
+          </div>
+        </section>
       </main>
     </>
   );
