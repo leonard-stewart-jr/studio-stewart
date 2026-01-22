@@ -38,6 +38,16 @@ export default function PortfolioViewer({
     return undefined;
   }, []);
 
+  // iOS detection (used to apply compositor fixes)
+  const [isIOS, setIsIOS] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const ua = navigator.userAgent || navigator.vendor || "";
+    // iPadOS may report Mac in some cases; this check is conservative but effective for most iPhones/iPods/iPads
+    const isiOSUA = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    setIsIOS(Boolean(isiOSUA));
+  }, []);
+
   // Helper: strip leading '#' from hash
   const getHashId = () => {
     if (typeof window === "undefined") return "";
@@ -257,6 +267,38 @@ export default function PortfolioViewer({
     }
   }
 
+  // Inject tiny iOS compositor fix into the iframe document for InDesign pages
+  function injectIOSCompositorFix(doc) {
+    try {
+      if (!doc || !doc.head) return;
+      if (doc.getElementById("ios-compositor-fix")) return;
+
+      const styleEl = doc.createElement("style");
+      styleEl.id = "ios-compositor-fix";
+      styleEl.textContent = `
+        /* iOS Safari compositor / repaint fixes for InDesign-export pages */
+        html, body, .publication, .publication-root, .idHTMLRoot, .page, #publication, .doc {
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+          will-change: transform, opacity;
+          -webkit-font-smoothing: antialiased;
+        }
+        /* promote images/artboards too */
+        img, picture, svg, .artboard, .page > div {
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+        }
+      `;
+      doc.head.appendChild(styleEl);
+    } catch {
+      // ignore failures
+    }
+  }
+
   // Measure page's natural size inside the iframe (type-aware)
   const measureIframePage = useCallback(() => {
     const iframe = iframeRef.current;
@@ -381,6 +423,39 @@ export default function PortfolioViewer({
 
   // After iframe load, measure and scale (with second pass after assets settle)
   const handleIframeLoad = useCallback(() => {
+    const iframe = iframeRef.current;
+    try {
+      const doc = iframe && (iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document));
+      // If iOS + InDesign page, inject compositor fixes into iframe
+      if (isIOS && doc && isInDesignPage(doc)) {
+        try {
+          injectIOSCompositorFix(doc);
+          // Also add compositor hint/promotion to iframe element itself
+          try {
+            if (iframe) {
+              iframe.style.transform = iframe.style.transform || "translateZ(0)";
+              iframe.style.webkitTransform = iframe.style.webkitTransform || "translateZ(0)";
+              iframe.style.webkitBackfaceVisibility = "hidden";
+              iframe.style.backfaceVisibility = "hidden";
+              iframe.style.willChange = "transform, opacity";
+            }
+          } catch {}
+          // Slight delay to allow rendering to settle
+          setTimeout(() => {
+            try {
+              // Force a reflow/read + ensure scrolled to left edge on touch
+              if (viewerRef.current) {
+                // read to force reflow
+                // eslint-disable-next-line no-unused-expressions
+                viewerRef.current.offsetHeight;
+                viewerRef.current.scrollLeft = 0;
+              }
+            } catch {}
+          }, 60);
+        } catch {}
+      }
+    } catch {}
+    // Existing measurement + scale passes
     measureIframePage();
     setTimeout(recomputeScale, 0);
     setTimeout(() => {
@@ -396,7 +471,7 @@ export default function PortfolioViewer({
         }
       } catch {}
     }, 200);
-  }, [measureIframePage, recomputeScale, isTouchDevice]);
+  }, [measureIframePage, recomputeScale, isTouchDevice, isIOS]);
 
   // Navigation helpers
   const total = manifest?.pages?.length || 0;
@@ -481,7 +556,15 @@ export default function PortfolioViewer({
         willChange: "transform",
         zIndex: 0,
         pointerEvents: "auto",
-        background: "#fff"
+        background: "#fff",
+        // iOS compositor hints
+        ...(isIOS ? {
+          WebkitTransform: "translateZ(0)",
+          transform: "translateZ(0) scale(" + scale + ")",
+          WebkitBackfaceVisibility: "hidden",
+          backfaceVisibility: "hidden",
+          willChange: "transform, opacity"
+        } : {})
       }
     : {
         position: "relative",
@@ -494,7 +577,14 @@ export default function PortfolioViewer({
         willChange: "transform",
         zIndex: 0,
         pointerEvents: "auto",
-        background: "#fff"
+        background: "#fff",
+        ...(isIOS ? {
+          WebkitTransform: "translateZ(0) translateX(-50%) scale(" + scale + ")",
+          transform: "translateZ(0) translateX(-50%) scale(" + scale + ")",
+          WebkitBackfaceVisibility: "hidden",
+          backfaceVisibility: "hidden",
+          willChange: "transform, opacity"
+        } : {})
       };
 
   const scaledHeight = pageSize.height * scale;
@@ -598,7 +688,14 @@ export default function PortfolioViewer({
             height: `${pageSize.height}px`,
             border: "none",
             background: "#fff",
-            display: "block"
+            display: "block",
+            ...(isIOS ? {
+              WebkitTransform: "translateZ(0)",
+              transform: "translateZ(0)",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden",
+              willChange: "transform, opacity"
+            } : {})
           }}
         />
       </div>
