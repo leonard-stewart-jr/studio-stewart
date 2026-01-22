@@ -19,7 +19,7 @@ export default function AboutPage() {
         </header>
 
         {/* Intro: left = intro text, right = studio logo (larger) */}
-        <section className={styles.intro}>
+        <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
             <p className={styles.lead}>
               Founded in 2025 when Leonard set out to learn web development for a
@@ -35,7 +35,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <figure className={styles.introLogoFigure}>
+          <figure className={styles.introLogoFigure} aria-hidden>
             <img
               src="/images/about/logo.png"
               alt="Studio Stewart logo"
@@ -47,6 +47,7 @@ export default function AboutPage() {
         {/* METHOD (H2 right-aligned) */}
         <section className={styles.methodSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
+
           <div className={styles.methodInner}>
             <div className={styles.methodTextWrap}>
               <p className={styles.methodText}>
