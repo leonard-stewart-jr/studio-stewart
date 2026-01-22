@@ -18,7 +18,7 @@ export default function AboutPage() {
           <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
 
-        {/* Intro: left = intro text (lead), right = tagline + studio logo */}
+        {/* Intro: left = intro text, right = logo */}
         <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
             <p className={styles.lead}>
@@ -28,15 +28,9 @@ export default function AboutPage() {
               presentable hub. What started as a technical exercise is now a
               portfolio, research hub, and an emerging 3D printing shop.
             </p>
-            {/* NOTE: tagline moved to the right column per request */}
           </div>
 
           <div className={styles.introRightColumn}>
-            <p className={styles.small}>
-              Studio Stewart is a small studio working at the intersection of
-              architecture, research, and digital fabrication.
-            </p>
-
             <figure className={styles.introLogoFigure} aria-hidden>
               <img
                 src="/images/about/logo.png"
@@ -45,6 +39,14 @@ export default function AboutPage() {
               />
             </figure>
           </div>
+        </section>
+
+        {/* Tagline row: full-width (centered to page container), right-aligned, two-line clamp */}
+        <section className={styles.taglineRow} aria-hidden>
+          <p className={styles.small}>
+            Studio Stewart is a small studio working at the intersection of
+            architecture, research, and digital fabrication.
+          </p>
         </section>
 
         {/* METHOD (H2 right-aligned) */}
