@@ -18,7 +18,7 @@ export default function AboutPage() {
           <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
 
-        {/* Intro / banner */}
+        {/* Intro: left = intro text, right = studio logo (as requested) */}
         <section className={styles.intro}>
           <div className={styles.introText}>
             <p className={styles.lead}>
@@ -35,15 +35,13 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <figure className={styles.bannerFigure}>
+          <figure className={styles.introLogoFigure}>
+            {/* This column now contains the logo (logo.png). */}
             <img
-              src="/images/about/banner.png"
-              alt="Studio Stewart banner"
-              className={styles.bannerImage}
+              src="/images/about/logo.png"
+              alt="Studio Stewart logo"
+              className={styles.introLogo}
             />
-            <figcaption className={styles.bannerCaption}>
-              Studio Stewart — architecture, research, digital fabrication
-            </figcaption>
           </figure>
         </section>
 
@@ -94,12 +92,14 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Badge row (visual placeholders) */}
-          <div className={styles.badgeRow} aria-hidden>
-            {Array.from({ length: 36 }).map((_, i) => (
-              <span key={i} className={styles.badge} />
-            ))}
-          </div>
+          {/* Full-bleed banner that spans the viewport width (replaces the placeholder circles) */}
+          <figure className={styles.fullBleedBanner} aria-hidden>
+            <img
+              src="/images/about/banner.png"
+              alt="Studio Stewart — banner of sample prints and logos"
+              className={styles.fullBleedImage}
+            />
+          </figure>
         </section>
 
         {/* Firm skills */}
@@ -194,7 +194,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Firm logo */}
+            {/* Firm logo (kept here too for larger layout) */}
             <figure className={styles.logoCard}>
               <img
                 src="/images/about/logo.png"
