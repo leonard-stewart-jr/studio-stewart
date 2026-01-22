@@ -109,7 +109,7 @@
   font-size: 40px; /* desktop base (reduced) */
   line-height: 1.05;
   text-align: right;
-  max-width: 520px; /* allows wrapping left, tuned for sensible two-line behavior */
+  max-width: 1100px; /* allows wrapping left, tuned for sensible two-line behavior */
   display: -webkit-box;
   -webkit-line-clamp: 2; /* allow up to two lines */
   -webkit-box-orient: vertical;
