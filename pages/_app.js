@@ -32,13 +32,15 @@ export default function MyApp({ Component, pageProps }) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
-  // Page-level flag: if a page component sets `Component.disableStickyHeader = true`
-  // we pass that into Layout so the header is not sticky on that page.
+  // Page-level flags:
+  // - if a page component sets `Component.disableStickyHeader = true` we pass that into Layout
+  // - if a page component sets `Component.hasFixedSubnav = true` we pass that into Layout
   const disableStickyHeader = Boolean(Component && Component.disableStickyHeader);
+  const hasFixedSubnav = Boolean(Component && Component.hasFixedSubnav);
 
   // Wrap all pages with LayoutGroup and Layout
   return (
-    <Layout disableStickyHeader={disableStickyHeader}>
+    <Layout disableStickyHeader={disableStickyHeader} hasFixedSubnav={hasFixedSubnav}>
       <LayoutGroup>
         <Component {...pageProps} />
       </LayoutGroup>
