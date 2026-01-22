@@ -13,12 +13,20 @@ export default function AboutPage() {
       </Head>
 
       <main className={styles.container}>
-        {/* Header */}
+        {/* Header: H1 on the left, logo on the right (aligned with H1) */}
         <header className={styles.headerRow}>
           <h1 className={styles.pageTitle}>ABOUT</h1>
+
+          <figure className={styles.headerLogo} aria-hidden>
+            <img
+              src="/images/about/logo.png"
+              alt="Studio Stewart logo"
+              className={styles.headerLogoImage}
+            />
+          </figure>
         </header>
 
-        {/* Intro: left = intro text, right = logo */}
+        {/* Intro: left = lead paragraph, right = (none) — logo moved to header */}
         <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
             <p className={styles.lead}>
@@ -30,23 +38,20 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className={styles.introRightColumn}>
-            <figure className={styles.introLogoFigure} aria-hidden>
-              <img
-                src="/images/about/logo.png"
-                alt="Studio Stewart logo"
-                className={styles.introLogo}
-              />
-            </figure>
-          </div>
+          {/* placeholder right column to keep layout balanced on wider screens */}
+          <div className={styles.introSpacer} aria-hidden />
         </section>
 
-        {/* Tagline row: full-width (centered to page container), right-aligned, two-line clamp */}
+        {/* Tagline row: full-bleed container with centered inner wrapper.
+            Right-aligned to the container edge, allowed to stretch left,
+            clamped to 2 lines when needed. */}
         <section className={styles.taglineRow} aria-hidden>
-          <p className={styles.small}>
-            Studio Stewart is a small studio working at the intersection of
-            architecture, research, and digital fabrication.
-          </p>
+          <div className={styles.taglineInner}>
+            <p className={styles.small}>
+              Studio Stewart is a small studio working at the intersection of
+              architecture, research, and digital fabrication.
+            </p>
+          </div>
         </section>
 
         {/* METHOD (H2 right-aligned) */}
