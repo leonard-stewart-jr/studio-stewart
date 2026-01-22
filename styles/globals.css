@@ -61,7 +61,7 @@ body {
   background: #f9f9f7;
   color: #181818;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; /* keep desktop stable; overridden for touch devices below */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -600,3 +600,44 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   scrollbar-width: thin;
   scrollbar-color: #e6dbb9 #f0f0ed;
 }
+
+/* ====== TOUCH / MOBILE: enable natural panning on touch devices ======
+   We target coarse pointers (touch) so desktop remains unchanged.
+   This allows horizontal panning (overflow-x:auto) and enables momentum scroll.
+*/
+@media (pointer: coarse) {
+  html, body {
+    overflow-x: auto !important;               /* allow panning horizontally on touch devices */
+    -webkit-overflow-scrolling: touch;         /* enable momentum scrolling on iOS */
+    touch-action: pan-x pan-y;                 /* allow panning in both directions */
+  }
+
+  /* Ensure full-bleed nav cards and other wide containers don't force an extra scrollbar */
+  .nav-card-top,
+  .nav-card-mid,
+  .nav-card-bot,
+  .isp-globe-section,
+  .publication,
+  .publication-root,
+  .doc,
+  .pk-container,
+  .sidebar {
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    overscroll-behavior-x: auto;
+  }
+
+  /* If any element ends up wider than the viewport, allow it to be panned rather than clipped */
+  * {
+    -ms-touch-action: pan-x pan-y; /* legacy IE / Edge */
+  }
+
+  /* If an element explicitly sets overflow hidden and you want it pannable, add a class `allow-pan` to override it */
+  .allow-pan {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x pan-y !important;
+  }
+}
+
+/* ----------------- end globals.css ----------------- */
