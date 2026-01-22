@@ -386,8 +386,17 @@ export default function PortfolioViewer({
     setTimeout(() => {
       measureIframePage();
       recomputeScale();
+      // On touch devices, ensure we start scrolled to the left after layout settles
+      try {
+        if (isTouchDevice && viewerRef.current) {
+          // small delay to ensure transforms are applied
+          setTimeout(() => {
+            try { viewerRef.current.scrollLeft = 0; } catch {}
+          }, 30);
+        }
+      } catch {}
     }, 200);
-  }, [measureIframePage, recomputeScale]);
+  }, [measureIframePage, recomputeScale, isTouchDevice]);
 
   // Navigation helpers
   const total = manifest?.pages?.length || 0;
@@ -424,6 +433,16 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goPrev, goNext, total]);
 
+  // Ensure viewer is scrolled to left on touch devices when appropriate:
+  useEffect(() => {
+    if (!isTouchDevice || !viewerRef.current) return;
+    // Defer to next tick so layout/transform updates settle
+    const t = setTimeout(() => {
+      try { viewerRef.current.scrollLeft = 0; } catch {}
+    }, 30);
+    return () => clearTimeout(t);
+  }, [isTouchDevice, index, scale, pageSize.width, fitMode]);
+
   if (error) {
     return (
       <div style={{ padding: "20px" }}>
@@ -445,20 +464,36 @@ export default function PortfolioViewer({
   const TOP_BAR_HEIGHT = 44; // optional info bar height
   const topOffset = showInfoBar ? TOP_BAR_HEIGHT : 0;
 
-  // Wrapper for scaled iframe: center horizontally, scale to fit
-  const canvasWrapStyle = {
-    position: "relative",
-    marginTop: topOffset,
-    left: "50%",
-    transform: `translateX(-50%) scale(${scale})`,
-    transformOrigin: "top center",
-    width: `${pageSize.width}px`,
-    height: `${pageSize.height}px`,
-    willChange: "transform",
-    zIndex: 0,
-    pointerEvents: "auto",
-    background: "#fff"
-  };
+  // Wrapper for scaled iframe:
+  // - On desktop: center the canvas (left:50% + translateX(-50%)) so it visually centers
+  // - On touch devices: left-align the canvas (left:0, transform origin top-left) so initial view shows left edge
+  const canvasWrapStyle = isTouchDevice
+    ? {
+        position: "relative",
+        marginTop: topOffset,
+        left: 0,
+        transform: `scale(${scale})`,
+        transformOrigin: "top left",
+        width: `${pageSize.width}px`,
+        height: `${pageSize.height}px`,
+        willChange: "transform",
+        zIndex: 0,
+        pointerEvents: "auto",
+        background: "#fff"
+      }
+    : {
+        position: "relative",
+        marginTop: topOffset,
+        left: "50%",
+        transform: `translateX(-50%) scale(${scale})`,
+        transformOrigin: "top center",
+        width: `${pageSize.width}px`,
+        height: `${pageSize.height}px`,
+        willChange: "transform",
+        zIndex: 0,
+        pointerEvents: "auto",
+        background: "#fff"
+      };
 
   const scaledHeight = pageSize.height * scale;
   const allowVerticalScroll = fitMode === "width";
