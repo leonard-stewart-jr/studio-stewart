@@ -59,7 +59,7 @@
   grid-template-columns: 1fr 380px;
   gap: 28px;
   align-items: start;
-  margin-bottom: 12px;
+  margin-bottom: 80px;
 }
 .introText {
   max-width: 740px;
