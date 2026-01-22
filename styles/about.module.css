@@ -35,19 +35,19 @@
   letter-spacing: 0.06em;
 }
 
-/* Intro/banner (left = lead, right = tagline + logo) */
+/* Intro/banner (left = lead, right = logo) */
 .intro {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 28px;
   align-items: start;
-  margin-bottom: 26px;
+  margin-bottom: 12px;
 }
 .introText {
   max-width: 740px;
 }
 
-/* Intro right column wrapper */
+/* Intro right column wrapper (logo only) */
 .introRightColumn {
   display: flex;
   flex-direction: column;
@@ -65,17 +65,32 @@
   color: #222;
 }
 
-/* Green tagline: italic, right-aligned, large (placed in right column) */
+/* Tagline row: full-width container centered to the page container */
+.taglineRow {
+  width: min(1600px, 95vw);
+  margin: 12px auto 8px auto;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end; /* keep text right-aligned to match logo/H2 edge */
+}
+
+/* Green tagline: italic, right-aligned, clamped to two lines,
+   desktop base reduced from 50->40 and responsive values scaled proportionally */
 .small {
   margin: 0;
   font-style: italic;
   color: #9a6f61;
-  font-size: 50px; /* requested */
-  margin-top: 12px;
-  text-align: right; /* right-aligned as requested */
+  font-size: 40px; /* desktop base (reduced from 50) */
   line-height: 1.05;
-  width: 100%;
-  max-width: 420px; /* keep it constrained to the right column */
+  text-align: right; /* right aligned as requested */
+  width: auto;
+  max-width: 520px; /* wider than the right column so it can stretch left across page */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* force two lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Intro right column: logo (much larger) */
@@ -164,7 +179,7 @@
 /* Method body text (unified paragraph size and right aligned) */
 .methodText {
   margin: 0;
-  font-size: 24px; /* updated per request */
+  font-size: 24px; /* unified paragraph size */
   color: #333;
   line-height: 1.6;
   text-align: right; /* keep right alignment */
@@ -352,10 +367,13 @@
     font-size: 20px;
     text-align: right;
   }
+
+  /* Tagline scaled proportionally: 40 -> ~27 (was 34 -> 27 approx) */
   .small {
-    font-size: 34px;
-    text-align: right;
+    font-size: 27px;
+    max-width: 420px;
   }
+
   .serviceText {
     font-size: 20px;
   }
@@ -403,11 +421,14 @@
     font-size: 18px;
     text-align: right;
   }
+
+  /* Tagline scaled proportionally: 40 -> ~22 */
   .small {
-    font-size: 28px;
+    font-size: 22px;
     text-align: right;
     max-width: 100%;
   }
+
   .serviceText {
     font-size: 18px;
   }
@@ -434,11 +455,14 @@
     font-size: 14px;
     text-align: left; /* on small screens, left-align for readability */
   }
+
+  /* Tagline on small screens: scaled proportionally and left-aligned for stacking */
   .small {
-    font-size: 22px;
+    font-size: 18px;
     text-align: left; /* stack-friendly on small screens */
     max-width: 100%;
   }
+
   .serviceText {
     font-size: 14px;
   }
