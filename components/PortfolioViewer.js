@@ -18,6 +18,26 @@ export default function PortfolioViewer({
   // Bump this to force iframe reloads (fit toggle or explicit)
   const [reloadCounter, setReloadCounter] = useState(0);
 
+  // Touch device detection (so we can enable panning on touch devices)
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  useEffect(() => {
+    // Prefer matchMedia('(pointer:coarse)') as the reliable indicator for touch-first devices.
+    const mq = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
+    const detect = () => {
+      const match = mq ? mq.matches : (typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0));
+      setIsTouchDevice(Boolean(match));
+    };
+    detect();
+    if (mq && typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", detect);
+      return () => mq.removeEventListener("change", detect);
+    } else if (mq && typeof mq.addListener === "function") {
+      mq.addListener(detect);
+      return () => mq.removeListener(detect);
+    }
+    return undefined;
+  }, []);
+
   // Helper: strip leading '#' from hash
   const getHashId = () => {
     if (typeof window === "undefined") return "";
@@ -342,6 +362,11 @@ export default function PortfolioViewer({
     return () => window.removeEventListener("resize", onResize);
   }, [measureIframePage, recomputeScale]);
 
+  // Also recompute scale if touch-device status changes (media query flip)
+  useEffect(() => {
+    recomputeScale();
+  }, [isTouchDevice, recomputeScale]);
+
   // Update URL when fitMode changes (without reload) and recompute scale
   useEffect(() => {
     try {
@@ -448,17 +473,38 @@ export default function PortfolioViewer({
   const srcWithBuster =
     rawSrc + (rawSrc.includes("?") ? "&" : "?") + "v=" + reloadCounter;
 
+  // Viewer container styles: on touch devices, allow horizontal panning
+  const viewerContainerStyle = {
+    width: "100%",
+    height: viewerHeight,
+    position: "relative",
+    background: "#fff",
+    overflowX: isTouchDevice ? "auto" : "hidden", // allow panning on touch
+    overflowY: allowVerticalScroll ? "auto" : "hidden",
+    // momentum scrolling + touch-action for iOS / modern browsers
+    WebkitOverflowScrolling: isTouchDevice ? "touch" : undefined,
+    touchAction: isTouchDevice ? "pan-x pan-y" : undefined
+  };
+
+  // Click zones for navigation can intercept touch panning. On touch devices,
+  // use touch-action: manipulation so taps still work but dragging/panning is preserved.
+  const sideButtonBase = {
+    position: "absolute",
+    top: topOffset,
+    width: "50%",
+    height: `calc(100% - ${topOffset}px)`,
+    background: "transparent",
+    border: "none",
+    zIndex: 1,
+    // keep click/tap behavior but avoid intercepting pan gestures
+    touchAction: isTouchDevice ? "manipulation" : undefined,
+    WebkitTapHighlightColor: "transparent"
+  };
+
   return (
     <div
       ref={viewerRef}
-      style={{
-        width: "100%",
-        height: viewerHeight,
-        position: "relative",
-        background: "#fff",
-        overflowX: "hidden",
-        overflowY: allowVerticalScroll ? "auto" : "hidden"
-      }}
+      style={viewerContainerStyle}
     >
       {/* Top info bar (optional; default hidden) */}
       {showInfoBar && (
@@ -531,15 +577,9 @@ export default function PortfolioViewer({
         onClick={goPrev}
         disabled={index <= 0}
         style={{
-          position: "absolute",
+          ...sideButtonBase,
           left: 0,
-          top: topOffset,
-          width: "50%",
-          height: `calc(100% - ${topOffset}px)`,
-          background: "transparent",
-          border: "none",
-          cursor: index > 0 ? "pointer" : "not-allowed",
-          zIndex: 1,
+          cursor: index > 0 ? "pointer" : "not-allowed"
         }}
       />
       <button
@@ -547,15 +587,10 @@ export default function PortfolioViewer({
         onClick={goNext}
         disabled={index >= total - 1}
         style={{
-          position: "absolute",
+          ...sideButtonBase,
           right: 0,
-          top: topOffset,
-          width: "50%",
-          height: `calc(100% - ${topOffset}px)`,
-          background: "transparent",
-          border: "none",
-          cursor: index < total - 1 ? "pointer" : "not-allowed",
-          zIndex: 1,
+          left: "50%",
+          cursor: index < total - 1 ? "pointer" : "not-allowed"
         }}
       />
 
