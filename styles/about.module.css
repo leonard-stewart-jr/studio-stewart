@@ -21,16 +21,15 @@
   margin-bottom: 18px;
 }
 
-/* H1: ABOUT (coolvetica, blue, left aligned, very large but responsive)
-   Max ceilings have been halved per request. */
+/* H1: ABOUT (coolvetica, blue, left aligned, responsive) */
 .pageTitle {
   font-family: "coolvetica", var(--font-sans);
   color: #17324a; /* site blue */
   text-transform: uppercase;
   text-align: left;
-  margin: 0 0 20px 0;
+  margin: 0 0 24px 0; /* added bottom margin for spacing under H1 */
   line-height: 0.95;
-  /* Fluid scaling — max ceiling halved to 950px */
+  /* Fluid scaling — max ceiling set to 95px */
   font-size: clamp(48px, 6vw + 64px, 95px);
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -48,18 +47,25 @@
 .introText {
   max-width: 740px;
 }
+
+/* Lead paragraph (red area) — doubled font size from base and spaced */
 .lead {
   margin: 0 0 12px 0;
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 30px; /* doubled from 15px */
+  line-height: 1.6;
   color: #222;
+  margin-top: 6px;
 }
+
+/* Green tagline: italic, right-aligned, large */
 .small {
   margin: 0;
   font-style: italic;
   color: #9a6f61;
-  font-size: 15px;
+  font-size: 50px; /* requested */
   margin-top: 12px;
+  text-align: right; /* right-aligned as requested */
+  line-height: 1.05;
 }
 
 /* Intro right column: logo (much larger) */
@@ -100,8 +106,7 @@
   border-radius: 6px;
 }
 
-/* H2 base styling (coolvetica, blue, uppercase)
-   Max ceilings halved to 800px. */
+/* H2 base styling (coolvetica, blue, uppercase) */
 .sectionHeading {
   font-family: "coolvetica", var(--font-sans);
   color: #17324a;
@@ -110,7 +115,7 @@
   line-height: 1;
   letter-spacing: 0.06em;
   font-weight: 400;
-  /* Fluid H2 sizing with max ceiling 800px (halved from 1600) */
+  /* Fluid H2 sizing (max ceiling 70px) */
   font-size: clamp(36px, 4.5vw + 40px, 70px);
   padding: 18px 0;
 }
@@ -145,11 +150,14 @@
 .methodTextWrap {
   max-width: 740px;
 }
+
+/* Method body text (yellow area) — doubled size and right aligned */
 .methodText {
   margin: 0;
-  font-size: 14px;
+  font-size: 28px; /* doubled from 14px */
   color: #333;
-  line-height: 1.55;
+  line-height: 1.6;
+  text-align: right; /* right-aligned as requested */
 }
 
 /* Services */
@@ -306,7 +314,7 @@
   display: block;
 }
 
-/* Responsive adjustments with halved maxima for headings */
+/* Responsive adjustments */
 @media (max-width: 1200px) {
   .intro {
     grid-template-columns: 1fr 300px;
@@ -317,12 +325,26 @@
   .fullBleedImage {
     max-height: 360px;
   }
-  /* reduce maximum H1/H2 a bit on narrower desktops (halved) */
+
+  /* moderate H1/H2 sizes on narrower desktops */
   .pageTitle {
-    font-size: clamp(48px, 7.8vw + 48px, 450px); /* was 900 -> now 450 */
+    font-size: clamp(48px, 7.8vw + 48px, 48px);
   }
   .sectionHeading {
-    font-size: clamp(32px, 5.2vw + 28px, 350px); /* was 700 -> now 350 */
+    font-size: clamp(32px, 5.2vw + 28px, 48px);
+  }
+
+  /* scale down large intro text for mid breakpoints */
+  .lead {
+    font-size: 22px;
+  }
+  .methodText {
+    font-size: 20px;
+    text-align: right;
+  }
+  .small {
+    font-size: 34px;
+    text-align: right;
   }
 }
 
@@ -351,12 +373,23 @@
     padding: 0 20px;
   }
 
-  /* Make H1 and H2 scale down for tablets / phones (maxs halved) */
+  /* Tablet / small laptops */
   .pageTitle {
-    font-size: clamp(36px, 8.5vw + 18px, 120px); /* was 240 -> now 120 */
+    font-size: clamp(36px, 8.5vw + 18px, 34px);
   }
   .sectionHeading {
-    font-size: clamp(22px, 6.5vw + 10px, 80px); /* was 160 -> now 80 */
+    font-size: clamp(22px, 6.5vw + 10px, 30px);
+  }
+  .lead {
+    font-size: 20px;
+  }
+  .methodText {
+    font-size: 18px;
+    text-align: right;
+  }
+  .small {
+    font-size: 28px;
+    text-align: right;
   }
 }
 
@@ -365,10 +398,22 @@
     padding: 20px 10px;
   }
   .pageTitle {
-    font-size: clamp(28px, 9.5vw + 8px, 70px); /* was 140 -> now 70 */
+    font-size: clamp(28px, 9.5vw + 8px, 28px);
   }
   .sectionHeading {
-    font-size: clamp(18px, 6.8vw + 6px, 55px); /* was 110 -> now 55 */
+    font-size: clamp(18px, 6.8vw + 6px, 22px);
+  }
+  .lead {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .methodText {
+    font-size: 14px;
+    text-align: left; /* on small screens, left-align for readability */
+  }
+  .small {
+    font-size: 22px;
+    text-align: left; /* stack-friendly on small screens */
   }
   .kobeImage,
   .portraitImage {
