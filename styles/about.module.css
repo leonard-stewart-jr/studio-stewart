@@ -21,7 +21,8 @@
   margin-bottom: 18px;
 }
 
-/* H1: ABOUT (coolvetica, blue, left aligned, very large but responsive) */
+/* H1: ABOUT (coolvetica, blue, left aligned, very large but responsive)
+   Max ceilings have been halved per request. */
 .pageTitle {
   font-family: "coolvetica", var(--font-sans);
   color: #17324a; /* site blue */
@@ -29,8 +30,8 @@
   text-align: left;
   margin: 0 0 20px 0;
   line-height: 0.95;
-  /* Fluid scaling — literal ceiling at 1900px as requested, while remaining usable on small screens */
-  font-size: clamp(48px, 6vw + 64px, 1900px);
+  /* Fluid scaling — max ceiling halved to 950px */
+  font-size: clamp(48px, 6vw + 64px, 950px);
   font-weight: 400;
   letter-spacing: 0.06em;
 }
@@ -99,7 +100,8 @@
   border-radius: 6px;
 }
 
-/* H2 base styling (coolvetica, blue, uppercase) */
+/* H2 base styling (coolvetica, blue, uppercase)
+   Max ceilings halved to 800px. */
 .sectionHeading {
   font-family: "coolvetica", var(--font-sans);
   color: #17324a;
@@ -108,8 +110,8 @@
   line-height: 1;
   letter-spacing: 0.06em;
   font-weight: 400;
-  /* Fluid H2 sizing with literal ceiling at 1600px as requested */
-  font-size: clamp(36px, 4.5vw + 40px, 1600px);
+  /* Fluid H2 sizing with max ceiling 800px (halved from 1600) */
+  font-size: clamp(36px, 4.5vw + 40px, 800px);
   padding: 18px 0;
 }
 
@@ -304,7 +306,7 @@
   display: block;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments with halved maxima for headings */
 @media (max-width: 1200px) {
   .intro {
     grid-template-columns: 1fr 300px;
@@ -315,12 +317,12 @@
   .fullBleedImage {
     max-height: 360px;
   }
-  /* reduce maximum H1/H2 a bit on narrower desktops to keep layout sensible */
+  /* reduce maximum H1/H2 a bit on narrower desktops (halved) */
   .pageTitle {
-    font-size: clamp(48px, 7.8vw + 48px, 900px);
+    font-size: clamp(48px, 7.8vw + 48px, 450px); /* was 900 -> now 450 */
   }
   .sectionHeading {
-    font-size: clamp(32px, 5.2vw + 28px, 700px);
+    font-size: clamp(32px, 5.2vw + 28px, 350px); /* was 700 -> now 350 */
   }
 }
 
@@ -349,12 +351,12 @@
     padding: 0 20px;
   }
 
-  /* Make H1 and H2 scale down for tablets / phones */
+  /* Make H1 and H2 scale down for tablets / phones (maxs halved) */
   .pageTitle {
-    font-size: clamp(36px, 8.5vw + 18px, 240px);
+    font-size: clamp(36px, 8.5vw + 18px, 120px); /* was 240 -> now 120 */
   }
   .sectionHeading {
-    font-size: clamp(22px, 6.5vw + 10px, 160px);
+    font-size: clamp(22px, 6.5vw + 10px, 80px); /* was 160 -> now 80 */
   }
 }
 
@@ -363,10 +365,10 @@
     padding: 20px 10px;
   }
   .pageTitle {
-    font-size: clamp(28px, 9.5vw + 8px, 140px);
+    font-size: clamp(28px, 9.5vw + 8px, 70px); /* was 140 -> now 70 */
   }
   .sectionHeading {
-    font-size: clamp(18px, 6.8vw + 6px, 110px);
+    font-size: clamp(18px, 6.8vw + 6px, 55px); /* was 110 -> now 55 */
   }
   .kobeImage,
   .portraitImage {
