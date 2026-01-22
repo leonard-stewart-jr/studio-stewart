@@ -27,7 +27,7 @@
   color: #17324a; /* site blue */
   text-transform: uppercase;
   text-align: left;
-  margin: 0 0 24px 0; /* added bottom margin for spacing under H1 */
+  margin: 0 0 24px 0; /* bottom spacing */
   line-height: 0.95;
   /* Fluid scaling — max ceiling set to 95px */
   font-size: clamp(48px, 6vw + 64px, 95px);
@@ -35,10 +35,9 @@
   letter-spacing: 0.06em;
 }
 
-/* Intro/banner (logo on right, larger) */
+/* Intro/banner (left = lead, right = tagline + logo) */
 .intro {
   display: grid;
-  /* left content flexible, right column larger to house a bigger logo */
   grid-template-columns: 1fr 380px;
   gap: 28px;
   align-items: start;
@@ -48,16 +47,25 @@
   max-width: 740px;
 }
 
-/* Lead paragraph (red area) — doubled font size from base and spaced */
-.lead {
-  margin: 0 0 12px 0;
-  font-size: 30px; /* doubled from 15px */
-  line-height: 1.6;
-  color: #222;
-  margin-top: 6px;
+/* Intro right column wrapper */
+.introRightColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  padding-top: 6px;
 }
 
-/* Green tagline: italic, right-aligned, large */
+/* Lead paragraph (intro paragraph) — unified paragraph size 24px */
+.lead {
+  margin: 0 0 12px 0;
+  font-size: 24px; /* updated per request */
+  line-height: 1.6;
+  color: #222;
+}
+
+/* Green tagline: italic, right-aligned, large (placed in right column) */
 .small {
   margin: 0;
   font-style: italic;
@@ -66,6 +74,8 @@
   margin-top: 12px;
   text-align: right; /* right-aligned as requested */
   line-height: 1.05;
+  width: 100%;
+  max-width: 420px; /* keep it constrained to the right column */
 }
 
 /* Intro right column: logo (much larger) */
@@ -74,9 +84,10 @@
   align-items: start;
   justify-content: center;
   padding-top: 6px;
+  margin: 0;
 }
 .introLogo {
-  width: 300px; /* primary large size on desktop */
+  width: 300px; /* large desktop size */
   height: auto;
   object-fit: contain;
   display: block;
@@ -115,7 +126,6 @@
   line-height: 1;
   letter-spacing: 0.06em;
   font-weight: 400;
-  /* Fluid H2 sizing (max ceiling 70px) */
   font-size: clamp(36px, 4.5vw + 40px, 70px);
   padding: 18px 0;
 }
@@ -151,13 +161,13 @@
   max-width: 740px;
 }
 
-/* Method body text (yellow area) — doubled size and right aligned */
+/* Method body text (unified paragraph size and right aligned) */
 .methodText {
   margin: 0;
-  font-size: 28px; /* doubled from 14px */
+  font-size: 24px; /* updated per request */
   color: #333;
   line-height: 1.6;
-  text-align: right; /* right-aligned as requested */
+  text-align: right; /* keep right alignment */
 }
 
 /* Services */
@@ -187,7 +197,7 @@
 }
 .serviceText {
   margin: 0;
-  font-size: 13px;
+  font-size: 24px; /* unified paragraph size */
   color: #666;
   line-height: 1.45;
 }
@@ -288,7 +298,7 @@
 }
 .bioText p {
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-size: 24px; /* unified paragraph size */
   color: #333;
   line-height: 1.5;
 }
@@ -336,7 +346,7 @@
 
   /* scale down large intro text for mid breakpoints */
   .lead {
-    font-size: 22px;
+    font-size: 20px;
   }
   .methodText {
     font-size: 20px;
@@ -345,6 +355,12 @@
   .small {
     font-size: 34px;
     text-align: right;
+  }
+  .serviceText {
+    font-size: 20px;
+  }
+  .bioText p {
+    font-size: 20px;
   }
 }
 
@@ -381,7 +397,7 @@
     font-size: clamp(22px, 6.5vw + 10px, 30px);
   }
   .lead {
-    font-size: 20px;
+    font-size: 18px;
   }
   .methodText {
     font-size: 18px;
@@ -390,6 +406,13 @@
   .small {
     font-size: 28px;
     text-align: right;
+    max-width: 100%;
+  }
+  .serviceText {
+    font-size: 18px;
+  }
+  .bioText p {
+    font-size: 18px;
   }
 }
 
@@ -414,6 +437,13 @@
   .small {
     font-size: 22px;
     text-align: left; /* stack-friendly on small screens */
+    max-width: 100%;
+  }
+  .serviceText {
+    font-size: 14px;
+  }
+  .bioText p {
+    font-size: 14px;
   }
   .kobeImage,
   .portraitImage {
