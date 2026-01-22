@@ -18,7 +18,7 @@ export default function AboutPage() {
           <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
 
-        {/* Intro: left = intro text, right = studio logo (as requested) */}
+        {/* Intro: left = intro text, right = studio logo (larger) */}
         <section className={styles.intro}>
           <div className={styles.introText}>
             <p className={styles.lead}>
@@ -36,7 +36,7 @@ export default function AboutPage() {
           </div>
 
           <figure className={styles.introLogoFigure}>
-            {/* This column now contains the logo (logo.png). */}
+            {/* This column now contains the logo (logo.png). It's intentionally large. */}
             <img
               src="/images/about/logo.png"
               alt="Studio Stewart logo"
@@ -92,8 +92,8 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Full-bleed banner that spans the viewport width (replaces the placeholder circles) */}
-          <figure className={styles.fullBleedBanner} aria-hidden>
+          {/* Full-bleed banner that spans the viewport width with 20px side padding */}
+          <figure className={styles.fullBleedBanner} aria-hidden="true">
             <img
               src="/images/about/banner.png"
               alt="Studio Stewart — banner of sample prints and logos"
@@ -194,7 +194,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Firm logo (kept here too for larger layout) */}
+            {/* Firm logo (kept here for larger layout) */}
             <figure className={styles.logoCard}>
               <img
                 src="/images/about/logo.png"
