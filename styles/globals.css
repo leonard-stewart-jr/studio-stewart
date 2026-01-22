@@ -116,7 +116,6 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
   min-height: 44px;
   height: 44px;
-  /* placement for mid nav is handled with sticky/top in desktop media query */
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
@@ -436,7 +435,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   box-shadow: none !important;
   border: none !important;
 }
-/* Sticky nav only for matter-matters page */
 .matter-matters-page .nav-card-top {
   position: fixed;
   top: 0;
@@ -487,7 +485,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     box-shadow: 0 3px 14px 0 rgba(0,0,0,0.10);
     background: #fff;
     /* Position the mid nav exactly under the header */
-    position: sticky;
+    position: fixed;
     top: 60px;
     z-index: 1160; /* raised so mid-nav/subnav sit above logos (was 1100) */
   }
