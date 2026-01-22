@@ -43,3 +43,6 @@ export default function Home() {
     </>
   );
 }
+
+// Page flag: disable sticky header on the home page so the header scrolls with content
+Home.disableStickyHeader = true;
