@@ -60,20 +60,23 @@
   position: sticky;
   top: 86px;
   display: block;
-  margin-left: auto;          /* push figure to the right edge of the right column */
-  z-index: 1100;              /* below header/nav (header ~1200) so header always sits in front */
+  margin: 0;
+  align-self: flex-end; /* anchor the figure to the right edge of its column */
+  /* push the figure left by the page gutter so its right edge aligns with the centered content container */
+  margin-right: calc((100vw - min(1600px, 95vw)) / 2);
+  z-index: 1000;
   pointer-events: auto;
 }
 
-/* Logo: explicit width values; remove max-width constraints so CSS width is honored */
 .introLogo {
-  width: 640px; /* desktop requested size */
+  width: 640px;             
   height: auto;
   object-fit: contain;
   display: block;
   max-width: none !important; /* ensure explicit width isn't clamped by parent */
-  transform: translateZ(0);
-  padding-right: 20px;
+  transform: none;
+  position: relative;
+  left: 0;
 }
 
 /* Lead paragraph */
