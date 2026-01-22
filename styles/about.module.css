@@ -66,6 +66,7 @@
   margin-left: auto;          /* push figure to the right edge of the right column */
   z-index: 1100;              /* below header/nav (header ~1200) so header always sits in front */
   pointer-events: auto;
+  padding-right: 20px;
 }
 
 /* Logo: explicit width values; remove max-width constraints so CSS width is honored */
