@@ -490,14 +490,6 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
     z-index: 1160; /* raised so mid-nav/subnav sit above logos (was 1100) */
   }
 
-  /* Top nav sticky placement (header) — keep full-bleed */
-  .nav-card.nav-card-top {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 1200;
-  }
-
   /* Keep inner child centered to the page container and remove side padding */
   .nav-card.nav-card-mid > div,
   .nav-card.nav-card-top > div,
