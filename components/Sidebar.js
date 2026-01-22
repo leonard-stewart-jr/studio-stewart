@@ -12,7 +12,7 @@ const navItems = [
   { label: "PROJECTS", href: "/" },
   { label: "3D PRINTING", href: "/3d-printing" },
   { label: "MATTER MATTERS", href: "/matter-matters" },
-  { label: "ABOUT ME", href: "/about" },
+  { label: "ABOUT", href: "/about" },
 ];
 
 const socialLinks = [
