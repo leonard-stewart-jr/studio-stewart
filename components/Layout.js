@@ -9,11 +9,12 @@ export default function Layout({ children, disableStickyHeader = false }) {
   const logoSize = 60;
   const sidebarPaddingLeft = 22;
 
-  // Header height
+  // Header height (must match HeaderBar height)
   const HEADER_HEIGHT = 60;
 
+  // Keep the prop for compatibility, but header is now fixed site-wide.
   const sticky = !disableStickyHeader;
-  
+
   return (
     <>
       <HeaderBar
@@ -21,7 +22,7 @@ export default function Layout({ children, disableStickyHeader = false }) {
         sidebarOpen={sidebarOpen}
         logoSize={logoSize}
         sidebarPaddingLeft={sidebarPaddingLeft}
-        // sticky controls whether the header uses CSS sticky vs relative positioning.
+        // sticky prop is still provided for compatibility but HeaderBar currently enforces fixed positioning site-wide
         sticky={sticky}
       />
       <Sidebar
@@ -31,8 +32,8 @@ export default function Layout({ children, disableStickyHeader = false }) {
         sidebarPaddingLeft={sidebarPaddingLeft}
         headerHeight={HEADER_HEIGHT}
       />
-      {/* ISPSubNav REMOVED from here */}
-      <main style={{ paddingTop: 0 }}>
+      {/* Ensure main content is pushed below the fixed header so it is not covered */}
+      <main style={{ paddingTop: HEADER_HEIGHT }}>
         {children}
       </main>
     </>
