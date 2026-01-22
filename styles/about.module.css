@@ -24,13 +24,13 @@
   justify-content: flex-start;
 }
 
-/* H1: ABOUT (coolvetica, blue, left aligned, responsive) */
+/* H1: ABOUT */
 .pageTitle {
   font-family: "coolvetica", var(--font-sans);
-  color: #17324a; /* site blue */
+  color: #17324a;
   text-transform: uppercase;
   text-align: left;
-  margin: 0 0 24px 0; /* bottom spacing */
+  margin: 0 0 24px 0;
   line-height: 0.95;
   font-size: clamp(48px, 6vw + 64px, 95px);
   font-weight: 400;
@@ -43,38 +43,42 @@
   grid-template-columns: 1fr 380px;
   gap: 28px;
   align-items: start;
-  margin-bottom: 80px; /* user changed this to 80px */
+  margin-bottom: 80px;
 }
 .introText {
   max-width: 740px;
 }
 
-/* Right column wrapper (acts as positioning context) */
+/* Right column wrapper (positioning context). Allow overflow so the absolute logo can visually
+   extend beyond the 380px column without being clipped. */
 .introRightColumn {
-  position: relative; /* positioning context for absolute logo */
+  position: relative;
+  overflow: visible; /* critical: allow the oversized logo to overflow visually */
   min-height: 1px;
 }
 
-/* The logo image is absolutely positioned inside the right column so it does
-   not affect the document flow (won't push the ABOUT paragraph down). */
+/* The logo figure is absolutely positioned inside the right column so it does not affect layout flow */
 .introLogoFigure {
   position: absolute;
   top: 0;
   right: 0;
   margin: 0;
   display: block;
+  z-index: 1250; /* above nav cards (nav z-index ~1200) so it sits visually on top */
   pointer-events: auto;
 }
+
+/* Logo: explicit width values; remove max-width constraints so CSS width is honored */
 .introLogo {
   width: 640px; /* desktop requested size */
   height: auto;
   object-fit: contain;
   display: block;
-  max-width: 100%; /* prevent weird overflow on very small containers */
+  max-width: none !important; /* ensure explicit width isn't clamped by parent */
   transform: translateZ(0); /* avoid subpixel issues */
 }
 
-/* Lead paragraph (intro paragraph) — unified paragraph size 24px */
+/* Lead paragraph */
 .lead {
   margin: 0 0 12px 0;
   font-size: 24px;
@@ -82,7 +86,7 @@
   color: #222;
 }
 
-/* Tagline row: full-bleed container with centered inner wrapper */
+/* Tagline row: full-bleed centered inner wrapper */
 .taglineRow {
   width: 100vw;
   margin-left: calc(50% - 50vw);
@@ -97,29 +101,29 @@
   width: min(1600px, 95vw);
   margin: 0 auto;
   display: flex;
-  justify-content: flex-end; /* align to the content/container right edge */
+  justify-content: flex-end;
   box-sizing: border-box;
   padding-left: 0;
   padding-right: 0;
 }
 
-/* Green tagline: italic, right-aligned, clamped to up to two lines */
+/* Tagline: clamped to up to two lines, sized and responsive */
 .small {
   margin: 0;
   font-style: italic;
   color: #9a6f61;
-  font-size: 40px; /* desktop base (reduced from 50) */
+  font-size: 40px;
   line-height: 1.05;
   text-align: right;
-  max-width: 1100px; /* user requested */
+  max-width: 1100px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* allow up to two lines */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Banner full-bleed (used below services) */
+/* Banner full-bleed */
 .fullBleedBanner {
   width: 100vw;
   margin-left: calc(50% - 50vw);
@@ -141,7 +145,7 @@
   border-radius: 6px;
 }
 
-/* H2 base styling (coolvetica, blue, uppercase) */
+/* H2 base styling */
 .sectionHeading {
   font-family: "coolvetica", var(--font-sans);
   color: #17324a;
@@ -154,7 +158,7 @@
   padding: 18px 0;
 }
 
-/* Helper classes to position H2 at the container edge (left or right) while staying inside the centered container */
+/* Helper classes for H2 alignment */
 .h2Left {
   width: min(1600px, 95vw);
   margin-left: auto;
@@ -185,7 +189,7 @@
   max-width: 740px;
 }
 
-/* Method body text (unified paragraph size and right aligned) */
+/* Method text */
 .methodText {
   margin: 0;
   font-size: 24px;
@@ -354,7 +358,6 @@
     grid-template-columns: 1fr 300px;
   }
 
-  /* header logo (unused) and intro logo reduced to 480px here */
   .introLogo {
     width: 480px;
   }
@@ -363,7 +366,6 @@
     max-height: 360px;
   }
 
-  /* moderate H1/H2 sizes */
   .pageTitle {
     font-size: clamp(48px, 7.8vw + 48px, 48px);
   }
@@ -371,7 +373,6 @@
     font-size: clamp(32px, 5.2vw + 28px, 48px);
   }
 
-  /* scale down intro & method */
   .lead {
     font-size: 20px;
   }
@@ -380,7 +381,6 @@
     text-align: right;
   }
 
-  /* Tagline scaled proportionally */
   .small {
     font-size: 27px;
     max-width: 420px;
@@ -399,8 +399,17 @@
     grid-template-columns: 1fr;
   }
   .introRightColumn {
-    /* keep space when stacked */
+    position: relative;
     height: auto;
+    overflow: visible;
+  }
+  .introLogo {
+    position: relative;
+    width: 360px;
+    max-width: 100%;
+    top: auto;
+    right: auto;
+    transform: none;
   }
   .methodInner {
     grid-template-columns: 1fr;
@@ -423,7 +432,6 @@
     padding: 0 20px;
   }
 
-  /* Tablet adjustments */
   .pageTitle {
     font-size: clamp(36px, 8.5vw + 18px, 34px);
   }
@@ -442,7 +450,6 @@
     font-size: 22px;
     text-align: right;
     max-width: 100%;
-    -webkit-line-clamp: 2;
   }
 
   .serviceText {
@@ -458,9 +465,12 @@
     padding: 20px 10px;
   }
 
-  /* reduce the intro/logo width for small screens to 220px */
   .introLogo {
     width: 220px;
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
   }
 
   .headerRow {
@@ -480,14 +490,14 @@
   }
   .methodText {
     font-size: 14px;
-    text-align: left; /* on small screens, left-align for readability */
+    text-align: left;
   }
 
   .small {
     font-size: 18px;
     text-align: left;
     max-width: 100%;
-    -webkit-line-clamp: 3; /* allow extra lines on small screens */
+    -webkit-line-clamp: 3;
   }
 
   .serviceText {
