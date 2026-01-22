@@ -37,7 +37,7 @@
   letter-spacing: 0.06em;
 }
 
-/* Intro/banner (left content, right column for positioned logo) */
+/* Intro/banner (left content, right column for positioning/fallback) */
 .intro {
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -49,22 +49,23 @@
   max-width: 740px;
 }
 
-/* Right column wrapper (positioning context). Allow overflow so the absolute logo can visually
-   extend beyond the 380px column without being clipped. */
+/* Right column wrapper */
 .introRightColumn {
   position: relative;
-  overflow: visible; /* critical: allow the oversized logo to overflow visually */
+  overflow: visible; /* allow the fixed logo to appear above this area */
   min-height: 1px;
 }
 
-/* The logo figure is absolutely positioned inside the right column so it does not affect layout flow */
+/* Logo figure: FIXED to viewport so it truly ignores header/nav and layout flow.
+   Right edge is aligned to the content container right edge via calc((100vw - min(1600px, 95vw)) / 2).
+   top: 86px places it below the top nav; tweak if you want it higher/lower. */
 .introLogoFigure {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: fixed;
+  top: 86px; /* default offset (change if you want it higher or lower) */
+  right: calc((100vw - min(1600px, 95vw)) / 2);
   margin: 0;
   display: block;
-  z-index: 1250; /* above nav cards (nav z-index ~1200) so it sits visually on top */
+  z-index: 1400; /* above nav (nav ~1200) so it sits on top visually */
   pointer-events: auto;
 }
 
@@ -75,7 +76,7 @@
   object-fit: contain;
   display: block;
   max-width: none !important; /* ensure explicit width isn't clamped by parent */
-  transform: translateZ(0); /* avoid subpixel issues */
+  transform: translateZ(0);
 }
 
 /* Lead paragraph */
@@ -403,13 +404,20 @@
     height: auto;
     overflow: visible;
   }
-  .introLogo {
+  .introLogoFigure {
     position: relative;
-    width: 360px;
-    max-width: 100%;
     top: auto;
     right: auto;
     transform: none;
+    z-index: 1;
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+    padding-top: 8px;
+  }
+  .introLogo {
+    width: 360px;
+    max-width: 100%;
   }
   .methodInner {
     grid-template-columns: 1fr;
