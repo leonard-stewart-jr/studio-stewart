@@ -2,7 +2,7 @@ import { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import Sidebar from "./Sidebar";
 
-export default function Layout({ children }) {
+export default function Layout({ children, disableStickyHeader = false }) {
   // Keep sidebar state here so both HeaderBar and Sidebar can access it.
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -12,6 +12,10 @@ export default function Layout({ children }) {
   // Header height
   const HEADER_HEIGHT = 60;
 
+  // If a page opts out (disableStickyHeader === true) then header should be non-sticky
+  // Otherwise the header remains sticky by default.
+  const sticky = !disableStickyHeader;
+
   return (
     <>
       <HeaderBar
@@ -19,6 +23,8 @@ export default function Layout({ children }) {
         sidebarOpen={sidebarOpen}
         logoSize={logoSize}
         sidebarPaddingLeft={sidebarPaddingLeft}
+        // sticky controls whether the header uses CSS sticky vs relative positioning.
+        sticky={sticky}
       />
       <Sidebar
         open={sidebarOpen}
