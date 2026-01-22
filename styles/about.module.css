@@ -60,7 +60,7 @@
    Right edge is aligned to the content container right edge via calc((100vw - min(1600px, 95vw)) / 2).
    top: 86px places it below the top nav; tweak if you want it higher/lower. */
 .introLogoFigure {
-  position: fixed;
+  position: sticky;
   top: 86px; /* default offset (change if you want it higher or lower) */
   right: calc((100vw - min(1600px, 95vw)) / 2);
   margin: 0;
