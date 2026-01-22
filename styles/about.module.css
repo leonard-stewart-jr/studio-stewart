@@ -61,11 +61,11 @@
    top: 86px places it below the top nav; tweak if you want it higher/lower. */
 .introLogoFigure {
   position: sticky;
-  top: 86px; /* default offset (change if you want it higher or lower) */
+  top: 86px;
   right: calc((100vw - min(1600px, 95vw)) / 2);
-  margin: 0;
   display: block;
-  z-index: 1400; /* above nav (nav ~1200) so it sits on top visually */
+  margin-left: auto;          /* push figure to the right edge of the right column */
+  z-index: 1400;              /* above nav (nav ~1200) so it visually sits on top */
   pointer-events: auto;
 }
 
