@@ -15,11 +15,14 @@ export default function HeaderBar({ fixedNav = false }) {
   // Animation speed for hamburger fade
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
+  // SITE-WIDE CHANGE: use non-sticky header by default.
+  // If `fixedNav` is true we still allow fixed positioning, otherwise use "relative"
+  // (inline style overrides the .nav-card CSS which previously made it sticky).
   const navBarStyle = {
-    position: fixedNav ? "fixed" : "sticky",
+    position: fixedNav ? "fixed" : "relative",
     top: 0,
     zIndex: 1200,
-    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, sticky can use 100%
+    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, relative can use 100%
     paddingLeft: 0,
     paddingRight: 0,
     display: "flex",
