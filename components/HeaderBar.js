@@ -2,34 +2,44 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import LogoHamburger from "./LogoHamburger";
 import NavBar from "./NavBar";
-import Sidebar from "./Sidebar";
 
-export default function HeaderBar({ fixedNav = false }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function HeaderBar({
+  fixedNav = false,
+  sticky = true,
+  onOpenSidebar,
+  sidebarOpen: sidebarOpenProp,
+  logoSize = 60,
+  sidebarPaddingLeft = 22,
+}) {
+  // Internal sidebar state only used when parent doesn't control it.
+  const [internalSidebarOpen, setInternalSidebarOpen] = useState(false);
 
-  // Consistent sizing
-  const logoSize = 60;
-  const headerHeight = 60; // reduced from 76
-  const sidebarPaddingLeft = 22;
+  // Determine the actual sidebar state and open handler.
+  const sidebarOpen = typeof sidebarOpenProp === "boolean" ? sidebarOpenProp : internalSidebarOpen;
+  const openSidebar = () => {
+    if (typeof onOpenSidebar === "function") onOpenSidebar();
+    else setInternalSidebarOpen(true);
+  };
 
   // Animation speed for hamburger fade
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
-  // SITE-WIDE CHANGE: use non-sticky header by default.
-  // If `fixedNav` is true we still allow fixed positioning, otherwise use "relative"
-  // (inline style overrides the .nav-card CSS which previously made it sticky).
+  // Position selection:
+  // - fixedNav true => fixed (top-level fixed)
+  // - else if sticky true => sticky
+  // - else => relative (scrolls with page)
   const navBarStyle = {
-    position: fixedNav ? "fixed" : "relative",
+    position: fixedNav ? "fixed" : sticky ? "sticky" : "relative",
     top: 0,
     zIndex: 1200,
-    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, relative can use 100%
+    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, relative/sticky can use 100%
     paddingLeft: 0,
     paddingRight: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    minHeight: headerHeight,
-    height: headerHeight,
+    minHeight: 60,
+    height: 60,
     background: "#fff",
     left: 0, // only matters for fixed
   };
@@ -53,7 +63,7 @@ export default function HeaderBar({ fixedNav = false }) {
             transition={hamburgerTransition}
             style={{
               marginLeft: sidebarPaddingLeft,
-              marginTop: -5, // shift logo up by 10px
+              marginTop: -5, // shift logo up by 10px visually
               cursor: "pointer",
               opacity: sidebarOpen ? 0 : 1,
               pointerEvents: sidebarOpen ? "none" : "auto",
@@ -63,7 +73,7 @@ export default function HeaderBar({ fixedNav = false }) {
             <LogoHamburger
               logoSize={logoSize}
               sidebarPaddingLeft={sidebarPaddingLeft}
-              onOpenSidebar={() => setSidebarOpen(true)}
+              onOpenSidebar={openSidebar}
             />
           </motion.div>
         </div>
@@ -77,21 +87,12 @@ export default function HeaderBar({ fixedNav = false }) {
             alignItems: "center",
           }}
         >
-          <NavBar headerHeight={headerHeight} />
+          <NavBar headerHeight={60} />
         </div>
 
         {/* Right: Reserved for future use, maintains space for symmetry */}
         <div style={{ flex: "0 0 auto", width: logoSize, minWidth: logoSize }} />
       </div>
-
-      {/* Sidebar with separate close button */}
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        logoSize={logoSize}
-        sidebarPaddingLeft={sidebarPaddingLeft}
-        headerHeight={headerHeight}
-      />
     </>
   );
 }
