@@ -62,10 +62,9 @@
 .introLogoFigure {
   position: sticky;
   top: 86px;
-  right: calc((100vw - min(1600px, 95vw)) / 2);
   display: block;
   margin-left: auto;          /* push figure to the right edge of the right column */
-  z-index: 1400;              /* above nav (nav ~1200) so it visually sits on top */
+  z-index: 1100;              /* below header/nav (header ~1200) so header always sits in front */
   pointer-events: auto;
 }
 
