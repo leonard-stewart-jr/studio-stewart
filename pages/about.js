@@ -36,7 +36,6 @@ export default function AboutPage() {
           </div>
 
           <figure className={styles.introLogoFigure}>
-            {/* This column now contains the logo (logo.png). It's intentionally large. */}
             <img
               src="/images/about/logo.png"
               alt="Studio Stewart logo"
@@ -45,23 +44,25 @@ export default function AboutPage() {
           </figure>
         </section>
 
-        {/* Method */}
+        {/* METHOD (H2 right-aligned) */}
         <section className={styles.methodSection}>
+          <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
           <div className={styles.methodInner}>
-            <h2 className={styles.methodTitle}>METHOD</h2>
-            <p className={styles.methodText}>
-              Studio Stewart adapts its approach to each project, iterating
-              between quick ideation sketches, mass models, and detailed digital
-              fabrication. Ideas become visible through making — physical work and
-              clean web presentation sit side-by-side, letting form, material, and
-              process be the conversation.
-            </p>
+            <div className={styles.methodTextWrap}>
+              <p className={styles.methodText}>
+                Studio Stewart adapts its approach to each project, iterating
+                between quick ideation sketches, mass models, and detailed digital
+                fabrication. Ideas become visible through making — physical work and
+                clean web presentation sit side-by-side, letting form, material, and
+                process be the conversation.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Services */}
+        {/* SERVICES (H2 left-aligned) */}
         <section className={styles.servicesSection}>
-          <h3 className={styles.sectionHeading}>SERVICES</h3>
+          <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>SERVICES</h2>
 
           <div className={styles.servicesGrid}>
             <div className={styles.serviceCard}>
@@ -102,9 +103,9 @@ export default function AboutPage() {
           </figure>
         </section>
 
-        {/* Firm skills */}
+        {/* FIRM SKILLS (H2 right-aligned) */}
         <section className={styles.skillsSection}>
-          <h3 className={styles.sectionHeading}>FIRM SKILLS</h3>
+          <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>FIRM SKILLS</h2>
 
           <div className={styles.skillsGrid}>
             <div className={styles.skillColumn}>
@@ -147,9 +148,9 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Team */}
+        {/* TEAM (H2 left-aligned) */}
         <section className={styles.teamSection}>
-          <h3 className={styles.sectionHeading}>TEAM</h3>
+          <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>TEAM</h2>
 
           <div className={styles.teamGrid}>
             {/* Kobe / studio mascot */}
