@@ -20,12 +20,19 @@
 .headerRow {
   margin-bottom: 18px;
 }
+
+/* H1: ABOUT (coolvetica, blue, left aligned, very large but responsive) */
 .pageTitle {
-  font-size: 44px;
-  letter-spacing: 0.06em;
+  font-family: "coolvetica", var(--font-sans);
+  color: #17324a; /* site blue */
   text-transform: uppercase;
-  margin: 0 0 8px 0;
-  font-weight: var(--weight-thin);
+  text-align: left;
+  margin: 0 0 20px 0;
+  line-height: 0.95;
+  /* Fluid scaling — literal ceiling at 1900px as requested, while remaining usable on small screens */
+  font-size: clamp(48px, 6vw + 64px, 1900px);
+  font-weight: 400;
+  letter-spacing: 0.06em;
 }
 
 /* Intro/banner (logo on right, larger) */
@@ -70,13 +77,12 @@
 
 /* Banner full-bleed (used below services)
    Spans the viewport, but keeps 20px side gutters visually via internal padding.
-   Uses the same full-bleed approach as nav cards. */
+   Uses object-fit: cover for bold presentation. */
 .fullBleedBanner {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   box-sizing: border-box;
-  /* 20px gutters on each side as requested */
   padding: 0 20px;
   display: block;
   background: transparent;
@@ -88,17 +94,44 @@
   width: 100%;
   height: auto;
   display: block;
-  object-fit: cover; /* cover recommended for bold full-bleed look */
-  max-height: 420px; /* larger visual presence on desktop */
+  object-fit: cover;
+  max-height: 420px;
   border-radius: 6px;
+}
+
+/* H2 base styling (coolvetica, blue, uppercase) */
+.sectionHeading {
+  font-family: "coolvetica", var(--font-sans);
+  color: #17324a;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  font-weight: 400;
+  /* Fluid H2 sizing with literal ceiling at 1600px as requested */
+  font-size: clamp(36px, 4.5vw + 40px, 1600px);
+  padding: 18px 0;
+}
+
+/* Helper classes to position H2 at the container edge (left or right) while staying inside the centered container */
+.h2Left {
+  width: min(1600px, 95vw);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.h2Right {
+  width: min(1600px, 95vw);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: right;
 }
 
 /* Method section */
 .methodSection {
   margin: 24px 0 36px 0;
   background: transparent;
-  display: flex;
-  justify-content: flex-end; /* place heading visually to the right */
+  display: block;
 }
 .methodInner {
   width: min(920px, 100%);
@@ -107,12 +140,8 @@
   gap: 20px;
   align-items: start;
 }
-.methodTitle {
-  font-size: 30px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin: 0;
-  color: #17324a;
+.methodTextWrap {
+  max-width: 740px;
 }
 .methodText {
   margin: 0;
@@ -126,13 +155,6 @@
   margin-top: 8px;
   padding-top: 24px;
   border-top: 1px solid rgba(0,0,0,0.03);
-}
-.sectionHeading {
-  font-size: 20px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin: 0 0 18px 0;
-  color: #17324b;
 }
 .servicesGrid {
   display: grid;
@@ -158,24 +180,6 @@
   font-size: 13px;
   color: #666;
   line-height: 1.45;
-}
-
-/* badgeRow (kept if you want to reuse later; not used now) */
-.badgeRow {
-  margin-top: 18px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-.badge {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: inline-block;
-  background: linear-gradient(180deg, #e6dbb9 0%, #caa97a 100%);
-  border: 2px solid rgba(0,0,0,0.06);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 /* Skills */
@@ -300,7 +304,7 @@
   display: block;
 }
 
-/* Responsive */
+/* Responsive adjustments */
 @media (max-width: 1200px) {
   .intro {
     grid-template-columns: 1fr 300px;
@@ -310,6 +314,13 @@
   }
   .fullBleedImage {
     max-height: 360px;
+  }
+  /* reduce maximum H1/H2 a bit on narrower desktops to keep layout sensible */
+  .pageTitle {
+    font-size: clamp(48px, 7.8vw + 48px, 900px);
+  }
+  .sectionHeading {
+    font-size: clamp(32px, 5.2vw + 28px, 700px);
   }
 }
 
@@ -337,6 +348,14 @@
   .fullBleedBanner {
     padding: 0 20px;
   }
+
+  /* Make H1 and H2 scale down for tablets / phones */
+  .pageTitle {
+    font-size: clamp(36px, 8.5vw + 18px, 240px);
+  }
+  .sectionHeading {
+    font-size: clamp(22px, 6.5vw + 10px, 160px);
+  }
 }
 
 @media (max-width: 640px) {
@@ -344,14 +363,10 @@
     padding: 20px 10px;
   }
   .pageTitle {
-    font-size: 34px;
+    font-size: clamp(28px, 9.5vw + 8px, 140px);
   }
-  .bannerFigure {
-    padding: 6px;
-  }
-  .badge {
-    width: 28px;
-    height: 28px;
+  .sectionHeading {
+    font-size: clamp(18px, 6.8vw + 6px, 110px);
   }
   .kobeImage,
   .portraitImage {
