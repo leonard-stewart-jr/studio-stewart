@@ -218,68 +218,68 @@ export default function ThreeDPrinting() {
     marginTop: isMobile ? 12 : 14
   };
 
-function handleFilterChange(key) {
-  // find the button that matches key
-  const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
-  if (!btn) return;
+  function handleFilterChange(key) {
+    // find the button that matches key
+    const btn = LEAGUE_FILTER_BUTTONS.find((b) => b.value === key);
+    if (!btn) return;
 
-  // If user clicked a conference control (ALL / EAST / WEST), treat as before:
-  if (btn.type === "conference") {
-    setConference(btn.value);
-    setDivision("ALL"); // reset division when switching conference
-    return;
-  }
-
-  // If the user clicked a global "ALL" division entry (if present), reset both
-  if (btn.value === "ALL") {
-    setDivision("ALL");
-    setConference("ALL");
-    return;
-  }
-
-  // Otherwise this is a division button. Set the division as usual...
-  setDivision(btn.value);
-
-  // ...and for NBA only: automatically set the matching conference so the UI
-  // centers the proper conference logo and hides opposite divisions.
-  if (leagueIsNBA) {
-    if (NBA_EAST_DIVS.has(btn.value)) {
-      setConference("EAST");
-    } else if (NBA_WEST_DIVS.has(btn.value)) {
-      setConference("WEST");
+    // If user clicked a conference control (ALL / EAST / WEST), treat as before:
+    if (btn.type === "conference") {
+      setConference(btn.value);
+      setDivision("ALL"); // reset division when switching conference
+      return;
     }
-    // if the division key isn't recognized, leave conference untouched
+
+    // If the user clicked a global "ALL" division entry (if present), reset both
+    if (btn.value === "ALL") {
+      setDivision("ALL");
+      setConference("ALL");
+      return;
+    }
+
+    // Otherwise this is a division button. Set the division as usual...
+    setDivision(btn.value);
+
+    // ...and for NBA only: automatically set the matching conference so the UI
+    // centers the proper conference logo and hides opposite divisions.
+    if (leagueIsNBA) {
+      if (NBA_EAST_DIVS.has(btn.value)) {
+        setConference("EAST");
+      } else if (NBA_WEST_DIVS.has(btn.value)) {
+        setConference("WEST");
+      }
+      // if the division key isn't recognized, leave conference untouched
+    }
   }
-}
-// --- NBA-only: hide divisions from the opposite conference when a conference is selected ---
-const NBA_EAST_DIVS = new Set(["ATLANTIC", "CENTRAL", "SOUTHEAST"]);
-const NBA_WEST_DIVS = new Set(["PACIFIC", "NORTHWEST", "SOUTHWEST"]);
+  // --- NBA-only: hide divisions from the opposite conference when a conference is selected ---
+  const NBA_EAST_DIVS = new Set(["ATLANTIC", "CENTRAL", "SOUTHEAST"]);
+  const NBA_WEST_DIVS = new Set(["PACIFIC", "NORTHWEST", "SOUTHWEST"]);
 
-// Start with the full list
-let filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS;
+  // Start with the full list
+  let filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS;
 
-// If we're in NBA mode and a specific conference is selected, remove the divisions
-// that belong to the other conference (keep conference controls + "ALL")
-if (leagueIsNBA && conference !== "ALL") {
-  if (conference === "EAST") {
-    filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
-      if (!b || !b.value) return false;
-      if (b.type === "conference") return true; // keep conference buttons (ALL / EAST / WEST)
-      if (b.value === "ALL") return true;       // keep global ALL
-      return NBA_EAST_DIVS.has(b.value);        // keep only east divisions
-    });
-  } else if (conference === "WEST") {
-    filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
-      if (!b || !b.value) return false;
-      if (b.type === "conference") return true;
-      if (b.value === "ALL") return true;
-      return NBA_WEST_DIVS.has(b.value);        // keep only west divisions
-    });
+  // If we're in NBA mode and a specific conference is selected, remove the divisions
+  // that belong to the other conference (keep conference controls + "ALL")
+  if (leagueIsNBA && conference !== "ALL") {
+    if (conference === "EAST") {
+      filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
+        if (!b || !b.value) return false;
+        if (b.type === "conference") return true; // keep conference buttons (ALL / EAST / WEST)
+        if (b.value === "ALL") return true;       // keep global ALL
+        return NBA_EAST_DIVS.has(b.value);        // keep only east divisions
+      });
+    } else if (conference === "WEST") {
+      filteredLeagueFilterButtons = LEAGUE_FILTER_BUTTONS.filter((b) => {
+        if (!b || !b.value) return false;
+        if (b.type === "conference") return true;
+        if (b.value === "ALL") return true;
+        return NBA_WEST_DIVS.has(b.value);        // keep only west divisions
+      });
+    }
   }
-}
 
-// Map to SectionTabs items (same shape as before)
-const leagueFilterItems = filteredLeagueFilterButtons.map((b) => ({ key: b.value, label: b.label }));
+  // Map to SectionTabs items (same shape as before)
+  const leagueFilterItems = filteredLeagueFilterButtons.map((b) => ({ key: b.value, label: b.label }));
 
   // Render helpers
   // LogoRow lays out logos in a 4-column grid and applies nudges + overlap so logos visually sit over the subnav area.
@@ -685,3 +685,6 @@ const leagueFilterItems = filteredLeagueFilterButtons.map((b) => ({ key: b.value
     </div>
   );
 }
+
+// Page flag: disable sticky header on the 3D Printing page
+ThreeDPrinting.disableStickyHeader = true;
