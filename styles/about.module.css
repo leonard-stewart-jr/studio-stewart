@@ -76,7 +76,7 @@
   max-width: none !important; /* ensure explicit width isn't clamped by parent */
   transform: none;
   position: relative;
-  left: calc(100% - 640px); /* e.g. if figure is 380px, this is -260px, shifting the image left */
+  left: 20px;
 }
 
 /* Lead paragraph */
