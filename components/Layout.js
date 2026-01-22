@@ -12,6 +12,8 @@ export default function Layout({ children, disableStickyHeader = false }) {
   // Header height
   const HEADER_HEIGHT = 60;
 
+  const sticky = !disableStickyHeader;
+  
   return (
     <>
       <HeaderBar
