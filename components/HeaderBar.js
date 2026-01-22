@@ -5,6 +5,8 @@ import NavBar from "./NavBar";
 
 export default function HeaderBar({
   fixedNav = false,
+  // NOTE: `sticky` prop is intentionally accepted for compatibility but ignored
+  // so the header is sticky site-wide unless fixedNav === true.
   sticky = true,
   onOpenSidebar,
   sidebarOpen: sidebarOpenProp,
@@ -26,13 +28,15 @@ export default function HeaderBar({
 
   // Position selection:
   // - fixedNav true => fixed (top-level fixed)
-  // - else if sticky true => sticky
-  // - else => relative (scrolls with page)
+  // - otherwise => always sticky (site-wide)
+  // We intentionally ignore the incoming `sticky` prop so pages cannot opt out.
+  const computedPosition = fixedNav ? "fixed" : "sticky";
+
   const navBarStyle = {
-    position: fixedNav ? "fixed" : sticky ? "sticky" : "relative",
+    position: computedPosition,
     top: 0,
     zIndex: 1200,
-    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, relative/sticky can use 100%
+    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, sticky can use 100%
     paddingLeft: 0,
     paddingRight: 0,
     display: "flex",
