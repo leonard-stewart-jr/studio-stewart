@@ -20,7 +20,7 @@ const projects = [
   },
   {
     grade: "SUMMER 25'",
-    title: "INDEPENDENT STUDIO",
+    title: "INVESTIGATION INTO (in)JUSTICE FACILITIES",
     type: "JUSTICE FACILITIES",
     slug: "ISP",
     bannerSrc: "/images/placeholders/blank.svg",
