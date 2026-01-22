@@ -12,7 +12,7 @@ export default function Layout({ children, disableStickyHeader = false, hasFixed
   // Header height (must match HeaderBar height)
   const HEADER_HEIGHT = 60;
   // Mid/nav (subnav) height used by 3D Printing page when pinned
-  const MID_NAV_HEIGHT = 0;
+  const MID_NAV_HEIGHT = 44;
 
   // Keep the prop for compatibility, but header is now fixed site-wide.
   const sticky = !disableStickyHeader;
