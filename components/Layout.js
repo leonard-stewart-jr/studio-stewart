@@ -27,8 +27,6 @@ export default function Layout({ children, disableStickyHeader = false, hasFixed
         sidebarOpen={sidebarOpen}
         logoSize={logoSize}
         sidebarPaddingLeft={sidebarPaddingLeft}
-        // sticky prop is still provided for compatibility but HeaderBar currently enforces fixed positioning site-wide
-        sticky={sticky}
       />
       <Sidebar
         open={sidebarOpen}
