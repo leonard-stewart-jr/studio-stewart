@@ -5,8 +5,7 @@ import NavBar from "./NavBar";
 
 export default function HeaderBar({
   fixedNav = false,
-  // NOTE: `sticky` prop is intentionally accepted for compatibility but ignored
-  // so the header is sticky site-wide unless fixedNav === true.
+  // kept for compatibility but ignored — header is fixed site-wide unless fixedNav is explicitly handled
   sticky = true,
   onOpenSidebar,
   sidebarOpen: sidebarOpenProp,
@@ -27,16 +26,16 @@ export default function HeaderBar({
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
   // Position selection:
-  // - fixedNav true => fixed (top-level fixed)
-  // - otherwise => always sticky (site-wide)
-  // We intentionally ignore the incoming `sticky` prop so pages cannot opt out.
-  const computedPosition = fixedNav ? "fixed" : "sticky";
+  // - Always fixed site-wide (guaranteed to pin header to viewport)
+  // - fixedNav kept as a prop for future use but not required here
+  const computedPosition = "fixed";
 
   const navBarStyle = {
     position: computedPosition,
     top: 0,
-    zIndex: 1200,
-    width: fixedNav ? "100vw" : "100%", // fixed needs 100vw, sticky can use 100%
+    zIndex: 1200,            // below sidebar (2100) so sidebar still overlays
+    width: "100vw",         // fixed needs full viewport width
+    left: 0,
     paddingLeft: 0,
     paddingRight: 0,
     display: "flex",
@@ -45,7 +44,7 @@ export default function HeaderBar({
     minHeight: 60,
     height: 60,
     background: "#fff",
-    left: 0, // only matters for fixed
+    boxSizing: "border-box",
   };
 
   return (
@@ -67,7 +66,7 @@ export default function HeaderBar({
             transition={hamburgerTransition}
             style={{
               marginLeft: sidebarPaddingLeft,
-              marginTop: -5, // shift logo up by 10px visually
+              marginTop: -5, // shift logo up slightly visually
               cursor: "pointer",
               opacity: sidebarOpen ? 0 : 1,
               pointerEvents: sidebarOpen ? "none" : "auto",
