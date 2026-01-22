@@ -424,6 +424,8 @@ export default function PortfolioViewer({
         e.preventDefault();
         setIndex(total > 0 ? total - 1 : 0);
       } else if (e.key.toLowerCase() === "f") {
+        // Prevent toggling fit mode via "f" on touch devices
+        if (isTouchDevice) return;
         e.preventDefault();
         setFitMode((m) => (m === "height" ? "width" : "height"));
         setReloadCounter((n) => n + 1); // force iframe reload on toggle
@@ -431,7 +433,7 @@ export default function PortfolioViewer({
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [goPrev, goNext, total]);
+  }, [goPrev, goNext, total, isTouchDevice]);
 
   // Ensure viewer is scrolled to left on touch devices when appropriate:
   useEffect(() => {
@@ -641,18 +643,20 @@ export default function PortfolioViewer({
           pointerEvents: "auto",  // Ensure clickable
         }}
       >
-        {/* Fit mode toggle — also reloads */}
-        <button
-          onClick={() => {
-            setFitMode((m) => (m === "height" ? "width" : "height"));
-            setReloadCounter((n) => n + 1); // reload iframe for crispness
-          }}
-          style={arrowBtnStyle}
-          aria-label="Toggle fit mode"
-          title="Toggle fit mode (F)"
-        >
-          {fitMode === "height" ? "Fit: Height" : "Fit: Width"}
-        </button>
+        {/* Fit mode toggle — hidden on touch devices */}
+        {!isTouchDevice && (
+          <button
+            onClick={() => {
+              setFitMode((m) => (m === "height" ? "width" : "height"));
+              setReloadCounter((n) => n + 1); // reload iframe for crispness
+            }}
+            style={arrowBtnStyle}
+            aria-label="Toggle fit mode"
+            title="Toggle fit mode (F)"
+          >
+            {fitMode === "height" ? "Fit: Height" : "Fit: Width"}
+          </button>
+        )}
 
         {/* Arrow controls */}
         <button
