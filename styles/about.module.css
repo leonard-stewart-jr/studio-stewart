@@ -28,10 +28,11 @@
   font-weight: var(--weight-thin);
 }
 
-/* Intro/banner (now logo on right) */
+/* Intro/banner (logo on right, larger) */
 .intro {
   display: grid;
-  grid-template-columns: 1fr 420px;
+  /* left content flexible, right column larger to house a bigger logo */
+  grid-template-columns: 1fr 380px;
   gap: 28px;
   align-items: start;
   margin-bottom: 26px;
@@ -53,7 +54,7 @@
   margin-top: 12px;
 }
 
-/* Intro right column: logo */
+/* Intro right column: logo (much larger) */
 .introLogoFigure {
   display: flex;
   align-items: start;
@@ -61,29 +62,34 @@
   padding-top: 6px;
 }
 .introLogo {
-  width: 180px;
+  width: 300px; /* primary large size on desktop */
   height: auto;
   object-fit: contain;
   display: block;
 }
 
-/* Banner full-bleed (used below services) */
+/* Banner full-bleed (used below services)
+   Spans the viewport, but keeps 20px side gutters visually via internal padding.
+   Uses the same full-bleed approach as nav cards. */
 .fullBleedBanner {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 18px 0;
   box-sizing: border-box;
+  /* 20px gutters on each side as requested */
+  padding: 0 20px;
   display: block;
   background: transparent;
   text-align: center;
+  margin-top: 18px;
+  margin-bottom: 28px;
 }
 .fullBleedImage {
   width: 100%;
-  max-height: 180px; /* adjust as needed for visual balance */
-  object-fit: contain;
+  height: auto;
   display: block;
-  margin: 0 auto;
+  object-fit: cover; /* cover recommended for bold full-bleed look */
+  max-height: 420px; /* larger visual presence on desktop */
   border-radius: 6px;
 }
 
@@ -295,6 +301,18 @@
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  .intro {
+    grid-template-columns: 1fr 300px;
+  }
+  .introLogo {
+    width: 260px;
+  }
+  .fullBleedImage {
+    max-height: 360px;
+  }
+}
+
 @media (max-width: 980px) {
   .intro {
     grid-template-columns: 1fr;
@@ -317,7 +335,7 @@
     justify-content: flex-start;
   }
   .fullBleedBanner {
-    padding: 12px 0;
+    padding: 0 20px;
   }
 }
 
@@ -347,9 +365,10 @@
     grid-template-columns: 1fr;
   }
   .introLogo {
-    width: 140px;
+    width: 180px;
   }
   .fullBleedImage {
-    max-height: 120px;
+    max-height: 160px;
+    border-radius: 4px;
   }
 }
