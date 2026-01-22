@@ -13,12 +13,12 @@ export default function AboutPage() {
       </Head>
 
       <main className={styles.container}>
-        {/* Header: H1 only */}
+        {/* Header: H1 on the left */}
         <header className={styles.headerRow}>
           <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
 
-        {/* Intro: left = lead paragraph, right = positioned logo (absolute inside right column) */}
+        {/* Intro: left = lead paragraph, right = positioned logo (fixed/handled in CSS) */}
         <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
             <p className={styles.lead}>
@@ -30,8 +30,8 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Right column is the positioning context; the image inside is absolutely positioned
-              so it won't change the flow or height of the intro/header */}
+          {/* Right column acts as a spacer/positioning context on narrow screens;
+              the actual logo is positioned (fixed) via CSS so it doesn't change flow */}
           <div className={styles.introRightColumn} aria-hidden>
             <figure className={styles.introLogoFigure}>
               <img
@@ -44,8 +44,7 @@ export default function AboutPage() {
         </section>
 
         {/* Tagline row: full-bleed container with centered inner wrapper.
-            Right-aligned to the container edge, allowed to stretch left,
-            clamped to up to two lines. */}
+            Right-aligned to the container edge and clamped to up to two lines. */}
         <section className={styles.taglineRow} aria-hidden>
           <div className={styles.taglineInner}>
             <p className={styles.small}>
@@ -55,7 +54,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* METHOD */}
+        {/* METHOD (H2 right-aligned) */}
         <section className={styles.methodSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
 
@@ -72,7 +71,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* SERVICES */}
+        {/* SERVICES (H2 left-aligned) */}
         <section className={styles.servicesSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>SERVICES</h2>
 
@@ -105,7 +104,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Full-bleed banner */}
+          {/* Full-bleed banner that spans the viewport width with 20px side padding */}
           <figure className={styles.fullBleedBanner} aria-hidden="true">
             <img
               src="/images/about/banner.png"
@@ -115,7 +114,7 @@ export default function AboutPage() {
           </figure>
         </section>
 
-        {/* FIRM SKILLS */}
+        {/* FIRM SKILLS (H2 right-aligned) */}
         <section className={styles.skillsSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>FIRM SKILLS</h2>
 
@@ -160,11 +159,12 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* TEAM */}
+        {/* TEAM (H2 left-aligned) */}
         <section className={styles.teamSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>TEAM</h2>
 
           <div className={styles.teamGrid}>
+            {/* Kobe / studio mascot */}
             <figure className={styles.kobeCard}>
               <img
                 src="/images/about/kobe.png"
@@ -174,6 +174,7 @@ export default function AboutPage() {
               <figcaption className={styles.kobeCaption}>KOBE</figcaption>
             </figure>
 
+            {/* Bio and portraits */}
             <div className={styles.bioCard}>
               <div className={styles.portraits}>
                 <img
@@ -205,6 +206,7 @@ export default function AboutPage() {
               </div>
             </div>
 
+            {/* Firm logo (kept here for larger layout) */}
             <figure className={styles.logoCard}>
               <img
                 src="/images/about/logo.png"
