@@ -171,6 +171,7 @@
   color: #333;
   line-height: 1.6;
   text-align: right;
+  max-width: 740px;
 }
 
 /* == Services == */
