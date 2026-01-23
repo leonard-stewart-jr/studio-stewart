@@ -168,9 +168,9 @@
   margin-bottom: 0; /* may be adjusted for further spacing control if needed */
 }
 
-/* Wrap for the text to right-align in the right column */
 .methodTextWrap {
   max-width: 520px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
