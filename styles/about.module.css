@@ -350,26 +350,29 @@
 .leonardPortraitsBlock {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;   /* This pushes the portraits row to the right edge */
+  align-items: flex-end;    /* aligns content right */
+  flex: 1;
+  width: 100%;
+  margin-left: auto;        /* push as far right as parent allows */
 }
 
 .portraitsRow {
   display: flex;
-  flex-direction: row;
-  gap: 0;                  /* Remove any gap between images */
+  gap: 0;
+  width: 100%;              /* ensures row takes full panel width */
+  justify-content: flex-end;/* makes images hug the right side */
 }
 
-/* Portrait images: remove all borders, background, and rounding */
 .portraitImage {
-  width: 160px;            /* Make taller/wider if desired to match your ref */
+  width: 160px;
   height: 160px;
   object-fit: cover;
   border: none;
   border-radius: 0;
   box-shadow: none;
-  display: block;
   margin: 0;
   padding: 0;
+  display: block;
 }
 
 /* If you want the images to fill to the container edge exactly: */
