@@ -161,17 +161,21 @@
 .methodInner {
   width: min(920px, 100%);
   display: grid;
-  grid-template-columns: 1fr 420px;
+  grid-template-columns: 1fr 520px;
   gap: 20px;
   align-items: start;
-}
-.methodTextWrap {
-  max-width: 740px;
+  justify-content: end;
 }
 
-/* == Method text == */
+.methodTextWrap {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .methodText {
-  margin: 0;
+  margin: 0 0 24px 0;
   font-size: 24px;
   color: #333;
   line-height: 1.6;
