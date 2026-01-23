@@ -161,7 +161,6 @@
 .methodInner {
   width: min(1600px, 95vw);
   display: grid;
-  grid-template-columns: 1fr 520px;
   gap: 20px;
   align-items: start;
 }
