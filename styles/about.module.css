@@ -389,7 +389,8 @@
   margin-top: 12px;
   font-size: 20px;
   color: #282828;
-  max-width: 670px;
+  max-width: 900px;
+  width: 100%;
 }
 
 .leonardName {
