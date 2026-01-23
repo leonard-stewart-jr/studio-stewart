@@ -382,7 +382,7 @@
 
 .leonardPortraitsBlock {
   width: 100%;
-  max-width: 360px;  /* adjust to match your overall grid/column width */
+  max-width: 700px;  /* adjust to match your overall grid/column width */
 }
 
 .bioText {
