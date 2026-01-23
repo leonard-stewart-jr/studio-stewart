@@ -156,9 +156,15 @@
   margin: 24px 0 36px 0;
   background: transparent;
   display: block;
+}
+
+.methodRow {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
+  box-sizing: border-box;
+  background: transparent;
+  padding: 0;
 }
 
 .methodInner {
@@ -169,13 +175,6 @@
   box-sizing: border-box;
   padding-left: 0;
   padding-right: 0;
-  /* gap: 20px; // not needed for this flex layout */
-  align-items: start;
-}
-
-.methodInnerWrap {
-  max-width: 740px;
-  width: 100%;
 }
 
 .methodText {
@@ -183,7 +182,9 @@
   font-size: 24px;
   color: #333;
   line-height: 1.6;
+  max-width: 740px;
   text-align: right;
+  width: 100%;
 }
 
 /* == Services == */
