@@ -152,26 +152,33 @@
   text-align: right;
 }
 
-/* == Method == */
 .methodSection {
   margin: 24px 0 36px 0;
   background: transparent;
   display: block;
 }
+
 .methodInner {
   width: min(920px, 100%);
   display: grid;
-  grid-template-columns: 1fr 420px;
+  grid-template-columns: 1fr 520px;
   gap: 20px;
   align-items: start;
-}
-.methodTextWrap {
-  max-width: 740px;
+  justify-content: end;
+  margin-bottom: 0; /* may be adjusted for further spacing control if needed */
 }
 
-/* == Method text == */
+/* Wrap for the text to right-align in the right column */
+.methodTextWrap {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* The method text itself */
 .methodText {
-  margin: 0;
+  margin: 0 0 24px 0;
   font-size: 24px;
   color: #333;
   line-height: 1.6;
