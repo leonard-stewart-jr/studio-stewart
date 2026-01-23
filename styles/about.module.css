@@ -20,7 +20,7 @@
 
 /* Header */
 .headerRow {
-  margin-bottom: 18px;
+  margin-bottom: 40px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -183,8 +183,8 @@
   display: block;
   background: transparent;
   text-align: center;
-  margin-top: 18px;
-  margin-bottom: 28px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 .fullBleedImage {
   width: 100%;
@@ -205,11 +205,11 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 40px;
 }
 .serviceCard {
   background: #fff;
-  padding: 18px;
+  padding: 40px;
   border-radius: 6px;
   border: 1px solid #f0efe9;
   box-shadow: 0 3px 10px rgba(0,0,0,0.04);
@@ -230,12 +230,12 @@
 /* == Skills == */
 .skillsSection {
   margin-top: 36px;
-  padding-top: 18px;
+  padding-top: 40px;
 }
 .skillsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  gap: 40px;
   margin-top: 12px;
 }
 .skillColumn {
@@ -251,7 +251,7 @@
 }
 .skillList {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 40px;
   font-size: 13px;
   color: #666;
 }
@@ -262,13 +262,13 @@
 /* == Team == */
 .teamSection {
   margin-top: 36px;
-  padding-top: 18px;
+  padding-top: 40px;
   border-top: 1px solid rgba(0,0,0,0.03);
 }
 .teamGrid {
   display: grid;
   grid-template-columns: 140px 1fr 160px;
-  gap: 18px;
+  gap: 40px;
   align-items: start;
   margin-top: 16px;
 }
