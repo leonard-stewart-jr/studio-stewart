@@ -286,60 +286,65 @@
   align-items: flex-start;
 }
 
-.kobeCard {
+.kobeContainer {
   display: flex;
-  align-items: stretch;       /* Makes the image and bio fill the parent height */
-  gap: 32px;
-  height: 100%;               /* Helps the image fill the parent's height if the parent is sized */
+  align-items: flex-start;
+  gap: 40px;
 }
 
 .kobeImage {
-  width: 399px;               /* Make wide, adjust as needed */
-  height: 542px;              /* Set tall, adjust as needed */
+  width: 350px;           /* Adjust as needed */
+  height: 470px;          /* Adjust for your desired effect */
   object-fit: cover;
   border: none;
   border-radius: 0;
-  box-shadow: none;
   display: block;
 }
-.kobeBioBlock {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 100%;
-  max-width: 340px;           /* Adjust as needed for your design */
+
+.kobeLabel {
+  margin-top: 14px;
+  text-align: left;
 }
 
-.kobeCaption {
-  font-size: 25px;
+.kobeName {
+  font-size: 32px;
   color: #22314D;
   font-weight: bold;
   font-style: italic;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  margin-bottom: 3px;
 }
 
-.kobeTitle {
+.kobeRole {
+  font-size: 20px;
   color: #a49365;
-  font-size: 16px;
   font-style: italic;
-  font-weight: normal;
-  margin-left: 6px;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.kobeBioBox {
+  height: 470px;         /* Match exactly .kobeImage height */
+  display: flex;
+  align-items: flex-start;
 }
 
 .kobeBio {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 8px;
+  font-size: 22px;
+  color: #222;
+  text-align: left;
+  line-height: 1.35;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .kobeNote {
-  font-size: 14px;
+  font-size: 16px;
   color: #666;
   font-style: italic;
-  margin-top: 9px;
+  margin-top: 16px;
 }
 
 .leonardPanel {
