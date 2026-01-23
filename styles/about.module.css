@@ -363,7 +363,7 @@
 
 .portraitImage {
   width: 350px;
-  height: 350px;
+  height: 400px;
   object-fit: cover;
   border: none;
   border-radius: 0;
@@ -384,7 +384,7 @@
 }
 
 .bioText {
-  margin-top: 12px;
+  margin-top: 0px;
   font-size: 20px;
   color: #282828;
   max-width: 900px;
