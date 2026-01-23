@@ -1,4 +1,12 @@
-/* Scoped CSS module for About page */
+/* Scoped CSS module for About page
+   Place images in public/images/about:
+   - banner.png
+   - kobe.png
+   - me-young.jpeg
+   - me-now.jpg
+   - logo.png
+*/
+
 /* == Container/Main Setup == */
 .container {
   width: min(1600px, 95vw);
@@ -105,26 +113,40 @@
   text-overflow: ellipsis;
 }
 
-/* == Full-bleed banner == */
-.fullBleedBanner {
+/* == Method (right-aligned tagline block) == */
+.methodSection {
+  margin: 24px 0 36px 0;
+  background: transparent;
+  display: block;
+}
+.methodSection h2 {
+  margin-bottom: 8px;
+}
+.methodRow {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   box-sizing: border-box;
-  padding: 0 20px;
-  display: block;
   background: transparent;
-  text-align: center;
-  margin-top: 18px;
-  margin-bottom: 28px;
+  padding: 0;
 }
-.fullBleedImage {
+.methodInner {
+  width: min(1600px, 95vw);
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+}
+.methodText {
+  margin: 0 0 24px 0;
+  font-size: 24px;
+  color: #333;
+  line-height: 1.6;
+  max-width: 740px;
+  text-align: right;
   width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-  max-height: 420px;
-  border-radius: 6px;
 }
 
 /* == Section Headings == */
@@ -152,39 +174,26 @@
   text-align: right;
 }
 
-.methodSection {
-  margin: 24px 0 36px 0;
-  background: transparent;
-  display: block;
-}
-
-.methodRow {
+/* == Full-bleed banner == */
+.fullBleedBanner {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   box-sizing: border-box;
+  padding: 0 20px;
+  display: block;
   background: transparent;
-  padding: 0;
+  text-align: center;
+  margin-top: 18px;
+  margin-bottom: 28px;
 }
-
-.methodInner {
-  width: min(1600px, 95vw);
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-  box-sizing: border-box;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.methodText {
-  margin: 0 0 24px 0;
-  font-size: 24px;
-  color: #333;
-  line-height: 1.6;
-  max-width: 740px;
-  text-align: right;
+.fullBleedImage {
   width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  max-height: 420px;
+  border-radius: 6px;
 }
 
 /* == Services == */
@@ -324,7 +333,7 @@
   color: #7a7a74;
 }
 
-/* Logo card, used for bottom logo only */
+/* logo card */
 .logoCard {
   display: flex;
   align-items: center;
@@ -396,7 +405,8 @@
     margin-bottom: 40px;
   }
   .methodInner {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-end;
   }
   .servicesGrid {
     grid-template-columns: 1fr;
