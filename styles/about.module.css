@@ -293,8 +293,8 @@
 }
 
 .kobeImage {
-  width: 504px;           /* Adjust as needed */
-  height: 677px;          /* Adjust for your desired effect */
+  width: 370px;           /* Adjust as needed */
+  height: 700px;          /* Adjust for your desired effect */
   object-fit: cover;
   border: none;
   border-radius: 0;
@@ -308,7 +308,7 @@
 
 .kobeName {
   font-size: 32px;
-  color: #22314D;
+  color: #17324a;
   font-weight: bold;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -332,7 +332,7 @@
   color: #222;
   text-align: left;
   line-height: 1.35;
-  max-width: 200px;
+  max-width: 180px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -363,7 +363,7 @@
 
 .portraitImage {
   width: 350px;
-  height: 400px;
+  height: 480px;
   object-fit: cover;
   border: none;
   border-radius: 0;
@@ -389,6 +389,7 @@
   color: #282828;
   max-width: 900px;
   width: 100%;
+  text-align: center;
 }
 
 .leonardName {
@@ -396,7 +397,7 @@
   text-transform: uppercase;
   font-size: 32px;
   letter-spacing: 0.03em;
-  color: #22314D;
+  color: #17324a;
   font-weight: bold;
   text-align: center;
 }
