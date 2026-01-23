@@ -280,82 +280,83 @@
   padding-top: 40px;
 }
 
-/* Main flex row: Kobe left, Leonard right */
 .teamFlex {
   display: flex;
-  gap: 56px;                 /* Extra space between panels */
+  gap: 56px;
   align-items: flex-start;
 }
 
-.kobeColumn {
-  max-width: 320px;          /* Allow tall Kobe photo + caption + bio */
+.kobeCard {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  gap: 28px;
 }
 
-/* Bigger, taller Kobe image */
 .kobeImage {
-  width: 250px;
-  height: 320px;
+  width: 220px;
+  height: 300px;
   object-fit: cover;
   border-radius: 10px;
-  display: block;
-  margin-bottom: 12px;
   border: 2.5px solid #e6dbb9;
-  box-shadow: 0 4px 18px rgba(180, 161, 99, 0.05); /* subtle tan shadow */
+  box-shadow: 0 4px 18px rgba(180, 161, 99, 0.05);
+}
+
+.kobeBioBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 300px; /* match the img height for alignment */
+  max-width: 280px;
 }
 
 .kobeCaption {
-  font-size: 24px;
+  font-size: 25px;
   color: #22314D;
   font-weight: bold;
   font-style: italic;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin: 0 0 4px 0;
+  margin-bottom: 3px;
 }
+
 .kobeTitle {
-  color: #a49365;            /* Tan color */
+  color: #a49365;
   font-size: 16px;
   font-style: italic;
   font-weight: normal;
-  margin-left: 5px;
+  margin-left: 6px;
 }
+
 .kobeBio {
-  font-size: 19px;
+  font-size: 18px;
   color: #333;
-  max-width: 90%;
   margin-bottom: 8px;
-  margin-top: 12px;
-  text-align: left;
 }
+
 .kobeNote {
   font-size: 14px;
   color: #666;
   font-style: italic;
-  margin-top: 6px;
+  margin-top: 9px;
 }
 
-/* Leonard's panel layout */
 .leonardPanel {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 18px;
+  gap: 12px;
+  margin-left: 36px; /* spacing from Kobe bio */
 }
 
-/* Side-by-side young/current portraits */
 .portraitsRow {
   display: flex;
   flex-direction: row;
-  gap: 14px;
-  justify-content: flex-end;
+  gap: 12px;
 }
 
 .portraitImage {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   border-radius: 8px;
   border: 2px solid #eee;
   object-fit: cover;
@@ -363,16 +364,16 @@
 }
 
 .bioText {
-  margin-top: 6px;
+  margin-top: 12px;
   font-size: 20px;
   color: #282828;
   max-width: 670px;
 }
 
 .leonardName {
-  margin: 10px 0 8px 0;
+  margin: 12px 0 8px 0;
   text-transform: uppercase;
-  font-size: 2.1em;
+  font-size: 2em;
   letter-spacing: 0.03em;
   color: #22314D;
   font-weight: bold;
@@ -382,14 +383,14 @@
 .leonardRole {
   font-weight: normal;
   font-style: italic;
-  font-size: 0.55em;
+  font-size: 0.5em;
   color: #a49365;
   margin-left: 5px;
 }
 
 .bioText p {
   margin: 0 0 8px 0;
-  font-size: 21px;
+  font-size: 20px;
   color: #333;
   line-height: 1.5;
 }
