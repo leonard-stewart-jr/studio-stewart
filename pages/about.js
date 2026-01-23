@@ -43,6 +43,25 @@ export default function AboutPage() {
                 className={styles.introLogo}
               />
             </figure>
+
+            {/* METHOD (moved into the right column so it belongs to the right column flow) */}
+            <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
+
+            <div className={styles.methodInner}>
+              <div className={styles.methodTextWrap}>
+                <p className={styles.methodText}>
+                  Studio Stewart adapts its approach to each project, testing ideas
+                  quickly with sketches, mass models, and test 3D prints.
+                </p>
+
+                <p className={styles.methodText}>
+                  Iteration is central. Many problems only become visible through
+                  making, so ideas are tested, revised, and tested again. The tools
+                  used let the studio move between digital design, physical making,
+                  and web presentation without losing control of the outcome.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
