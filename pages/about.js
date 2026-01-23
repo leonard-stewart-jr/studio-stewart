@@ -18,38 +18,32 @@ export default function AboutPage() {
           <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
 
-        {/* Intro: left = lead paragraph, right = positioned logo (fixed/handled in CSS) */}
+        {/* LOGO: Pin to top-right INSIDE container */}
+        <figure className={styles.introLogoFigure}>
+          <img
+            src="/images/about/logo.png"
+            alt="Studio Stewart logo"
+            className={styles.introLogo}
+          />
+        </figure>
+
+        {/* Intro: left = lead paragraph */}
         <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
             <p className={styles.lead}>
-              Founded in 2025 when Leonard set out to learn web development for a
-              school project. He hand-coded the site to keep complete control over
-              hosting and content and to combine work and 3D prints into a single,
-              presentable hub. What started as a technical exercise is now a
-              portfolio, research hub, and an emerging 3D printing shop.
+              Founded in 2025 when Leonard set out to learn web development for a school project.
+              He hand-coded the site to keep complete control over hosting and content and to combine
+              work and 3D prints into a single, presentable hub. What started as a technical exercise
+              is now a portfolio, research hub, and an emerging 3D printing shop.
             </p>
-          </div>
-
-          {/* Right column acts as a spacer/positioning context on narrow screens;
-              the actual logo is positioned (fixed) via CSS so it doesn't change flow */}
-          <div className={styles.introRightColumn} aria-hidden>
-            <figure className={styles.introLogoFigure}>
-              <img
-                src="/images/about/logo.png"
-                alt="Studio Stewart logo"
-                className={styles.introLogo}
-              />
-            </figure>
           </div>
         </section>
 
-        {/* Tagline row: full-bleed container with centered inner wrapper.
-            Right-aligned to the container edge and clamped to up to two lines. */}
+        {/* Tagline row: full-bleed container with centered inner wrapper. Right-aligned and clamped to up to two lines. */}
         <section className={styles.taglineRow} aria-hidden>
           <div className={styles.taglineInner}>
             <p className={styles.small}>
-              Studio Stewart is a small studio working at the intersection of
-              architecture, research, and digital fabrication.
+              Studio Stewart is a small studio working at the intersection of architecture, research, and digital fabrication.
             </p>
           </div>
         </section>
@@ -61,11 +55,9 @@ export default function AboutPage() {
           <div className={styles.methodInner}>
             <div className={styles.methodTextWrap}>
               <p className={styles.methodText}>
-                Studio Stewart adapts its approach to each project, iterating
-                between quick ideation sketches, mass models, and detailed digital
-                fabrication. Ideas become visible through making — physical work and
-                clean web presentation sit side-by-side, letting form, material, and
-                process be the conversation.
+                Studio Stewart adapts its approach to each project, iterating between quick ideation
+                sketches, mass models, and detailed digital fabrication. Ideas become visible through making — 
+                physical work and clean web presentation sit side-by-side, letting form, material, and process be the conversation.
               </p>
             </div>
           </div>
@@ -79,32 +71,25 @@ export default function AboutPage() {
             <div className={styles.serviceCard}>
               <h4 className={styles.serviceTitle}>DESIGN</h4>
               <p className={styles.serviceText}>
-                Studio projects and academic proposals are developed through
-                sketches, drawings, models, and presentable working documents that
-                show ideas and intent.
+                Studio projects and academic proposals are developed through sketches, drawings, models, and presentable working documents that show ideas and intent.
               </p>
             </div>
-
             <div className={styles.serviceCard}>
               <h4 className={styles.serviceTitle}>RESEARCH</h4>
               <p className={styles.serviceText}>
-                Independent research looks at how architecture affects environments,
-                boundaries, political systems, and human wellbeing — producing
-                visual essays, built proposals, and supporting design research.
+                Independent research looks at how architecture affects environments, boundaries, political systems, and human wellbeing —
+                producing visual essays, built proposals, and supporting design research.
               </p>
             </div>
-
             <div className={styles.serviceCard}>
               <h4 className={styles.serviceTitle}>3D PRINTING</h4>
               <p className={styles.serviceText}>
-                3D printing shop for custom objects, lithophanes, and models —
-                specializing in sports logos, custom prototypes, and repeatable
-                fabrication-ready parts.
+                3D printing shop for custom objects, lithophanes, and models — specializing in sports logos, custom prototypes, and repeatable fabrication-ready parts.
               </p>
             </div>
           </div>
 
-          {/* Full-bleed banner that spans the viewport width with 20px side padding */}
+          {/* Full-bleed banner */}
           <figure className={styles.fullBleedBanner} aria-hidden="true">
             <img
               src="/images/about/banner.png"
@@ -188,12 +173,10 @@ export default function AboutPage() {
                   className={styles.portraitImage}
                 />
               </div>
-
               <div className={styles.bioText}>
                 <h4 className={styles.name}>LEONARD STEWART</h4>
                 <p>
-                  Leonard Stewart earned a Master of Architecture from South Dakota
-                  State University and is the principal behind Studio Stewart. His work
+                  Leonard Stewart earned a Master of Architecture from South Dakota State University and is the principal behind Studio Stewart. His work
                   spans architecture, research, and digital fabrication — balancing
                   design with hands-on making and web presentation.
                 </p>
@@ -205,8 +188,7 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-
-            {/* Firm logo (kept here for larger layout) */}
+            {/* Firm logo (right) */}
             <figure className={styles.logoCard}>
               <img
                 src="/images/about/logo.png"
