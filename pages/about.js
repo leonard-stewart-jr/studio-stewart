@@ -34,7 +34,7 @@ export default function AboutPage() {
           </div>
 
           {/* Right column acts as a spacer/positioning context on narrow screens;
-              the actual logo is positioned (fixed/sticky) via CSS so it doesn't change flow */}
+              the actual logo is positioned (sticky) via CSS so it doesn't change flow */}
           <div className={styles.introRightColumn} aria-hidden>
             <figure className={styles.introLogoFigure}>
               <img
@@ -44,9 +44,10 @@ export default function AboutPage() {
               />
             </figure>
 
-            {/* METHOD (moved into the right column so it belongs to the right column flow) */}
+            {/* METHOD heading (restored) */}
             <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
 
+            {/* METHOD paragraph(s) — unchanged text */}
             <div className={styles.methodInner}>
               <div className={styles.methodTextWrap}>
                 <p className={styles.methodText}>
