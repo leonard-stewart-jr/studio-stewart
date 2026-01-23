@@ -40,6 +40,21 @@ export default function AboutPage() {
                 className={styles.introLogo}
               />
             </figure>
+
+            {/* METHOD (moved into the right column so it belongs to the right column flow) */}
+            <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
+
+            <div className={styles.methodInner}>
+              <div className={styles.methodTextWrap}>
+                <p className={styles.methodText}>
+                  Studio Stewart adapts its approach to each project, iterating
+                  between quick ideation sketches, mass models, and detailed digital
+                  fabrication. Ideas become visible through making — physical work and
+                  clean web presentation sit side-by-side, letting form, material, and
+                  process be the conversation.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -51,23 +66,6 @@ export default function AboutPage() {
               Studio Stewart is a small studio working at the intersection of
               architecture, research, and digital fabrication.
             </p>
-          </div>
-        </section>
-
-        {/* METHOD (H2 right-aligned) */}
-        <section className={styles.methodSection}>
-          <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
-
-          <div className={styles.methodInner}>
-            <div className={styles.methodTextWrap}>
-              <p className={styles.methodText}>
-                Studio Stewart adapts its approach to each project, iterating
-                between quick ideation sketches, mass models, and detailed digital
-                fabrication. Ideas become visible through making — physical work and
-                clean web presentation sit side-by-side, letting form, material, and
-                process be the conversation.
-              </p>
-            </div>
           </div>
         </section>
 
