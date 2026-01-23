@@ -48,18 +48,15 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* METHOD (H2 right-aligned) */}
+        {/* METHOD (H2 right-aligned, paragraph right-aligned, max-width 740px) */}
         <section className={styles.methodSection}>
           <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
-
-          <div className={styles.methodInner}>
-            <div className={styles.methodTextWrap}>
+          <div className={styles.methodRow}>
+            <div className={styles.methodInner}>
               <p className={styles.methodText}>
                 Studio Stewart adapts its approach to each project, testing ideas quickly with sketches, mass models, and test 3D prints.
-              </p>
-              <p className={styles.methodText}>
-                Iteration&nbsp; is central. Many problems&nbsp; only become visible through&nbsp; making, so ideas are tested, revised, and tested again.
-                The tools used let the studio&nbsp; move between&nbsp; digital design, physical making, and web presentation&nbsp; without&nbsp; losing control&nbsp; of the outcome.
+                <br /><br />
+                Iteration is central. Many problems only become visible through making, so ideas are tested, revised, and tested again. The tools used let the studio move between digital design, physical making, and web presentation without losing control of the outcome.
               </p>
             </div>
           </div>
