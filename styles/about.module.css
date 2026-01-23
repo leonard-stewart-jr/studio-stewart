@@ -289,7 +289,7 @@
 .kobeContainer {
   display: flex;
   align-items: flex-start;
-  gap: 40px;
+  gap: 16px;
 }
 
 .kobeImage {
@@ -390,7 +390,6 @@
   color: #282828;
   max-width: 900px;
   width: 100%;
-  text-align: center;
 }
 
 .leonardName {
