@@ -47,11 +47,13 @@ export default function AboutPage() {
             <div className={styles.methodInner}>
               <div className={styles.methodTextWrap}>
                 <p className={styles.methodText}>
-                  Studio Stewart adapts its approach to each project, iterating
-                  between quick ideation sketches, mass models, and detailed digital
-                  fabrication. Ideas become visible through making — physical work and
-                  clean web presentation sit side-by-side, letting form, material, and
-                  process be the conversation.
+                  Studio Stewart adapts its approach to each project, testing ideas
+                  quickly with sketches, massmodels, and test 3Dprints. 
+                    
+                  Iteration is central. Many problems arise through making, so ideas
+                  are tested, revised, and tested again.The tools used let the studio
+                  move between digital design, physical making, and web presentation 
+                  without losing control of the outcome.
                 </p>
               </div>
             </div>
