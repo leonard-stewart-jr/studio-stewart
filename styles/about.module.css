@@ -347,27 +347,39 @@
   margin-top: 16px;
 }
 
-.leonardPanel {
+.leonardPortraitsBlock {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  gap: 12px;
-  margin-left: 176px; /* spacing from Kobe bio */
+  align-items: flex-end;   /* This pushes the portraits row to the right edge */
 }
 
 .portraitsRow {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 0;                  /* Remove any gap between images */
 }
 
+/* Portrait images: remove all borders, background, and rounding */
 .portraitImage {
-  width: 140px;
-  height: 140px;
-  border-radius: 8px;
-  border: 2px solid #eee;
+  width: 160px;            /* Make taller/wider if desired to match your ref */
+  height: 160px;
   object-fit: cover;
-  background: #faf8f3;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* If you want the images to fill to the container edge exactly: */
+.portraitsRow {
+  width: 100%;
+}
+
+.leonardPortraitsBlock {
+  width: 100%;
+  max-width: 360px;  /* adjust to match your overall grid/column width */
 }
 
 .bioText {
