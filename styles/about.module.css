@@ -310,7 +310,6 @@
   font-size: 32px;
   color: #22314D;
   font-weight: bold;
-  font-style: italic;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -318,7 +317,6 @@
 .kobeRole {
   font-size: 20px;
   color: #e6dbb9;
-  font-style: italic;
   font-weight: 400;
   margin-left: 8px;
 }
@@ -364,8 +362,8 @@
 }
 
 .portraitImage {
-  width: 160px;
-  height: 160px;
+  width: 350px;
+  height: 350px;
   object-fit: cover;
   border: none;
   border-radius: 0;
@@ -400,15 +398,15 @@
   letter-spacing: 0.03em;
   color: #22314D;
   font-weight: bold;
-  font-style: italic;
+  text-align: center;
 }
 
 .leonardRole {
   font-weight: normal;
-  font-style: italic;
   font-size: 20px;
   color: #e6dbb9;
   margin-left: 5px;
+  text-align: center;
 }
 
 .bioText p {
