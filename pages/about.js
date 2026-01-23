@@ -207,14 +207,6 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            {/* Firm logo (right) */}
-            <figure className={styles.logoCard}>
-              <img
-                src="/images/about/logo.png"
-                alt="Studio Stewart logo"
-                className={styles.logoImage}
-              />
-            </figure>
           </div>
         </section>
       </main>
