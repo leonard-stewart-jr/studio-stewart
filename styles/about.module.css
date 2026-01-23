@@ -12,7 +12,7 @@
   width: min(1600px, 95vw);
   margin: 0 auto 80px auto;
   padding: 32px 0;
-  box-sizing: border-box;
+  box-sizing: border-box;background: transparent;
   color: var(--color, #181818);
   font-family: var(--font-sans);
   position: relative; /* enables absolutely positioned logo inside */
@@ -101,7 +101,7 @@
 .small {
   margin: 0;
   font-style: italic;
-  color: #9a6f61;
+  color: #e6dbb9;
   font-size: 40px;
   line-height: 1.05;
   text-align: right;
@@ -216,9 +216,10 @@
 }
 .serviceTitle {
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-size: 48px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  color: #e6dbb9;
 }
 .serviceText {
   margin: 0;
