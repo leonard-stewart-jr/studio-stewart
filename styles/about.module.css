@@ -211,8 +211,8 @@
   background: transparent;
   padding: 40px;
   border-radius: 6px;
-  border: 1px solid #f0efe9;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+  border: 0px;
+  box-shadow: 0;
 }
 .serviceTitle {
   margin: 0 0 8px 0;
@@ -241,7 +241,7 @@
 }
 .skillColumn {
   background: transparent;
-  border: 1px solid #f1efe9;
+  border: 0px;
   padding: 14px;
   border-radius: 6px;
 }
@@ -335,22 +335,6 @@
   color: #7a7a74;
 }
 
-/* logo card */
-.logoCard {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid #f1efe9;
-}
-.logoImage {
-  width: 120px;
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
 
 /* == Responsive adjustments == */
 @media (max-width: 1200px) {
