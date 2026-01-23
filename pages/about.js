@@ -182,7 +182,7 @@ export default function AboutPage() {
             <div className={styles.bioCard}>
               <div className={styles.portraits}>
                 <img
-                  src="/images/about/me-young.jpeg"
+                  src="/images/about/me-young.JPEG"
                   alt="Leonard young portrait"
                   className={styles.portraitImage}
                 />
@@ -193,11 +193,11 @@ export default function AboutPage() {
                 />
               </div>
               <div className={styles.bioText}>
-                <h4 className={styles.name}>LEONARD STEWART</h4>
+                <h4 className={styles.name}>LEONARD STEWART (founder & designer)</h4>
                 <p>
-                  Leonard Stewart earned a Master of Architecture from South Dakota State University and is the principal behind Studio Stewart. His work
-                  spans architecture, research, and digital fabrication — balancing
-                  design with hands-on making and web presentation.
+                  Leonard Stewart earned a Master of Architecture from South Dakota State University in August 2025 and is the founder of Studio StewArt. 
+                  He grew up building and making, from model planes and cars to building playsets and framing walls. His work blends research and creative design with hands on fabrication.
+                  This website is Leonards attempt to showcase his work, along with start a small 3D printing shop.
                 </p>
                 <p className={styles.contactNote}>
                   For commissions, prints, or collaboration:{" "}
