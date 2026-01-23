@@ -347,6 +347,7 @@
 
 .leonardPortraitsBlock {
   display: flex;
+  margin-top: -110px;
   flex-direction: column;
   align-items: flex-end;    /* aligns content right */
   flex: 1;
