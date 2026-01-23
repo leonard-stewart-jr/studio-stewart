@@ -320,9 +320,9 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   font-weight: var(--weight-hover);
 }
 .isp-subnav-btn.active:hover,
-.isp-subnav-btn[aria-current="page"]::hover,
+.isp-subnav-btn[aria-current="page"]:hover,
 .isp-subnav-btn.active:focus,
-.isp-subnav-btn[aria-current="page"]::focus {
+.isp-subnav-btn[aria-current="page"]:focus {
   text-decoration: none;
 }
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
