@@ -206,7 +206,7 @@ export default function AboutPage() {
           <span className={styles.leonardRole}>(founder & designer)</span>
         </div>
         <p>
-          Leonard Stewart earned a Master of Architecture from South Dakota State University in August 2025 and is the founder of Studio StewArt. 
+          Leonard Stewart earned a Master of Architecture from South Dakota State University in August 2025 and is the founder of Studio Stewart. 
           He grew up building and making, from model planes and cars to building playsets and framing walls. His work blends research and creative design with hands on fabrication.
           This website is Leonards attempt to showcase his work, along with start a small 3D printing shop.
         </p>
