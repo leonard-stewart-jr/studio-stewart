@@ -13,17 +13,14 @@ export default function AboutPage() {
       </Head>
 
       <main className={styles.container}>
-        {/* Header: (H1 moved into left intro column per request) */}
+        {/* Header: H1 on the left */}
         <header className={styles.headerRow}>
-          {/* headerRow retained but H1 removed so it does not span full width */}
+          <h1 className={styles.pageTitle}>ABOUT</h1>
         </header>
 
-        {/* Intro: left = H1 + lead paragraph, right = positioned logo (fixed/handled in CSS) */}
+        {/* Intro: left = lead paragraph, right = positioned logo (fixed/handled in CSS) */}
         <section className={styles.intro} aria-labelledby="about-intro">
           <div className={styles.introText}>
-            {/* MOVED H1: ABOUT now lives inside the left column so the logo (right column) will sit at the top */}
-            <h1 className={styles.pageTitle}>ABOUT</h1>
-
             <p className={styles.lead}>
               Founded in 2025 when Leonard set out to learn web development for a
               school project. He hand-coded the site to keep complete control over
@@ -34,7 +31,7 @@ export default function AboutPage() {
           </div>
 
           {/* Right column acts as a spacer/positioning context on narrow screens;
-              the actual logo is positioned (sticky) via CSS so it doesn't change flow */}
+              the actual logo is positioned (fixed) via CSS so it doesn't change flow */}
           <div className={styles.introRightColumn} aria-hidden>
             <figure className={styles.introLogoFigure}>
               <img
@@ -43,26 +40,6 @@ export default function AboutPage() {
                 className={styles.introLogo}
               />
             </figure>
-
-            {/* METHOD heading (restored) */}
-            <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
-
-            {/* METHOD paragraph(s) — unchanged text */}
-            <div className={styles.methodInner}>
-              <div className={styles.methodTextWrap}>
-                <p className={styles.methodText}>
-                  Studio Stewart adapts its approach to each project, testing ideas
-                  quickly with sketches, mass models, and test 3D prints.
-                </p>
-
-                <p className={styles.methodText}>
-                  Iteration is central. Many problems only become visible through
-                  making, so ideas are tested, revised, and tested again. The tools
-                  used let the studio move between digital design, physical making,
-                  and web presentation without losing control of the outcome.
-                </p>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -74,6 +51,23 @@ export default function AboutPage() {
               Studio Stewart is a small studio working at the intersection of
               architecture, research, and digital fabrication.
             </p>
+          </div>
+        </section>
+
+        {/* METHOD (H2 right-aligned) */}
+        <section className={styles.methodSection}>
+          <h2 className={`${styles.sectionHeading} ${styles.h2Right}`}>METHOD</h2>
+
+          <div className={styles.methodInner}>
+            <div className={styles.methodTextWrap}>
+              <p className={styles.methodText}>
+                Studio Stewart adapts its approach to each project, iterating
+                between quick ideation sketches, mass models, and detailed digital
+                fabrication. Ideas become visible through making — physical work and
+                clean web presentation sit side-by-side, letting form, material, and
+                process be the conversation.
+              </p>
+            </div>
           </div>
         </section>
 
