@@ -30,7 +30,8 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Right column — logo figure + METHOD live here */}
+          {/* Right column acts as a spacer/positioning context on narrow screens;
+              the actual logo is positioned (fixed) via CSS so it doesn't change flow */}
           <div className={styles.introRightColumn} aria-hidden>
             <figure className={styles.introLogoFigure}>
               <img
