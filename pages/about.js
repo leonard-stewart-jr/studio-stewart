@@ -70,20 +70,19 @@ export default function AboutPage() {
             <div className={styles.serviceCard}>
               <h4 className={styles.serviceTitle}>DESIGN</h4>
               <p className={styles.serviceText}>
-                Studio projects and academic proposals are developed through sketches, drawings, models, and presentable working documents that show ideas and intent.
-              </p>
+                Studio projects and academic proposals are developed through sketches, drawings, and models and presented with clear visuals that show idea and intent.
+             </p>
             </div>
             <div className={styles.serviceCard}>
               <h4 className={styles.serviceTitle}>RESEARCH</h4>
               <p className={styles.serviceText}>
-                Independent research looks at how architecture affects environments, boundaries, political systems, and human wellbeing —
-                producing visual essays, built proposals, and supporting design research.
+                Independent research looks at how architecture affects environmental sustainability, political systems, and human wellbeing using diagrams, illustrated essays, and speculative proposals.
               </p>
             </div>
             <div className={styles.serviceCard}>
               <h4 className={styles.serviceTitle}>3D PRINTING</h4>
               <p className={styles.serviceText}>
-                3D printing shop for custom objects, lithophanes, and models — specializing in sports logos, custom prototypes, and repeatable fabrication-ready parts.
+                3D printing shop for sports logos and coasters, lithophanes <b>(image to print w/ color)</b>, architectural models, and custom modular prints such as a travel chessboard.
               </p>
             </div>
           </div>
@@ -107,10 +106,17 @@ export default function AboutPage() {
               <h4 className={styles.skillHeading}>TOOLS</h4>
               <ul className={styles.skillList}>
                 <li>Rhino</li>
-                <li>Illustrator</li>
+                <li>Revit</li>
+                <li>Enscape</li>
                 <li>Fusion 360</li>
                 <li>Blender</li>
                 <li>Adobe Creative Cloud</li>
+                <ul>
+                  <li>Adobe Photoshop</li>
+                  <li>Adobe Illustrator</li>
+                  <li>Adobe InDesign</li>
+                  <li>Adobe Premiere Pro</li>
+                </ul>
               </ul>
             </div>
 
@@ -118,8 +124,10 @@ export default function AboutPage() {
               <h4 className={styles.skillHeading}>DESIGN</h4>
               <ul className={styles.skillList}>
                 <li>Conceptual design</li>
-                <li>Sketching + diagrams</li>
-                <li>Physical modeling</li>
+                <li>Visual communication &amp; diagramming</li>
+                <li>Site analysis</li>
+                <li>Program &amp; massing</li>
+                <li>Modelmaking</li>
               </ul>
             </div>
 
@@ -127,17 +135,29 @@ export default function AboutPage() {
               <h4 className={styles.skillHeading}>TECHNICAL</h4>
               <ul className={styles.skillList}>
                 <li>Construction documentation</li>
-                <li>3D modeling & CAD</li>
-                <li>Parametric workflows</li>
+                <li>Detailing</li>
+                <li>Revit documentation</li>
+                <li>Drawing sets &amp; schedules</li>
               </ul>
             </div>
 
             <div className={styles.skillColumn}>
               <h4 className={styles.skillHeading}>BUILD</h4>
               <ul className={styles.skillList}>
-                <li>FDM & resin 3D prints</li>
+                <li>FDM &amp; Resin 3D printing</li>
+                <li>Processing &amp; finishing metal &amp; wood</li>
                 <li>Laser cutting</li>
-                <li>Rapid prototyping</li>
+                <li>Carpentry (framing to finishing)</li>
+              </ul>
+            </div>
+            <div className={styles.skillColumn}>
+              <h4 className={styles.skillHeading}>OTHER</h4>
+              <ul className={styles.skillList}>
+                <li>Lithophanes &amp; image prints</li>
+                <li>Restroation</li>
+                <li>Shoe Customizing</li>
+                <li>Basic electronics (soldering / Arduino)</li>
+                <li>Basic coding <small>(HTML / JS)</small></li>
               </ul>
             </div>
           </div>
