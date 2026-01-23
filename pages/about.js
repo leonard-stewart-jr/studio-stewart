@@ -166,26 +166,25 @@ export default function AboutPage() {
   <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>TEAM</h2>
   <div className={styles.teamFlex}>
     {/* Kobe Card: image and info side by side */}
-    <div className={styles.kobeCard}>
-      <img
-        src="/images/about/kobe.png"
-        alt="Kobe — studio mascot"
-        className={styles.kobeImage}
-      />
-      <div className={styles.kobeBioBlock}>
-        <div>
-          <span className={styles.kobeCaption}>KOBE</span>
-          <span className={styles.kobeTitle}>(studio manager)</span>
-        </div>
-        <div className={styles.kobeBio}>
-          Kobe is the studio’s resident cat and morale specialist.
-          Official duties include supervising workers, inspecting warm computers, and approving model materials.
-        </div>
-        <div className={styles.kobeNote}>
-          Not available for interviews at this time.
-        </div>
-      </div>
+    <div className={styles.kobeContainer}>
+  <div>
+    <img
+      src="/images/about/kobe.png"
+      alt="Kobe — studio mascot"
+      className={styles.kobeImage}
+    />
+    <div className={styles.kobeLabel}>
+      <span className={styles.kobeName}>KOBE</span>
+      <span className={styles.kobeRole}>(studio manager)</span>
     </div>
+  </div>
+  <div className={styles.kobeBioBox}>
+    <div className={styles.kobeBio}>
+      Kobe is the studio’s resident cat and morale specialist. Official duties include supervising workers, inspecting warm computers, and approving model materials.<br/><br/>
+      <span className={styles.kobeNote}>Not available for interviews at this time.</span>
+    </div>
+  </div>
+</div>
 
     {/* Leonard Panel */}
     <div className={styles.leonardPanel}>
