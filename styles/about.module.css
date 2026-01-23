@@ -274,76 +274,130 @@
   padding-left: 24px;    /* Indent nested ul if you want */
 }
 
-/* == Team == */
+/* == Team Section == */
 .teamSection {
   margin-top: 36px;
   padding-top: 40px;
 }
-.teamGrid {
-  display: grid;
-  grid-template-columns: 140px 1fr 160px;
-  gap: 40px;
-  align-items: start;
-  margin-top: 16px;
-}
-.kobeCard {
-  text-align: center;
-  margin: 0;
-}
-.kobeImage {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  display: block;
-  margin: 0 auto 8px auto;
-  border: 2px solid #e6dbb9;
-}
-.kobeCaption {
-  font-size: 12px;
-  color: #333;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-top: 4px;
+
+/* Main flex row: Kobe left, Leonard right */
+.teamFlex {
+  display: flex;
+  gap: 56px;                 /* Extra space between panels */
+  align-items: flex-start;
 }
 
-.bioCard {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  background: transparent;
-}
-.portraits {
+.kobeColumn {
+  max-width: 320px;          /* Allow tall Kobe photo + caption + bio */
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-width: 140px;
+  align-items: center;
 }
-.portraitImage {
-  width: 140px;
-  height: 140px;
+
+/* Bigger, taller Kobe image */
+.kobeImage {
+  width: 250px;
+  height: 320px;
   object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #eee;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 12px;
+  border: 2.5px solid #e6dbb9;
+  box-shadow: 0 4px 18px rgba(180, 161, 99, 0.05); /* subtle tan shadow */
 }
-.bioText {
-  flex: 1;
-}
-.name {
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
-  font-size: 16px;
+
+.kobeCaption {
+  font-size: 24px;
+  color: #22314D;
+  font-weight: bold;
+  font-style: italic;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 4px 0;
 }
+.kobeTitle {
+  color: #a49365;            /* Tan color */
+  font-size: 16px;
+  font-style: italic;
+  font-weight: normal;
+  margin-left: 5px;
+}
+.kobeBio {
+  font-size: 19px;
+  color: #333;
+  max-width: 90%;
+  margin-bottom: 8px;
+  margin-top: 12px;
+  text-align: left;
+}
+.kobeNote {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* Leonard's panel layout */
+.leonardPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 18px;
+}
+
+/* Side-by-side young/current portraits */
+.portraitsRow {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  justify-content: flex-end;
+}
+
+.portraitImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  border: 2px solid #eee;
+  object-fit: cover;
+  background: #faf8f3;
+}
+
+.bioText {
+  margin-top: 6px;
+  font-size: 20px;
+  color: #282828;
+  max-width: 670px;
+}
+
+.leonardName {
+  margin: 10px 0 8px 0;
+  text-transform: uppercase;
+  font-size: 2.1em;
+  letter-spacing: 0.03em;
+  color: #22314D;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.leonardRole {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.55em;
+  color: #a49365;
+  margin-left: 5px;
+}
+
 .bioText p {
   margin: 0 0 8px 0;
-  font-size: 24px;
+  font-size: 21px;
   color: #333;
   line-height: 1.5;
 }
+
 .contactNote {
-  font-size: 13px;
+  font-size: 15px;
   color: #7a7a74;
+  margin-top: 8px;
 }
 
 
