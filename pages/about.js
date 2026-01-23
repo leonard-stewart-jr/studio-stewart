@@ -187,19 +187,19 @@ export default function AboutPage() {
 </div>
 
     {/* Leonard Panel */}
-    <div className={styles.leonardPanel}>
-      <div className={styles.portraitsRow}>
-        <img
-          src="/images/about/me-young.JPEG"
-          alt="Leonard young portrait"
-          className={styles.portraitImage}
-        />
-        <img
-          src="/images/about/me-now.jpg"
-          alt="Leonard current portrait"
-          className={styles.portraitImage}
-        />
-      </div>
+    <div className={styles.leonardPortraitsBlock}>
+  <div className={styles.portraitsRow}>
+    <img
+      src="/images/about/me-young.JPEG"
+      alt="Leonard young portrait"
+      className={styles.portraitImage}
+    />
+    <img
+      src="/images/about/me-now.jpg"
+      alt="Leonard current portrait"
+      className={styles.portraitImage}
+    />
+  </div>
       <div className={styles.bioText}>
         <div className={styles.leonardName}>
           LEONARD STEWART
