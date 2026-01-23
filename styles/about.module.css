@@ -267,7 +267,6 @@
 .skillList li::before {
   content: "– ";
   color: #22314D;        /* Your site blue */
-  font-weight: bold;
   font-size: 1.2em;
 }
 .skillList ul {
