@@ -303,7 +303,7 @@
 
 .kobeLabel {
   margin-top: 14px;
-  text-align: left;
+  text-align: center;
 }
 
 .kobeName {
@@ -334,7 +334,7 @@
   color: #222;
   text-align: left;
   line-height: 1.35;
-  max-width: 340px;
+  max-width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
