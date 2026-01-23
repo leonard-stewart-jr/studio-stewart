@@ -288,25 +288,27 @@
 
 .kobeCard {
   display: flex;
-  align-items: flex-start;
-  gap: 28px;
+  align-items: stretch;       /* Makes the image and bio fill the parent height */
+  gap: 32px;
+  height: 100%;               /* Helps the image fill the parent's height if the parent is sized */
 }
 
 .kobeImage {
-  width: 220px;
-  height: 300px;
+  width: 399px;               /* Make wide, adjust as needed */
+  height: 500px;              /* Set tall, adjust as needed */
   object-fit: cover;
-  border-radius: 10px;
-  border: 2.5px solid #e6dbb9;
-  box-shadow: 0 4px 18px rgba(180, 161, 99, 0.05);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
 }
-
 .kobeBioBlock {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 300px; /* match the img height for alignment */
-  max-width: 280px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+  max-width: 340px;           /* Adjust as needed for your design */
 }
 
 .kobeCaption {
