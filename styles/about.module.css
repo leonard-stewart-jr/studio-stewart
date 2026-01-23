@@ -400,7 +400,6 @@
   letter-spacing: 0.03em;
   color: #17324a;
   font-weight: bold;
-  text-align: center;
 }
 
 .leonardRole {
@@ -408,7 +407,6 @@
   font-size: 24px;
   color: #e6dbb9;
   margin-left: 5px;
-  text-align: center;
 }
 
 .bioText p {
