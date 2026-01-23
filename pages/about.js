@@ -163,52 +163,53 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* TEAM (H2 left-aligned) */}
-        <section className={styles.teamSection}>
-          <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>TEAM</h2>
-
-          <div className={styles.teamGrid}>
-            {/* Kobe / studio mascot */}
-            <figure className={styles.kobeCard}>
-              <img
-                src="/images/about/kobe.png"
-                alt="Kobe — studio mascot"
-                className={styles.kobeImage}
-              />
-              <figcaption className={styles.kobeCaption}>KOBE</figcaption>
-            </figure>
-
-            {/* Bio and portraits */}
-            <div className={styles.bioCard}>
-              <div className={styles.portraits}>
-                <img
-                  src="/images/about/me-young.JPEG"
-                  alt="Leonard young portrait"
-                  className={styles.portraitImage}
-                />
-                <img
-                  src="/images/about/me-now.jpg"
-                  alt="Leonard current portrait"
-                  className={styles.portraitImage}
-                />
-              </div>
-              <div className={styles.bioText}>
-                <h4 className={styles.name}>LEONARD STEWART (founder & designer)</h4>
-                <p>
-                  Leonard Stewart earned a Master of Architecture from South Dakota State University in August 2025 and is the founder of Studio StewArt. 
-                  He grew up building and making, from model planes and cars to building playsets and framing walls. His work blends research and creative design with hands on fabrication.
-                  This website is Leonards attempt to showcase his work, along with start a small 3D printing shop.
-                </p>
-                <p className={styles.contactNote}>
-                  For commissions, prints, or collaboration:{" "}
-                  <a href="mailto:leonard.stewart@studio-stewart.com">
-                    leonard.stewart@studio-stewart.com
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+<section className={styles.teamSection}>
+  <h2 className={`${styles.sectionHeading} ${styles.h2Left}`}>TEAM</h2>
+  <div style={{ display: "flex", gap: 48 }}>
+    {/* Kobe Card & Bio */}
+    <div>
+      <figure className={styles.kobeCard}>
+        <img
+          src="/images/about/kobe.png"
+          alt="Kobe — studio mascot"
+          className={styles.kobeImage}
+        />
+        <figcaption>
+          <span style={{fontWeight: "bold", fontStyle: "italic", fontSize:24, color:"#22314D"}}>KOBE</span>
+          <span style={{fontStyle: "italic", fontSize:16, color:"#a49365"}}> (studio manager)</span>
+        </figcaption>
+      </figure>
+      <div style={{marginTop: "18px", maxWidth:"240px", fontSize:"20px", color: "#333"}}>
+        Kobe is the studio’s resident cat and morale specialist. Official duties include supervising workers, inspecting warm computers, and approving model materials.<br/><br/>
+        <span style={{fontSize:"16px", color:"#666"}}>Not available for interviews at this time.</span>
+      </div>
+    </div>
+    {/* Leonard Section */}
+    <div className={styles.bioCard} style={{flex:1, alignItems:"flex-start"}}>
+      <div className={styles.portraits} style={{flexDirection:"row", gap:"12px"}}>
+        <img
+          src="/images/about/me-young.JPEG"
+          alt="Leonard young portrait"
+          className={styles.portraitImage}
+        />
+        <img
+          src="/images/about/me-now.jpg"
+          alt="Leonard current portrait"
+          className={styles.portraitImage}
+        />
+      </div>
+      <div className={styles.bioText}>
+        <h4 style={{margin: "20px 0 8px 0", fontSize:"2em", letterSpacing:".02em", color:"#22314D", fontWeight:"bold", fontStyle:"italic"}}>
+          LEONARD STEWART
+          <span style={{fontWeight:"normal", fontSize:"0.5em", color:"#a49365", fontStyle:"italic"}}> &nbsp;(founder & designer)</span>
+        </h4>
+        <p style={{fontSize:"20px", color:"#333"}}>
+          Leonard Stewart earned a Master of Architecture from South Dakota State University in August 2025 and is the founder of Studio Stewart. He grew up building and making things, from model planes and furniture to framing houses and constructing playsets. His work blends research-driven design with hands-on fabrication. Leonard runs a small 3D printing practice and develops prototypes, lithophanes, and limited-run objects while keeping a close link between concept and making.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
       </main>
     </>
   );
