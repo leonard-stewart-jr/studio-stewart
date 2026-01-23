@@ -55,30 +55,27 @@
   overflow: visible; /* allow the fixed logo to appear above this area */
   min-height: 1px;
 }
-
 .introLogoFigure {
   position: sticky;
   top: 86px;
   display: block;
   margin: 0;
-  align-self: flex-end; /* anchor the figure to the right edge of its column */
-  /* push the figure left by the page gutter so its right edge aligns with the centered content container */
-  margin-right: calc((100vw - min(1600px, 95vw)) / 2);
   z-index: 1000;
   pointer-events: auto;
+  right: calc((100vw - min(1600px, 95vw)) / 2);
 }
 
 .introLogo {
-  width: 640px;             
+  width: 640px;          
   height: auto;
   object-fit: contain;
   display: block;
-  max-width: none !important; /* ensure explicit width isn't clamped by parent */
+  max-width: none !important; 
   transform: none;
+  margin: 0;
   position: relative;
-  left: 20px;
+  right: 0;
 }
-
 /* Lead paragraph */
 .lead {
   margin: 0 0 12px 0;
