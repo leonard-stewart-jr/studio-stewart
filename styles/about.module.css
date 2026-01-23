@@ -40,7 +40,7 @@
 /* Intro/banner (left content, right column for positioning/fallback) */
 .intro {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 720px 720px; /* desktop: two equal 720px columns */
   gap: 28px;
   align-items: start;
   margin-bottom: 80px;
@@ -60,9 +60,10 @@
   top: 86px;
   display: block;
   margin: 0;
+  margin-left: auto; /* align the figure to the right edge of the right column */
   z-index: 1000;
   pointer-events: auto;
-  right: calc((100vw - min(1600px, 95vw)) / 2);
+  /* removed horizontal calc offset so the figure respects its column */
 }
 
 .introLogo {
