@@ -317,7 +317,7 @@
 
 .kobeRole {
   font-size: 20px;
-  color: #a49365;
+  color: #e6dbb9;
   font-style: italic;
   font-weight: 400;
   margin-left: 8px;
@@ -380,7 +380,7 @@
 .leonardName {
   margin: 12px 0 8px 0;
   text-transform: uppercase;
-  font-size: 2em;
+  font-size: 32px;
   letter-spacing: 0.03em;
   color: #22314D;
   font-weight: bold;
@@ -390,8 +390,8 @@
 .leonardRole {
   font-weight: normal;
   font-style: italic;
-  font-size: 0.5em;
-  color: #a49365;
+  font-size: 20px;
+  color: #e6dbb9;
   margin-left: 5px;
 }
 
