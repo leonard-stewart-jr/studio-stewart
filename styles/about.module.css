@@ -247,8 +247,10 @@
 }
 .skillHeading {
   margin: 0 0 8px 0;
-  font-size: 13px;
+  font-size: 48px;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #e6dbb9;
 }
 .skillList {
   margin: 0;
