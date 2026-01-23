@@ -254,12 +254,21 @@
 }
 .skillList {
   margin: 0;
-  padding-left: 40px;
+  padding-left: 0;       /* Remove extra default indentation */
   font-size: 20px;
   color: #666;
+  list-style: none;      /* Remove default bullets */
 }
 .skillList li {
   margin-bottom: 6px;
+  position: relative;    /* Makes space for ::before if you need to position it */
+}
+
+.skillList li::before {
+  content: "– ";            /* Dash character */
+  color: #22314D;           /* Replace with your actual site blue variable or hex */
+  font-weight: bold;
+  font-size: 1.2em;         /* Make dash more visible (optional) */
 }
 
 /* == Team == */
