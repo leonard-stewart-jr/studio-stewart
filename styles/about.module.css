@@ -199,7 +199,6 @@
 .servicesSection {
   margin-top: 8px;
   padding-top: 24px;
-  border-top: 1px solid rgba(0,0,0,0.03);
 }
 .servicesGrid {
   display: grid;
@@ -279,7 +278,6 @@
 .teamSection {
   margin-top: 36px;
   padding-top: 40px;
-  border-top: 1px solid rgba(0,0,0,0.03);
 }
 .teamGrid {
   display: grid;
