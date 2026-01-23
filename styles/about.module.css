@@ -315,10 +315,11 @@
 }
 
 .kobeRole {
-  font-size: 20px;
+  font-size: 24px;
   color: #e6dbb9;
   font-weight: 400;
   margin-left: 8px;
+  text-transform: uppercase;
 }
 
 .kobeBioBox {
@@ -328,7 +329,7 @@
 }
 
 .kobeBio {
-  font-size: 22px;
+  font-size: 24px;
   color: #222;
   text-align: left;
   line-height: 1.35;
@@ -339,7 +340,7 @@
 }
 
 .kobeNote {
-  font-size: 16px;
+  font-size: 18px;
   color: #666;
   font-style: italic;
   margin-top: 16px;
@@ -386,7 +387,7 @@
 
 .bioText {
   margin-top: 0px;
-  font-size: 20px;
+  font-size: 24px;
   color: #282828;
   max-width: 900px;
   width: 100%;
@@ -404,7 +405,7 @@
 
 .leonardRole {
   font-weight: normal;
-  font-size: 20px;
+  font-size: 24px;
   color: #e6dbb9;
   margin-left: 5px;
   text-align: center;
@@ -412,7 +413,7 @@
 
 .bioText p {
   margin: 0 0 8px 0;
-  font-size: 20px;
+  font-size: 24px;
   color: #333;
   line-height: 1.5;
 }
@@ -441,10 +442,10 @@
     font-size: clamp(32px, 5.2vw + 28px, 48px);
   }
   .lead {
-    font-size: 20px;
+    font-size: 24px;
   }
   .methodText {
-    font-size: 20px;
+    font-size: 24px;
     text-align: right;
   }
   .small {
@@ -452,10 +453,10 @@
     max-width: 420px;
   }
   .serviceText {
-    font-size: 20px;
+    font-size: 24px;
   }
   .bioText p {
-    font-size: 20px;
+    font-size: 24px;
   }
 }
 
