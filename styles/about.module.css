@@ -101,6 +101,7 @@
 .small {
   margin: 0;
   font-style: italic;
+  font-weight: bold;
   color: #e6dbb9;
   font-size: 40px;
   line-height: 1.05;
@@ -216,6 +217,7 @@
 .serviceTitle {
   margin: 0 0 8px 0;
   font-size: 38px;
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #e6dbb9;
@@ -250,6 +252,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #e6dbb9;
+  font-weight: bold;
 }
 .skillList {
   margin: 0;
