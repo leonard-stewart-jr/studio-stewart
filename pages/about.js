@@ -210,12 +210,6 @@ export default function AboutPage() {
           He grew up building and making, from model planes and cars to building playsets and framing walls. His work blends research and creative design with hands on fabrication.
           This website is Leonards attempt to showcase his work, along with start a small 3D printing shop.
         </p>
-        <p className={styles.contactNote}>
-          For commissions, prints, or collaboration:{" "}
-          <a href="mailto:leonard.stewart@studio-stewart.com">
-            leonard.stewart@studio-stewart.com
-          </a>
-        </p>
       </div>
     </div>
   </div>
