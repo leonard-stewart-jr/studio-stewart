@@ -261,14 +261,19 @@
 }
 .skillList li {
   margin-bottom: 6px;
-  position: relative;    /* Makes space for ::before if you need to position it */
+  position: relative;
+  list-style: none;      /* Remove bullets from nested lists too */
 }
-
 .skillList li::before {
-  content: "– ";            /* Dash character */
-  color: #22314D;           /* Replace with your actual site blue variable or hex */
+  content: "– ";
+  color: #22314D;        /* Your site blue */
   font-weight: bold;
-  font-size: 1.2em;         /* Make dash more visible (optional) */
+  font-size: 1.2em;
+}
+.skillList ul {
+  margin-bottom: 0;
+  margin-top: 4px;
+  padding-left: 24px;    /* Indent nested ul if you want */
 }
 
 /* == Team == */
