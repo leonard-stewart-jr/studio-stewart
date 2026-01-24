@@ -180,7 +180,9 @@ export default function AboutPage() {
   </div>
   <div className={styles.kobeBioBox}>
     <div className={styles.kobeBio}>
-      Kobe is the studio’s resident cat and morale specialist. Official duties include supervising workers, inspecting warm computers, and approving model materials.<br/><br/>
+      Kobe is the studio’s resident cat and morale specialist.
+      <br /><br />
+      Official duties include supervising workers, inspecting warm computers, and approving model materials.<br/><br/>
       <span className={styles.kobeNote}>Not available for interviews at this time.</span>
     </div>
   </div>
