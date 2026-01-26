@@ -646,8 +646,8 @@ function LithophaneGrid({ lit, setLit }) {
             key={item.id}
             item={item}
             lit={lit}
-            w={item.double ? cardW * 2 : cardW}         // Double width for Kobe; others normal
-            h={item.double ? doubleH : cardH}           // Double height for Kobe
+            w={item.double ? cardW * 2 + gap : cardW}
+            h={item.double ? cardH * 2 + gap : cardH}
             isMobile={isMobile}
             gridColumn={item.double ? "span 2" : undefined}
             gridRow={item.double ? "span 2" : undefined}
