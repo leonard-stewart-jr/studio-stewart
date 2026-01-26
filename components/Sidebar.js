@@ -317,39 +317,22 @@ export default function Sidebar({
           </ul>
           {/* ===== END 3D PRINTING SECTION ===== */}
 
-          <div className={styles.sidebarSectionTitle}>Step 3: Placeholder Section</div>
-          <p style={{ fontSize: 13, color: "#888" }}>
-            This section exists to make the sidebar content long enough to require scrolling on mobile and desktop. You can add or remove items as needed.
-          </p>
-
-          <div className={styles.sidebarSectionTitle}>Step 4: Final Section</div>
-          <p style={{ fontSize: 13, color: "#888" }}>
-            If you can scroll this sidebar, the overflow-y: auto is working as intended.
-          </p>
-        </nav>
-
-        <div
-          className={styles.sidebarFooter}
-          style={{
-            padding: "0 24px 24px",
-            marginBottom: "100px",
-          }}
-        >
-          <h3>Other Links</h3>
-          <ul>
-            {socialLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+        <div className={styles.sidebarSectionTitle}>Contacts</div>
+          <ul className={styles.sidebarList}>
+            <li>
+                <a href="mailto:leonardwaynejr@icloud.com" className={styles.sidebarLink} aria-label="Email">Email</a>
+            </li>
+             <li>
+                <a href="https://www.linkedin.com/in/leonardstewartjr/" className={styles.sidebarLink} aria-label="Twitter">LinkedIn</a>
+            </li>
+            <li>
+              <a href="https://makerworld.com/en/@leonardstewart" className={styles.sidebarLink} aria-label="Instagram">MakerWorld</a>
+            </li>
+            <li>
+              <a href="tel:6053107894" className={styles.sidebarLink} aria-label="Phone">Phone</a>
+            </li>
           </ul>
-        </div>
+
       </motion.aside>
     </>
   );
