@@ -2,6 +2,13 @@
 // All images located in /public/images/prints/litho/
 
 const lithophanes = [
+   {
+    id: "kobe",
+    unlit: "/images/prints/litho/kobe_unlit.jpg",
+    lit: "/images/prints/litho/kobe_lit.jpg",
+    displayName: "Kobe Bryant Iconic Championship Image",
+    double: true, // Special property to flag double height
+  },
   {
     id: "ai",
     unlit: "/images/prints/litho/ai_unlit.jpg",
@@ -31,13 +38,6 @@ const lithophanes = [
     unlit: "/images/prints/litho/joel_unlit.jpg",
     lit: "/images/prints/litho/joel_lit.jpg",
     displayName: "Joel Embiid 76ers Trading Card",
-  },
-  {
-    id: "kobe",
-    unlit: "/images/prints/litho/kobe_unlit.jpg",
-    lit: "/images/prints/litho/kobe_lit.jpg",
-    displayName: "Kobe Bryant Iconic Championship Image",
-    double: true, // Special property to flag double height
   },
   {
     id: "maxey",
