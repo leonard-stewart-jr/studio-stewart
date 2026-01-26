@@ -635,7 +635,7 @@ function LithophaneGrid({ lit, setLit }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+          gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
           gap: isMobile ? 14 : 24,
           alignItems: "stretch",
           justifyItems: "center",
