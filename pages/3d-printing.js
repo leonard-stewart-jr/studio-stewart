@@ -19,9 +19,8 @@ import {
   FILTER_BUTTONS as FILTER_BUTTONS_NBA
 } from "../data/nba-logos";
 
-import lithophanesData from "../data/lithophanes"; // <--- ADD THIS IMPORT
+import lithophanesData from "../data/lithophanes";
 
-// Local categories — three items as you adjusted
 const CATEGORIES = [
   { key: "sports", label: "SPORTS" },
   { key: "lithophanes", label: "LITHOPHANES" },
@@ -229,7 +228,7 @@ export default function ThreeDPrinting() {
     // If user clicked a conference control (ALL / EAST / WEST), treat as before:
     if (btn.type === "conference") {
       setConference(btn.value);
-      setDivision("ALL"); // reset division when switching conference
+      setDivision("ALL");
       return;
     }
 
