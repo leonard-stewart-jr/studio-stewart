@@ -20,8 +20,8 @@ export default function NavBar({ headerHeight = 60 }) {
   return (
     <nav className="main-nav" style={{ height: headerHeight, alignItems: "center" }}>
       {navItems.map((item) => (
-        <Link key={item.href} href={item.href}>
-          <a className={isActive(item.href) ? "active" : ""}>{item.label}</a>
+        <Link key={item.href} href={item.href} className={isActive(item.href) ? "active" : ""}>
+          {item.label}
         </Link>
       ))}
     </nav>
