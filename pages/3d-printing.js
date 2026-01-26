@@ -21,6 +21,123 @@ import {
 
 import lithophanesData from "../data/lithophanes";
 
+function LightbulbToggleButton({ lit, setLit }) {
+  const [pulse, setPulse] = useState(true);
+
+  // Pulse ring fades after 2500ms or after click/tap
+  useEffect(() => {
+    if (pulse) {
+      const t = setTimeout(() => setPulse(false), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [pulse]);
+
+  // For SVG color overrides
+  const bulbColor = lit ? "#ffe85d" : "#d3d3bc"; // "on" yellow, "off" muted
+  const glowColor = "#ffe85d"; // glow ring color
+
+  return (
+    <button
+      aria-label={lit ? "Turn off print lights" : "Light up prints"}
+      aria-pressed={lit}
+      onClick={() => {
+        setLit(l => !l);
+        setPulse(false);
+      }}
+      style={{
+        position: "fixed",
+        top: 34,
+        right: 34,
+        width: 68,
+        height: 68,
+        padding: 0,
+        border: "none",
+        background: "none",
+        cursor: "pointer",
+        zIndex: 3000,
+        outline: "none",
+        transition: "filter 0.18s"
+      }}
+    >
+      {/* Animated Pulse/attention-helper ring */}
+      {pulse && (
+        <span
+          style={{
+            position: "absolute",
+            top: "50%", left: "50%",
+            transform: "translate(-50%,-50%)",
+            width: 85, height: 85,
+            borderRadius: "50%",
+            boxShadow: "0 0 20px 10px #ffe85dcc, 0 0 0px 0px #ffe85d",
+            background: "rgba(255,232,93,0.18)",
+            opacity: 1,
+            animation: "pulse-bulb 1.1s cubic-bezier(.7,.1,.93,.9) infinite",
+            pointerEvents: "none"
+          }}
+        />
+      )}
+      {/* Lightbulb SVG (bulb color and optional glow) */}
+      <span
+        style={{
+          display: "block",
+          position: "relative"
+        }}
+      >
+        {/* Outer glow when lit */}
+        {lit && (
+          <span
+            style={{
+              position: "absolute",
+              top: "50%", left: "50%",
+              transform: "translate(-50%,-50%)",
+              width: 78, height: 78,
+              borderRadius: "50%",
+              boxShadow: "0 0 36px 10px #ffe85dcc, 0 0 0px 0px #ffe85d",
+              background: "rgba(255,232,93,0.22)",
+              opacity: 0.8,
+              zIndex: 2,
+              pointerEvents: "none"
+            }}
+          />
+        )}
+        <img
+          src="/icons/lightbulb.svg"
+          alt={lit ? "Lightbulb on" : "Lightbulb off"}
+          style={{
+            width: 68,
+            height: 68,
+            filter: lit ? "drop-shadow(0 0 22px #ffe85d88)" : "none",
+            transition: "filter 0.18s"
+          }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            left: "50%", top: "53%",
+            transform: "translate(-50%,-50%)",
+            width: 28, height: 28, borderRadius: "47%",
+            background: bulbColor,
+            opacity: lit ? 0.89 : 0.52,
+            boxShadow: lit ? "0 0 20px 8px #ffe85d77" : "none",
+            pointerEvents: "none",
+            zIndex: 2
+          }}
+        />
+      </span>
+      {/* Inline CSS animation: pulse */}
+      <style>
+        {`
+        @keyframes pulse-bulb {
+          0% { opacity: 0.9; transform: translate(-50%,-50%) scale(1);}
+          50% { opacity: 0.4; transform: translate(-50%,-50%) scale(1.12);}
+          100% { opacity: 0.9; transform: translate(-50%,-50%) scale(1);}
+        }
+        `}
+      </style>
+    </button>
+  );
+}
+
 const CATEGORIES = [
   { key: "sports", label: "SPORTS" },
   { key: "lithophanes", label: "LITHOPHANES" },
@@ -608,30 +725,6 @@ function LithophaneGrid({ lit, setLit }) {
 
   return (
     <div style={{ width: "100%", margin: "0 auto" }}>
-      <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
-        <button
-          type="button"
-          aria-pressed={lit}
-          onClick={() => setLit(l => !l)}
-          style={{
-            padding: "8px 20px",
-            border: "none",
-            borderRadius: 6,
-            fontFamily: "Inter, sans-serif",
-            background: "#e6dbb9",
-            color: "#181818",
-            fontWeight: 350,
-            letterSpacing: ".09em",
-            fontSize: isMobile ? 14 : 15.5,
-            margin: "0 0 10px 0",
-            cursor: "pointer",
-            boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
-            transition: "background 0.18s"
-          }}
-        >
-          {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
-        </button>
-      </div>
       <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <div
           style={{
@@ -776,6 +869,7 @@ function LithoCard({ item, lit, w, h, isMobile, gridRow, gridColumn }) {
 
   return (
     <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
+      <LightbulbToggleButton lit={isLithoLit} setLit={setIsLithoLit} />
       <div style={pageStyle}>
         {/* Single nav-card-mid that contains only the tabs (structure matches IndependentStudio) */}
         <div className="nav-card nav-card-mid" aria-hidden={false}>
