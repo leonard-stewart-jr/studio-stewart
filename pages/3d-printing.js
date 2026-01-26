@@ -606,7 +606,7 @@ function LithophaneGrid({ lit, setLit }) {
   const cardH = Math.round(cardW * baseRatio);
   const doubleH = cardH * 2 + (isMobile ? 14 : 24);
 
- return (
+return (
   <div style={{ width: "100%", margin: "0 auto" }}>
     <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
       <button
@@ -635,14 +635,14 @@ function LithophaneGrid({ lit, setLit }) {
     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
       <div
         style={{
-      display: "grid",
-      gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
-      rowGap: gap,             // vertical gap (adjust this value as you want)
-      columnGap: 80px,         // horizontal gap (use your existing gap variable)
-      alignItems: "stretch",
-      justifyItems: "center",
-      marginTop: isMobile ? 20 : 26
-    }}
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
+          rowGap: 40,             // vertical gap between rows (change as needed!)
+          columnGap: gap,         // horizontal gap between columns (use your gap var)
+          alignItems: "stretch",
+          justifyItems: "center",
+          marginTop: isMobile ? 20 : 26
+        }}
       >
         {lithophanesData.map((item) => (
           <LithoCard
