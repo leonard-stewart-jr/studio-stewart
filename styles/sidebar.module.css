@@ -315,7 +315,7 @@ nav.sidebar-nav {
 .sidebarSubLink:hover,
 .sidebarSubLink:focus {
   color: #e6dbb9;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .sidebarLink {
