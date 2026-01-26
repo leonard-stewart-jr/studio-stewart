@@ -104,8 +104,8 @@ function LightbulbToggleButton({ lit, setLit }) {
           src="/icons/lightbulb.svg"
           alt={lit ? "Lightbulb on" : "Lightbulb off"}
           style={{
-            width: 68,
-            height: 68,
+            width: 136,
+            height: 136,
             filter: lit ? "drop-shadow(0 0 22px #ffe85d88)" : "none",
             transition: "filter 0.18s"
           }}
