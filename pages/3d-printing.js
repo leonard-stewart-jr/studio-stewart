@@ -133,7 +133,7 @@ function LightbulbToggleButton({ lit, setLit }) {
       fontWeight: 520,
       fontSize: 18,
       letterSpacing: ".09em",
-      color: "#d7b550",
+      color: "#ffffff",
       textShadow: "0 1px 4px #fff7, 0 2px 5px #ffe85d77",
       textAlign: "center",
       userSelect: "none"
