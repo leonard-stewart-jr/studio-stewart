@@ -301,8 +301,6 @@ export default function Sidebar({
             </li>
           </ul>
 
-export default function ThreeDPrintingSidebarSection() {
-  return (
     <div>
       <div className={styles.sidebarSectionTitle}>3D Printing</div>
       <ul className={styles.sidebarList}>
