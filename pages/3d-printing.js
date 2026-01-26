@@ -872,7 +872,8 @@ return (
     {/* --- Show lightbulb ONLY on LITHOPHANES tab. Position below header/subheader by shifting down 104px --- */}
     {activeCategory === "lithophanes" && (
       <LightbulbToggleButton lit={isLithoLit} setLit={setIsLithoLit} topPx={104} />
-      <div style={pageStyle}>
+    )}
+    <div style={pageStyle}>
         {/* Single nav-card-mid that contains only the tabs (structure matches IndependentStudio) */}
         <div className="nav-card nav-card-mid" aria-hidden={false}>
           <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
