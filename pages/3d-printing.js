@@ -631,9 +631,10 @@ function LithophaneGrid({ lit, setLit }) {
         >
           {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
         </button>
-      </div>
-      <div
-        style={{
+        </div>
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
           display: "grid",
           gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
           gap: isMobile ? 14 : 24,
