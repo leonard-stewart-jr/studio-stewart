@@ -317,24 +317,58 @@ export default function Sidebar({
           </ul>
           {/* ===== END 3D PRINTING SECTION ===== */}
 
-        <div className={styles.sidebarSectionTitle}>Contacts</div>
-        <ul className={styles.sidebarList}>
-          <li>
-            <a href="mailto:leonardwaynejr@icloud.com" className={styles.sidebarLink} aria-label="Email" target="_blank" rel="noopener noreferrer">Email</a>
-          </li>
-          <li>
-            <a href="https://www.linkedin.com/in/leonardstewartjr/" className={styles.sidebarLink} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          </li>
-          <li>
-            <a href="https://makerworld.com/en/@leonardstewart" className={styles.sidebarLink} aria-label="Makerworld" target="_blank" rel="noopener noreferrer">MakerWorld</a>
-          </li>
-          <li>
-            <a href="tel:6053107894" className={styles.sidebarLink} aria-label="Phone" target="_blank" rel="noopener noreferrer">Phone</a>
-          </li>
-          <li>
-            <a href="https://github.com/leonard-stewart-jr/studio-stewart" className={styles.sidebarLink} aria-label="CODE" target="_blank" rel="noopener noreferrer">CODE</a>
-          </li>
-        </ul>
+<ul className={styles.sidebarList}>
+  <li>
+    <a
+      href="mailto:leonardwaynejr@icloud.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.sidebarLink}
+    >
+      Email
+    </a>
+  </li>
+  <li>
+    <a
+      href="https://www.linkedin.com/in/leonardstewartjr/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.sidebarLink}
+    >
+      LinkedIn
+    </a>
+  </li>
+  <li>
+    <a
+      href="https://makerworld.com/en/@leonardstewart"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.sidebarLink}
+    >
+      MakerWorld
+    </a>
+  </li>
+  <li>
+    <a
+      href="tel:6053107894"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.sidebarLink}
+    >
+      Phone
+    </a>
+  </li>
+  <li>
+    <a
+      href="https://github.com/leonard-stewart-jr/studio-stewart"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.sidebarLink}
+    >
+      CODE
+    </a>
+  </li>
+</ul>
         <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
           <p>
             <b>Leonard Stewart</b> — Digital portfolio<br />
