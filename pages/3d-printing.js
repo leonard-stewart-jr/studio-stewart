@@ -600,6 +600,7 @@ function LithophaneGrid({ lit, setLit }) {
   const columns = isMobile ? 2 : 3; // <- This is the whole logic now!
 
   // (Keep your portrait size logic as before)
+  const gap = isMobile ? 14 : 24;
   const baseRatio = 1.35;
   const cardW = isMobile ? 220 : 328;
   const cardH = Math.round(cardW * baseRatio);
