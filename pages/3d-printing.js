@@ -46,7 +46,7 @@ function LightbulbToggleButton({ lit, setLit }) {
       }}
       style={{
         position: "fixed",
-        top: 34,
+        top: 138,
         right: 34,
         width: 68,
         height: 68,
