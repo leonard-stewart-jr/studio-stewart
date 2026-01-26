@@ -19,6 +19,8 @@ import {
   FILTER_BUTTONS as FILTER_BUTTONS_NBA
 } from "../data/nba-logos";
 
+import lithophanesData from "../data/lithophanes"; // <--- ADD THIS IMPORT
+
 // Local categories — three items as you adjusted
 const CATEGORIES = [
   { key: "sports", label: "SPORTS" },
@@ -580,6 +582,151 @@ export default function ThreeDPrinting() {
     );
   }
 
+  // LITHOPHANE GRID (NEW)
+  function LithophaneGrid() {
+    const [lit, setLit] = useState(false);
+
+    // Handles grid responsiveness
+    const [columns, setColumns] = useState(4);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      function handleResize() {
+        const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+        setColumns(w < 700 ? 2 : w < 1100 ? 3 : 4);
+        setIsMobile(w < 700);
+      }
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // Portrait card dimensions
+    const baseRatio = 1.35;
+    const cardW = isMobile ? 110 : 164;
+    const cardH = Math.round(cardW * baseRatio);
+    const doubleH = cardH * 2 + (isMobile ? 14 : 24);
+
+    return (
+      <div style={{ width: "100%", margin: "0 auto" }}>
+        <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
+          <button
+            type="button"
+            aria-pressed={lit}
+            onClick={() => setLit(l => !l)}
+            style={{
+              padding: "8px 20px",
+              border: "none",
+              borderRadius: 6,
+              fontFamily: "Inter, sans-serif",
+              background: "#e6dbb9",
+              color: "#181818",
+              fontWeight: 350,
+              letterSpacing: ".09em",
+              fontSize: isMobile ? 14 : 15.5,
+              margin: "0 0 10px 0",
+              cursor: "pointer",
+              boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
+              transition: "background 0.18s"
+            }}
+          >
+            {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
+          </button>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+            gap: isMobile ? 14 : 24,
+            alignItems: "stretch",
+            justifyItems: "center",
+            marginTop: isMobile ? 20 : 26
+          }}
+        >
+          {lithophanesData.map((item) => (
+            <LithoCard
+              key={item.id}
+              item={item}
+              lit={lit}
+              w={cardW}
+              h={item.double ? doubleH : cardH}
+              isMobile={isMobile}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function LithoCard({ item, lit, w, h, isMobile }) {
+    const [hovered, setHovered] = useState(false);
+    return (
+      <div
+        tabIndex={0}
+        aria-label={item.displayName}
+        title={item.displayName}
+        style={{
+          width: w,
+          height: h,
+          borderRadius: 11,
+          background: "#fff",
+          position: "relative",
+          overflow: "hidden",
+          boxShadow: "0 4px 19px rgba(90,90,90,0.13)",
+          border: "1.5px solid #dedede",
+          transition: "box-shadow 0.18s, border-color 0.16s, transform 0.14s",
+          cursor: "pointer",
+          gridRow: item.double ? `span 2` : undefined,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+      >
+        <img
+          src={lit ? item.lit : item.unlit}
+          alt={item.displayName}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            background: "#f0f0f0",
+            userSelect: "none",
+            transition: "opacity 0.18s"
+          }}
+          draggable={false}
+        />
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            bottom: 0,
+            width: "100%",
+            padding: isMobile ? "7px 0" : "11px 0",
+            background: hovered
+              ? "rgba(0,0,0,0.57)"
+              : "rgba(0,0,0,0.21)",
+            color: "#fff",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 350,
+            fontSize: isMobile ? 12 : 14.5,
+            letterSpacing: ".04em",
+            textAlign: "center",
+            opacity: hovered ? 1 : 0,
+            pointerEvents: "none",
+            transition: "opacity 0.19s, background 0.15s"
+          }}
+        >
+          {item.displayName}
+        </div>
+      </div>
+    );
+  }
+
   // Render grid items
   function renderGridItems() {
     if (
@@ -678,9 +825,13 @@ export default function ThreeDPrinting() {
         <SportsDropdown />
 
         {/* Grid */}
-        <div ref={gridRef} style={gridWrapStyle}>
-          {renderGridItems()}
-        </div>
+        {activeCategory === "lithophanes" ? (
+          <LithophaneGrid />
+        ) : (
+          <div ref={gridRef} style={gridWrapStyle}>
+            {renderGridItems()}
+          </div>
+        )}
       </div>
     </div>
   );
