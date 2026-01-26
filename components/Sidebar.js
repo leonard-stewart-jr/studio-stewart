@@ -163,14 +163,13 @@ export default function Sidebar({
           {/* Top nav links grouped so we can preserve larger spacing for them only */}
           <div className={styles.topNavGroup}>
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} passHref legacyBehavior>
-                <a
-                  className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
-                  onClick={onClose}
-                >
-                  {item.label}
-                </a>
-              </Link>
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
+              >
+                {item.label}
+            </Link>
             ))}
           </div>
 
