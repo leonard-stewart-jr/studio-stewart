@@ -214,7 +214,8 @@ export default function ThreeDPrinting() {
   const gridWrapStyle = {
     display: "grid",
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-    : isMobile ? 14 : 18,
+    rowGap: isMobile ? 20 : 40,
+    columnGap: isMobile ? 14 : 24,
     alignItems: "start",
     justifyItems: "center",
     marginTop: isMobile ? 12 : 14
