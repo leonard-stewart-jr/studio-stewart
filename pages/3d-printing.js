@@ -215,7 +215,7 @@ export default function ThreeDPrinting() {
   const gridWrapStyle = {
     display: "grid",
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-    gap: isMobile ? 14 : 18,
+    : isMobile ? 14 : 18,
     alignItems: "start",
     justifyItems: "center",
     marginTop: isMobile ? 12 : 14
@@ -394,7 +394,7 @@ export default function ThreeDPrinting() {
       width: dropdownPos.width,
       display: "flex",
       flexDirection: "column",
-      gap: 2,
+      : 2,
       alignItems: "stretch",
       pointerEvents: "auto",
       transform: "translateZ(0)"
@@ -425,7 +425,7 @@ export default function ThreeDPrinting() {
       if (!el) return;
       const r = el.getBoundingClientRect();
       // Position tooltip to the right of the hovered element (viewport coords)
-      const left = r.right + 10; // 10px gap to the right
+      const left = r.right + 10; // 10px  to the right
       const top = r.top + r.height / 2; // vertically center on the element
       setTooltip({
         visible: true,
@@ -600,7 +600,7 @@ function LithophaneGrid({ lit, setLit }) {
   const columns = isMobile ? 2 : 3; // <- This is the whole logic now!
 
   // (Keep your portrait size logic as before)
-  const gap = isMobile ? 14 : 24;
+  const  = isMobile ? 14 : 24;
   const baseRatio = 1.35;
   const cardW = isMobile ? 220 : 328;
   const cardH = Math.round(cardW * baseRatio);
@@ -635,13 +635,14 @@ function LithophaneGrid({ lit, setLit }) {
     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
-          gap: gap,
-          alignItems: "stretch",
-          justifyItems: "center",
-          marginTop: isMobile ? 20 : 26
-        }}
+      display: "grid",
+      gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
+      rowGap: gap,             // vertical gap (adjust this value as you want)
+      columnGap: 80px,         // horizontal gap (use your existing gap variable)
+      alignItems: "stretch",
+      justifyItems: "center",
+      marginTop: isMobile ? 20 : 26
+    }}
       >
         {lithophanesData.map((item) => (
           <LithoCard
