@@ -278,7 +278,7 @@ export default function Sidebar({
               <ul className={styles.sidebarSublist}>
                 <li>
                   <Link
-                    href="/3d-printing#nfl"
+                    href={{ pathname: "/3d-printing", query: { tab: "sports", league: "nfl" } }}
                     aria-label="3D Printing NFL"
                     className={styles.sidebarSubLink}
                   >
@@ -287,7 +287,7 @@ export default function Sidebar({
                 </li>
                 <li>
                   <Link
-                    href="/3d-printing#nba"
+                    href={{ pathname: "/3d-printing", query: { tab: "sports", league: "nba" } }}
                     aria-label="3D Printing NBA"
                     className={styles.sidebarSubLink}
                   >
@@ -298,7 +298,7 @@ export default function Sidebar({
             </li>
             <li>
               <Link
-                href="/3d-printing#lithophanes"
+                href={{ pathname: "/3d-printing", query: { tab: "lithophanes" } }}
                 aria-label="3D Printing Lithophanes"
                 className={styles.sidebarLink}
               >
@@ -307,7 +307,7 @@ export default function Sidebar({
             </li>
             <li>
               <Link
-                href="/3d-printing#other"
+                href={{ pathname: "/3d-printing", query: { tab: "other" } }}
                 aria-label="3D Printing Other"
                 className={styles.sidebarLink}
               >
