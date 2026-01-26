@@ -335,13 +335,20 @@ export default function Sidebar({
               <a href="https://github.com/leonard-stewart-jr/studio-stewart" className={styles.sidebarLink} aria-label="CODE">CODE</a>
             </li>
           </ul>
-  <div
+        <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
+          <p>
+            <b>Leonard Stewart</b> — Digital portfolio<br />
+            Architecture Student, designer, and maker.<br />
+            Explore my work and reach out to connect!
+          </p>
+        </div>
+
+        <div
           className={styles.sidebarFooter}
           style={{
             padding: "0 24px 24px",
             marginBottom: "100px",
           }}
-        >
     </nav>
 
   </motion.aside>
