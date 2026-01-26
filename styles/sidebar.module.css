@@ -275,6 +275,58 @@ nav.sidebar-nav {
   touch-action: manipulation;
 }
 
+/* Sidebar.module.css */
+.sidebarList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarSubtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #28355c; /* deep blue, adjust to preference */
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.sidebarSublist {
+  list-style: none;
+  margin: 0 0 0 14px; /* indent sub-links */
+  padding: 0;
+}
+
+.sidebarSubLink {
+  display: block;
+  font-size: 13px;
+  color: #b1b1ae;
+  text-decoration: none;
+  margin: 2px 0 2px 0;
+  padding: 2px 0;
+  transition: color 0.2s;
+}
+
+.sidebarSubLink:hover,
+.sidebarSubLink:focus {
+  color: #e6dbb9;
+  text-decoration: underline;
+}
+
+.sidebarLink {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e6dbb9; /* site tan */
+  margin: 8px 0 0 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.sidebarLink:hover,
+.sidebarLink:focus {
+  color: #28355c; /* deep blue on hover if you want */
+  text-decoration: underline;
+}
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
 
 @media (max-width: 700px) {
