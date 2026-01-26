@@ -301,16 +301,53 @@ export default function Sidebar({
             </li>
           </ul>
 
-          <div className={styles.sidebarSectionTitle}>Step 2: Even more content</div>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-            {[...Array(10)].map((_, i) => (
-              <li key={`more-${i}`}>
-                <a href="#" style={{ color: "#b1b1ae", fontSize: 13 }}>
-                  Item {i + 1}
-                </a>
-              </li>
-            ))}
+export default function ThreeDPrintingSidebarSection() {
+  return (
+    <div>
+      <div className={styles.sidebarSectionTitle}>3D Printing</div>
+      <ul className={styles.sidebarList}>
+        <li>
+          <div className={styles.sidebarSubtitle}>Sports</div>
+          <ul className={styles.sidebarSublist}>
+            <li>
+              <a
+                href="/3d-printing#nfl"
+                className={styles.sidebarSubLink}
+                aria-label="3D Printing NFL"
+              >
+                NFL
+              </a>
+            </li>
+            <li>
+              <a
+                href="/3d-printing#nba"
+                className={styles.sidebarSubLink}
+                aria-label="3D Printing NBA"
+              >
+                NBA
+              </a>
+            </li>
           </ul>
+        </li>
+        <li>
+          <a
+            href="/3d-printing#lithophanes"
+            className={styles.sidebarLink}
+            aria-label="3D Printing Lithophanes"
+          >
+            Lithophanes
+          </a>
+        </li>
+        <li>
+          <a
+            href="/3d-printing#other"
+            className={styles.sidebarLink}
+            aria-label="3D Printing Other"
+          >
+            Other
+          </a>
+        </li>
+      </ul>
 
           <div className={styles.sidebarSectionTitle}>Step 3: Placeholder Section</div>
           <p style={{ fontSize: 13, color: "#888" }}>
@@ -323,60 +360,6 @@ export default function Sidebar({
           </p>
         </nav>
 
-{/* 3D Printing Section */}
-<div className={styles.sidebarSectionTitle}>3D Printing</div>
-<ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-  {/* Sports (with children) */}
-  <li>
-    <div className={styles.portfolioLink} style={{ fontWeight: 500, fontSize: 15, marginTop: 8, marginBottom: 4 }}>
-      Sports
-    </div>
-    <ul style={{ listStyle: "none", margin: 0, paddingLeft: 16 }}>
-      <li>
-        <a
-          href="#"
-          className={styles.portfolioLink}
-          aria-label="NFL Section"
-          style={{ fontSize: 13, color: "#b1b1ae" }}
-        >
-          NFL
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          className={styles.portfolioLink}
-          aria-label="NBA Section"
-          style={{ fontSize: 13, color: "#b1b1ae" }}
-        >
-          NBA
-        </a>
-      </li>
-    </ul>
-  </li>
-  {/* Lithophanes */}
-  <li>
-    <a
-      href="#"
-      className={styles.portfolioLink}
-      aria-label="Lithophanes Section"
-      style={{ fontWeight: 500, fontSize: 15, marginTop: 8, marginBottom: 4 }}
-    >
-      Lithophanes
-    </a>
-  </li>
-  {/* Other */}
-  <li>
-    <a
-      href="#"
-      className={styles.portfolioLink}
-      aria-label="Other Section"
-      style={{ fontWeight: 500, fontSize: 15, marginTop: 8, marginBottom: 4 }}
-    >
-      Other
-    </a>
-  </li>
-</ul>
 
         <div
           className={styles.sidebarFooter}
