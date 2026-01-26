@@ -323,13 +323,60 @@ export default function Sidebar({
           </p>
         </nav>
 
-        <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
-          <p>
-            <b>Leonard Stewart</b> — Digital portfolio<br />
-            Architecture Student, designer, and maker.<br />
-            Explore my work and reach out to connect!
-          </p>
-        </div>
+{/* 3D Printing Section */}
+<div className={styles.sidebarSectionTitle}>3D Printing</div>
+<ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+  {/* Sports (with children) */}
+  <li>
+    <div className={styles.portfolioLink} style={{ fontWeight: 500, fontSize: 15, marginTop: 8, marginBottom: 4 }}>
+      Sports
+    </div>
+    <ul style={{ listStyle: "none", margin: 0, paddingLeft: 16 }}>
+      <li>
+        <a
+          href="#"
+          className={styles.portfolioLink}
+          aria-label="NFL Section"
+          style={{ fontSize: 13, color: "#b1b1ae" }}
+        >
+          NFL
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          className={styles.portfolioLink}
+          aria-label="NBA Section"
+          style={{ fontSize: 13, color: "#b1b1ae" }}
+        >
+          NBA
+        </a>
+      </li>
+    </ul>
+  </li>
+  {/* Lithophanes */}
+  <li>
+    <a
+      href="#"
+      className={styles.portfolioLink}
+      aria-label="Lithophanes Section"
+      style={{ fontWeight: 500, fontSize: 15, marginTop: 8, marginBottom: 4 }}
+    >
+      Lithophanes
+    </a>
+  </li>
+  {/* Other */}
+  <li>
+    <a
+      href="#"
+      className={styles.portfolioLink}
+      aria-label="Other Section"
+      style={{ fontWeight: 500, fontSize: 15, marginTop: 8, marginBottom: 4 }}
+    >
+      Other
+    </a>
+  </li>
+</ul>
 
         <div
           className={styles.sidebarFooter}
