@@ -323,13 +323,16 @@ export default function Sidebar({
                 <a href="mailto:leonardwaynejr@icloud.com" className={styles.sidebarLink} aria-label="Email">Email</a>
             </li>
              <li>
-                <a href="https://www.linkedin.com/in/leonardstewartjr/" className={styles.sidebarLink} aria-label="Twitter">LinkedIn</a>
+                <a href="https://www.linkedin.com/in/leonardstewartjr/" className={styles.sidebarLink} aria-label="LinkedIn">LinkedIn</a>
             </li>
             <li>
-              <a href="https://makerworld.com/en/@leonardstewart" className={styles.sidebarLink} aria-label="Instagram">MakerWorld</a>
+              <a href="https://makerworld.com/en/@leonardstewart" className={styles.sidebarLink} aria-label="Makerworld">MakerWorld</a>
             </li>
             <li>
               <a href="tel:6053107894" className={styles.sidebarLink} aria-label="Phone">Phone</a>
+            </li>
+            <li>
+              <a href="https://github.com/leonard-stewart-jr/studio-stewart" className={styles.sidebarLink} aria-label="CODE">CODE</a>
             </li>
           </ul>
 
