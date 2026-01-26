@@ -310,42 +310,42 @@ export default function ThreeDPrintingSidebarSection() {
           <div className={styles.sidebarSubtitle}>Sports</div>
           <ul className={styles.sidebarSublist}>
             <li>
-              <a
+              <Link
                 href="/3d-printing#nfl"
-                className={styles.sidebarSubLink}
                 aria-label="3D Printing NFL"
+                className={styles.sidebarSubLink}
               >
                 NFL
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/3d-printing#nba"
-                className={styles.sidebarSubLink}
                 aria-label="3D Printing NBA"
+                className={styles.sidebarSubLink}
               >
                 NBA
-              </a>
+              </Link>
             </li>
           </ul>
         </li>
         <li>
-          <a
+          <Link
             href="/3d-printing#lithophanes"
-            className={styles.sidebarLink}
             aria-label="3D Printing Lithophanes"
+            className={styles.sidebarLink}
           >
             Lithophanes
-          </a>
+          </Link>
         </li>
         <li>
-          <a
+          <Link
             href="/3d-printing#other"
-            className={styles.sidebarLink}
             aria-label="3D Printing Other"
+            className={styles.sidebarLink}
           >
             Other
-          </a>
+          </Link>
         </li>
       </ul>
 
