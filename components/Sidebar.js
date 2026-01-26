@@ -1,6 +1,3 @@
-// NOTE: this is your existing Sidebar.js with the portfolio link block updated
-// to programmatically set window.location.hash when already on the viewer page.
-// This guarantees PortfolioViewer's hashchange listener runs reliably.
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
@@ -52,48 +49,33 @@ export default function Sidebar({
   };
   const hamburgerTransition = { duration: 0.18, ease: "linear" };
 
-  // Helper to navigate to the portfolio viewer with a hash and close the sidebar.
-  // Behavior:
-  // - If already on /undergraduate-portfolio, set window.location.hash = hash (always fires hashchange).
-  // - Otherwise, navigate with router.push to /undergraduate-portfolio#hash (shallow).
-  // - Fallback to location.href if router push fails.
+  // Helper to navigate to the portfolio viewer with a hash and close the sidebar
   const navigateToPortfolioHash = (hash) => {
     const url = `/undergraduate-portfolio#${hash}`;
     try {
       if (typeof window !== "undefined") {
-        // If we're already on the viewer page, setting location.hash ensures the browser fires a hashchange event
-        // even when there's no full navigation — this is the most reliable behavior for in-place viewer updates.
         if (window.location.pathname === "/undergraduate-portfolio") {
-          // If the hash is already identical, force a small history push so hashchange triggers:
           const currentHash = (window.location.hash || "").replace(/^#/, "");
           if (currentHash === hash) {
-            // Force a new history entry with pushState so hashchange handlers run predictably.
             try {
               const newUrl = `${window.location.pathname}#${hash}`;
               window.history.pushState({}, "", newUrl);
-              // Manually dispatch a hashchange event to be 100% certain listeners run.
               window.dispatchEvent(new HashChangeEvent("hashchange"));
             } catch {
-              // fallback
               window.location.hash = hash;
             }
           } else {
-            // Normal case: different hash — set it (triggers hashchange)
             window.location.hash = hash;
           }
         } else {
-          // Not currently on the viewer page — navigate there with shallow push so page routing is minimal.
           router.push(url, undefined, { shallow: true }).catch(() => {
-            // As a robust fallback, do a full navigation
             window.location.href = url;
           });
         }
       } else {
-        // Server-side or unknown environment — attempt router navigation
-        router.push(url, undefined, { shallow: true }).catch(() => {});
+        router.push(url, undefined, { shallow: true }).catch(() => { });
       }
     } catch (err) {
-      // Final fallback: set hash directly
       if (typeof window !== "undefined") window.location.hash = hash;
     } finally {
       if (typeof onClose === "function") onClose();
@@ -154,13 +136,13 @@ export default function Sidebar({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 8, // reduced global gap; .topNavGroup will preserve large spacing for top nav
+            gap: 8,
             marginTop: logoSize,
             paddingLeft: sidebarPaddingLeft,
             paddingRight: sidebarPaddingLeft,
           }}
         >
-          {/* Top nav links grouped so we can preserve larger spacing for them only */}
+          {/* Top nav links */}
           <div className={styles.topNavGroup}>
             {navItems.map((item) => (
               <Link
@@ -169,17 +151,13 @@ export default function Sidebar({
                 className={`${styles.sidebarNavLink} ${isActive(item.href) ? styles.active : ""}`}
               >
                 {item.label}
-            </Link>
+              </Link>
             ))}
           </div>
 
           {/* Chronological Portfolio (oldest → newest) */}
           <div className={styles.sidebarSectionTitle}>Chronological Portfolio</div>
-
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            {/* Oldest first mapping — these ids correspond exactly to your manifest page ids.
-                We use direct hash updates when already on the viewer page so PortfolioViewer responds in-place. */}
-
             <li>
               <a
                 href="/undergraduate-portfolio#spring2021"
@@ -192,7 +170,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>AXONOMETRIC CUBE DESIGN</span>
               </a>
             </li>
-
             <li>
               <a
                 href="/undergraduate-portfolio#fall2021"
@@ -205,7 +182,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>DESIGN PRACTICE "STICKPLAY"</span>
               </a>
             </li>
-
             <li>
               <a
                 href="/undergraduate-portfolio#spring2022-1"
@@ -218,7 +194,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>TECHNICAL VIGNETTES</span>
               </a>
             </li>
-
             <li>
               <a
                 href="/undergraduate-portfolio#spring2022-2"
@@ -231,7 +206,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>SDSU AGRICULTURAL HERITAGE MUSEUM</span>
               </a>
             </li>
-
             <li>
               <a
                 href="/undergraduate-portfolio#spring2023-1"
@@ -244,7 +218,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>SDSU INTERFAITH CENTER</span>
               </a>
             </li>
-
             <li>
               <a
                 href="/undergraduate-portfolio#spring2024-1"
@@ -257,7 +230,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>BROOKINGS PUBLIC LIBRARY</span>
               </a>
             </li>
-
             <li>
               <a
                 href="/undergraduate-portfolio#fall2024-1"
@@ -270,8 +242,6 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>CENTRO DE CIENCIAS VEGETALES DE MONTERREY</span>
               </a>
             </li>
-
-            {/* Two internal route projects — converted to two-line layout to match the portfolio links */}
             <li>
               <Link href="/projects/dma-25" passHref legacyBehavior>
                 <a
@@ -285,7 +255,6 @@ export default function Sidebar({
                 </a>
               </Link>
             </li>
-
             <li>
               <Link href="/independent-studio" passHref legacyBehavior>
                 <a
@@ -301,51 +270,52 @@ export default function Sidebar({
             </li>
           </ul>
 
-    <div>
-      <div className={styles.sidebarSectionTitle}>3D Printing</div>
-      <ul className={styles.sidebarList}>
-        <li>
-          <div className={styles.sidebarSubtitle}>Sports</div>
-          <ul className={styles.sidebarSublist}>
+          {/* ===== 3D PRINTING SECTION ===== */}
+          <div className={styles.sidebarSectionTitle}>3D Printing</div>
+          <ul className={styles.sidebarList}>
+            <li>
+              <div className={styles.sidebarSubtitle}>Sports</div>
+              <ul className={styles.sidebarSublist}>
+                <li>
+                  <Link
+                    href="/3d-printing#nfl"
+                    aria-label="3D Printing NFL"
+                    className={styles.sidebarSubLink}
+                  >
+                    NFL
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/3d-printing#nba"
+                    aria-label="3D Printing NBA"
+                    className={styles.sidebarSubLink}
+                  >
+                    NBA
+                  </Link>
+                </li>
+              </ul>
+            </li>
             <li>
               <Link
-                href="/3d-printing#nfl"
-                aria-label="3D Printing NFL"
-                className={styles.sidebarSubLink}
+                href="/3d-printing#lithophanes"
+                aria-label="3D Printing Lithophanes"
+                className={styles.sidebarLink}
               >
-                NFL
+                Lithophanes
               </Link>
             </li>
             <li>
               <Link
-                href="/3d-printing#nba"
-                aria-label="3D Printing NBA"
-                className={styles.sidebarSubLink}
+                href="/3d-printing#other"
+                aria-label="3D Printing Other"
+                className={styles.sidebarLink}
               >
-                NBA
+                Other
               </Link>
             </li>
           </ul>
-        </li>
-        <li>
-          <Link
-            href="/3d-printing#lithophanes"
-            aria-label="3D Printing Lithophanes"
-            className={styles.sidebarLink}
-          >
-            Lithophanes
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/3d-printing#other"
-            aria-label="3D Printing Other"
-            className={styles.sidebarLink}
-          >
-            Other
-          </Link>
-        </li>
-      </ul>
+          {/* ===== END 3D PRINTING SECTION ===== */}
 
           <div className={styles.sidebarSectionTitle}>Step 3: Placeholder Section</div>
           <p style={{ fontSize: 13, color: "#888" }}>
@@ -357,7 +327,6 @@ export default function Sidebar({
             If you can scroll this sidebar, the overflow-y: auto is working as intended.
           </p>
         </nav>
-
 
         <div
           className={styles.sidebarFooter}
