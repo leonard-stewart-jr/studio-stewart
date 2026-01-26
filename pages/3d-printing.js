@@ -583,9 +583,8 @@ export default function ThreeDPrinting() {
     );
   }
 
-// Accept lit and setLit as props now
 function LithophaneGrid({ lit, setLit }) {
-  // Responsive columns: 2 if mobile, 3 otherwise (NOTE: doesn't reset on rerender now!)
+  // Responsive columns: 2 if mobile, 3 otherwise
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -597,140 +596,141 @@ function LithophaneGrid({ lit, setLit }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const columns = isMobile ? 2 : 3; // <- This is the whole logic now!
+  const columns = isMobile ? 2 : 3;
 
-  // (Keep your portrait size logic as before)
-  const  = isMobile ? 14 : 24;
+  // Sizing and gaps
+  const gap = isMobile ? 14 : 24;           // Horizontal gap (columnGap)
+  const rowGap = isMobile ? 20 : 40;        // Vertical gap (rowGap)—change as desired!
   const baseRatio = 1.35;
   const cardW = isMobile ? 220 : 328;
   const cardH = Math.round(cardW * baseRatio);
-  const doubleH = cardH * 2 + (isMobile ? 14 : 24);
+  const doubleH = cardH * 2 + rowGap;       // Double card accounts for vertical gap
 
-return (
-  <div style={{ width: "100%", margin: "0 auto" }}>
-    <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
-      <button
-        type="button"
-        aria-pressed={lit}
-        onClick={() => setLit(l => !l)}
-        style={{
-          padding: "8px 20px",
-          border: "none",
-          borderRadius: 6,
-          fontFamily: "Inter, sans-serif",
-          background: "#e6dbb9",
-          color: "#181818",
-          fontWeight: 350,
-          letterSpacing: ".09em",
-          fontSize: isMobile ? 14 : 15.5,
-          margin: "0 0 10px 0",
-          cursor: "pointer",
-          boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
-          transition: "background 0.18s"
-        }}
-      >
-        {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
-      </button>
-    </div>
-    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
-          rowGap: 40,         // <-- vertical gap between rows; change 40 to your desired px
-          columnGap: gap,     // <-- horizontal gap between columns; use your gap variable here
-          alignItems: "stretch",
-          justifyItems: "center",
-          marginTop: isMobile ? 20 : 26
-        }}
-      >
-        {lithophanesData.map((item) => (
-          <LithoCard
-            key={item.id}
-            item={item}
-            lit={lit}
-            w={item.double ? cardW * 2 + gap : cardW}
-            h={item.double ? doubleH : cardH}
-            isMobile={isMobile}
-            gridColumn={item.double ? "span 2" : undefined}
-            gridRow={item.double ? "span 2" : undefined}
-          />
-        ))}
-      </div>
-    </div>
-  </div>
-);
-}
-
-  function LithoCard({ item, lit, w, h, isMobile, gridRow, gridColumn }) {
-    const [hovered, setHovered] = useState(false);
-    return (
-      <div
-        tabIndex={0}
-        aria-label={item.displayName}
-        title={item.displayName}
-        style={{
-          width: '100%',
-          height: h,
-          borderRadius: 11,
-          background: "#fff",
-          position: "relative",
-          overflow: "hidden",
-          boxShadow: "0 4px 19px rgba(90,90,90,0.13)",
-          border: "1.5px solid #dedede",
-          transition: "box-shadow 0.18s, border-color 0.16s, transform 0.14s",
-          cursor: "pointer",
-          gridRow: gridRow,
-          gridColumn: gridColumn,      // <-- Add this line!
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
-      >
-        <img
-          src={lit ? item.lit : item.unlit}
-          alt={item.displayName}
+  return (
+    <div style={{ width: "100%", margin: "0 auto" }}>
+      <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
+        <button
+          type="button"
+          aria-pressed={lit}
+          onClick={() => setLit(l => !l)}
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-            background: "#f0f0f0",
-            userSelect: "none",
-            transition: "opacity 0.18s"
-          }}
-          draggable={false}
-        />
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: "100%",
-            padding: isMobile ? "7px 0" : "11px 0",
-            background: hovered
-              ? "rgba(0,0,0,0.57)"
-              : "rgba(0,0,0,0.21)",
-            color: "#fff",
+            padding: "8px 20px",
+            border: "none",
+            borderRadius: 6,
             fontFamily: "Inter, sans-serif",
+            background: "#e6dbb9",
+            color: "#181818",
             fontWeight: 350,
-            fontSize: isMobile ? 12 : 14.5,
-            letterSpacing: ".04em",
-            textAlign: "center",
-            opacity: hovered ? 1 : 0,
-            pointerEvents: "none",
-            transition: "opacity 0.19s, background 0.15s"
+            letterSpacing: ".09em",
+            fontSize: isMobile ? 14 : 15.5,
+            margin: "0 0 10px 0",
+            cursor: "pointer",
+            boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
+            transition: "background 0.18s"
           }}
         >
-          {item.displayName}
+          {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
+        </button>
+      </div>
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
+            rowGap: rowGap,               // vertical gap between rows
+            columnGap: gap,               // horizontal gap between columns
+            alignItems: "stretch",
+            justifyItems: "center",
+            marginTop: isMobile ? 20 : 26
+          }}
+        >
+          {lithophanesData.map((item) => (
+            <LithoCard
+              key={item.id}
+              item={item}
+              lit={lit}
+              w={item.double ? cardW * 2 + gap : cardW}
+              h={item.double ? doubleH : cardH}
+              isMobile={isMobile}
+              gridColumn={item.double ? "span 2" : undefined}
+              gridRow={item.double ? "span 2" : undefined}
+            />
+          ))}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+function LithoCard({ item, lit, w, h, isMobile, gridRow, gridColumn }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      tabIndex={0}
+      aria-label={item.displayName}
+      title={item.displayName}
+      style={{
+        width: '100%',
+        height: h,
+        borderRadius: 11,
+        background: "#fff",
+        position: "relative",
+        overflow: "hidden",
+        boxShadow: "0 4px 19px rgba(90,90,90,0.13)",
+        border: "1.5px solid #dedede",
+        transition: "box-shadow 0.18s, border-color 0.16s, transform 0.14s",
+        cursor: "pointer",
+        gridRow: gridRow,
+        gridColumn: gridColumn,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+    >
+      <img
+        src={lit ? item.lit : item.unlit}
+        alt={item.displayName}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+          background: "#f0f0f0",
+          userSelect: "none",
+          transition: "opacity 0.18s"
+        }}
+        draggable={false}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          width: "100%",
+          padding: isMobile ? "7px 0" : "11px 0",
+          background: hovered
+            ? "rgba(0,0,0,0.57)"
+            : "rgba(0,0,0,0.21)",
+          color: "#fff",
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 350,
+          fontSize: isMobile ? 12 : 14.5,
+          letterSpacing: ".04em",
+          textAlign: "center",
+          opacity: hovered ? 1 : 0,
+          pointerEvents: "none",
+          transition: "opacity 0.19s, background 0.15s"
+        }}
+      >
+        {item.displayName}
+      </div>
+    </div>
+  );
+}
 
   // Render grid items
   function renderGridItems() {
