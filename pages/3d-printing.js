@@ -606,38 +606,38 @@ function LithophaneGrid({ lit, setLit }) {
   const cardH = Math.round(cardW * baseRatio);
   const doubleH = cardH * 2 + (isMobile ? 14 : 24);
 
-  return (
-    <div style={{ width: "100%", margin: "0 auto" }}>
-      <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
-        <button
-          type="button"
-          aria-pressed={lit}
-          onClick={() => setLit(l => !l)}
-          style={{
-            padding: "8px 20px",
-            border: "none",
-            borderRadius: 6,
-            fontFamily: "Inter, sans-serif",
-            background: "#e6dbb9",
-            color: "#181818",
-            fontWeight: 350,
-            letterSpacing: ".09em",
-            fontSize: isMobile ? 14 : 15.5,
-            margin: "0 0 10px 0",
-            cursor: "pointer",
-            boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
-            transition: "background 0.18s"
-          }}
-        >
-          {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
-        </button>
-        </div>
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <div
-          style={{
+ return (
+  <div style={{ width: "100%", margin: "0 auto" }}>
+    <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
+      <button
+        type="button"
+        aria-pressed={lit}
+        onClick={() => setLit(l => !l)}
+        style={{
+          padding: "8px 20px",
+          border: "none",
+          borderRadius: 6,
+          fontFamily: "Inter, sans-serif",
+          background: "#e6dbb9",
+          color: "#181818",
+          fontWeight: 350,
+          letterSpacing: ".09em",
+          fontSize: isMobile ? 14 : 15.5,
+          margin: "0 0 10px 0",
+          cursor: "pointer",
+          boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
+          transition: "background 0.18s"
+        }}
+      >
+        {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
+      </button>
+    </div>
+    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
           display: "grid",
           gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
-          gap: isMobile ? 14 : 24,
+          gap: gap,
           alignItems: "stretch",
           justifyItems: "center",
           marginTop: isMobile ? 20 : 26
@@ -649,7 +649,7 @@ function LithophaneGrid({ lit, setLit }) {
             item={item}
             lit={lit}
             w={item.double ? cardW * 2 + gap : cardW}
-            h={item.double ? cardH * 2 + gap : cardH}
+            h={item.double ? doubleH : cardH}
             isMobile={isMobile}
             gridColumn={item.double ? "span 2" : undefined}
             gridRow={item.double ? "span 2" : undefined}
@@ -657,7 +657,8 @@ function LithophaneGrid({ lit, setLit }) {
         ))}
       </div>
     </div>
-  );
+  </div>
+);
 }
 
   function LithoCard({ item, lit, w, h, isMobile, gridRow, gridColumn }) {
