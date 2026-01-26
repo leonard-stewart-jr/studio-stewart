@@ -667,7 +667,7 @@ function LithophaneGrid({ lit, setLit }) {
         aria-label={item.displayName}
         title={item.displayName}
         style={{
-          width: w,
+          width: '100%',
           height: h,
           borderRadius: 11,
           background: "#fff",
