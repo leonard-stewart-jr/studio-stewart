@@ -195,8 +195,8 @@ nav.sidebar-nav {
 }
 .portfolioLink:focus,
 .portfolioLink:hover {
-  text-decoration: none;
-  outline: none;
+  color: #28355c; /* deep blue on hover if you want */
+  text-decoration: underline;
 }
 .portfolioLinkYear {
   display: block;
@@ -314,12 +314,17 @@ nav.sidebar-nav {
 
 .sidebarLink {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 14px; /* reverted back to 14px */
   color: #e6dbb9; /* site tan */
-  margin: 8px 0 0 0;
-  text-decoration: none;
-  transition: color 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: var(--weight-hover);
+  /* Allow wrapping instead of forcing single-line truncation */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+  line-height: 1.15;
 }
 
 .sidebarLink:hover,
