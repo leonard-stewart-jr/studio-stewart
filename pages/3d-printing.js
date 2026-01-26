@@ -124,17 +124,35 @@ function LightbulbToggleButton({ lit, setLit }) {
           }}
         />
       </span>
-      {/* Inline CSS animation: pulse */}
-      <style>
-        {`
-        @keyframes pulse-bulb {
-          0% { opacity: 0.9; transform: translate(-50%,-50%) scale(1);}
-          50% { opacity: 0.4; transform: translate(-50%,-50%) scale(1.12);}
-          100% { opacity: 0.9; transform: translate(-50%,-50%) scale(1);}
-        }
-        `}
-      </style>
-    </button>
+  {/* (ADD THIS SPAN FOR CLICK ME BELOW) */}
+  <span
+    style={{
+      display: "block",
+      marginTop: 4,
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 520,
+      fontSize: 18,
+      letterSpacing: ".09em",
+      color: "#d7b550",
+      textShadow: "0 1px 4px #fff7, 0 2px 5px #ffe85d77",
+      textAlign: "center",
+      userSelect: "none"
+    }}
+  >
+    CLICK ME
+  </span>
+
+  {/* Inline CSS animation: pulse */}
+  <style>
+    {`
+    @keyframes pulse-bulb {
+      0% { opacity: 0.9; transform: translate(-50%,-50%) scale(1);}
+      50% { opacity: 0.4; transform: translate(-50%,-50%) scale(1.12);}
+      100% { opacity: 0.9; transform: translate(-50%,-50%) scale(1);}
+    }
+    `}
+  </style>
+</button>
   );
 }
 
