@@ -31,6 +31,7 @@ const CATEGORIES = [
 export default function ThreeDPrinting() {
   const [activeCategory, setActiveCategory] = useState("sports");
 
+  const [isLithoLit, setIsLithoLit] = useState(false);
   // SPORTS state
   const [sportsOpen, setSportsOpen] = useState(false);
   const [currentLeague, setCurrentLeague] = useState("nfl");
@@ -582,81 +583,78 @@ export default function ThreeDPrinting() {
     );
   }
 
-  // LITHOPHANE GRID (NEW)
-  function LithophaneGrid() {
-    const [lit, setLit] = useState(false);
+// Accept lit and setLit as props now
+function LithophaneGrid({ lit, setLit }) {
+  // Responsive columns: 2 if mobile, 3 otherwise (NOTE: doesn't reset on rerender now!)
+  const [isMobile, setIsMobile] = useState(false);
 
-    // Handles grid responsiveness
-    const [columns, setColumns] = useState(4);
-    const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 700);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    useEffect(() => {
-      function handleResize() {
-        const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-        setColumns(w < 700 ? 2 : w < 1100 ? 3 : 4);
-        setIsMobile(w < 700);
-      }
-      handleResize();
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }, []);
+  const columns = isMobile ? 2 : 3; // <- This is the whole logic now!
 
-    // Portrait card dimensions
-    const baseRatio = 1.35;
-    const cardW = isMobile ? 110 : 164;
-    const cardH = Math.round(cardW * baseRatio);
-    const doubleH = cardH * 2 + (isMobile ? 14 : 24);
+  // (Keep your portrait size logic as before)
+  const baseRatio = 1.35;
+  const cardW = isMobile ? 110 : 164;
+  const cardH = Math.round(cardW * baseRatio);
+  const doubleH = cardH * 2 + (isMobile ? 14 : 24);
 
-    return (
-      <div style={{ width: "100%", margin: "0 auto" }}>
-        <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
-          <button
-            type="button"
-            aria-pressed={lit}
-            onClick={() => setLit(l => !l)}
-            style={{
-              padding: "8px 20px",
-              border: "none",
-              borderRadius: 6,
-              fontFamily: "Inter, sans-serif",
-              background: "#e6dbb9",
-              color: "#181818",
-              fontWeight: 350,
-              letterSpacing: ".09em",
-              fontSize: isMobile ? 14 : 15.5,
-              margin: "0 0 10px 0",
-              cursor: "pointer",
-              boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
-              transition: "background 0.18s"
-            }}
-          >
-            {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
-          </button>
-        </div>
-        <div
+  return (
+    <div style={{ width: "100%", margin: "0 auto" }}>
+      <div style={{ padding: isMobile ? "0 6px" : "0 30px 6px 30px", textAlign: "right" }}>
+        <button
+          type="button"
+          aria-pressed={lit}
+          onClick={() => setLit(l => !l)}
           style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-            gap: isMobile ? 14 : 24,
-            alignItems: "stretch",
-            justifyItems: "center",
-            marginTop: isMobile ? 20 : 26
+            padding: "8px 20px",
+            border: "none",
+            borderRadius: 6,
+            fontFamily: "Inter, sans-serif",
+            background: "#e6dbb9",
+            color: "#181818",
+            fontWeight: 350,
+            letterSpacing: ".09em",
+            fontSize: isMobile ? 14 : 15.5,
+            margin: "0 0 10px 0",
+            cursor: "pointer",
+            boxShadow: "0 2px 7px rgba(32,32,32,0.08)",
+            transition: "background 0.18s"
           }}
         >
-          {lithophanesData.map((item) => (
-            <LithoCard
-              key={item.id}
-              item={item}
-              lit={lit}
-              w={cardW}
-              h={item.double ? doubleH : cardH}
-              isMobile={isMobile}
-            />
-          ))}
-        </div>
+          {lit ? "TURN OFF LIGHTS" : "LIGHT UP PRINTS"}
+        </button>
       </div>
-    );
-  }
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+          gap: isMobile ? 14 : 24,
+          alignItems: "stretch",
+          justifyItems: "center",
+          marginTop: isMobile ? 20 : 26
+        }}
+      >
+        {lithophanesData.map((item) => (
+          <LithoCard
+            key={item.id}
+            item={item}
+            lit={lit}
+            w={cardW}
+            h={item.double ? doubleH : cardH}
+            isMobile={isMobile}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
   function LithoCard({ item, lit, w, h, isMobile }) {
     const [hovered, setHovered] = useState(false);
