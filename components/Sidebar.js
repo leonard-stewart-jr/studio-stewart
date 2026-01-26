@@ -336,7 +336,9 @@ export default function Sidebar({
             </li>
           </ul>
 
-      </motion.aside>
-    </>
+    </nav>
+
+  </motion.aside>
+</>
   );
 }
