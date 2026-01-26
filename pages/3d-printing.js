@@ -601,7 +601,7 @@ function LithophaneGrid({ lit, setLit }) {
 
   // (Keep your portrait size logic as before)
   const baseRatio = 1.35;
-  const cardW = isMobile ? 110 : 164;
+  const cardW = isMobile ? 220 : 328;
   const cardH = Math.round(cardW * baseRatio);
   const doubleH = cardH * 2 + (isMobile ? 14 : 24);
 
@@ -646,9 +646,11 @@ function LithophaneGrid({ lit, setLit }) {
             key={item.id}
             item={item}
             lit={lit}
-            w={cardW}
-            h={item.double ? doubleH : cardH}
+            w={item.double ? cardW * 2 : cardW}         // Double width for Kobe; others normal
+            h={item.double ? doubleH : cardH}           // Double height for Kobe
             isMobile={isMobile}
+            gridColumn={item.double ? "span 2" : undefined}
+            gridRow={item.double ? "span 2" : undefined}
           />
         ))}
       </div>
@@ -656,7 +658,7 @@ function LithophaneGrid({ lit, setLit }) {
   );
 }
 
-  function LithoCard({ item, lit, w, h, isMobile }) {
+  function LithoCard({ item, lit, w, h, isMobile, gridRow, gridColumn }) {
     const [hovered, setHovered] = useState(false);
     return (
       <div
@@ -674,7 +676,8 @@ function LithophaneGrid({ lit, setLit }) {
           border: "1.5px solid #dedede",
           transition: "box-shadow 0.18s, border-color 0.16s, transform 0.14s",
           cursor: "pointer",
-          gridRow: item.double ? `span 2` : undefined,
+          gridRow: gridRow,
+          gridColumn: gridColumn,      // <-- Add this line!
           display: "flex",
           alignItems: "center",
           justifyContent: "center"
