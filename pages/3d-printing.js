@@ -115,7 +115,7 @@ function LightbulbToggleButton({ lit, setLit }) {
             position: "absolute",
             left: "50%", top: "53%",
             transform: "translate(-50%,-50%)",
-            width: 28, height: 28, borderRadius: "47%",
+            width: 20, height: 20, borderRadius: "47%",
             background: bulbColor,
             opacity: lit ? 0.89 : 0.52,
             boxShadow: lit ? "0 0 20px 8px #ffe85d77" : "none",
