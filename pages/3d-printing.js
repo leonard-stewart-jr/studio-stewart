@@ -716,7 +716,7 @@ function LithophaneGrid({ lit, setLit }) {
   const columns = isMobile ? 2 : 3;
 
   // Sizing and gaps
-  const gap = isMobile ? 14 : 120;           // Horizontal gap (columnGap)
+  const gap = isMobile ? 14 : 200;           // Horizontal gap (columnGap)
   const rowGap = isMobile ? 20 : 40;        // Vertical gap (rowGap)—change as desired!
   const baseRatio = 1.35;
   const cardW = isMobile ? 220 : 328;
