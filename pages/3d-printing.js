@@ -637,8 +637,8 @@ return (
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${columns}, ${cardW}px)`,
-          rowGap: 40,             // vertical gap between rows (change as needed!)
-          columnGap: gap,         // horizontal gap between columns (use your gap var)
+          rowGap: 40,         // <-- vertical gap between rows; change 40 to your desired px
+          columnGap: gap,     // <-- horizontal gap between columns; use your gap variable here
           alignItems: "stretch",
           justifyItems: "center",
           marginTop: isMobile ? 20 : 26
