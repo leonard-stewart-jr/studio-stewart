@@ -824,7 +824,7 @@ function LithophaneGrid({ lit, setLit }) {
 
         {/* Grid */}
         {activeCategory === "lithophanes" ? (
-          <LithophaneGrid />
+        <LithophaneGrid lit={isLithoLit} setLit={setIsLithoLit} />
         ) : (
           <div ref={gridRef} style={gridWrapStyle}>
             {renderGridItems()}
