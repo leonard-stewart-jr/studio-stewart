@@ -316,7 +316,7 @@ export default function Sidebar({
             </li>
           </ul>
           {/* ===== END 3D PRINTING SECTION ===== */}
- <div className={styles.sidebarSectionTitle}>LINKS</div>
+ <div className={styles.sidebarSectionTitle}>Links</div>
 <ul className={styles.sidebarList}>
   <li>
     <a
