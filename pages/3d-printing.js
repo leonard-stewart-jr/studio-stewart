@@ -867,9 +867,11 @@ function LithoCard({ item, lit, w, h, isMobile, gridRow, gridColumn }) {
     return null;
   }
 
-  return (
-    <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
-      <LightbulbToggleButton lit={isLithoLit} setLit={setIsLithoLit} />
+return (
+  <div className="three-d-printing-page" style={{ width: "100%", background: "#f9f9f7" }}>
+    {/* --- Show lightbulb ONLY on LITHOPHANES tab. Position below header/subheader by shifting down 104px --- */}
+    {activeCategory === "lithophanes" && (
+      <LightbulbToggleButton lit={isLithoLit} setLit={setIsLithoLit} topPx={104} />
       <div style={pageStyle}>
         {/* Single nav-card-mid that contains only the tabs (structure matches IndependentStudio) */}
         <div className="nav-card nav-card-mid" aria-hidden={false}>
