@@ -369,7 +369,7 @@ export default function Sidebar({
     </a>
   </li>
 </ul>
-        <div className={styles.sidebarInfo} style={{ padding: "24px" }}>
+        <div className={styles.sidebarInfo} style={{ padding: "0px" }}>
           <p>
             <b>Leonard Stewart</b> — Digital portfolio<br />
             Architecture Student, designer, and maker.<br />
