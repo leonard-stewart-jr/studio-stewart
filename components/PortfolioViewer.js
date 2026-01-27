@@ -751,7 +751,7 @@ export default function PortfolioViewer({
             aria-label="Toggle fit mode"
             title="Toggle fit mode (F)"
           >
-            {fitMode === "height" ? "Fullscreen" : "Fit: Height"}
+            {fitMode === "height" ? "Fullscreen Mode" : "Fit Height"}
           </button>
         )}
 
