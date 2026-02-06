@@ -712,7 +712,7 @@ export default function PortfolioViewer({
         disabled={index <= 0}
         style={{
           ...sideButtonBase,
-          left: "-20%",
+          left: "0%",
           cursor: index > 0 ? "pointer" : "not-allowed"
         }}
       />
@@ -723,7 +723,7 @@ export default function PortfolioViewer({
         style={{
           ...sideButtonBase,
           right: 0,
-          left: "70%",
+          left: "50%",
           cursor: index < total - 1 ? "pointer" : "not-allowed"
         }}
       />
