@@ -28,15 +28,15 @@
   background: #f0f0ed;
 }
 .sidebar::-webkit-scrollbar-thumb {
-  background: #e6dbb9;
+  background: #192d4b;
   border-radius: 6px;
 }
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: #d6c08e;
+  background: #0f1f3a;
 }
 .sidebar {
   scrollbar-width: thin;
-  scrollbar-color: #e6dbb9 #f0f0ed;
+  scrollbar-color: #192d4b #f0f0ed;
 }
 
 .sidebar.open {
@@ -143,7 +143,7 @@ nav.sidebar-nav {
   cursor: pointer;
 }
 .active {
-  color: #e6dbb9;
+  color: #192d4b;
   background: none;
   text-decoration: underline;
   cursor: default;
@@ -152,12 +152,12 @@ nav.sidebar-nav {
 }
 .sidebarNavLink:not(.active):hover,
 .sidebarNavLink:not(.active):focus {
-  color: #e6dbb9;
+  color: #192d4b;
   font-weight: var(--weight-hover);
   text-decoration: none;
 }
 .sidebarNavLink:focus-visible {
-  outline: 2px solid #e6dbb9;
+  outline: 2px solid #192d4b;
 }
 
 /* ====== SECTION TITLES (align with list items, site blue color) ====== */
@@ -167,12 +167,12 @@ nav.sidebar-nav {
   /* Made visually stronger: heavier weight + subtle stroke + shadow fallback
      to emulate increased line-width without changing font-size */
   font-weight: 700;                 /* use a strong font-weight */
-  color: #192d4b; /* site blue */
-  -webkit-text-stroke: 0.2px #192d4b; /* thickens glyph outlines in WebKit/Blink */
+  color: #e6dbb9; /* site tan */
+  -webkit-text-stroke: 0.2px #e6dbb9; /* thickens glyph outlines in WebKit/Blink */
   /* subtle text-shadow fallback for browsers that don't support text-stroke */
   text-shadow:
-    0.35px 0.12px rgba(25,45,75,0.06),
-    -0.35px -0.12px rgba(25,45,75,0.06);
+    0.35px 0.12px rgba(230,219,185,0.06),
+    -0.35px -0.12px rgba(230,219,185,0.06);
   font-size: 16px;
   text-transform: none;
   padding-left: 0;
@@ -209,7 +209,7 @@ nav.sidebar-nav {
 .portfolioLinkTitle {
   display: block;
   font-size: 14px; /* reverted back to 14px */
-  color: #e6dbb9; /* site tan */
+  color: #192d4b; /* site blue - flipped from tan */
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -285,7 +285,7 @@ nav.sidebar-nav {
 .sidebarSubtitle {
   display: block;
   font-size: 14px; /* reverted back to 14px */
-  color: #e6dbb9; /* site tan */
+  color: #192d4b; /* site blue - flipped from tan */
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-weight: var(--weight-hover);
@@ -314,14 +314,14 @@ nav.sidebar-nav {
 
 .sidebarSubLink:hover,
 .sidebarSubLink:focus {
-  color: #e6dbb9;
+  color: #192d4b;
   text-decoration: none;
 }
 
 .sidebarLink {
   display: block;
   font-size: 14px; /* reverted back to 14px */
-  color: #e6dbb9; /* site tan */
+  color: #192d4b; /* site blue - flipped from tan */
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-weight: var(--weight-hover);
@@ -334,7 +334,7 @@ nav.sidebar-nav {
 
 .sidebarLink:hover,
 .sidebarLink:focus {
-  color: #28355c; /* deep blue on hover if you want */
+  color: #e6dbb9; /* tan on hover - flipped from blue */
   text-decoration: underline;
 }
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
