@@ -16,7 +16,7 @@ const ISP_MAIN_TABS = [
 export default function IndependentStudio() {
   // Tabs: "history" or "future"
   const [mainSection, setMainSection] = useState("history");
-  // Subnav: "world", "usa", "sd" (only for history)
+  // Subnav: "world" only (usa and sd removed)
   const [activeHistory, setActiveHistory] = useState("world");
   // Info modal state
   const [modalData, setModalData] = useState(null);
