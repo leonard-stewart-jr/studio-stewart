@@ -32,7 +32,7 @@
   border-radius: 6px;
 }
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: #0f1f3a;
+  background: #192d4b;
 }
 .sidebar {
   scrollbar-width: thin;
@@ -167,8 +167,8 @@ nav.sidebar-nav {
   /* Made visually stronger: heavier weight + subtle stroke + shadow fallback
      to emulate increased line-width without changing font-size */
   font-weight: 700;                 /* use a strong font-weight */
-  color: #e6dbb9; /* site tan */
-  -webkit-text-stroke: 0.2px #e6dbb9; /* thickens glyph outlines in WebKit/Blink */
+  color: #e5c19f; /* site tan */
+  -webkit-text-stroke: 0.0px #e5c19f; /* thickens glyph outlines in WebKit/Blink */
   /* subtle text-shadow fallback for browsers that don't support text-stroke */
   text-shadow:
     0.35px 0.12px rgba(230,219,185,0.06),
@@ -334,7 +334,7 @@ nav.sidebar-nav {
 
 .sidebarLink:hover,
 .sidebarLink:focus {
-  color: #e6dbb9; /* tan on hover - flipped from blue */
+  color: #e5c19f; /* tan on hover - flipped from blue */
   text-decoration: underline;
 }
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
