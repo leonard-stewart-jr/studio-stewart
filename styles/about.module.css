@@ -102,7 +102,7 @@
   margin: 0;
   font-style: italic;
   font-weight: bold;
-  color: #e6dbb9;
+  color: #e5c19f;
   font-size: 38px;
   line-height: 1.05;
   text-align: right;
@@ -220,7 +220,7 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #e6dbb9;
+  color: #e5c19f;
 }
 .serviceText {
   margin: 0;
@@ -251,7 +251,7 @@
   font-size: 38px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #e6dbb9;
+  color: #e5c19f;
   font-weight: bold;
 }
 .skillList {
@@ -319,7 +319,7 @@
 
 .kobeRole {
   font-size: 24px;
-  color: #e6dbb9;
+  color: #e5c19f;
   font-weight: 400;
   margin-left: 8px;
   text-transform: uppercase;
@@ -408,7 +408,7 @@
 .leonardRole {
   font-weight: normal;
   font-size: 24px;
-  color: #e6dbb9;
+  color: #e5c19f;
   margin-left: 5px;
 }
 
