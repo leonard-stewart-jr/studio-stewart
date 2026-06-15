@@ -384,7 +384,7 @@ export default function Sidebar({
     technology, fabrication, and built work.
   </p>
 </div>
-        </nav>
+</nav>
       </motion.aside>
     </>
   );
