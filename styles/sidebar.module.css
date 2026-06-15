@@ -337,6 +337,38 @@ nav.sidebar-nav {
   color: #e5c19f; /* tan on hover - flipped from blue */
   text-decoration: underline;
 }
+.sidebarOutro {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(25, 45, 75, 0.18);
+  max-width: 220px;
+}
+
+.sidebarOutroLabel {
+  margin-bottom: 10px;
+  color: #e5c19f;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.sidebarOutroName {
+  color: #192d4b;
+  font-size: 14px;
+  font-weight: var(--weight-hover);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.sidebarOutroText {
+  color: #6c6c6a;
+  font-size: 13px;
+  font-weight: var(--weight-thin);
+  line-height: 1.35;
+  margin: 0;
+}
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
 
 @media (max-width: 700px) {
