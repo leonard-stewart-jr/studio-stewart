@@ -1,6 +1,6 @@
 const projects = [
   {
-        grade: "2020–2024",
+    grade: "2020–2024",
     title: "UNDERGRADUATE PORTFOLIO",
     type: "SELECTED WORKS",
     slug: "UG-PORTFOLIO",
@@ -9,7 +9,7 @@ const projects = [
     linkHref: "/undergraduate-portfolio"
   },
   {
-        grade: "SPRING 25'",
+    grade: "SPRING 25'",
     title: "DES MOINES ACADAMY OF ARTS AND ATHLETICS",
     type: "EDUCATION, SPORTS, RESIDENTIAL",
     slug: "DMA-25",
@@ -26,6 +26,24 @@ const projects = [
     bannerSrc: "/images/placeholders/blank.svg",
     action: "route",
     linkHref: "/independent-studio"
+  },
+  {
+    grade: "SUMMER 26'",
+    title: "AIRCRAFT HANGAR",
+    type: "COMMERCIAL, STAGE 1",
+    slug: "HANGAR-26",
+    bannerSrc: "/images/placeholders/blank.svg",
+    action: "route",
+    linkHref: "/projects/hangar-26"
+  },
+  {
+    grade: "RESEARCH",
+    title: "MATTER MATTERS",
+    type: "MATERIAL RESEARCH, PERIODIC TABLE",
+    slug: "MATTER-MATTERS",
+    bannerSrc: "/images/placeholders/blank.svg",
+    action: "route",
+    linkHref: "/matter-matters"
   }
 ];
 
