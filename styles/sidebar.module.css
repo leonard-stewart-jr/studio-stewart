@@ -28,15 +28,15 @@
   background: #f0f0ed;
 }
 .sidebar::-webkit-scrollbar-thumb {
-  background: #192d4b;
+  background: #e5c19f;
   border-radius: 6px;
 }
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: #192d4b;
+  background: #e5c19f;
 }
 .sidebar {
   scrollbar-width: thin;
-  scrollbar-color: #192d4b #f0f0ed;
+  scrollbar-color: #e5c19f #f0f0ed;
 }
 
 .sidebar.open {
