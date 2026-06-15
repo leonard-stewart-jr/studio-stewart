@@ -372,12 +372,18 @@ export default function Sidebar({
           </ul>
 
           <div className={styles.sidebarInfo} style={{ padding: "0px" }}>
-            <p>
-              <b>Leonard Stewart</b> — Digital portfolio<br />
-              Architecture Student, designer, and maker.<br />
-              Explore my work and reach out to connect!
-            </p>
-          </div>
+<div className={styles.sidebarOutro}>
+  <div className={styles.sidebarOutroLabel}>Studio Stewart</div>
+
+  <div className={styles.sidebarOutroName}>
+    Leonard Stewart Jr
+  </div>
+
+  <p className={styles.sidebarOutroText}>
+    Architecture graduate, designer, and maker exploring the overlap of design,
+    technology, fabrication, and built work.
+  </p>
+</div>
         </nav>
       </motion.aside>
     </>
