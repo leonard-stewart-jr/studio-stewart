@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 const navItems = [
   { label: "PROJECTS", href: "/" },
   // Removed "INDEPENDENT STUDIO" from main nav per request
-  { label: "3D PRINTING", href: "/3d-printing" },
-  { label: "MATTER MATTERS", href: "/matter-matters" },
+  { label: "3D WORKS", href: "/3d-printing" },
   { label: "ABOUT", href: "/about" },
 ];
 
