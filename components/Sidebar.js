@@ -7,8 +7,7 @@ import styles from "../styles/sidebar.module.css";
 
 const navItems = [
   { label: "PROJECTS", href: "/" },
-  { label: "3D PRINTING", href: "/3d-printing" },
-  { label: "MATTER MATTERS", href: "/matter-matters" },
+  { label: "3D WORKS", href: "/3d-printing" },
   { label: "ABOUT", href: "/about" },
 ];
 
@@ -270,8 +269,8 @@ export default function Sidebar({
             </li>
           </ul>
 
-          {/* ===== 3D PRINTING SECTION ===== */}
-          <div className={styles.sidebarSectionTitle}>3D Printing</div>
+          {/* ===== 3D WORKS SECTION ===== */}
+          <div className={styles.sidebarSectionTitle}>3D Works</div>
           <ul className={styles.sidebarList}>
             <li>
               <div className={styles.sidebarSubtitle}>Sports</div>
@@ -279,7 +278,7 @@ export default function Sidebar({
                 <li>
                   <Link
                     href={{ pathname: "/3d-printing", query: { tab: "sports", league: "nfl" } }}
-                    aria-label="3D Printing NFL"
+                    aria-label="3D Works NFL"
                     className={styles.sidebarSubLink}
                   >
                     NFL
@@ -288,7 +287,7 @@ export default function Sidebar({
                 <li>
                   <Link
                     href={{ pathname: "/3d-printing", query: { tab: "sports", league: "nba" } }}
-                    aria-label="3D Printing NBA"
+                    aria-label="3D Works NBA"
                     className={styles.sidebarSubLink}
                   >
                     NBA
@@ -299,7 +298,7 @@ export default function Sidebar({
             <li>
               <Link
                 href={{ pathname: "/3d-printing", query: { tab: "lithophanes" } }}
-                aria-label="3D Printing Lithophanes"
+                aria-label="3D Works Lithophanes"
                 className={styles.sidebarLink}
               >
                 Lithophanes
@@ -308,76 +307,79 @@ export default function Sidebar({
             <li>
               <Link
                 href={{ pathname: "/3d-printing", query: { tab: "other" } }}
-                aria-label="3D Printing Other"
+                aria-label="3D Works Other"
                 className={styles.sidebarLink}
               >
                 Other
               </Link>
             </li>
           </ul>
-          {/* ===== END 3D PRINTING SECTION ===== */}
- <div className={styles.sidebarSectionTitle}>Links</div>
-<ul className={styles.sidebarList}>
-  <li>
-    <a
-      href="mailto:leonardwaynejr@icloud.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.sidebarLink}
-    >
-      Email
-    </a>
-  </li>
-  <li>
-    <a
-      href="https://www.linkedin.com/in/leonardstewartjr/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.sidebarLink}
-    >
-      LinkedIn
-    </a>
-  </li>
-  <li>
-    <a
-      href="https://makerworld.com/en/@leonardstewart"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.sidebarLink}
-    >
-      MakerWorld
-    </a>
-  </li>
-  <li>
-    <a
-      href="tel:6053107894"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.sidebarLink}
-    >
-      Phone
-    </a>
-  </li>
-  <li>
-    <a
-      href="https://github.com/leonard-stewart-jr/studio-stewart"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.sidebarLink}
-    >
-      CODE
-    </a>
-  </li>
-</ul>
-        <div className={styles.sidebarInfo} style={{ padding: "0px" }}>
-          <p>
-            <b>Leonard Stewart</b> — Digital portfolio<br />
-            Architecture Student, designer, and maker.<br />
-            Explore my work and reach out to connect!
-          </p>
-        </div>
-      </nav>
-    </motion.aside>
-  </>
+          {/* ===== END 3D WORKS SECTION ===== */}
+
+          {/* ===== LINKS SECTION ===== */}
+          <div className={styles.sidebarSectionTitle}>Links</div>
+          <ul className={styles.sidebarList}>
+            <li>
+              <a
+                href="mailto:leonardwaynejr@icloud.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.sidebarLink}
+              >
+                Email
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/leonardstewartjr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.sidebarLink}
+              >
+                LinkedIn
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://makerworld.com/en/@leonardstewart"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.sidebarLink}
+              >
+                MakerWorld
+              </a>
+            </li>
+            <li>
+              <a
+                href="tel:6053107894"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.sidebarLink}
+              >
+                Phone
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/leonard-stewart-jr/studio-stewart"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.sidebarLink}
+              >
+                CODE
+              </a>
+            </li>
+          </ul>
+
+          <div className={styles.sidebarInfo} style={{ padding: "0px" }}>
+            <p>
+              <b>Leonard Stewart</b> — Digital portfolio<br />
+              Architecture Student, designer, and maker.<br />
+              Explore my work and reach out to connect!
+            </p>
+          </div>
+        </nav>
+      </motion.aside>
+    </>
   );
 }
