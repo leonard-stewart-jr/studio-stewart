@@ -13,7 +13,7 @@ export default function PortfolioViewer({
   const viewerRef = useRef(null);
   const [pageSize, setPageSize] = useState({ width: 1224, height: 792 }); // default single-spread size
   const [scale, setScale] = useState(1);
-  const [fitMode, setFitMode] = useState("height"); // "height" or "width"
+  const [fitMode, setFitMode] = useState("width"); // "height" or "width"
 
   // Bump this to force iframe reloads (fit toggle or explicit)
   const [reloadCounter, setReloadCounter] = useState(0);
