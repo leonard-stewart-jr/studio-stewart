@@ -68,14 +68,14 @@ body {
 
   /* Custom scrollbar for entire page */
   scrollbar-width: thin;
-  scrollbar-color: #e6dbb9 #f0f0ed;
+  scrollbar-color: #e5c19f #f0f0ed;
 }
 html::-webkit-scrollbar, body::-webkit-scrollbar {
   width: 14px;
   background: transparent;
 }
 html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
-  background: #e6dbb9;
+  background: #e5c19f;
   border-radius: 0;
 }
 html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
@@ -190,7 +190,7 @@ nav.main-nav a {
 }
 nav.main-nav a.active,
 nav.main-nav a[aria-current="page"] {
-  color: #e6dbb9;
+  color: #e5c19f;
   text-decoration: underline;
   cursor: default;
   font-size: 16px;
@@ -203,7 +203,7 @@ nav.main-nav a[aria-current="page"]:hover {
 nav.main-nav a:not(.active):not([aria-current="page"]):hover,
 nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   font-weight: var(--weight-hover);
-  color: #e6dbb9;
+  color: #e5c19f;
   text-decoration: none;
 }
 
@@ -249,7 +249,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 }
 .isp-tab-btn.active,
 .isp-tab-btn[aria-current="page"] {
-  color: #e6dbb9;
+  color: #e5c19f;
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
@@ -266,7 +266,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 .isp-tab-btn:not(.active):not([aria-current="page"]):hover,
 .isp-tab-btn:not(.active):not([aria-current="page"]):focus {
   font-weight: var(--weight-hover);
-  color: #e6dbb9;
+  color: #e5c19f;
   text-decoration: none;
 }
 
@@ -311,7 +311,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 }
 .isp-subnav-btn.active,
 .isp-subnav-btn[aria-current="page"] {
-  color: #e6dbb9;
+  color: #e5c19f;
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1.5px;
@@ -328,12 +328,12 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 .isp-subnav-btn:not(.active):not([aria-current="page"]):hover,
 .isp-subnav-btn:not(.active):not([aria-current="page"]):focus {
   font-weight: var(--weight-hover);
-  color: #e6dbb9;
+  color: #e5c19f;
   text-decoration: none;
 }
 .isp-tab-btn:focus-visible,
 .isp-subnav-btn:focus-visible {
-  outline: 2px solid #e6dbb9;
+  outline: 2px solid #e5c19f;
 }
 
 /* Desktop: ensure buttons are vertically centered with no translateY shift */
@@ -420,7 +420,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   background: transparent;
 }
 .mesopotamia-scrollbar::-webkit-scrollbar-thumb {
-  background: #e6dbb9;
+  background: #e5c19f;
   border-radius: 0;
 }
 .mesopotamia-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -428,7 +428,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 }
 .mesopotamia-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #e6dbb9 #f0f0ed;
+  scrollbar-color: #e5c19f #f0f0ed;
 }
 .matter-matters-page {
   background: #fff !important;
@@ -580,7 +580,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
   background: transparent;
 }
 .mesopotamia-scrollbar::-webkit-scrollbar-thumb {
-  background: #e6dbb9;
+  background: #e5c19f;
   border-radius: 0;
 }
 .mesopotamia-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -588,7 +588,7 @@ nav.main-nav a:not(.active):not([aria-current="page"]):focus {
 }
 .mesopotamia-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #e6dbb9 #f0f0ed;
+  scrollbar-color: #e5c19f #f0f0ed;
 }
 
 /* ====== TOUCH / MOBILE: enable natural panning on touch devices ======
