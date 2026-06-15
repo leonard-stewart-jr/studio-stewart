@@ -37,7 +37,7 @@ const projects = [
     linkHref: "/projects/hangar-26"
   },
   {
-    grade: "SPRING 25",
+    grade: "SPRING 25'",
     title: "MATTER MATTERS",
     type: "MATERIAL RESEARCH",
     slug: "MATTER-MATTERS",
