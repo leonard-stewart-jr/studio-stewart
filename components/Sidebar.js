@@ -139,6 +139,7 @@ export default function Sidebar({
             marginTop: logoSize,
             paddingLeft: sidebarPaddingLeft,
             paddingRight: sidebarPaddingLeft,
+            paddingBottom: 64,
           }}
         >
           {/* Top nav links */}
@@ -154,7 +155,8 @@ export default function Sidebar({
             ))}
           </div>
 
-          {/* Chronological Portfolio (oldest → newest) */}
+          <div className={styles.sidebarDivider} />
+          {/* Chronological Portfolio */}
           <div className={styles.sidebarSectionTitle}>Chronological Portfolio</div>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             <li>
@@ -269,6 +271,8 @@ export default function Sidebar({
             </li>
           </ul>
 
+          <div className={styles.sidebarDivider} />
+                    
           {/* ===== 3D WORKS SECTION ===== */}
           <div className={styles.sidebarSectionTitle}>3D Works</div>
           <ul className={styles.sidebarList}>
@@ -314,7 +318,8 @@ export default function Sidebar({
               </Link>
             </li>
           </ul>
-          {/* ===== END 3D WORKS SECTION ===== */}
+
+          <div className={styles.sidebarDivider} />
 
                     {/* ===== LINKS SECTION ===== */}
           <div className={styles.sidebarSectionTitle}>Links</div>
@@ -371,6 +376,8 @@ export default function Sidebar({
             </li>
           </ul>
 
+          <div className={styles.sidebarDivider} />
+          {/* ===== OUTRO SECTION ===== */}          
           <div className={styles.sidebarOutro}>
             <div className={styles.sidebarOutroLabel}>Studio Stewart</div>
 
