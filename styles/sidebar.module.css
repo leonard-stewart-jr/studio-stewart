@@ -170,7 +170,7 @@ nav.sidebar-nav {
 
 /* ====== SECTION TITLES (align with list items, site blue color) ====== */
 .sidebarSectionTitle {
-  margin-top: 30px;
+  margin-top: 0px;
   margin-bottom: 0px;
   /* Made visually stronger: heavier weight + subtle stroke + shadow fallback
      to emulate increased line-width without changing font-size */
