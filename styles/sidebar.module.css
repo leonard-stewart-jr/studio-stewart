@@ -43,6 +43,14 @@
   pointer-events: auto;
 }
 
+.sidebarDivider {
+  width: 100%;
+  max-width: 220px;
+  height: 1px;
+  background: rgba(25, 45, 75, 0.18);
+  margin: 28px 0 22px 0;
+}
+
 @media (max-width: 700px) {
   .sidebar {
     left: 0 !important;
@@ -337,12 +345,6 @@ nav.sidebar-nav {
   color: #e5c19f; /* tan on hover - flipped from blue */
   text-decoration: underline;
 }
-.sidebarOutro {
-  margin-top: 34px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(25, 45, 75, 0.18);
-  max-width: 220px;
-}
 
 .sidebarOutroLabel {
   margin-bottom: 10px;
@@ -369,6 +371,7 @@ nav.sidebar-nav {
   line-height: 1.35;
   margin: 0;
 }
+
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
 
 @media (max-width: 700px) {
