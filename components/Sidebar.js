@@ -316,7 +316,7 @@ export default function Sidebar({
           </ul>
           {/* ===== END 3D WORKS SECTION ===== */}
 
-          {/* ===== LINKS SECTION ===== */}
+                    {/* ===== LINKS SECTION ===== */}
           <div className={styles.sidebarSectionTitle}>Links</div>
           <ul className={styles.sidebarList}>
             <li>
@@ -366,25 +366,24 @@ export default function Sidebar({
                 rel="noopener noreferrer"
                 className={styles.sidebarLink}
               >
-                CODE
+                Code
               </a>
             </li>
           </ul>
 
-          <div className={styles.sidebarInfo} style={{ padding: "0px" }}>
-<div className={styles.sidebarOutro}>
-  <div className={styles.sidebarOutroLabel}>Studio Stewart</div>
+          <div className={styles.sidebarOutro}>
+            <div className={styles.sidebarOutroLabel}>Studio Stewart</div>
 
-  <div className={styles.sidebarOutroName}>
-    Leonard Stewart Jr
-  </div>
+            <div className={styles.sidebarOutroName}>
+              Leonard Stewart Jr
+            </div>
 
-  <p className={styles.sidebarOutroText}>
-    Architecture graduate, designer, and maker exploring the overlap of design,
-    technology, fabrication, and built work.
-  </p>
-</div>
-</nav>
+            <p className={styles.sidebarOutroText}>
+              Architecture graduate, designer, and maker exploring the overlap of design,
+              technology, fabrication, and built work.
+            </p>
+          </div>
+        </nav>
       </motion.aside>
     </>
   );
