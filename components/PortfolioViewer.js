@@ -376,23 +376,38 @@ export default function PortfolioViewer({
     }
   }, []);
 
-  // Compute scale to fit viewer HEIGHT or WIDTH (no cropping)
-  const recomputeScale = useCallback(() => {
-    if (!viewerRef.current) return;
-    const viewerEl = viewerRef.current;
-    const availableHeight = viewerEl.clientHeight; // excludes site header via container style
-    const availableWidth = viewerEl.clientWidth;
-    const naturalHeight = pageSize.height || 792;
-    const naturalWidth = pageSize.width || 1224;
 
-    let s = 1;
-    if (fitMode === "width") {
-      s = availableWidth > 0 ? availableWidth / naturalWidth : 1;
-    } else {
-      s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
-    }
-    setScale(s);
-  }, [pageSize.height, pageSize.width, fitMode]);
+  // Covers should fit by height, while the main portfolio pages use the selected fit mode
+  const getEffectiveFitMode = useCallback(() => {
+  const pageId = manifest?.pages?.[index]?.id || "";
+  const isCoverPage = pageId === "cover" || pageId === "backcover";
+
+  return isCoverPage ? "height" : fitMode;
+}, [manifest, index, fitMode]);
+
+// Compute scale to fit viewer HEIGHT or WIDTH, no cropping
+  const recomputeScale = useCallback(() => {
+  if (!viewerRef.current) return;
+
+  const viewerEl = viewerRef.current;
+  const availableHeight = viewerEl.clientHeight;
+  const availableWidth = viewerEl.clientWidth;
+
+  const naturalHeight = pageSize.height || 792;
+  const naturalWidth = pageSize.width || 1224;
+
+  const effectiveFitMode = getEffectiveFitMode();
+
+  let s = 1;
+
+  if (effectiveFitMode === "width") {
+    s = availableWidth > 0 ? availableWidth / naturalWidth : 1;
+  } else {
+    s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
+  }
+
+  setScale(s);
+}, [pageSize.height, pageSize.width, getEffectiveFitMode]);
 
   // Recompute when window resizes, page changes, or fit mode toggles
   useEffect(() => {
@@ -588,7 +603,7 @@ export default function PortfolioViewer({
       };
 
   const scaledHeight = pageSize.height * scale;
-  const allowVerticalScroll = fitMode === "width";
+  const allowVerticalScroll = getEffectiveFitMode() === "width";
 
   // Spacer should only add the difference between scaled height and original layout height.
   const spacerHeight = allowVerticalScroll
@@ -751,7 +766,7 @@ export default function PortfolioViewer({
             aria-label="Toggle fit mode"
             title="Toggle fit mode (F)"
           >
-            {fitMode === "height" ? "Fit: Height" : "Fit: Width"}
+            {getEffectiveFitMode() === "height" ? "Fit: Height" : "Fit: Width"}
           </button>
         )}
 
