@@ -30,7 +30,7 @@ const projects = [
   {
     grade: "SUMMER 26'",
     title: "FSD COMMERCIAL HANGAR",
-    type: "AVIATION, STAGE 1 of 4",
+    type: "AVIATION, STAGE 1",
     slug: "HANGAR-26",
     bannerSrc: "/images/placeholders/blank.svg",
     action: "route",
