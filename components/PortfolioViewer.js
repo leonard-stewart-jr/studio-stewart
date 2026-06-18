@@ -798,7 +798,7 @@ export default function PortfolioViewer({
     >
       <style jsx global>{`
         .portfolio-viewer-shell {
-          scrollbar-width: thin;
+          scrollbar-width: auto;
           scrollbar-color: var(--portfolio-scrollbar-thumb) var(--portfolio-scrollbar-track);
         }
 
