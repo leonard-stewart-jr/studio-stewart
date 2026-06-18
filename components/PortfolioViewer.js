@@ -888,7 +888,7 @@ export default function PortfolioViewer({
       <div
         style={{
           position: "fixed",
-          right: 16,
+          right: 36,
           top: `calc(${headerHeight}px + 12px + env(safe-area-inset-top, 0))`,
           display: "flex",
           alignItems: "center",
