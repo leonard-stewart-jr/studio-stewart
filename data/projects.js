@@ -23,6 +23,7 @@ const projects = [
     title: "INVESTIGATION INTO (in)JUSTICE FACILITIES",
     type: "JUSTICE FACILITIES",
     slug: "ISP",
+    hidden: true,
     bannerSrc: "/images/placeholders/blank.svg",
     action: "route",
     linkHref: "/independent-studio"
