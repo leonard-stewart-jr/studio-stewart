@@ -787,8 +787,40 @@ export default function PortfolioViewer({
   return (
     <div
       ref={viewerRef}
-      style={viewerContainerStyle}
+      className="portfolio-viewer-shell"
+      style={{
+        ...viewerContainerStyle,
+        "--portfolio-theme-color": pageThemeColor,
+        "--portfolio-scrollbar-track": colorToRgba(pageThemeColor, 0.08),
+        "--portfolio-scrollbar-thumb": colorToRgba(pageThemeColor, 0.55),
+        "--portfolio-scrollbar-thumb-hover": colorToRgba(pageThemeColor, 0.75)
+      }}
     >
+      <style jsx global>{`
+        .portfolio-viewer-shell {
+          scrollbar-width: thin;
+          scrollbar-color: var(--portfolio-scrollbar-thumb) var(--portfolio-scrollbar-track);
+        }
+
+        .portfolio-viewer-shell::-webkit-scrollbar {
+          width: 12px;
+          height: 12px;
+        }
+
+        .portfolio-viewer-shell::-webkit-scrollbar-track {
+          background: var(--portfolio-scrollbar-track);
+        }
+
+        .portfolio-viewer-shell::-webkit-scrollbar-thumb {
+          background: var(--portfolio-scrollbar-thumb);
+          border-radius: 999px;
+          border: 3px solid var(--portfolio-scrollbar-track);
+        }
+
+        .portfolio-viewer-shell::-webkit-scrollbar-thumb:hover {
+          background: var(--portfolio-scrollbar-thumb-hover);
+        }
+      `}</style>
       {/* Top info bar (optional; default hidden) */}
       {showInfoBar && (
         <div
