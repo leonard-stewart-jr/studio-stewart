@@ -9,7 +9,6 @@ export default function MatterMatters() {
   return (
     <>
       {/* Fixed nav bar, only for this page */}
-      <HeaderBar fixedNav={true} />
       <main
         className="matter-matters-page"
         style={{
