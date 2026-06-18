@@ -714,6 +714,10 @@ export default function PortfolioViewer({
 
   const showProjectTag = Boolean(semesterLabel);
 
+  const controlsTop = isFullscreen
+    ? "14px"
+    : `calc(${headerHeight}px + 12px + env(safe-area-inset-top, 0))`;
+
   const canvasWrapStyle = isTouchDevice
     ? {
         position: "relative",
@@ -855,7 +859,44 @@ export default function PortfolioViewer({
       ? colorToRgba(pageThemeColor, 0.28)
       : colorToRgba(pageThemeColor, 0.16),
     transition:
-      "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease",
+      "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease"
+  };
+
+  const fullscreenControlWrapStyle = {
+    position: "fixed",
+    top: controlsTop,
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2100,
+    pointerEvents: "auto"
+  };
+
+  const fullscreenTooltipStyle = {
+    position: "absolute",
+    top: "calc(100% + 8px)",
+    left: "50%",
+    transform: fullscreenHover
+      ? "translateX(-50%) translateY(0)"
+      : "translateX(-50%) translateY(-3px)",
+    padding: "6px 9px",
+    borderRadius: 4,
+    border: `1px solid ${pageThemeColor}`,
+    background: colorToRgba(pageThemeColor, 0.92),
+    color: "#fff",
+    fontFamily: "coolvetica, sans-serif",
+    fontSize: 11,
+    letterSpacing: ".04em",
+    textTransform: "uppercase",
+    lineHeight: 1,
+    whiteSpace: "nowrap",
+    opacity: fullscreenHover ? 1 : 0,
+    pointerEvents: "none",
+    transition: "opacity 0.16s ease, transform 0.16s ease",
+    zIndex: 2200,
+    boxShadow: "0 3px 10px rgba(0,0,0,0.12)"
   };
 
   return (
@@ -1003,13 +1044,30 @@ export default function PortfolioViewer({
         }}
       />
 
+      <div style={fullscreenControlWrapStyle}>
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          onMouseEnter={() => setFullscreenHover(true)}
+          onMouseLeave={() => setFullscreenHover(false)}
+          onFocus={() => setFullscreenHover(true)}
+          onBlur={() => setFullscreenHover(false)}
+          style={fullscreenBtnStyle}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? "×" : "⛶"}
+        </button>
+
+        <div style={fullscreenTooltipStyle}>
+          {isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        </div>
+      </div>
+
       <div
         style={{
           position: "fixed",
           right: 36,
-          top: isFullscreen
-            ? "14px"
-            : `calc(${headerHeight}px + 12px + env(safe-area-inset-top, 0))`,
+          top: controlsTop,
           display: "flex",
           alignItems: "center",
           gap: 6,
@@ -1017,17 +1075,6 @@ export default function PortfolioViewer({
           pointerEvents: "auto"
         }}
       >
-        <button
-          type="button"
-          onClick={toggleFullscreen}
-          onMouseEnter={() => setFullscreenHover(true)}
-          onMouseLeave={() => setFullscreenHover(false)}
-          style={fullscreenBtnStyle}
-          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        >
-          {isFullscreen ? "×" : "⛶"}
-        </button>
-
         {showProjectTag && (
           <div
             style={projectTagStyle}
