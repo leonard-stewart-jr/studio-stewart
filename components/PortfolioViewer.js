@@ -766,6 +766,24 @@ export default function PortfolioViewer({
     flex: "0 0 auto"
   };
 
+  const controlBtnStyle = (disabled = false) => ({
+    background: disabled
+      ? colorToRgba(pageThemeColor, 0.04)
+      : colorToRgba(pageThemeColor, 0.12),
+    color: pageThemeColor,
+    border: `1px solid ${pageThemeColor}`,
+    borderRadius: 4,
+    padding: "6px 8px",
+    cursor: disabled ? "not-allowed" : "pointer",
+    fontFamily: "coolvetica, sans-serif",
+    fontSize: 11,
+    lineHeight: 1,
+    minHeight: 26,
+    opacity: disabled ? 0.35 : 1,
+    transition: "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease",
+    boxSizing: "border-box"
+  });
+
   return (
     <div
       ref={viewerRef}
@@ -903,7 +921,7 @@ export default function PortfolioViewer({
               setFitMode((m) => (m === "height" ? "width" : "height"));
               setReloadCounter((n) => n + 1); // reload iframe for crispness
             }}
-            style={arrowBtnStyle}
+            style={controlBtnStyle(false)}
             aria-label="Toggle fit mode"
             title="Toggle fit mode (F)"
           >
@@ -915,7 +933,7 @@ export default function PortfolioViewer({
         <button
           onClick={() => setIndex(0)}
           disabled={index === 0}
-          style={arrowBtnStyle}
+          style={controlBtnStyle(index === 0)}
           aria-label="First page"
           title="First"
         >
@@ -924,7 +942,7 @@ export default function PortfolioViewer({
         <button
           onClick={goPrev}
           disabled={index === 0}
-          style={arrowBtnStyle}
+          style={controlBtnStyle(index === 0)}
           aria-label="Previous page"
           title="Previous"
         >
@@ -933,7 +951,7 @@ export default function PortfolioViewer({
         <button
           onClick={goNext}
           disabled={index >= total - 1}
-          style={arrowBtnStyle}
+          style={controlBtnStyle(index >= total - 1)}
           aria-label="Next page"
           title="Next"
         >
@@ -942,7 +960,7 @@ export default function PortfolioViewer({
         <button
           onClick={() => setIndex(total - 1)}
           disabled={index >= total - 1}
-          style={arrowBtnStyle}
+          style={controlBtnStyle(index >= total - 1)}
           aria-label="Last page"
           title="Last"
         >
@@ -952,14 +970,3 @@ export default function PortfolioViewer({
     </div>
   );
 }
-
-const arrowBtnStyle = {
-  background: "#fff",
-  color: "#181818",
-  border: "1px solid #ddd",
-  borderRadius: 4,
-  padding: "6px 8px",
-  cursor: "pointer",
-  fontFamily: "coolvetica, sans-serif",
-  fontSize: 11,
-};
