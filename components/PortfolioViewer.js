@@ -1,5 +1,89 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
+function colorToRgba(color, alpha = 0.12) {
+  if (!color) return `rgba(108, 108, 106, ${alpha})`;
+
+  const value = String(color).trim();
+
+  if (value.startsWith("#")) {
+    let hex = value.replace("#", "");
+
+    if (hex.length === 3) {
+      hex = hex
+        .split("")
+        .map((char) => char + char)
+        .join("");
+    }
+
+    if (hex.length === 6) {
+      const bigint = parseInt(hex, 16);
+
+      if (Number.isFinite(bigint)) {
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+    }
+  }
+
+  if (value.startsWith("rgb(")) {
+    return value.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+  }
+
+  if (value.startsWith("rgba(")) {
+    return value;
+  }
+
+  return `rgba(108, 108, 106, ${alpha})`;
+}
+
+function formatSemesterFromId(id) {
+  if (!id) return "";
+
+  const match = String(id).match(/^(spring|summer|fall|winter)(20\d{2})/i);
+  if (!match) return "";
+
+  return `${match[1].toUpperCase()} ${match[2]}`;
+}
+
+function getProjectBaseId(id) {
+  if (!id) return "";
+
+  return String(id).replace(/-\d+$/, "");
+}
+
+function getSpreadLabelForPage(pages, page, index) {
+  if (!page) return "";
+  if (page.spreadLabel) return page.spreadLabel;
+
+  const id = page.id || "";
+  const semester = page.semester || page.term || page.date || formatSemesterFromId(id);
+
+  if (!semester) return "";
+
+  const baseId = getProjectBaseId(id);
+
+  const projectPages = (pages || []).filter((p) => {
+    const pId = p.id || "";
+    const pSemester = p.semester || p.term || p.date || formatSemesterFromId(pId);
+
+    return pSemester && getProjectBaseId(pId) === baseId;
+  });
+
+  if (projectPages.length > 1) {
+    const suffixMatch = String(id).match(/-(\d+)$/);
+    const spreadNumber = suffixMatch
+      ? Number(suffixMatch[1])
+      : projectPages.findIndex((p) => p.id === id) + 1;
+
+    return `SPREAD ${spreadNumber} OF ${projectPages.length}`;
+  }
+
+  return "SINGLE PAGE";
+}
+
 export default function PortfolioViewer({
   manifestUrl = "/portfolio/undergraduate/manifest.json",
   showInfoBar = false
@@ -376,38 +460,37 @@ export default function PortfolioViewer({
     }
   }, []);
 
-
   // Covers should fit by height, while the main portfolio pages use the selected fit mode
   const getEffectiveFitMode = useCallback(() => {
-  const pageId = manifest?.pages?.[index]?.id || "";
-  const isCoverPage = pageId === "cover" || pageId === "backcover";
+    const pageId = manifest?.pages?.[index]?.id || "";
+    const isCoverPage = pageId === "cover" || pageId === "backcover";
 
-  return isCoverPage ? "height" : fitMode;
-}, [manifest, index, fitMode]);
+    return isCoverPage ? "height" : fitMode;
+  }, [manifest, index, fitMode]);
 
-// Compute scale to fit viewer HEIGHT or WIDTH, no cropping
+  // Compute scale to fit viewer HEIGHT or WIDTH, no cropping
   const recomputeScale = useCallback(() => {
-  if (!viewerRef.current) return;
+    if (!viewerRef.current) return;
 
-  const viewerEl = viewerRef.current;
-  const availableHeight = viewerEl.clientHeight;
-  const availableWidth = viewerEl.clientWidth;
+    const viewerEl = viewerRef.current;
+    const availableHeight = viewerEl.clientHeight;
+    const availableWidth = viewerEl.clientWidth;
 
-  const naturalHeight = pageSize.height || 792;
-  const naturalWidth = pageSize.width || 1224;
+    const naturalHeight = pageSize.height || 792;
+    const naturalWidth = pageSize.width || 1224;
 
-  const effectiveFitMode = getEffectiveFitMode();
+    const effectiveFitMode = getEffectiveFitMode();
 
-  let s = 1;
+    let s = 1;
 
-  if (effectiveFitMode === "width") {
-    s = availableWidth > 0 ? availableWidth / naturalWidth : 1;
-  } else {
-    s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
-  }
+    if (effectiveFitMode === "width") {
+      s = availableWidth > 0 ? availableWidth / naturalWidth : 1;
+    } else {
+      s = availableHeight > 0 ? availableHeight / naturalHeight : 1;
+    }
 
-  setScale(s);
-}, [pageSize.height, pageSize.width, getEffectiveFitMode]);
+    setScale(s);
+  }, [pageSize.height, pageSize.width, getEffectiveFitMode]);
 
   // Recompute when window resizes, page changes, or fit mode toggles
   useEffect(() => {
@@ -556,6 +639,18 @@ export default function PortfolioViewer({
   const TOP_BAR_HEIGHT = 44; // optional info bar height
   const topOffset = showInfoBar ? TOP_BAR_HEIGHT : 0;
 
+  const semesterLabel = page?.semester || page?.term || page?.date || formatSemesterFromId(page?.id);
+  const spreadLabel = getSpreadLabelForPage(manifest?.pages || [], page, index);
+
+  const pageThemeColor =
+    page?.themeColor ||
+    page?.theme ||
+    page?.accentColor ||
+    page?.color ||
+    "#6c6c6a";
+
+  const showProjectTag = Boolean(semesterLabel);
+
   // Wrapper for scaled iframe:
   // - On desktop: center the canvas (left:50% + translateX(-50%)) so it visually centers
   // - On touch devices: left-align the canvas (left:0, transform origin top-left) so initial view shows left edge
@@ -641,6 +736,34 @@ export default function PortfolioViewer({
     // keep click/tap behavior but avoid intercepting pan gestures
     touchAction: isTouchDevice ? "manipulation" : undefined,
     WebkitTapHighlightColor: "transparent"
+  };
+
+  const projectTagStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    minHeight: 26,
+    padding: "0 10px",
+    borderRadius: 4,
+    border: `1px solid ${pageThemeColor}`,
+    background: colorToRgba(pageThemeColor, 0.12),
+    color: pageThemeColor,
+    fontFamily: "coolvetica, sans-serif",
+    fontSize: 11,
+    letterSpacing: ".06em",
+    textTransform: "uppercase",
+    lineHeight: 1,
+    userSelect: "none",
+    whiteSpace: "nowrap",
+    boxSizing: "border-box"
+  };
+
+  const projectTagDividerStyle = {
+    width: 1,
+    height: 12,
+    background: pageThemeColor,
+    opacity: 0.45,
+    flex: "0 0 auto"
   };
 
   return (
@@ -743,18 +866,36 @@ export default function PortfolioViewer({
         }}
       />
 
-      {/* Controls: Fit toggle + arrows — FIXED to viewport top-right (25% smaller) */}
+      {/* Controls: project tag + fit toggle + arrows */}
       <div
         style={{
           position: "fixed",
           right: 16,
           top: `calc(${headerHeight}px + 12px + env(safe-area-inset-top, 0))`,
           display: "flex",
-          gap: 6,                 // reduced spacing
-          zIndex: 2000,           // Above iframe/click zones
-          pointerEvents: "auto",  // Ensure clickable
+          alignItems: "center",
+          gap: 6,
+          zIndex: 2000,
+          pointerEvents: "auto",
         }}
       >
+        {/* Project identity tag */}
+        {showProjectTag && (
+          <div
+            style={projectTagStyle}
+            aria-label={`${semesterLabel}${spreadLabel ? `, ${spreadLabel}` : ""}`}
+            title={`${semesterLabel}${spreadLabel ? `, ${spreadLabel}` : ""}`}
+          >
+            <span>{semesterLabel}</span>
+            {spreadLabel && (
+              <>
+                <span style={projectTagDividerStyle} />
+                <span>{spreadLabel}</span>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Fit mode toggle — hidden on touch devices */}
         {!isTouchDevice && (
           <button
@@ -816,9 +957,9 @@ const arrowBtnStyle = {
   background: "#fff",
   color: "#181818",
   border: "1px solid #ddd",
-  borderRadius: 4,         // reduced from 6
-  padding: "6px 8px",      // reduced ~25%
+  borderRadius: 4,
+  padding: "6px 8px",
   cursor: "pointer",
   fontFamily: "coolvetica, sans-serif",
-  fontSize: 11,            // reduced from 14 (~25% smaller)
+  fontSize: 11,
 };
