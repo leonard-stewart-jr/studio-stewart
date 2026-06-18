@@ -124,21 +124,25 @@ export default function ProjectList({ projects, onProjectClick }) {
     height: "auto"
   };
 
-  const overlayStyle = {
-    position: "absolute",
-    left: 14,
-    bottom: 12,
-    padding: "6px 10px",
-    background: "rgba(0,0,0,0.35)",
-    color: "#fff",
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 280,
-    fontSize: 12,
-    letterSpacing: ".06em",
-    textTransform: "uppercase",
-    borderRadius: 4,
-    userSelect: "none"
-  };
+const overlayStyle = {
+  position: "absolute",
+  left: 14,
+  bottom: 12,
+  padding: "6px 10px",
+  background: "rgba(0,0,0,0.16)",
+  color: "rgba(255,255,255,0.82)",
+  fontFamily: "Inter, sans-serif",
+  fontWeight: 280,
+  fontSize: 12,
+  letterSpacing: ".06em",
+  textTransform: "uppercase",
+  borderRadius: 4,
+  userSelect: "none",
+  pointerEvents: "none",
+  opacity: 0,
+  transform: "translateY(4px)",
+  transition: "opacity 0.18s ease, transform 0.18s ease"
+};
 
   return (
     <div style={pageContainerStyle}>
@@ -167,10 +171,14 @@ export default function ProjectList({ projects, onProjectClick }) {
                 onProjectClick(idx);
               }
             }}
-            onMouseEnter={() => setHoveredIndex(idx)}
-            onMouseLeave={() =>
-              setHoveredIndex((h) => (h === idx ? null : h))
-            }
+              onMouseEnter={() => setHoveredIndex(idx)}
+              onMouseLeave={() =>
+                setHoveredIndex((h) => (h === idx ? null : h))
+              }
+              onFocus={() => setHoveredIndex(idx)}
+              onBlur={() =>
+                setHoveredIndex((h) => (h === idx ? null : h))
+              }
             style={{
               ...imageWrapStyle,
               transform:
@@ -190,7 +198,15 @@ export default function ProjectList({ projects, onProjectClick }) {
               alt={project.title}
               style={imageStyle}
             />
-            <div style={overlayStyle}>{overlayLabel(project)}</div>
+            <div
+              style={{
+                ...overlayStyle,
+                opacity: hoveredIndex === idx ? 1 : 0,
+                transform: hoveredIndex === idx ? "translateY(0)" : "translateY(4px)"
+              }}
+            >
+              {overlayLabel(project)}
+            </div>
           </div>
 
           {/* Right: empty column to keep image perfectly centered */}
