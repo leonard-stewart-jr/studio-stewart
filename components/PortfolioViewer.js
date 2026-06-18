@@ -803,8 +803,8 @@ export default function PortfolioViewer({
         }
 
         .portfolio-viewer-shell::-webkit-scrollbar {
-          width: 12px;
-          height: 12px;
+          width: 18px;
+          height: 18px;
         }
 
         .portfolio-viewer-shell::-webkit-scrollbar-track {
