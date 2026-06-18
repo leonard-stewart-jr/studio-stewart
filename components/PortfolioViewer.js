@@ -841,31 +841,21 @@ export default function PortfolioViewer({
   });
 
   const fullscreenBtnStyle = {
-    position: "fixed",
-    top: isFullscreen
-      ? "18px"
-      : `calc(${headerHeight}px + 16px + env(safe-area-inset-top, 0))`,
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: 62,
-    height: 62,
-    borderRadius: "50%",
-    border: `1px solid ${colorToRgba(pageThemeColor, fullscreenHover ? 0.65 : 0.28)}`,
-    background: colorToRgba(pageThemeColor, fullscreenHover ? 0.18 : 0.07),
-    color: pageThemeColor,
-    display: "flex",
+    ...controlBtnStyle(false),
+    width: 36,
+    minWidth: 36,
+    height: 32,
+    minHeight: 32,
+    padding: 0,
+    display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: "coolvetica, sans-serif",
-    fontSize: 24,
-    lineHeight: 1,
-    cursor: "pointer",
-    zIndex: 2100,
-    opacity: fullscreenHover ? 0.9 : 0.28,
+    opacity: fullscreenHover ? 1 : 0.55,
+    background: fullscreenHover
+      ? colorToRgba(pageThemeColor, 0.28)
+      : colorToRgba(pageThemeColor, 0.16),
     transition:
-      "opacity 0.18s ease, background 0.18s ease, border-color 0.18s ease, transform 0.18s ease",
-    backdropFilter: "blur(4px)",
-    WebkitBackdropFilter: "blur(4px)"
+      "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease",
   };
 
   return (
@@ -1013,18 +1003,6 @@ export default function PortfolioViewer({
         }}
       />
 
-      <button
-        type="button"
-        onClick={toggleFullscreen}
-        onMouseEnter={() => setFullscreenHover(true)}
-        onMouseLeave={() => setFullscreenHover(false)}
-        style={fullscreenBtnStyle}
-        aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-      >
-        {isFullscreen ? "×" : "⛶"}
-      </button>
-
       <div
         style={{
           position: "fixed",
@@ -1039,6 +1017,17 @@ export default function PortfolioViewer({
           pointerEvents: "auto"
         }}
       >
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          onMouseEnter={() => setFullscreenHover(true)}
+          onMouseLeave={() => setFullscreenHover(false)}
+          style={fullscreenBtnStyle}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? "×" : "⛶"}
+        </button>
+
         {showProjectTag && (
           <div
             style={projectTagStyle}
