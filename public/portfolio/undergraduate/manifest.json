@@ -15,14 +15,14 @@
     {
       "id": "fall2024-1",
       "src": "/portfolio/undergraduate/fall2024.html?ab=1",
-      "semester": "FALL 2024",
+      "semester": "FALL 24'",
       "spreadLabel": "1 OF 2",
       "themeColor": "#e6d8c0"
     },
     {
       "id": "fall2024-2",
       "src": "/portfolio/undergraduate/fall2024.html?ab=2",
-      "semester": "FALL 2024",
+      "semester": "FALL 24'",
       "spreadLabel": "2 OF 2",
       "themeColor": "#e6d8c0"
     },
@@ -30,14 +30,14 @@
     {
       "id": "spring2024-1",
       "src": "/portfolio/undergraduate/spring2024.html?ab=1",
-      "semester": "SPRING 2024",
+      "semester": "SPRING 24'",
       "spreadLabel": "1 OF 2",
       "themeColor": "#aec272"
     },
     {
       "id": "spring2024-2",
       "src": "/portfolio/undergraduate/spring2024.html?ab=2",
-      "semester": "SPRING 2024",
+      "semester": "SPRING 24'",
       "spreadLabel": "2 OF 2",
       "themeColor": "#aec272"
     },
@@ -45,14 +45,14 @@
     {
       "id": "spring2021",
       "src": "/portfolio/undergraduate/spring2021.html",
-      "semester": "SPRING 2021",
+      "semester": "SPRING 21'",
       "spreadLabel": "1 of 1",
       "themeColor": "#e9c6c8"
     },
     {
       "id": "fall2021",
       "src": "/portfolio/undergraduate/fall2021.html",
-      "semester": "FALL 2021",
+      "semester": "FALL 21'",
       "spreadLabel": "1 of 1",
       "themeColor": "#456790"
     },
@@ -60,14 +60,14 @@
     {
       "id": "spring2022-1",
       "src": "/portfolio/undergraduate/spring2022.html?ab=1",
-      "semester": "SPRING 2022",
+      "semester": "SPRING 22'",
       "spreadLabel": "1 OF 2",
       "themeColor": "#8a8a8a"
     },
     {
       "id": "spring2022-2",
       "src": "/portfolio/undergraduate/spring2022.html?ab=2",
-      "semester": "SPRING 2022",
+      "semester": "SPRING 22'",
       "spreadLabel": "2 OF 2",
       "themeColor": "#8a8a8a"
     },
@@ -75,14 +75,14 @@
     {
       "id": "spring2023-1",
       "src": "/portfolio/undergraduate/spring2023.html?ab=1",
-      "semester": "SPRING 2023",
+      "semester": "SPRING 23'",
       "spreadLabel": "1 OF 2",
       "themeColor": "#935741"
     },
     {
       "id": "spring2023-2",
       "src": "/portfolio/undergraduate/spring2023.html?ab=2",
-      "semester": "SPRING 2023",
+      "semester": "SPRING 23'",
       "spreadLabel": "2 OF 2",
       "themeColor": "#935741"
     },
