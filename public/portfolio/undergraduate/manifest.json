@@ -2,25 +2,94 @@
   "title": "Undergraduate Portfolio",
   "headerHeight": 60,
   "pages": [
-    { "id": "cover",       "src": "/portfolio/undergraduate/cover.html" },
+    {
+      "id": "cover",
+      "src": "/portfolio/undergraduate/cover.html"
+    },
 
-    { "id": "intro",       "src": "/portfolio/undergraduate/intro.html" },
+    {
+      "id": "intro",
+      "src": "/portfolio/undergraduate/intro.html"
+    },
 
-    { "id": "fall2024-1",  "src": "/portfolio/undergraduate/fall2024.html?ab=1" },
-    { "id": "fall2024-2",  "src": "/portfolio/undergraduate/fall2024.html?ab=2" },
+    {
+      "id": "fall2024-1",
+      "src": "/portfolio/undergraduate/fall2024.html?ab=1",
+      "semester": "FALL 2024",
+      "spreadLabel": "SPREAD 1 OF 2",
+      "themeColor": "#d8c28c"
+    },
+    {
+      "id": "fall2024-2",
+      "src": "/portfolio/undergraduate/fall2024.html?ab=2",
+      "semester": "FALL 2024",
+      "spreadLabel": "SPREAD 2 OF 2",
+      "themeColor": "#d8c28c"
+    },
 
-    { "id": "spring2024-1","src": "/portfolio/undergraduate/spring2024.html?ab=1" },
-    { "id": "spring2024-2","src": "/portfolio/undergraduate/spring2024.html?ab=2" },
+    {
+      "id": "spring2024-1",
+      "src": "/portfolio/undergraduate/spring2024.html?ab=1",
+      "semester": "SPRING 2024",
+      "spreadLabel": "SPREAD 1 OF 2",
+      "themeColor": "#9b7b48"
+    },
+    {
+      "id": "spring2024-2",
+      "src": "/portfolio/undergraduate/spring2024.html?ab=2",
+      "semester": "SPRING 2024",
+      "spreadLabel": "SPREAD 2 OF 2",
+      "themeColor": "#9b7b48"
+    },
 
-    { "id": "spring2021",  "src": "/portfolio/undergraduate/spring2021.html" },
-    { "id": "fall2021",    "src": "/portfolio/undergraduate/fall2021.html" },
+    {
+      "id": "spring2021",
+      "src": "/portfolio/undergraduate/spring2021.html",
+      "semester": "SPRING 2021",
+      "spreadLabel": "SINGLE PAGE",
+      "themeColor": "#e8b5bf"
+    },
+    {
+      "id": "fall2021",
+      "src": "/portfolio/undergraduate/fall2021.html",
+      "semester": "FALL 2021",
+      "spreadLabel": "SINGLE PAGE",
+      "themeColor": "#315f91"
+    },
 
-    { "id": "spring2022-1","src": "/portfolio/undergraduate/spring2022.html?ab=1" },
-    { "id": "spring2022-2","src": "/portfolio/undergraduate/spring2022.html?ab=2" },
+    {
+      "id": "spring2022-1",
+      "src": "/portfolio/undergraduate/spring2022.html?ab=1",
+      "semester": "SPRING 2022",
+      "spreadLabel": "SPREAD 1 OF 2",
+      "themeColor": "#c49a3a"
+    },
+    {
+      "id": "spring2022-2",
+      "src": "/portfolio/undergraduate/spring2022.html?ab=2",
+      "semester": "SPRING 2022",
+      "spreadLabel": "SPREAD 2 OF 2",
+      "themeColor": "#c49a3a"
+    },
 
-    { "id": "spring2023-1","src": "/portfolio/undergraduate/spring2023.html?ab=1" },
-    { "id": "spring2023-2","src": "/portfolio/undergraduate/spring2023.html?ab=2" },
+    {
+      "id": "spring2023-1",
+      "src": "/portfolio/undergraduate/spring2023.html?ab=1",
+      "semester": "SPRING 2023",
+      "spreadLabel": "SPREAD 1 OF 2",
+      "themeColor": "#7b8f5b"
+    },
+    {
+      "id": "spring2023-2",
+      "src": "/portfolio/undergraduate/spring2023.html?ab=2",
+      "semester": "SPRING 2023",
+      "spreadLabel": "SPREAD 2 OF 2",
+      "themeColor": "#7b8f5b"
+    },
 
-    { "id": "backcover",   "src": "/portfolio/undergraduate/backcover.html" }
+    {
+      "id": "backcover",
+      "src": "/portfolio/undergraduate/backcover.html"
+    }
   ]
 }
