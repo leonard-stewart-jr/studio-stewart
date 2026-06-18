@@ -33,7 +33,7 @@ const projects = [
     title: "FSD COMMERCIAL HANGAR",
     type: "AVIATION, STAGE 1",
     slug: "HANGAR-26",
-    bannerSrc: "/images/placeholders/blank.svg",
+    bannerSrc: "/images/portfolio/fsd26.png",
     action: "route",
     linkHref: "/projects/hangar-26"
   },
