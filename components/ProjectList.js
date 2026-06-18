@@ -142,7 +142,10 @@ export default function ProjectList({ projects, onProjectClick }) {
 
   return (
     <div style={pageContainerStyle}>
-      {projects.map((project, idx) => (
+      {projects.map((project, idx) => {
+        if (project.hidden) return null;
+
+        return (
         <div key={project.slug || idx} style={rowStyle}>
           {/* Left: Info block */}
           <div style={infoColStyle}>
@@ -193,7 +196,8 @@ export default function ProjectList({ projects, onProjectClick }) {
           {/* Right: empty column to keep image perfectly centered */}
           {!isMobile && <div aria-hidden="true" />}
         </div>
-      ))}
+            );
+    })}
     </div>
   );
 }
