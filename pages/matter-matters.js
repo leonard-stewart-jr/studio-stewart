@@ -7,10 +7,12 @@ const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
+
   return (
     <>
       {/* Fixed nav bar, only for this page */}
       <HeaderBar fixedNav={true} />
+
       <main
         className="matter-matters-page"
         style={{
@@ -24,7 +26,7 @@ export default function MatterMatters() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          paddingTop: 76, // Prevents content from hiding under the fixed nav!
+          paddingTop: 76
         }}
       >
         {/* ======================= */}
@@ -39,7 +41,7 @@ export default function MatterMatters() {
             background: "#fff",
             margin: 0,
             padding: 0,
-            boxShadow: "none",
+            boxShadow: "none"
           }}
         >
           <div
@@ -52,9 +54,54 @@ export default function MatterMatters() {
               padding: 0,
               boxShadow: "none",
               overflow: "visible",
-              border: "none",
+              border: "none"
             }}
           >
+            {/* Invisible scroll anchors for the side nav */}
+            <div
+              id="matter-top"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: 1,
+                height: 1
+              }}
+            />
+
+            <div
+              id="matter-crisis"
+              style={{
+                position: "absolute",
+                top: 1150,
+                left: 0,
+                width: 1,
+                height: 1
+              }}
+            />
+
+            <div
+              id="matter-approach"
+              style={{
+                position: "absolute",
+                top: 2550,
+                left: 0,
+                width: 1,
+                height: 1
+              }}
+            />
+
+            <div
+              id="matter-index"
+              style={{
+                position: "absolute",
+                top: 5000,
+                left: 0,
+                width: 1,
+                height: 1
+              }}
+            />
+
             <iframe
               ref={iframeRef}
               src="/static/matter-matters/index.html"
@@ -70,15 +117,16 @@ export default function MatterMatters() {
                 boxSizing: "content-box",
                 boxShadow: "none",
                 outline: "none",
-                overflow: "visible",
+                overflow: "visible"
               }}
               scrolling="yes"
               allowFullScreen
             />
           </div>
         </div>
+
         {/* ======================= */}
-        {/* 2. Periodic Table Section (React) */}
+        {/* 2. Periodic Table Section */}
         {/* ======================= */}
         <div
           id="hc-periodic-table-root"
@@ -89,6 +137,7 @@ export default function MatterMatters() {
             alignItems: "center",
             justifyContent: "center",
             background: "#fff",
+            scrollMarginTop: 90
           }}
         >
           <PTableSection />
