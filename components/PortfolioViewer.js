@@ -741,15 +741,15 @@ export default function PortfolioViewer({
   const projectTagStyle = {
     display: "inline-flex",
     alignItems: "center",
-    gap: 8,
-    minHeight: 26,
-    padding: "0 10px",
-    borderRadius: 4,
+    gap: 10,
+    minHeight: 32,
+    padding: "0 12px",
+    borderRadius: 5,
     border: `1px solid ${pageThemeColor}`,
-    background: colorToRgba(pageThemeColor, 0.12),
+    background: colorToRgba(pageThemeColor, 0.2),
     color: pageThemeColor,
     fontFamily: "coolvetica, sans-serif",
-    fontSize: 11,
+    fontSize: 12,
     letterSpacing: ".06em",
     textTransform: "uppercase",
     lineHeight: 1,
@@ -760,26 +760,26 @@ export default function PortfolioViewer({
 
   const projectTagDividerStyle = {
     width: 1,
-    height: 12,
+    height: 14,
     background: pageThemeColor,
-    opacity: 0.45,
+    opacity: 0.55,
     flex: "0 0 auto"
   };
 
   const controlBtnStyle = (disabled = false) => ({
     background: disabled
-      ? colorToRgba(pageThemeColor, 0.04)
-      : colorToRgba(pageThemeColor, 0.12),
+      ? colorToRgba(pageThemeColor, 0.08)
+      : colorToRgba(pageThemeColor, 0.2),
     color: pageThemeColor,
     border: `1px solid ${pageThemeColor}`,
-    borderRadius: 4,
-    padding: "6px 8px",
+    borderRadius: 5,
+    padding: "7px 10px",
     cursor: disabled ? "not-allowed" : "pointer",
     fontFamily: "coolvetica, sans-serif",
-    fontSize: 11,
+    fontSize: 12,
     lineHeight: 1,
-    minHeight: 26,
-    opacity: disabled ? 0.35 : 1,
+    minHeight: 32,
+    opacity: disabled ? 0.4 : 1,
     transition: "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease",
     boxSizing: "border-box"
   });
