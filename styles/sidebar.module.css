@@ -27,13 +27,16 @@
   width: 8px;
   background: #f0f0ed;
 }
+
 .sidebar::-webkit-scrollbar-thumb {
   background: #e5c19f;
   border-radius: 6px;
 }
+
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: #e5c19f;
 }
+
 .sidebar {
   scrollbar-width: thin;
   scrollbar-color: #e5c19f #f0f0ed;
@@ -77,6 +80,7 @@
   justify-content: center;
   touch-action: manipulation;
 }
+
 .logo-hamburger-wrap img,
 .logo-hamburger-wrap .hamburger-svg {
   position: absolute;
@@ -87,13 +91,16 @@
   transition: opacity 0.18s;
   pointer-events: none;
 }
+
 .logo-hamburger-wrap .hamburger-svg {
   opacity: 0;
 }
+
 .logo-hamburger-wrap:hover img,
 .logo-hamburger-wrap:focus img {
   opacity: 0;
 }
+
 .logo-hamburger-wrap:hover .hamburger-svg,
 .logo-hamburger-wrap:focus .hamburger-svg {
   opacity: 1;
@@ -123,7 +130,7 @@
 nav.sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* reduced global gap; topNavGroup preserves the original larger spacing for top links */
+  gap: 8px;
   font-family: var(--font-sans);
 }
 
@@ -131,7 +138,7 @@ nav.sidebar-nav {
 .topNavGroup {
   display: flex;
   flex-direction: column;
-  gap: 22px; /* original spacing preserved for the top nav items */
+  gap: 22px;
 }
 
 .sidebarNavLink {
@@ -150,6 +157,7 @@ nav.sidebar-nav {
   display: block;
   cursor: pointer;
 }
+
 .active {
   color: #192d4b;
   background: none;
@@ -158,26 +166,25 @@ nav.sidebar-nav {
   font-size: 16px;
   font-weight: var(--weight-hover);
 }
+
 .sidebarNavLink:not(.active):hover,
 .sidebarNavLink:not(.active):focus {
   color: #192d4b;
   font-weight: var(--weight-hover);
   text-decoration: none;
 }
+
 .sidebarNavLink:focus-visible {
   outline: 2px solid #192d4b;
 }
 
-/* ====== SECTION TITLES (align with list items, site blue color) ====== */
+/* ====== SECTION TITLES ====== */
 .sidebarSectionTitle {
   margin-top: 0px;
   margin-bottom: 0px;
-  /* Made visually stronger: heavier weight + subtle stroke + shadow fallback
-     to emulate increased line-width without changing font-size */
-  font-weight: 700;                 /* use a strong font-weight */
-  color: #e5c19f; /* site tan */
-  -webkit-text-stroke: 0.0px #e5c19f; /* thickens glyph outlines in WebKit/Blink */
-  /* subtle text-shadow fallback for browsers that don't support text-stroke */
+  font-weight: 700;
+  color: #e5c19f;
+  -webkit-text-stroke: 0.0px #e5c19f;
   text-shadow:
     0.35px 0.12px rgba(230,219,185,0.06),
     -0.35px -0.12px rgba(230,219,185,0.06);
@@ -187,47 +194,69 @@ nav.sidebar-nav {
   line-height: 1.1;
 }
 
-/* ====== PORTFOLIO LINK STYLES ======
-   Two-line link: year above (small grey), title below (tan).
-   Title wraps to multiple lines (no forced single-line ellipsis).
-   Increased gap between items by 2px (was 6px margin -> now 8px).
-*/
+/* ====== PORTFOLIO LINK STYLES ====== */
 .portfolioLink {
   display: block;
   color: inherit;
   text-decoration: none;
   padding: 6px 0;
-  margin: 8px 0; /* increased from 6px to 8px per request */
+  margin: 8px 0;
   line-height: 1;
   cursor: pointer;
 }
-.portfolioLink:focus,
-.portfolioLink:hover {
-  
-}
+
 .portfolioLinkYear {
   display: block;
-  font-size: 12px; /* reverted back to 12px */
-  color: #b1b1ae; /* grey */
+  font-size: 12px;
+  color: #b1b1ae;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 2px;
   font-weight: var(--weight-thin);
 }
+
 .portfolioLinkTitle {
   display: block;
-  font-size: 14px; /* reverted back to 14px */
-  color: #192d4b; /* site blue - flipped from tan */
+  font-size: 14px;
+  color: #192d4b;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;
   font-weight: var(--weight-hover);
-  /* Allow wrapping instead of forcing single-line truncation */
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
   max-width: 100%;
   line-height: 1.15;
+  transition: color 0.2s ease;
+}
+
+/* Restores hover color for original portfolio links */
+.portfolioLink:hover .portfolioLinkTitle,
+.portfolioLink:focus .portfolioLinkTitle,
+.portfolioLink:focus-visible .portfolioLinkTitle {
+  color: #e5c19f;
+}
+
+/* Grouped semester styling, used for repeated semester projects */
+.portfolioGroup {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0 14px 0;
+}
+
+.portfolioGroupedTitle {
+  display: block;
+  text-decoration: none;
+  margin: 2px 0 5px 0;
+  transition: color 0.2s ease;
+}
+
+/* Keeps grouped titles using the same hover color */
+.portfolioGroupedTitle:hover,
+.portfolioGroupedTitle:focus,
+.portfolioGroupedTitle:focus-visible {
+  color: #e5c19f;
 }
 
 /* ====== CONTENT/FOOTER/SOCIAL ====== */
@@ -237,20 +266,24 @@ nav.sidebar-nav {
   color: #888;
   font-weight: var(--weight-thin);
 }
+
 .sidebar .sidebar-footer h3 {
   font-size: 17px;
   margin: 10px 0 6px 0;
   color: #181818;
   font-weight: var(--weight-thin);
 }
+
 .sidebar .sidebar-footer ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .sidebar .sidebar-footer li {
   margin-bottom: 5px;
 }
+
 .sidebar .sidebar-footer a {
   color: #181818;
   text-decoration: underline;
@@ -265,6 +298,7 @@ nav.sidebar-nav {
   color: #555;
   font-weight: var(--weight-thin);
 }
+
 .sidebar .sidebar-info b {
   font-weight: var(--weight-hover);
 }
@@ -277,6 +311,7 @@ nav.sidebar-nav {
   z-index: 2000;
   display: none;
 }
+
 .sidebar-overlay.open {
   display: block;
   pointer-events: auto;
@@ -292,8 +327,8 @@ nav.sidebar-nav {
 
 .sidebarSubtitle {
   display: block;
-  font-size: 14px; /* reverted back to 14px */
-  color: #192d4b; /* site blue - flipped from tan */
+  font-size: 14px;
+  color: #192d4b;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-weight: var(--weight-hover);
@@ -306,7 +341,7 @@ nav.sidebar-nav {
 
 .sidebarSublist {
   list-style: none;
-  margin: 0 0 0 14px; /* indent sub-links */
+  margin: 0 0 0 14px;
   padding: 0;
 }
 
@@ -328,8 +363,8 @@ nav.sidebar-nav {
 
 .sidebarLink {
   display: block;
-  font-size: 14px; /* reverted back to 14px */
-  color: #192d4b; /* site blue - flipped from tan */
+  font-size: 14px;
+  color: #192d4b;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-weight: var(--weight-hover);
@@ -342,7 +377,7 @@ nav.sidebar-nav {
 
 .sidebarLink:hover,
 .sidebarLink:focus {
-  color: #e5c19f; /* tan on hover - flipped from blue */
+  color: #e5c19f;
   text-decoration: underline;
 }
 
@@ -371,24 +406,8 @@ nav.sidebar-nav {
   line-height: 1.35;
   margin: 0;
 }
-.portfolioGroup {
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 14px 0;
-}
-
-.portfolioGroupedTitle {
-  display: block;
-  text-decoration: none;
-  margin: 2px 0 5px 0;
-}
-
-.portfolioGroupedTitle:hover {
-  color: #dfb98f;
-}
 
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
-
 @media (max-width: 700px) {
   .sidebar {
     left: 0 !important;
