@@ -192,7 +192,7 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#spring2022-1"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-1"); }}
-                className={styles.portfolioGroupedTitle}
+                className={`${styles.portfolioLinkTitle} ${styles.portfolioGroupedTitle}`}
                 aria-label="Technical Vignettes — Spring 2022"
                 title="TECHNICAL VIGNETTES - SPRING 2022"
               >
@@ -202,7 +202,7 @@ export default function Sidebar({
               <a
                 href="/undergraduate-portfolio#spring2022-2"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-2"); }}
-                className={styles.portfolioGroupedTitle}
+                className={`${styles.portfolioLinkTitle} ${styles.portfolioGroupedTitle}`}
                 aria-label="SDSU Agricultural Heritage Museum — Spring 2022"
                 title="SDSU AGRICULTURAL HERITAGE MUSEUM - SPRING 2022"
               >
