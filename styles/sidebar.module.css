@@ -371,6 +371,27 @@ nav.sidebar-nav {
   line-height: 1.35;
   margin: 0;
 }
+.portfolioGroup {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 14px 0;
+}
+
+.portfolioGroupedTitle {
+  display: block;
+  color: #192d4b;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin: 2px 0 5px 0;
+}
+
+.portfolioGroupedTitle:hover {
+  color: #dfb98f;
+}
 
 /* ----------------- Responsive and other existing rules remain unchanged below ----------------- */
 
