@@ -379,12 +379,6 @@ nav.sidebar-nav {
 
 .portfolioGroupedTitle {
   display: block;
-  color: #192d4b;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: 1.1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   text-decoration: none;
   margin: 2px 0 5px 0;
 }
