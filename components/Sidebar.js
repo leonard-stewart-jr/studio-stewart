@@ -156,6 +156,7 @@ export default function Sidebar({
           </div>
 
           <div className={styles.sidebarDivider} />
+
           {/* Chronological Portfolio */}
           <div className={styles.sidebarSectionTitle}>Chronological Portfolio</div>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
@@ -171,6 +172,7 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>AXONOMETRIC CUBE DESIGN</span>
               </a>
             </li>
+
             <li>
               <a
                 href="/undergraduate-portfolio#fall2021"
@@ -183,30 +185,31 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>DESIGN PRACTICE "STICKPLAY"</span>
               </a>
             </li>
-            <li>
+
+            <li className={styles.portfolioGroup}>
+              <span className={styles.portfolioLinkYear}>SPRING 2022</span>
+
               <a
                 href="/undergraduate-portfolio#spring2022-1"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-1"); }}
-                className={styles.portfolioLink}
+                className={styles.portfolioGroupedTitle}
                 aria-label="Technical Vignettes — Spring 2022"
                 title="TECHNICAL VIGNETTES - SPRING 2022"
               >
-                <span className={styles.portfolioLinkYear}>SPRING 2022</span>
-                <span className={styles.portfolioLinkTitle}>TECHNICAL VIGNETTES</span>
+                TECHNICAL VIGNETTES
               </a>
-            </li>
-            <li>
+
               <a
                 href="/undergraduate-portfolio#spring2022-2"
                 onClick={(e) => { e.preventDefault(); navigateToPortfolioHash("spring2022-2"); }}
-                className={styles.portfolioLink}
+                className={styles.portfolioGroupedTitle}
                 aria-label="SDSU Agricultural Heritage Museum — Spring 2022"
                 title="SDSU AGRICULTURAL HERITAGE MUSEUM - SPRING 2022"
               >
-                <span className={styles.portfolioLinkYear}>SPRING 2022</span>
-                <span className={styles.portfolioLinkTitle}>SDSU AGRICULTURAL HERITAGE MUSEUM</span>
+                SDSU AGRICULTURAL HERITAGE MUSEUM
               </a>
             </li>
+
             <li>
               <a
                 href="/undergraduate-portfolio#spring2023-1"
@@ -219,6 +222,7 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>SDSU INTERFAITH CENTER</span>
               </a>
             </li>
+
             <li>
               <a
                 href="/undergraduate-portfolio#spring2024-1"
@@ -231,6 +235,7 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>BROOKINGS PUBLIC LIBRARY</span>
               </a>
             </li>
+
             <li>
               <a
                 href="/undergraduate-portfolio#fall2024-1"
@@ -243,6 +248,7 @@ export default function Sidebar({
                 <span className={styles.portfolioLinkTitle}>CENTRO DE CIENCIAS VEGETALES DE MONTERREY</span>
               </a>
             </li>
+
             <li>
               <Link href="/projects/dma-25" passHref legacyBehavior>
                 <a
@@ -256,6 +262,7 @@ export default function Sidebar({
                 </a>
               </Link>
             </li>
+
             <li>
               <Link href="/independent-studio" passHref legacyBehavior>
                 <a
@@ -299,6 +306,7 @@ export default function Sidebar({
                 </li>
               </ul>
             </li>
+
             <li>
               <Link
                 href={{ pathname: "/3d-printing", query: { tab: "lithophanes" } }}
@@ -308,6 +316,7 @@ export default function Sidebar({
                 Lithophanes
               </Link>
             </li>
+
             <li>
               <Link
                 href={{ pathname: "/3d-printing", query: { tab: "other" } }}
@@ -321,7 +330,7 @@ export default function Sidebar({
 
           <div className={styles.sidebarDivider} />
 
-                    {/* ===== LINKS SECTION ===== */}
+          {/* ===== LINKS SECTION ===== */}
           <div className={styles.sidebarSectionTitle}>Links</div>
           <ul className={styles.sidebarList}>
             <li>
@@ -334,6 +343,7 @@ export default function Sidebar({
                 Email
               </a>
             </li>
+
             <li>
               <a
                 href="https://www.linkedin.com/in/leonardstewartjr/"
@@ -344,6 +354,7 @@ export default function Sidebar({
                 LinkedIn
               </a>
             </li>
+
             <li>
               <a
                 href="https://makerworld.com/en/@leonardstewart"
@@ -354,6 +365,7 @@ export default function Sidebar({
                 MakerWorld
               </a>
             </li>
+
             <li>
               <a
                 href="tel:6053107894"
@@ -364,6 +376,7 @@ export default function Sidebar({
                 Phone
               </a>
             </li>
+
             <li>
               <a
                 href="https://github.com/leonard-stewart-jr/studio-stewart"
@@ -377,6 +390,7 @@ export default function Sidebar({
           </ul>
 
           <div className={styles.sidebarDivider} />
+
           {/* ===== OUTRO SECTION ===== */}          
           <div className={styles.sidebarOutro}>
             <div className={styles.sidebarOutroLabel}>Studio Stewart</div>
