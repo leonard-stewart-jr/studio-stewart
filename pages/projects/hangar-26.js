@@ -46,7 +46,9 @@ export default function Hangar26ProjectPage() {
       <main className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
-          <h1>PJ AVIATION HANGAR</h1>
+          <h1 style={{ fontSize: "clamp(42px, 5.8vw, 94px)", lineHeight: 0.94, maxWidth: 980 }}>
+            PJ AVIATION HANGAR
+          </h1>
           <div className={styles.heroGrid}>
             <div className={styles.heroStatement}>
               <p>
