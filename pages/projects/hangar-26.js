@@ -54,7 +54,7 @@ export default function Hangar26ProjectPage() {
           <div className={styles.heroGrid}>
             <div className={styles.heroStatement}>
               <p>
-                A phased commercial aviation project developed from preliminary architectural design toward site specific documentation and construction.
+                This page documents the ongoing development of a real aviation project planned for Sioux Falls Regional Airport (FSD). The work began with preliminary building design and airport review, and will continue through site acquisition, site specific development, professional coordination, and construction.
               </p>
             </div>
             <div className={styles.heroFacts}>
