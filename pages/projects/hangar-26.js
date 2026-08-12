@@ -36,18 +36,18 @@ export default function Hangar26ProjectPage() {
   return (
     <>
       <Head>
-        <title>PJ Aviation Hangar | Studio Stewart</title>
+        <title>FSD Commercial Hangar | Studio Stewart</title>
         <meta
           name="description"
-          content="PJ Aviation hangar project development from preliminary design through construction."
+          content="FSD Commercial Hangar project development for PJ Aviation from preliminary design through construction."
         />
       </Head>
 
       <main className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
-          <h1 style={{ fontSize: "clamp(42px, 5.8vw, 94px)", lineHeight: 0.94, maxWidth: 980 }}>
-            PJ AVIATION HANGAR
+          <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250 }}>
+            FSD COMMERCIAL HANGAR
           </h1>
           <div className={styles.heroGrid}>
             <div className={styles.heroStatement}>
@@ -58,6 +58,7 @@ export default function Hangar26ProjectPage() {
             <div className={styles.heroFacts}>
               <div><span>LOCATION</span><strong>SIOUX FALLS AREA, SOUTH DAKOTA</strong></div>
               <div><span>TYPE</span><strong>AVIATION</strong></div>
+              <div><span>OWNER</span><strong>PJ AVIATION</strong></div>
               <div><span>STATUS</span><strong>PHASE 01 IN REVIEW</strong></div>
             </div>
           </div>
