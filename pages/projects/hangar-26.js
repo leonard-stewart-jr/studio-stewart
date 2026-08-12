@@ -47,24 +47,26 @@ export default function Hangar26ProjectPage() {
 
       <main className={styles.page}>
         <section className={styles.hero} style={{ paddingTop: "clamp(36px, 4vw, 64px)" }}>
-          <div>
-            <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
-            <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250, color: TITLE_BLUE, margin: 0 }}>
-              FSD COMMERCIAL HANGAR
-            </h1>
-          </div>
-
-          <div className={styles.heroGrid} style={{ alignItems: "start" }}>
-            <div className={styles.heroStatement}>
-              <p>
-                This page documents the ongoing development of a real aviation project planned for Sioux Falls Regional Airport (FSD). The work began with preliminary building design and airport review, and will continue through site acquisition, site specific development, professional coordination, and construction.
-              </p>
+          <div style={{ display: "grid", gap: "clamp(34px, 3.4vw, 56px)" }}>
+            <div>
+              <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
+              <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250, color: TITLE_BLUE, margin: 0 }}>
+                FSD COMMERCIAL HANGAR
+              </h1>
             </div>
-            <div className={styles.heroFacts}>
-              <div><span>LOCATION</span><strong>SIOUX FALLS AREA, SOUTH DAKOTA</strong></div>
-              <div><span>TYPE</span><strong>AVIATION</strong></div>
-              <div><span>OWNER</span><strong>PJ AVIATION</strong></div>
-              <div><span>STATUS</span><strong>PHASE 01 IN REVIEW</strong></div>
+
+            <div className={styles.heroGrid} style={{ alignItems: "start", marginTop: 0 }}>
+              <div className={styles.heroStatement}>
+                <p>
+                  This page documents the ongoing development of a real aviation project planned for Sioux Falls Regional Airport (FSD). The work began with preliminary building design and airport review, and will continue through site acquisition, site specific development, professional coordination, and construction.
+                </p>
+              </div>
+              <div className={styles.heroFacts}>
+                <div><span>LOCATION</span><strong>SIOUX FALLS AREA, SOUTH DAKOTA</strong></div>
+                <div><span>TYPE</span><strong>AVIATION</strong></div>
+                <div><span>OWNER</span><strong>PJ AVIATION</strong></div>
+                <div><span>STATUS</span><strong>PHASE 01 IN REVIEW</strong></div>
+              </div>
             </div>
           </div>
 
