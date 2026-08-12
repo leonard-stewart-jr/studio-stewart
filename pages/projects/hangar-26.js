@@ -54,7 +54,7 @@ export default function Hangar26ProjectPage() {
             justifyContent: "flex-start",
           }}
         >
-          <div style={{ display: "grid", gap: "clamp(64px, 5.4vw, 88px)" }}>
+          <div style={{ display: "grid", gap: "clamp(100px, 8vw, 140px)" }}>
             <div>
               <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
               <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250, color: TITLE_BLUE, margin: 0 }}>
@@ -80,7 +80,7 @@ export default function Hangar26ProjectPage() {
           <nav
             className={styles.phaseNav}
             aria-label="Project phases"
-            style={{ marginTop: "clamp(64px, 5.4vw, 88px)" }}
+            style={{ marginTop: "clamp(100px, 8vw, 140px)" }}
           >
             {phases.map((phase) => (
               <a href={phase.href} key={phase.number}>
