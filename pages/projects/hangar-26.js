@@ -1,6 +1,8 @@
 import Head from "next/head";
 import styles from "../../styles/Hangar26.module.css";
 
+const TITLE_BLUE = "#192d4b";
+
 const phases = [
   { number: "01", label: "PRELIMINARY DESIGN", status: "IN REVIEW", href: "#phase-01" },
   { number: "02", label: "DESIGN DEVELOPMENT", status: "COMPLETE", href: "#phase-02" },
@@ -17,7 +19,7 @@ function PhaseHeader({ number, eyebrow, title, status, children }) {
           <span>{eyebrow}</span>
           <span className={styles.status}>{status}</span>
         </div>
-        <h2>{title}</h2>
+        <h2 style={{ color: TITLE_BLUE }}>{title}</h2>
         {children && <div className={styles.phaseIntro}>{children}</div>}
       </div>
     </div>
@@ -46,7 +48,7 @@ export default function Hangar26ProjectPage() {
       <main className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
-          <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250 }}>
+          <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250, color: TITLE_BLUE }}>
             FSD COMMERCIAL HANGAR
           </h1>
           <div className={styles.heroGrid}>
@@ -67,7 +69,7 @@ export default function Hangar26ProjectPage() {
             {phases.map((phase) => (
               <a href={phase.href} key={phase.number}>
                 <span className={styles.phaseNavNumber}>{phase.number}</span>
-                <span className={styles.phaseNavLabel}>{phase.label}</span>
+                <span className={styles.phaseNavLabel} style={{ color: TITLE_BLUE }}>{phase.label}</span>
                 <span className={styles.phaseNavStatus}>{phase.status}</span>
               </a>
             ))}
@@ -114,7 +116,7 @@ export default function Hangar26ProjectPage() {
 
           <div className={styles.phaseClose}>
             <span>MAY 2026</span>
-            <h3>PRELIMINARY DESIGN COMPLETE</h3>
+            <h3 style={{ color: TITLE_BLUE }}>PRELIMINARY DESIGN COMPLETE</h3>
             <p>Initial drawings and dimensions submitted for engineering review.</p>
           </div>
         </section>
@@ -136,10 +138,10 @@ export default function Hangar26ProjectPage() {
           </div>
 
           <div className={styles.developmentNotes}>
-            <div><span>01</span><h3>ENVELOPE</h3><p>Metal siding, glazing, trim, CMU base and drainage elements.</p></div>
-            <div><span>02</span><h3>LIGHTING</h3><p>Hangar fixtures, office lighting and interior atmosphere.</p></div>
-            <div><span>03</span><h3>INTERIOR</h3><p>Office, lounge, planning and support spaces furnished for scale and use.</p></div>
-            <div><span>04</span><h3>AVIATION SCALE</h3><p>Aircraft integrated into the model to test clearance, proportion and visual character.</p></div>
+            <div><span>01</span><h3 style={{ color: TITLE_BLUE }}>ENVELOPE</h3><p>Metal siding, glazing, trim, CMU base and drainage elements.</p></div>
+            <div><span>02</span><h3 style={{ color: TITLE_BLUE }}>LIGHTING</h3><p>Hangar fixtures, office lighting and interior atmosphere.</p></div>
+            <div><span>03</span><h3 style={{ color: TITLE_BLUE }}>INTERIOR</h3><p>Office, lounge, planning and support spaces furnished for scale and use.</p></div>
+            <div><span>04</span><h3 style={{ color: TITLE_BLUE }}>AVIATION SCALE</h3><p>Aircraft integrated into the model to test clearance, proportion and visual character.</p></div>
           </div>
 
           <div className={styles.imageMosaic}>
@@ -169,7 +171,7 @@ export default function Hangar26ProjectPage() {
             <div className={styles.sitePendingGrid} aria-hidden="true" />
             <div className={styles.sitePendingLabel}>
               <span>03 / SITE</span>
-              <h3>SITE PENDING</h3>
+              <h3 style={{ color: TITLE_BLUE }}>SITE PENDING</h3>
               <p>Future site plan, access, taxiway relationship and site specific revisions will be added here.</p>
             </div>
           </div>
