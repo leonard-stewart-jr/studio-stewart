@@ -51,7 +51,7 @@ export default function Hangar26ProjectPage() {
           <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250, color: TITLE_BLUE }}>
             FSD COMMERCIAL HANGAR
           </h1>
-          <div className={styles.heroGrid}>
+          <div className={styles.heroGrid} style={{ alignItems: "start" }}>
             <div className={styles.heroStatement}>
               <p>
                 This page documents the ongoing development of a real aviation project planned for Sioux Falls Regional Airport (FSD). The work began with preliminary building design and airport review, and will continue through site acquisition, site specific development, professional coordination, and construction.
