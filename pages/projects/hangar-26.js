@@ -46,7 +46,7 @@ export default function Hangar26ProjectPage() {
       </Head>
 
       <main className={styles.page}>
-        <section className={styles.hero}>
+        <section className={styles.hero} style={{ paddingTop: "clamp(36px, 4vw, 64px)" }}>
           <div className={styles.heroTopline}>ONGOING PROJECT · 2026</div>
           <h1 style={{ fontSize: "clamp(42px, 5.4vw, 90px)", lineHeight: 0.96, maxWidth: 1250, color: TITLE_BLUE }}>
             FSD COMMERCIAL HANGAR
