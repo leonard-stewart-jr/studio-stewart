@@ -146,7 +146,7 @@ export default function Hangar26ProjectPage() {
           </nav>
         </section>
 
-        <section id="phase-01" className={styles.phaseSection}>
+        <section id="phase-01" className={styles.phaseSection} style={{ borderTop: 0 }}>
           <PhaseHeader
             number="01"
             eyebrow="BASE MODEL + ENGINEERING REVIEW"
