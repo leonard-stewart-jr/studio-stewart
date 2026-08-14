@@ -186,7 +186,7 @@ export default function Hangar26ProjectPage() {
               <h3>SUBMITTED FOR REVIEW</h3>
             </div>
             <p>
-              Initial plans, elevations, sections, and dimensions submitted to Sioux Falls Regional Airport for engineering review.
+              Initial plans, elevations, sections, and dimensions were submitted to Sioux Falls Regional Airport for engineering review in May 2026. The drawings shown here have continued to develop since that submission and will continue to be updated as the project progresses.
             </p>
           </div>
         </section>
