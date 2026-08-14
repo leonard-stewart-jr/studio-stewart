@@ -159,7 +159,7 @@ export default function Hangar26ProjectPage() {
           </PhaseHeader>
 
           <div className={styles.statsGrid}>
-            <div><span>HANGAR AREA</span><strong>12,823 SF</strong></div>
+            <div><span>MAIN BAY AREA</span><strong>12,750 SF</strong></div>
             <div><span>HANGAR WIDTH</span><strong>110 FT</strong></div>
             <div><span>BUILDING LENGTH</span><strong>145 FT 4 IN</strong></div>
             <div><span>ROOF APEX</span><strong>32 FT 8 IN</strong></div>
