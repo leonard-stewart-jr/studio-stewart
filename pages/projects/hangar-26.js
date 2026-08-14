@@ -269,7 +269,7 @@ export default function Hangar26ProjectPage() {
 
       <style jsx>{`
         .phaseOneSupportRow {
-          grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+          grid-template-columns: minmax(0, 2.16fr) minmax(0, 1fr);
           align-items: start;
         }
 
