@@ -176,7 +176,7 @@
 }
 
 .phaseHeadingText h2 {
-  font-size: clamp(36px, 5vw, 78px);
+  font-size: clamp(32.4px, 4.5vw, 70.2px);
   line-height: .98;
   letter-spacing: -.01em;
   margin: 22px 0 30px;
@@ -609,7 +609,7 @@
   }
 
   .phaseHeadingText h2 {
-    font-size: 40px;
+    font-size: 36px;
   }
 
   .imageMosaic > :first-child {
