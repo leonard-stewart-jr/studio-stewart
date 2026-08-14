@@ -33,13 +33,25 @@ const phases = [
 ];
 
 function PhaseHeader({ number, eyebrow, title, status, titleStyle, children }) {
+  const isFuturePhase = status === "UPCOMING" || status === "FUTURE";
+
   return (
     <div className={styles.phaseHeader}>
       <div className={styles.phaseIndex}>{number}</div>
       <div className={styles.phaseHeadingText}>
         <div className={styles.phaseMetaRow}>
           <span>{eyebrow}</span>
-          <span className={styles.status}>{status}</span>
+          <span
+            className={styles.status}
+            style={isFuturePhase ? {
+              border: "1px solid rgba(229, 193, 159, .78)",
+              background: "rgba(229, 193, 159, .07)",
+              padding: "5px 8px",
+              lineHeight: 1,
+            } : undefined}
+          >
+            {status}
+          </span>
         </div>
         <h2 style={{ color: TITLE_BLUE, ...titleStyle }}>{title}</h2>
         {children && <div className={styles.phaseIntro}>{children}</div>}
@@ -54,7 +66,7 @@ function Placeholder({ label, ratio = "wide", muted = false, style }) {
       className={`${styles.placeholder} ${styles[ratio]} ${muted ? styles.placeholderMuted : ""}`}
       style={style}
     >
-      <span>{label}</span>
+      {label && <span>{label}</span>}
     </div>
   );
 }
@@ -335,11 +347,18 @@ export default function Hangar26ProjectPage() {
             </p>
           </PhaseHeader>
 
-          <div className={styles.sitePending}>
+          <div
+            className={styles.sitePending}
+            style={{
+              minHeight: "clamp(280px, 28vw, 420px)",
+              borderStyle: "dashed",
+              background: "rgba(229, 193, 159, .025)",
+            }}
+          >
             <div className={styles.sitePendingGrid} aria-hidden="true" />
             <div className={styles.sitePendingLabel}>
-              <span>03 / SITE</span>
-              <h3 style={{ color: TITLE_BLUE }}>SITE PENDING</h3>
+              <span>PHASE 03 · UPCOMING</span>
+              <h3 style={{ color: TITLE_BLUE, fontSize: "clamp(36px, 5vw, 70px)" }}>SITE PENDING</h3>
               <p>Future site plan, access, taxiway relationship and site specific revisions will be added here.</p>
             </div>
           </div>
@@ -366,9 +385,24 @@ export default function Hangar26ProjectPage() {
           </div>
 
           <div className={styles.builtFuture}>
-            <Placeholder label="FUTURE · COMPLETED BUILDING PHOTOGRAPH" ratio="built" muted />
+            <Placeholder
+              label=""
+              ratio="built"
+              muted
+              style={{ aspectRatio: "16 / 5", borderStyle: "dashed" }}
+            />
             <div className={styles.builtOverlay}>
-              <span>TO BE CONTINUED</span>
+              <span style={{ position: "absolute", top: 14, left: 14 }}>PHASE 04 · FUTURE COMPLETED BUILDING PHOTOGRAPH</span>
+              <strong
+                style={{
+                  color: TITLE_BLUE,
+                  fontSize: "clamp(18px, 2vw, 30px)",
+                  fontWeight: 280,
+                  letterSpacing: ".08em",
+                }}
+              >
+                TO BE CONTINUED
+              </strong>
             </div>
           </div>
         </section>
