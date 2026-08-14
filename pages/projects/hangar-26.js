@@ -32,7 +32,7 @@ const phases = [
   { number: "04", label: "DOCUMENTATION + CONSTRUCTION", status: "FUTURE", href: "#phase-04" },
 ];
 
-function PhaseHeader({ number, eyebrow, title, status, children }) {
+function PhaseHeader({ number, eyebrow, title, status, titleStyle, children }) {
   return (
     <div className={styles.phaseHeader}>
       <div className={styles.phaseIndex}>{number}</div>
@@ -41,7 +41,7 @@ function PhaseHeader({ number, eyebrow, title, status, children }) {
           <span>{eyebrow}</span>
           <span className={styles.status}>{status}</span>
         </div>
-        <h2 style={{ color: TITLE_BLUE }}>{title}</h2>
+        <h2 style={{ color: TITLE_BLUE, ...titleStyle }}>{title}</h2>
         {children && <div className={styles.phaseIntro}>{children}</div>}
       </div>
     </div>
@@ -351,9 +351,10 @@ export default function Hangar26ProjectPage() {
             eyebrow="PROFESSIONAL COORDINATION + DELIVERY"
             title="DOCUMENTATION + CONSTRUCTION"
             status="FUTURE"
+            titleStyle={{ fontSize: "clamp(28px, 3.6vw, 56px)" }}
           >
             <p style={INTRO_TEXT_STYLE}>
-              Following site selection and professional coordination, the project will move through technical documentation, engineering, permitting and construction. This phase will continue to evolve as the project advances toward completion.
+              Phase 04 will begin once the site and design are finalized. From there, I will coordinate with licensed professionals as the project moves through technical drawings, engineering, permitting, and construction. This phase will continue through the completed building.
             </p>
           </PhaseHeader>
 
