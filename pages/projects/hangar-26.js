@@ -15,6 +15,14 @@ const TECHNICAL_DRAWING_STYLE = {
   border: "1px solid #deddd7",
   background: "linear-gradient(rgba(229,193,159,.04), rgba(229,193,159,.04)), repeating-linear-gradient(0deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), repeating-linear-gradient(90deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), #f3f2ee",
 };
+const PROJECT_RENDER_STYLE = {
+  width: "100%",
+  height: "auto",
+  display: "block",
+  boxSizing: "border-box",
+  border: "1px solid #deddd7",
+  background: "#f3f2ee",
+};
 
 const phases = [
   { number: "01", label: "PRELIMINARY DESIGN", status: "IN REVIEW", href: "#phase-01" },
@@ -52,6 +60,18 @@ function Placeholder({ label, ratio = "wide", muted = false, style }) {
 
 function TechnicalDrawing({ src, alt }) {
   return <img src={src} alt={alt} loading="lazy" decoding="async" style={TECHNICAL_DRAWING_STYLE} />;
+}
+
+function ProjectRender({ src, alt, priority = false }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      style={PROJECT_RENDER_STYLE}
+    />
+  );
 }
 
 export default function Hangar26ProjectPage() {
@@ -204,7 +224,15 @@ export default function Hangar26ProjectPage() {
           </PhaseHeader>
 
           <div className={styles.heroRenderWrap}>
-            <Placeholder label="PHASE 02 · HERO EXTERIOR RENDER" ratio="heroRender" />
+            <ProjectRender
+              src="/fsd26/render-hero-day.png"
+              alt="Daylight exterior rendering of the FSD Commercial Hangar and PJ Aviation hangar door"
+              priority
+            />
+            <div className={styles.captionRow}>
+              <span>DAYLIGHT EXTERIOR</span>
+              <span>HANGAR + AIRPORT CONTEXT</span>
+            </div>
           </div>
 
           <div className={styles.developmentNotes}>
@@ -214,14 +242,52 @@ export default function Hangar26ProjectPage() {
             <div><span>04</span><h3 style={{ color: TITLE_BLUE }}>AVIATION SCALE</h3><p>Aircraft integrated into the model to test clearance, proportion and visual character.</p></div>
           </div>
 
-          <div className={styles.imageMosaic}>
-            <Placeholder label="HANGAR INTERIOR" ratio="portraitWide" />
-            <Placeholder label="OFFICE INTERIOR" ratio="portraitWide" />
-            <Placeholder label="SECONDARY EXTERIOR" ratio="portraitWide" />
-          </div>
+          <div className="renderRows">
+            <div className="renderPair">
+              <div>
+                <ProjectRender
+                  src="/fsd26/render-hero-dusk.png"
+                  alt="Dusk exterior rendering of the FSD Commercial Hangar with illuminated interior and facade lighting"
+                />
+                <div className={styles.captionRow}>
+                  <span>DUSK EXTERIOR</span>
+                  <span>LIGHTING + TRANSPARENCY</span>
+                </div>
+              </div>
+              <div>
+                <ProjectRender
+                  src="/fsd26/render-hangar-interior.png"
+                  alt="Interior rendering of the main aircraft hangar showing the aircraft, steel frame and support spaces"
+                />
+                <div className={styles.captionRow}>
+                  <span>HANGAR INTERIOR</span>
+                  <span>AIRCRAFT SCALE + MAINTENANCE</span>
+                </div>
+              </div>
+            </div>
 
-          <div className={styles.detailBand}>
-            <Placeholder label="MATERIAL / DETAIL VIEW" ratio="detail" />
+            <div className="renderPair">
+              <div>
+                <ProjectRender
+                  src="/fsd26/render-office-exterior.png"
+                  alt="Exterior rendering of the PJ Aviation office entrance attached to the FSD Commercial Hangar"
+                />
+                <div className={styles.captionRow}>
+                  <span>OFFICE ENTRANCE</span>
+                  <span>HUMAN SCALE + ACCESS</span>
+                </div>
+              </div>
+              <div>
+                <ProjectRender
+                  src="/fsd26/render-office-interior.png"
+                  alt="Interior rendering of the PJ Aviation office reception and support spaces"
+                />
+                <div className={styles.captionRow}>
+                  <span>OFFICE INTERIOR</span>
+                  <span>RECEPTION + WORKPLACE</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -329,14 +395,32 @@ export default function Hangar26ProjectPage() {
           max-width: 430px;
         }
 
+        .renderRows {
+          display: grid;
+          gap: clamp(56px, 8vw, 120px);
+          margin-top: clamp(70px, 9vw, 140px);
+        }
+
+        .renderPair {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: clamp(20px, 3vw, 46px);
+          align-items: start;
+        }
+
         @media (max-width: 680px) {
           .phaseOneSupportRow,
-          .phaseOneClose {
+          .phaseOneClose,
+          .renderPair {
             grid-template-columns: 1fr;
           }
 
           .phaseOneClose {
             align-items: start;
+          }
+
+          .renderPair {
+            gap: clamp(40px, 8vw, 64px);
           }
         }
       `}</style>
