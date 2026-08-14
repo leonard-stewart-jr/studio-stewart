@@ -119,10 +119,16 @@ export default function Hangar26ProjectPage() {
           </div>
 
           <div className={styles.drawingBlock}>
-            <Placeholder
-              label="PHASE 01 · FIRST FLOOR PLAN"
-              ratio="plan"
-              style={{ aspectRatio: "3 / 2" }}
+            <img
+              src="/fsd26/phase01-floorplan.svg"
+              alt="Phase 01 architectural first floor plan for the FSD Commercial Hangar"
+              style={{
+                width: "100%",
+                aspectRatio: "3 / 2",
+                objectFit: "contain",
+                display: "block",
+                background: "#fff",
+              }}
             />
             <div className={styles.captionRow}>
               <span>ARCHITECTURAL FLOOR PLAN</span>
