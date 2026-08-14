@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: var(--hangar-space-major) !important;
+  padding-top: clamp(32px, 3vw, 48px) !important;
   padding-bottom: 0;
 }
 
