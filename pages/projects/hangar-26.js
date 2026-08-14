@@ -69,7 +69,7 @@ export default function Hangar26ProjectPage() {
             <div className={styles.heroGrid} style={{ alignItems: "start", marginTop: 0 }}>
               <div className={styles.heroStatement}>
                 <p style={INTRO_TEXT_STYLE}>
-                  This page documents the ongoing development of a real aviation project planned for Sioux Falls Regional Airport (FSD). The work began with preliminary building design and airport review, and will continue through site acquisition, site specific development, professional coordination, and construction.
+                  This project began as a collaboration with a former college roommate who was looking to develop a commercial hangar for his company at Sioux Falls Regional Airport (FSD). What started with preliminary building design and airport review will continue through site acquisition, site specific development, professional coordination, and construction.
                 </p>
               </div>
               <div className={styles.heroFacts}>
