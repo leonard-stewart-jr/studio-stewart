@@ -127,7 +127,9 @@ export default function Hangar26ProjectPage() {
                 aspectRatio: "3 / 2",
                 objectFit: "contain",
                 display: "block",
-                background: "#fff",
+                boxSizing: "border-box",
+                border: "1px solid #deddd7",
+                background: "linear-gradient(rgba(229,193,159,.04), rgba(229,193,159,.04)), repeating-linear-gradient(0deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), repeating-linear-gradient(90deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), #f3f2ee",
               }}
             />
             <div className={styles.captionRow}>
