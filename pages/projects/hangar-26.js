@@ -176,10 +176,18 @@ export default function Hangar26ProjectPage() {
             </div>
           </div>
 
-          <div className={styles.phaseClose}>
-            <span>MAY 2026</span>
-            <h3 style={{ color: TITLE_BLUE }}>PRELIMINARY DESIGN COMPLETE</h3>
-            <p>Initial drawings and dimensions submitted for engineering review.</p>
+          <div className="phaseOneClose">
+            <div className="phaseOneCloseMeta">
+              <span>PHASE 01</span>
+              <strong>MAY 2026</strong>
+            </div>
+            <div className="phaseOneCloseStatus">
+              <span>CURRENT STATUS</span>
+              <h3>SUBMITTED FOR REVIEW</h3>
+            </div>
+            <p>
+              Initial plans, elevations, sections, and dimensions submitted to Sioux Falls Regional Airport for engineering review.
+            </p>
           </div>
         </section>
 
@@ -273,9 +281,62 @@ export default function Hangar26ProjectPage() {
           align-items: start;
         }
 
+        .phaseOneClose {
+          margin-top: clamp(56px, 8vw, 120px);
+          padding: clamp(24px, 3vw, 40px) 0;
+          border-top: 1px solid #deddd7;
+          border-bottom: 1px solid #deddd7;
+          display: grid;
+          grid-template-columns: .6fr 1.45fr 1fr;
+          gap: clamp(28px, 4vw, 72px);
+          align-items: end;
+        }
+
+        .phaseOneCloseMeta,
+        .phaseOneCloseStatus {
+          display: grid;
+          gap: 10px;
+        }
+
+        .phaseOneClose span {
+          font-size: 10px;
+          line-height: 1.2;
+          letter-spacing: .11em;
+          color: #b0afa9;
+        }
+
+        .phaseOneCloseMeta strong {
+          font-size: 13px;
+          font-weight: 280;
+          letter-spacing: .035em;
+          color: #4f4f4c;
+        }
+
+        .phaseOneCloseStatus h3 {
+          margin: 0;
+          color: ${TITLE_BLUE};
+          font-size: clamp(24px, 2.5vw, 40px);
+          line-height: 1;
+          font-weight: 280;
+          letter-spacing: -.01em;
+        }
+
+        .phaseOneClose p {
+          margin: 0;
+          color: #8a8a86;
+          font-size: 13px;
+          line-height: 1.55;
+          max-width: 430px;
+        }
+
         @media (max-width: 680px) {
-          .phaseOneSupportRow {
+          .phaseOneSupportRow,
+          .phaseOneClose {
             grid-template-columns: 1fr;
+          }
+
+          .phaseOneClose {
+            align-items: start;
           }
         }
       `}</style>
