@@ -331,7 +331,7 @@ export default function Hangar26ProjectPage() {
             status="UPCOMING"
           >
             <p style={INTRO_TEXT_STYLE}>
-              The current building establishes the baseline design. Once a site is secured, the project will be adapted to its specific orientation, access, utilities, aircraft movement, grading, setbacks and surrounding conditions.
+              Phase 03 begins once a site is secured. From there, I will take the current design and adapt it to the actual location, working through access, utilities, grading, setbacks, aircraft movement, and how the building sits on the site.
             </p>
           </PhaseHeader>
 
