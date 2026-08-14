@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import styles from "../../styles/Hangar26.module.css";
 
 const TITLE_BLUE = "#192d4b";
@@ -75,6 +76,19 @@ function ProjectRender({ src, alt, priority = false }) {
 }
 
 export default function Hangar26ProjectPage() {
+  const [exteriorTime, setExteriorTime] = useState("day");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+
+    const timer = window.setTimeout(() => {
+      setExteriorTime((current) => (current === "day" ? "dusk" : "day"));
+    }, 7000);
+
+    return () => window.clearTimeout(timer);
+  }, [exteriorTime]);
+
   return (
     <>
       <Head>
@@ -224,14 +238,44 @@ export default function Hangar26ProjectPage() {
           </PhaseHeader>
 
           <div className={styles.heroRenderWrap}>
-            <ProjectRender
-              src="/fsd26/render-hero-day.png"
-              alt="Daylight exterior rendering of the FSD Commercial Hangar and PJ Aviation hangar door"
-              priority
-            />
+            <div className="exteriorToggleStage">
+              <img
+                src="/fsd26/render-hero-day.png"
+                alt="Daylight exterior rendering of the FSD Commercial Hangar and PJ Aviation hangar door"
+                loading="lazy"
+                decoding="async"
+                className={`exteriorToggleImage ${exteriorTime === "day" ? "isActive" : ""}`}
+              />
+              <img
+                src="/fsd26/render-hero-dusk.png"
+                alt="Dusk exterior rendering of the FSD Commercial Hangar with illuminated interior and facade lighting"
+                loading="lazy"
+                decoding="async"
+                className={`exteriorToggleImage ${exteriorTime === "dusk" ? "isActive" : ""}`}
+              />
+              <div className="exteriorToggleControls" aria-label="Exterior lighting view">
+                <button
+                  type="button"
+                  className={exteriorTime === "day" ? "isActive" : ""}
+                  aria-pressed={exteriorTime === "day"}
+                  onClick={() => setExteriorTime("day")}
+                >
+                  DAY
+                </button>
+                <span aria-hidden="true">/</span>
+                <button
+                  type="button"
+                  className={exteriorTime === "dusk" ? "isActive" : ""}
+                  aria-pressed={exteriorTime === "dusk"}
+                  onClick={() => setExteriorTime("dusk")}
+                >
+                  DUSK
+                </button>
+              </div>
+            </div>
             <div className={styles.captionRow}>
-              <span>DAYLIGHT EXTERIOR</span>
-              <span>HANGAR + AIRPORT CONTEXT</span>
+              <span>EXTERIOR LIGHTING STUDY</span>
+              <span>{exteriorTime === "day" ? "DAYLIGHT + AIRPORT CONTEXT" : "DUSK + LIGHTING"}</span>
             </div>
           </div>
 
@@ -243,26 +287,14 @@ export default function Hangar26ProjectPage() {
           </div>
 
           <div className="renderRows">
-            <div className="renderPair">
-              <div>
-                <ProjectRender
-                  src="/fsd26/render-hero-dusk.png"
-                  alt="Dusk exterior rendering of the FSD Commercial Hangar with illuminated interior and facade lighting"
-                />
-                <div className={styles.captionRow}>
-                  <span>DUSK EXTERIOR</span>
-                  <span>LIGHTING + TRANSPARENCY</span>
-                </div>
-              </div>
-              <div>
-                <ProjectRender
-                  src="/fsd26/render-hangar-interior.png"
-                  alt="Interior rendering of the main aircraft hangar showing the aircraft, steel frame and support spaces"
-                />
-                <div className={styles.captionRow}>
-                  <span>HANGAR INTERIOR</span>
-                  <span>AIRCRAFT SCALE + MAINTENANCE</span>
-                </div>
+            <div>
+              <ProjectRender
+                src="/fsd26/render-hangar-interior.png"
+                alt="Interior rendering of the main aircraft hangar showing the aircraft, steel frame and support spaces"
+              />
+              <div className={styles.captionRow}>
+                <span>HANGAR INTERIOR</span>
+                <span>AIRCRAFT SCALE + MAINTENANCE</span>
               </div>
             </div>
 
@@ -395,6 +427,75 @@ export default function Hangar26ProjectPage() {
           max-width: 430px;
         }
 
+        .exteriorToggleStage {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          overflow: hidden;
+          box-sizing: border-box;
+          border: 1px solid #deddd7;
+          background: #f3f2ee;
+        }
+
+        .exteriorToggleImage {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          opacity: 0;
+          transition: opacity 1.5s ease;
+        }
+
+        .exteriorToggleImage.isActive {
+          opacity: 1;
+        }
+
+        .exteriorToggleControls {
+          position: absolute;
+          right: clamp(12px, 1.6vw, 24px);
+          bottom: clamp(12px, 1.6vw, 24px);
+          z-index: 3;
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          padding: 7px 9px;
+          border: 1px solid rgba(222, 221, 215, .85);
+          background: rgba(249, 249, 247, .88);
+          backdrop-filter: blur(8px);
+        }
+
+        .exteriorToggleControls button {
+          appearance: none;
+          border: 0;
+          background: transparent;
+          padding: 3px 5px;
+          color: #8a8a86;
+          font: inherit;
+          font-size: 10px;
+          line-height: 1;
+          letter-spacing: .11em;
+          cursor: pointer;
+          transition: color .18s ease;
+        }
+
+        .exteriorToggleControls button:hover,
+        .exteriorToggleControls button:focus-visible,
+        .exteriorToggleControls button.isActive {
+          color: ${TITLE_BLUE};
+        }
+
+        .exteriorToggleControls button:focus-visible {
+          outline: 1px solid ${TITLE_BLUE};
+          outline-offset: 2px;
+        }
+
+        .exteriorToggleControls span {
+          color: #b0afa9;
+          font-size: 10px;
+        }
+
         .renderRows {
           display: grid;
           gap: clamp(56px, 8vw, 120px);
@@ -406,6 +507,12 @@ export default function Hangar26ProjectPage() {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: clamp(20px, 3vw, 46px);
           align-items: start;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .exteriorToggleImage {
+            transition: none;
+          }
         }
 
         @media (max-width: 680px) {
@@ -421,6 +528,11 @@ export default function Hangar26ProjectPage() {
 
           .renderPair {
             gap: clamp(40px, 8vw, 64px);
+          }
+
+          .exteriorToggleControls {
+            right: 10px;
+            bottom: 10px;
           }
         }
       `}</style>
