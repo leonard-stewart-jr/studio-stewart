@@ -6,6 +6,15 @@ const INTRO_TEXT_STYLE = {
   fontSize: "clamp(18px, 1.35vw, 22px)",
   lineHeight: 1.5,
 };
+const TECHNICAL_DRAWING_STYLE = {
+  width: "100%",
+  height: "auto",
+  objectFit: "contain",
+  display: "block",
+  boxSizing: "border-box",
+  border: "1px solid #deddd7",
+  background: "linear-gradient(rgba(229,193,159,.04), rgba(229,193,159,.04)), repeating-linear-gradient(0deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), repeating-linear-gradient(90deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), #f3f2ee",
+};
 
 const phases = [
   { number: "01", label: "PRELIMINARY DESIGN", status: "IN REVIEW", href: "#phase-01" },
@@ -39,6 +48,10 @@ function Placeholder({ label, ratio = "wide", muted = false, style }) {
       <span>{label}</span>
     </div>
   );
+}
+
+function TechnicalDrawing({ src, alt }) {
+  return <img src={src} alt={alt} loading="lazy" decoding="async" style={TECHNICAL_DRAWING_STYLE} />;
 }
 
 export default function Hangar26ProjectPage() {
@@ -119,18 +132,9 @@ export default function Hangar26ProjectPage() {
           </div>
 
           <div className={styles.drawingBlock}>
-            <img
+            <TechnicalDrawing
               src="/fsd26/phase01-floorplan.svg"
               alt="Phase 01 architectural first floor plan for the FSD Commercial Hangar"
-              style={{
-                width: "100%",
-                aspectRatio: "3 / 2",
-                objectFit: "contain",
-                display: "block",
-                boxSizing: "border-box",
-                border: "1px solid #deddd7",
-                background: "linear-gradient(rgba(229,193,159,.04), rgba(229,193,159,.04)), repeating-linear-gradient(0deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), repeating-linear-gradient(90deg, transparent 0 31px, rgba(24,24,24,.025) 31px 32px), #f3f2ee",
-              }}
             />
             <div className={styles.captionRow}>
               <span>ARCHITECTURAL FLOOR PLAN</span>
@@ -138,14 +142,37 @@ export default function Hangar26ProjectPage() {
             </div>
           </div>
 
-          <div className={styles.twoColumnMedia}>
+          <div className={`${styles.twoColumnMedia} phaseOneSupportRow`}>
             <div>
-              <Placeholder label="BUILDING ELEVATION" ratio="wide" />
-              <div className={styles.captionRow}><span>EXTERIOR ELEVATION</span><span>ENVELOPE + PROPORTION</span></div>
+              <TechnicalDrawing
+                src="/fsd26/phase01-elevation.svg"
+                alt="South elevation of the FSD Commercial Hangar"
+              />
+              <div className={styles.captionRow}>
+                <span>SOUTH ELEVATION</span>
+                <span>HANGAR DOOR + FRONT ELEVATION</span>
+              </div>
             </div>
             <div>
-              <Placeholder label="BUILDING SECTION" ratio="wide" />
-              <div className={styles.captionRow}><span>BUILDING SECTION</span><span>VERTICAL CLEARANCE + OFFICE LEVELS</span></div>
+              <TechnicalDrawing
+                src="/fsd26/phase01-floorplan_officecallout.svg"
+                alt="Enlarged first floor office plan for the FSD Commercial Hangar"
+              />
+              <div className={styles.captionRow}>
+                <span>OFFICE PLAN</span>
+                <span>ENTRY + OFFICE SUPPORT SPACES</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.drawingBlock} style={{ marginTop: "clamp(56px, 8vw, 120px)" }}>
+            <TechnicalDrawing
+              src="/fsd26/phase01-section.svg"
+              alt="Long building section through the FSD Commercial Hangar"
+            />
+            <div className={styles.captionRow}>
+              <span>BUILDING SECTION</span>
+              <span>HANGAR VOLUME + OFFICE LEVELS</span>
             </div>
           </div>
 
@@ -239,6 +266,19 @@ export default function Hangar26ProjectPage() {
           </div>
         </section>
       </main>
+
+      <style jsx>{`
+        .phaseOneSupportRow {
+          grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+          align-items: start;
+        }
+
+        @media (max-width: 680px) {
+          .phaseOneSupportRow {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </>
   );
 }
