@@ -104,7 +104,7 @@ export default function Hangar26ProjectPage() {
             status="IN REVIEW"
           >
             <p style={INTRO_TEXT_STYLE}>
-              The first phase established the building geometry, primary dimensions, aircraft clearances, office program and overall spatial organization. Plans, elevations and sections were prepared as the first coordinated architectural package and submitted to the airport for engineering review.
+              Phase 01 focused on developing the base design of the hangar, including the overall dimensions, aircraft clearances, and office layout. From there, I created the plans, elevations, and sections that made up the first drawing set sent to the airport for review.
             </p>
           </PhaseHeader>
 
