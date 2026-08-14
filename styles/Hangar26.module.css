@@ -5,6 +5,10 @@
   --hangar-faint: #b0afa9;
   --hangar-line: #deddd7;
   --hangar-accent: #e5c19f;
+  --hangar-space-major: clamp(64px, 6vw, 96px);
+  --hangar-space-medium: clamp(44px, 4vw, 64px);
+  --hangar-phase-top: clamp(84px, 7vw, 112px);
+  --hangar-phase-bottom: clamp(56px, 4.5vw, 72px);
   background: var(--hangar-bg);
   color: var(--hangar-text);
   min-height: 100vh;
@@ -135,7 +139,7 @@
 }
 
 .phaseSection {
-  padding: clamp(90px, 10vw, 180px) 0;
+  padding: var(--hangar-phase-top) 0 var(--hangar-phase-bottom);
   border-top: 1px solid var(--hangar-line);
   scroll-margin-top: 72px;
 }
@@ -188,7 +192,7 @@
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  margin: clamp(72px, 9vw, 140px) 0 52px;
+  margin: var(--hangar-space-major) 0 0;
   border-top: 1px solid var(--hangar-line);
   border-bottom: 1px solid var(--hangar-line);
 }
@@ -222,7 +226,7 @@
 .detailBand,
 .heroRenderWrap,
 .builtFuture {
-  margin-top: 48px;
+  margin-top: var(--hangar-space-medium);
 }
 
 .placeholder {
@@ -289,11 +293,15 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: clamp(20px, 3vw, 46px);
-  margin-top: clamp(56px, 8vw, 120px);
+  margin-top: var(--hangar-space-major);
+}
+
+.twoColumnMedia + .drawingBlock {
+  margin-top: var(--hangar-space-major) !important;
 }
 
 .phaseClose {
-  margin-top: clamp(90px, 12vw, 180px);
+  margin-top: var(--hangar-space-major);
   padding: clamp(42px, 7vw, 86px) 0;
   border-top: 1px solid var(--hangar-line);
   border-bottom: 1px solid var(--hangar-line);
@@ -316,11 +324,11 @@
 }
 
 .phaseTwo {
-  padding-bottom: clamp(120px, 13vw, 220px);
+  padding-bottom: var(--hangar-phase-bottom);
 }
 
 .heroRenderWrap {
-  margin-top: clamp(72px, 10vw, 150px);
+  margin-top: var(--hangar-space-major);
 }
 
 .developmentNotes {
@@ -366,11 +374,11 @@
   display: grid;
   grid-template-columns: 1.25fr 1fr 1.25fr;
   gap: clamp(16px, 2vw, 30px);
-  margin-top: clamp(70px, 9vw, 140px);
+  margin-top: var(--hangar-space-major);
 }
 
 .detailBand {
-  margin-top: clamp(70px, 9vw, 140px);
+  margin-top: var(--hangar-space-major);
 }
 
 .futurePhase {
@@ -485,6 +493,15 @@
 
 .lastPhase {
   padding-bottom: clamp(130px, 14vw, 240px);
+}
+
+:global(.phaseOneClose) {
+  margin-top: var(--hangar-space-major) !important;
+}
+
+:global(.renderRows) {
+  margin-top: var(--hangar-space-major) !important;
+  gap: var(--hangar-space-major) !important;
 }
 
 @media (max-width: 950px) {
