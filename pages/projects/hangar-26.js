@@ -9,7 +9,7 @@ const INTRO_TEXT_STYLE = {
 
 const phases = [
   { number: "01", label: "PRELIMINARY DESIGN", status: "IN REVIEW", href: "#phase-01" },
-  { number: "02", label: "DESIGN DEVELOPMENT", status: "COMPLETE", href: "#phase-02" },
+  { number: "02", label: "DESIGN DEVELOPMENT", status: "IN PROGRESS", href: "#phase-02" },
   { number: "03", label: "SITE ACQUISITION", status: "UPCOMING", href: "#phase-03" },
   { number: "04", label: "DOCUMENTATION + CONSTRUCTION", status: "FUTURE", href: "#phase-04" },
 ];
@@ -146,7 +146,7 @@ export default function Hangar26ProjectPage() {
             number="02"
             eyebrow="MATERIAL + VISUAL DEVELOPMENT"
             title="DESIGN DEVELOPMENT"
-            status="COMPLETE"
+            status="IN PROGRESS"
           >
             <p style={INTRO_TEXT_STYLE}>
               With the primary geometry established, the model was developed into a more complete architectural proposal. Exterior cladding, glazing, lighting, materials, office furnishings and aircraft scale were added to clarify the intended character and use of the building.
