@@ -2,6 +2,10 @@ import Head from "next/head";
 import styles from "../../styles/Hangar26.module.css";
 
 const TITLE_BLUE = "#192d4b";
+const INTRO_TEXT_STYLE = {
+  fontSize: "clamp(18px, 1.35vw, 22px)",
+  lineHeight: 1.5,
+};
 
 const phases = [
   { number: "01", label: "PRELIMINARY DESIGN", status: "IN REVIEW", href: "#phase-01" },
@@ -64,7 +68,7 @@ export default function Hangar26ProjectPage() {
 
             <div className={styles.heroGrid} style={{ alignItems: "start", marginTop: 0 }}>
               <div className={styles.heroStatement}>
-                <p style={{ fontSize: "clamp(18px, 1.35vw, 22px)", lineHeight: 1.5 }}>
+                <p style={INTRO_TEXT_STYLE}>
                   This page documents the ongoing development of a real aviation project planned for Sioux Falls Regional Airport (FSD). The work began with preliminary building design and airport review, and will continue through site acquisition, site specific development, professional coordination, and construction.
                 </p>
               </div>
@@ -99,7 +103,7 @@ export default function Hangar26ProjectPage() {
             title="PRELIMINARY DESIGN"
             status="IN REVIEW"
           >
-            <p>
+            <p style={INTRO_TEXT_STYLE}>
               The first phase established the building geometry, primary dimensions, aircraft clearances, office program and overall spatial organization. Plans, elevations and sections were prepared as the first coordinated architectural package and submitted to the airport for engineering review.
             </p>
           </PhaseHeader>
@@ -144,7 +148,7 @@ export default function Hangar26ProjectPage() {
             title="DESIGN DEVELOPMENT"
             status="COMPLETE"
           >
-            <p>
+            <p style={INTRO_TEXT_STYLE}>
               With the primary geometry established, the model was developed into a more complete architectural proposal. Exterior cladding, glazing, lighting, materials, office furnishings and aircraft scale were added to clarify the intended character and use of the building.
             </p>
           </PhaseHeader>
@@ -178,7 +182,7 @@ export default function Hangar26ProjectPage() {
             title="SITE ACQUISITION"
             status="UPCOMING"
           >
-            <p>
+            <p style={INTRO_TEXT_STYLE}>
               The current building establishes the baseline design. Once a site is secured, the project will be adapted to its specific orientation, access, utilities, aircraft movement, grading, setbacks and surrounding conditions.
             </p>
           </PhaseHeader>
@@ -200,7 +204,7 @@ export default function Hangar26ProjectPage() {
             title="DOCUMENTATION + CONSTRUCTION"
             status="FUTURE"
           >
-            <p>
+            <p style={INTRO_TEXT_STYLE}>
               Following site selection and professional coordination, the project will move through technical documentation, engineering, permitting and construction. This phase will continue to evolve as the project advances toward completion.
             </p>
           </PhaseHeader>
