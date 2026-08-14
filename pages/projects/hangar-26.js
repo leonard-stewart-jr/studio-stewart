@@ -30,9 +30,12 @@ function PhaseHeader({ number, eyebrow, title, status, children }) {
   );
 }
 
-function Placeholder({ label, ratio = "wide", muted = false }) {
+function Placeholder({ label, ratio = "wide", muted = false, style }) {
   return (
-    <div className={`${styles.placeholder} ${styles[ratio]} ${muted ? styles.placeholderMuted : ""}`}>
+    <div
+      className={`${styles.placeholder} ${styles[ratio]} ${muted ? styles.placeholderMuted : ""}`}
+      style={style}
+    >
       <span>{label}</span>
     </div>
   );
@@ -116,7 +119,11 @@ export default function Hangar26ProjectPage() {
           </div>
 
           <div className={styles.drawingBlock}>
-            <Placeholder label="PHASE 01 · FIRST FLOOR PLAN" ratio="plan" />
+            <Placeholder
+              label="PHASE 01 · FIRST FLOOR PLAN"
+              ratio="plan"
+              style={{ aspectRatio: "3 / 2" }}
+            />
             <div className={styles.captionRow}>
               <span>ARCHITECTURAL FLOOR PLAN</span>
               <span>BASE MODEL + DIMENSIONAL COORDINATION</span>
