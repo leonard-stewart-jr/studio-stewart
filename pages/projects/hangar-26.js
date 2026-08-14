@@ -233,7 +233,7 @@ export default function Hangar26ProjectPage() {
             status="IN PROGRESS"
           >
             <p style={INTRO_TEXT_STYLE}>
-              With the primary geometry established, the model was developed into a more complete architectural proposal. Exterior cladding, glazing, lighting, materials, office furnishings and aircraft scale were added to clarify the intended character and use of the building.
+              Phase 02 began after the preliminary design was submitted and focuses on developing the model in more detail. I added the exterior siding, glazing, lighting, office furnishings, and aircraft to better understand how the building would look and function. This phase is still ongoing and will continue to develop as the project moves forward.
             </p>
           </PhaseHeader>
 
