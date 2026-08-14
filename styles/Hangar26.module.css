@@ -140,7 +140,6 @@
 
 .phaseSection {
   padding: var(--hangar-phase-top) 0 var(--hangar-phase-bottom);
-  border-top: 1px solid var(--hangar-line);
   scroll-margin-top: 72px;
 }
 
