@@ -119,7 +119,7 @@ export default function Hangar26ProjectPage() {
             <div className={styles.heroGrid} style={{ alignItems: "start", marginTop: 0 }}>
               <div className={styles.heroStatement}>
                 <p style={INTRO_TEXT_STYLE}>
-                  This project began as a collaboration with a former college roommate who was looking to develop a commercial hangar for his company at Sioux Falls Regional Airport (FSD). What started with preliminary building design and airport review will continue through site acquisition, site specific development, professional coordination, and construction.
+                  This project began as a collaboration with a former college roommate who was looking to develop a commercial hangar for his company at the Sioux Falls Regional Airport (FSD). What started with preliminary building design and airport review will continue through site acquisition, site specific development, professional coordination, and construction.
                 </p>
               </div>
               <div className={styles.heroFacts}>
@@ -159,7 +159,7 @@ export default function Hangar26ProjectPage() {
           </PhaseHeader>
 
           <div className={styles.statsGrid}>
-            <div><span>MAIN BAY AREA</span><strong>12,750 SF</strong></div>
+            <div><span>HANGAR AREA</span><strong>12,750 SF</strong></div>
             <div><span>HANGAR WIDTH</span><strong>110 FT</strong></div>
             <div><span>BUILDING LENGTH</span><strong>145 FT 4 IN</strong></div>
             <div><span>ROOF APEX</span><strong>32 FT 8 IN</strong></div>
