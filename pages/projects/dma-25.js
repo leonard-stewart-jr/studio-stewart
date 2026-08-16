@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import SectionTabs from "../../components/section-tabs";
+import CollapsibleSubnav from "../../components/CollapsibleSubnav";
 import styles from "../../styles/DMA25.module.css";
 
 const VIEW_TABS = [
@@ -105,7 +106,7 @@ function FloorIndex() {
   );
 }
 
-function BuildingExplorer({ onOpenStory }) {
+function BuildingExplorer() {
   return (
     <div className={styles.buildingView}>
       <header className={styles.projectHeader}>
@@ -117,22 +118,13 @@ function BuildingExplorer({ onOpenStory }) {
         <div className={styles.projectHeaderMeta}>
           <span>DES MOINES, IOWA</span>
           <span>15 FLOORS</span>
-          <span>ACADEMY + HOUSING + PARKING</span>
         </div>
       </header>
 
       <section className={styles.explorerSection} id="explore">
         <div className={styles.explorerHeaderCompact}>
-          <div>
-            <span className={styles.sectionKicker}>BUILDING EXPLORER</span>
-            <h2>EXPLORE THE BUILDING</h2>
-          </div>
-
-          <p>Select a floor from the building or floor index to explore its plan, spaces, and views.</p>
-
-          <button type="button" className={styles.storyPrompt} onClick={onOpenStory}>
-            PROJECT BACKGROUND + PROCESS <span>↑ STORY</span>
-          </button>
+          <h2>EXPLORE THE BUILDING</h2>
+          <p>SELECT A FLOOR TO VIEW ITS PLAN, PROGRAM, AND SPACES.</p>
         </div>
 
         <div className={styles.explorerShell}>
@@ -156,11 +148,6 @@ function BuildingExplorer({ onOpenStory }) {
           </div>
 
           <FloorIndex />
-        </div>
-
-        <div className={styles.explorerFutureNote}>
-          <span>NEXT · SYNCHRONIZED BUILDING HOVER + FLOOR SELECTION</span>
-          <span>FINAL FLOOR NAMES + AREAS PENDING REVIT REVIEW</span>
         </div>
       </section>
     </div>
@@ -363,6 +350,20 @@ export default function DMA25ProjectPage() {
     return () => window.removeEventListener("hashchange", syncFromHash);
   }, []);
 
+  useEffect(() => {
+    if (typeof document === "undefined" || activeView !== "building") return undefined;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [activeView]);
+
   const changeView = (view) => {
     setActiveView(view);
 
@@ -383,25 +384,19 @@ export default function DMA25ProjectPage() {
         />
       </Head>
 
-      <div className="nav-card nav-card-mid" aria-label="Project view navigation">
-        <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
-        <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}>
-          <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <SectionTabs
-              items={VIEW_TABS}
-              active={activeView}
-              onChange={changeView}
-              variant="top"
-              ariaLabel="Des Moines Academy project views"
-            />
-          </div>
-        </div>
-        <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
-      </div>
+      <CollapsibleSubnav ariaLabel="Des Moines Academy project views">
+        <SectionTabs
+          items={VIEW_TABS}
+          active={activeView}
+          onChange={changeView}
+          variant="top"
+          ariaLabel="Des Moines Academy project views"
+        />
+      </CollapsibleSubnav>
 
       <div className={styles.page}>
         {activeView === "building" ? (
-          <BuildingExplorer onOpenStory={() => changeView("story")} />
+          <BuildingExplorer />
         ) : (
           <ProjectStory onOpenBuilding={() => changeView("building")} />
         )}
@@ -409,5 +404,3 @@ export default function DMA25ProjectPage() {
     </>
   );
 }
-
-DMA25ProjectPage.hasFixedSubnav = true;
