@@ -22,6 +22,7 @@ export default function SectionTabs({
 
   const wrapperClass = isTop ? "isp-section-tabs" : "isp-subnav-row";
   const btnClassBase = isTop ? "isp-tab-btn" : "isp-subnav-btn";
+  const wrapperClasses = `${wrapperClass} tab-count-${items.length}`;
 
   function handleKeyDown(e, key) {
     if (e.key === "Enter" || e.key === " ") {
@@ -31,7 +32,7 @@ export default function SectionTabs({
   }
 
   return (
-    <div className={wrapperClass} role="tablist" aria-label={ariaLabel}>
+    <div className={wrapperClasses} role="tablist" aria-label={ariaLabel}>
       {items.map((item) => {
         const isActive = active === item.key;
         const className = `${btnClassBase}${isActive ? " active" : ""}`;
