@@ -30,7 +30,7 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
           aria-expanded={open}
           onClick={() => setOpen((current) => !current)}
         >
-          <span aria-hidden="true">⌄</span>
+          <span aria-hidden="true" />
         </button>
       </div>
 
@@ -75,38 +75,43 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
           top: 100%;
           left: 50%;
           transform: translateX(-50%);
-          width: 42px;
-          height: 19px;
+          width: 36px;
+          height: 17px;
           padding: 0;
           border: 0;
-          border-radius: 0 0 10px 10px;
-          background: rgba(255,255,255,.96);
-          box-shadow: 0 4px 10px rgba(0,0,0,.10);
+          border-radius: 0;
+          background: rgba(255,255,255,.58);
+          box-shadow: 0 2px 7px rgba(0,0,0,.06);
           color: #b8b5ae;
-          display: grid;
-          place-items: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           cursor: pointer;
+          backdrop-filter: blur(3px);
+          -webkit-backdrop-filter: blur(3px);
           transition: color .18s ease, box-shadow .18s ease, background .18s ease;
         }
 
         .collapsible-subnav-handle span {
           display: block;
-          font-size: 18px;
-          line-height: 1;
-          transform: translateY(-3px) rotate(0deg);
+          width: 7px;
+          height: 7px;
+          border-right: 1px solid currentColor;
+          border-bottom: 1px solid currentColor;
+          transform: rotate(45deg) translate(-1px, -1px);
           transform-origin: 50% 50%;
           transition: transform .24s ease;
         }
 
         .collapsible-subnav.is-open .collapsible-subnav-handle span {
-          transform: translateY(2px) rotate(180deg);
+          transform: rotate(225deg) translate(-1px, -1px);
         }
 
         .collapsible-subnav-handle:hover,
         .collapsible-subnav-handle:focus-visible {
           color: #e5c19f;
-          background: #fff;
-          box-shadow: 0 5px 14px rgba(0,0,0,.14);
+          background: rgba(255,255,255,.78);
+          box-shadow: 0 3px 9px rgba(0,0,0,.08);
           outline: none;
         }
 
@@ -117,11 +122,11 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
         @keyframes secondary-nav-hint {
           0%, 100% {
             color: #b8b5ae;
-            box-shadow: 0 4px 10px rgba(0,0,0,.10);
+            box-shadow: 0 2px 7px rgba(0,0,0,.06);
           }
           50% {
             color: #e5c19f;
-            box-shadow: 0 5px 15px rgba(229,193,159,.46);
+            box-shadow: 0 3px 10px rgba(229,193,159,.28);
           }
         }
 
@@ -131,8 +136,8 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
           }
 
           .collapsible-subnav-handle {
-            width: 38px;
-            height: 18px;
+            width: 34px;
+            height: 16px;
           }
         }
 
