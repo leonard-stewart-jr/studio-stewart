@@ -93,34 +93,52 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
           box-sizing: border-box;
         }
 
-        /* Pin the two project tabs to the exact viewport center instead of
-           relying on surrounding flex space or inherited nav layout rules. */
+        /* Default: center the tab group itself. */
         .collapsible-subnav-content .isp-section-tabs {
           position: absolute;
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
-          width: 240px;
+          margin: 0;
+        }
+
+        /* For a two item subnav, center the VISIBLE GAP between the labels on
+           the viewport center. Equal columns center the buttons, but because
+           BUILDING and STORY have different text widths and active font sizes,
+           that can still look off-center. These two buttons are instead pinned
+           to opposite sides of the exact 50% centerline. */
+        .collapsible-subnav-content .isp-section-tabs.tab-count-2 {
+          left: 0;
+          top: 0;
+          transform: none;
+          width: 100vw;
           height: 44px;
           min-height: 44px;
           margin: 0;
           padding: 0;
-          display: grid;
-          grid-template-columns: repeat(2, 120px);
-          gap: 0;
-          align-items: center;
-          justify-items: stretch;
+          display: block;
         }
 
-        .collapsible-subnav-content .isp-tab-btn {
-          width: 120px;
+        .collapsible-subnav-content .isp-section-tabs.tab-count-2 .isp-tab-btn {
+          position: absolute;
+          top: 0;
+          width: auto;
           height: 44px;
           margin: 0;
-          padding: 0 8px;
+          padding: 0;
           display: flex;
           align-items: center;
           justify-content: center;
           text-align: center;
+          white-space: nowrap;
+        }
+
+        .collapsible-subnav-content .isp-section-tabs.tab-count-2 .isp-tab-btn:first-child {
+          right: calc(50% + 28px);
+        }
+
+        .collapsible-subnav-content .isp-section-tabs.tab-count-2 .isp-tab-btn:last-child {
+          left: calc(50% + 28px);
         }
 
         .collapsible-subnav-handle {
@@ -184,13 +202,12 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
         }
 
         @media (max-width: 700px) {
-          .collapsible-subnav-content .isp-section-tabs {
-            width: 208px;
-            grid-template-columns: repeat(2, 104px);
+          .collapsible-subnav-content .isp-section-tabs.tab-count-2 .isp-tab-btn:first-child {
+            right: calc(50% + 22px);
           }
 
-          .collapsible-subnav-content .isp-tab-btn {
-            width: 104px;
+          .collapsible-subnav-content .isp-section-tabs.tab-count-2 .isp-tab-btn:last-child {
+            left: calc(50% + 22px);
           }
 
           .collapsible-subnav-handle {
