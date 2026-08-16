@@ -86,29 +86,39 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
         }
 
         .collapsible-subnav-content {
+          position: relative;
           width: 100vw;
           height: 44px;
           margin: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
           box-sizing: border-box;
         }
 
+        /* Pin the two project tabs to the exact viewport center instead of
+           relying on surrounding flex space or inherited nav layout rules. */
         .collapsible-subnav-content .isp-section-tabs {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
           width: 240px;
+          height: 44px;
+          min-height: 44px;
+          margin: 0;
+          padding: 0;
           display: grid;
           grid-template-columns: repeat(2, 120px);
           gap: 0;
-          justify-content: center;
           align-items: center;
+          justify-items: stretch;
         }
 
         .collapsible-subnav-content .isp-tab-btn {
           width: 120px;
+          height: 44px;
           margin: 0;
-          padding-left: 8px;
-          padding-right: 8px;
+          padding: 0 8px;
+          display: flex;
+          align-items: center;
           justify-content: center;
           text-align: center;
         }
@@ -174,10 +184,6 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
         }
 
         @media (max-width: 700px) {
-          .collapsible-subnav-content {
-            width: 100vw;
-          }
-
           .collapsible-subnav-content .isp-section-tabs {
             width: 208px;
             grid-template-columns: repeat(2, 104px);
