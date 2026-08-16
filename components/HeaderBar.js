@@ -30,6 +30,10 @@ export default function HeaderBar({
   // - fixedNav kept as a prop for future use but not required here
   const computedPosition = "fixed";
 
+  // The left and right header rails must match exactly so the navigation
+  // is centered on the viewport rather than centered in the remaining space.
+  const headerRailWidth = logoSize + sidebarPaddingLeft;
+
   const navBarStyle = {
     position: computedPosition,
     top: 0,
@@ -57,8 +61,8 @@ export default function HeaderBar({
             flex: "0 0 auto",
             display: "flex",
             alignItems: "center",
-            width: logoSize + sidebarPaddingLeft,
-            minWidth: logoSize + sidebarPaddingLeft,
+            width: headerRailWidth,
+            minWidth: headerRailWidth,
             justifyContent: "flex-start",
           }}
         >
@@ -93,8 +97,8 @@ export default function HeaderBar({
           <NavBar headerHeight={60} />
         </div>
 
-        {/* Right: Reserved for future use, maintains space for symmetry */}
-        <div style={{ flex: "0 0 auto", width: logoSize, minWidth: logoSize }} />
+        {/* Right: intentionally mirrors the complete logo rail for true viewport centering */}
+        <div style={{ flex: "0 0 auto", width: headerRailWidth, minWidth: headerRailWidth }} />
       </div>
     </>
   );
