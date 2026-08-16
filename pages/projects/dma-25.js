@@ -1,5 +1,12 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import SectionTabs from "../../components/section-tabs";
 import styles from "../../styles/DMA25.module.css";
+
+const VIEW_TABS = [
+  { key: "building", label: "BUILDING" },
+  { key: "story", label: "STORY" },
+];
 
 const floorGroups = [
   {
@@ -70,7 +77,302 @@ function ProgramNote({ title, detail, color }) {
   );
 }
 
+function FloorIndex() {
+  return (
+    <aside className={styles.floorIndex} aria-label="Des Moines Academy floor index">
+      <div className={styles.floorIndexTop}>
+        <strong>FLOOR INDEX</strong>
+        <strong>15 FLOORS</strong>
+      </div>
+
+      {floorGroups.map((group) => (
+        <div className={styles.floorGroup} key={group.title}>
+          <div className={styles.floorGroupHeading}>
+            <span className={styles.floorGroupTitle}>{group.title}</span>
+            <span className={styles.floorGroupCount}>{group.count}</span>
+          </div>
+
+          {group.floors.map((floor) => (
+            <div className={styles.floorRow} key={floor.number}>
+              <span className={styles.floorNumber}>{floor.number}</span>
+              <span className={styles.floorName}>{floor.name}</span>
+              <span className={styles.floorArea}>{floor.area}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </aside>
+  );
+}
+
+function BuildingExplorer({ onOpenStory }) {
+  return (
+    <div className={styles.buildingView}>
+      <header className={styles.projectHeader}>
+        <div>
+          <div className={styles.eyebrow}>ACADEMIC PROJECT · 2025 →</div>
+          <h1>DES MOINES ACADEMY OF ARTS AND ATHLETICS</h1>
+        </div>
+
+        <div className={styles.projectHeaderMeta}>
+          <span>DES MOINES, IOWA</span>
+          <span>15 FLOORS</span>
+          <span>ACADEMY + HOUSING + PARKING</span>
+        </div>
+      </header>
+
+      <section className={styles.explorerSection} id="explore">
+        <div className={styles.explorerHeaderCompact}>
+          <div>
+            <span className={styles.sectionKicker}>BUILDING EXPLORER</span>
+            <h2>EXPLORE THE BUILDING</h2>
+          </div>
+
+          <p>Select a floor from the building or floor index to explore its plan, spaces, and views.</p>
+
+          <button type="button" className={styles.storyPrompt} onClick={onOpenStory}>
+            PROJECT BACKGROUND + PROCESS <span>↑ STORY</span>
+          </button>
+        </div>
+
+        <div className={styles.explorerShell}>
+          <div className={styles.buildingStage}>
+            <div className={styles.buildingGhost} aria-label="Temporary fifteen floor building placeholder">
+              {allFloors.map((floor) => (
+                <div
+                  key={floor.number}
+                  className={`${styles.ghostFloor} ${
+                    floor.program === "housing"
+                      ? styles.ghostHousing
+                      : floor.program === "academy"
+                        ? styles.ghostAcademy
+                        : styles.ghostParking
+                  }`}
+                  title={`Level ${floor.number}`}
+                />
+              ))}
+            </div>
+            <span className={`${styles.placeholderLabel} ${styles.stageNote}`}>MASTER BUILDING AXON PLACEHOLDER</span>
+          </div>
+
+          <FloorIndex />
+        </div>
+
+        <div className={styles.explorerFutureNote}>
+          <span>NEXT · SYNCHRONIZED BUILDING HOVER + FLOOR SELECTION</span>
+          <span>FINAL FLOOR NAMES + AREAS PENDING REVIT REVIEW</span>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ProjectStory({ onOpenBuilding }) {
+  return (
+    <div className={styles.storyView}>
+      <section className={styles.storyLead}>
+        <div className={styles.storyLeadText}>
+          <div className={styles.eyebrow}>PROJECT STORY · 2025 →</div>
+          <h1>DES MOINES ACADEMY OF ARTS AND ATHLETICS</h1>
+          <p>
+            The Des Moines Academy began during Spring 2025 as my most detailed academic building project. The original model combined Rhino and Revit while I was still learning the Revit workflow. After graduation, I returned to the project and rebuilt nearly every Rhino asset in Revit, using the building as a way to continue developing the design and expand what I could do with the model.
+          </p>
+          <button type="button" className={styles.returnToBuilding} onClick={onOpenBuilding}>
+            ← RETURN TO BUILDING EXPLORER
+          </button>
+        </div>
+
+        <Placeholder label="FINAL HERO RENDER" className={styles.storyHeroPlaceholder} />
+      </section>
+
+      <section className={`${styles.section} ${styles.container}`}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionKicker}>PROJECT SNAPSHOT</div>
+            <h2>THE PROJECT</h2>
+          </div>
+          <p>
+            The project stacks parking, a full arts and athletics academy, and teacher housing into one vertical campus in downtown Des Moines. The story section collects the background, program organization, rebuild process, details, drawings, and final imagery without interrupting the floor by floor explorer.
+          </p>
+        </div>
+
+        <div className={styles.snapshotGrid}>
+          {snapshot.map(([label, value]) => (
+            <div className={styles.snapshotItem} key={label}>
+              <span className={styles.snapshotLabel}>{label}</span>
+              <strong className={styles.snapshotValue}>{value}</strong>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={`${styles.section} ${styles.container}`}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionKicker}>PROGRAM ORGANIZATION</div>
+            <h2>A VERTICAL ACADEMY</h2>
+          </div>
+          <p>
+            Fifteen floors organize three major programs into one vertical building. Four levels of parking form the base, nine academy levels make up the primary building, and two teacher housing levels complete the top of the tower.
+          </p>
+        </div>
+
+        <div className={styles.programLayout}>
+          <div className={styles.programStack} aria-label="Des Moines Academy program stack">
+            <div className={`${styles.stackBlock} ${styles.stackHousing}`}>
+              <span className={styles.programLabel}>TEACHER HOUSING</span>
+              <strong>02</strong>
+            </div>
+            <div className={`${styles.stackBlock} ${styles.stackAcademy}`}>
+              <span className={styles.programLabel}>ACADEMY</span>
+              <strong>09</strong>
+            </div>
+            <div className={`${styles.stackBlock} ${styles.stackParking}`}>
+              <span className={styles.programLabel}>PARKING</span>
+              <strong>04</strong>
+            </div>
+          </div>
+
+          <div className={styles.programNotes}>
+            <ProgramNote
+              title="TEACHER HOUSING"
+              detail="Two upper levels dedicated to apartments and shared living spaces for academy teachers."
+              color="var(--dma-housing)"
+            />
+            <ProgramNote
+              title="ACADEMY"
+              detail="Nine detailed education levels containing the arts, athletics, academic, and shared programs that define the project."
+              color="var(--dma-academy)"
+            />
+            <ProgramNote
+              title="PARKING"
+              detail="Four structured parking levels form the base of the project and connect the vertical campus to the downtown site."
+              color="var(--dma-parking)"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className={`${styles.section} ${styles.container}`}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionKicker}>PROJECT DEVELOPMENT</div>
+            <h2>THE REBUILD</h2>
+          </div>
+          <p>
+            The rebuild will compare the original Spring 2025 model with the current Revit model and show how the project changed as the modeling workflow, building systems, families, envelope, interiors, and visualization developed.
+          </p>
+        </div>
+
+        <div className={styles.rebuildGrid}>
+          <div>
+            <Placeholder label="ORIGINAL 2025 MODEL" className={styles.mediaPlaceholder} />
+            <div className={styles.rebuildLabels}>
+              <span>SPRING 2025</span>
+              <span>RHINO + REVIT</span>
+            </div>
+          </div>
+          <div>
+            <Placeholder label="CURRENT REVIT MODEL" className={styles.mediaPlaceholder} />
+            <div className={styles.rebuildLabels}>
+              <span>CURRENT MODEL</span>
+              <span>REVIT + D5</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.rebuildCopy}>
+          <div className={styles.rebuildPath}>
+            <div><span>2025</span><span>ORIGINAL MODEL</span></div>
+            <div><span>2026</span><span>REVIT REBUILD</span></div>
+            <div><span>NEXT</span><span>VISUALIZATION</span></div>
+          </div>
+          <p>
+            This section will document the project as a continuing design process rather than a frozen semester submission. It will show where the original workflow started, what was rebuilt, and how the project became a much more complete architectural model after graduation.
+          </p>
+        </div>
+      </section>
+
+      <section className={`${styles.section} ${styles.container}`}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionKicker}>MODEL DEPTH</div>
+            <h2>BUILDING DETAILS</h2>
+          </div>
+          <p>
+            This section will zoom into the pieces that are easy to miss at the scale of the full tower, including facade systems, custom Revit families, interior components, structure, circulation, and major shared spaces.
+          </p>
+        </div>
+
+        <div className={styles.detailsGrid}>
+          <Placeholder label="DETAIL 01" className={styles.detailCard} />
+          <Placeholder label="DETAIL 02" className={`${styles.detailCard} ${styles.detailCardTall}`} />
+          <Placeholder label="DETAIL 03" className={styles.detailCard} />
+        </div>
+      </section>
+
+      <section className={`${styles.section} ${styles.container}`}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionKicker}>BUILDING SECTION</div>
+            <h2>A VERTICAL CAMPUS</h2>
+          </div>
+          <p>
+            A major building section will connect the individual floor plans back to the full fifteen floor project and show how parking, academy spaces, shared circulation, and teacher housing work together vertically.
+          </p>
+        </div>
+
+        <Placeholder label="MAJOR BUILDING SECTION" className={styles.sectionDrawing} />
+      </section>
+
+      <section className={`${styles.section} ${styles.container}`}>
+        <div>
+          <div className={styles.sectionKicker}>FINAL PROJECT IMAGERY</div>
+          <h2 className={styles.sectionTitle}>DES MOINES ACADEMY</h2>
+        </div>
+
+        <div className={styles.finalGallery}>
+          <Placeholder label="FINAL RENDER 01" className={styles.finalHeroPlaceholder} />
+          <div className={styles.finalGallerySplit}>
+            <Placeholder label="FINAL RENDER 02" className={styles.finalSmallPlaceholder} />
+            <Placeholder label="FINAL RENDER 03" className={styles.finalSmallPlaceholder} />
+          </div>
+          <Placeholder label="FINAL RENDER 04" className={styles.finalHeroPlaceholder} />
+        </div>
+      </section>
+
+      <div className={styles.footerNote}>
+        PAGE SHELL · PLACEHOLDER CONTENT WILL BE REPLACED AS REVIT AND D5 ASSETS ARE PRODUCED
+      </div>
+    </div>
+  );
+}
+
 export default function DMA25ProjectPage() {
+  const [activeView, setActiveView] = useState("building");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const syncFromHash = () => {
+      setActiveView(window.location.hash === "#story" ? "story" : "building");
+    };
+
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, []);
+
+  const changeView = (view) => {
+    setActiveView(view);
+
+    if (typeof window !== "undefined") {
+      const hash = view === "story" ? "#story" : "#building";
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
+      window.scrollTo({ top: 0, left: 0 });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -81,264 +383,31 @@ export default function DMA25ProjectPage() {
         />
       </Head>
 
-      <main className={styles.page}>
-        <section className={styles.hero}>
-          <div className={styles.heroTop}>
-            <div>
-              <div className={styles.eyebrow}>ACADEMIC PROJECT · 2025 →</div>
-              <h1
-                style={{
-                  fontSize: "clamp(40px, 4.7vw, 76px)",
-                  lineHeight: 0.94,
-                  letterSpacing: "-.025em",
-                  maxWidth: 1020,
-                }}
-              >
-                DES MOINES ACADEMY OF ARTS AND ATHLETICS
-              </h1>
-            </div>
-
-            <div className={styles.heroMeta}>
-              <div className={styles.heroMetaRow}>
-                <span className={styles.metaLabel}>LOCATION</span>
-                <strong>DES MOINES, IOWA</strong>
-              </div>
-              <div className={styles.heroMetaRow}>
-                <span className={styles.metaLabel}>TYPE</span>
-                <strong>ACADEMY + HOUSING + PARKING</strong>
-              </div>
-              <div className={styles.heroMetaRow}>
-                <span className={styles.metaLabel}>STATUS</span>
-                <strong>REVISITED PROJECT</strong>
-              </div>
-            </div>
+      <div className="nav-card nav-card-mid" aria-label="Project view navigation">
+        <div style={{ flex: "0 0 auto", width: 88, minWidth: 88 }} />
+        <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}>
+          <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <SectionTabs
+              items={VIEW_TABS}
+              active={activeView}
+              onChange={changeView}
+              variant="top"
+              ariaLabel="Des Moines Academy project views"
+            />
           </div>
-
-          <Placeholder label="FINAL HERO RENDER" className={styles.heroImagePlaceholder} />
-        </section>
-
-        <section className={`${styles.section} ${styles.container}`}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionKicker}>PROJECT INTRODUCTION</div>
-              <h2>DES MOINES ACADEMY</h2>
-            </div>
-            <p>
-              The Des Moines Academy began during Spring 2025 as my most detailed academic building project. The original model combined Rhino and Revit while I was still learning the Revit workflow. After graduation, I returned to the project and rebuilt nearly every Rhino asset in Revit, using the building as a way to continue developing the design and expand what I could do with the model.
-            </p>
-          </div>
-
-          <div className={styles.snapshotGrid}>
-            {snapshot.map(([label, value]) => (
-              <div className={styles.snapshotItem} key={label}>
-                <span className={styles.snapshotLabel}>{label}</span>
-                <strong className={styles.snapshotValue}>{value}</strong>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className={`${styles.section} ${styles.container}`}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionKicker}>PROGRAM ORGANIZATION</div>
-              <h2>A VERTICAL ACADEMY</h2>
-            </div>
-            <p>
-              Fifteen floors organize three major programs into one vertical building. Four levels of parking form the base, nine academy levels make up the primary building, and two teacher housing levels complete the top of the tower.
-            </p>
-          </div>
-
-          <div className={styles.programLayout}>
-            <div className={styles.programStack} aria-label="Des Moines Academy program stack">
-              <div className={`${styles.stackBlock} ${styles.stackHousing}`}>
-                <span className={styles.programLabel}>TEACHER HOUSING</span>
-                <strong>02</strong>
-              </div>
-              <div className={`${styles.stackBlock} ${styles.stackAcademy}`}>
-                <span className={styles.programLabel}>ACADEMY</span>
-                <strong>09</strong>
-              </div>
-              <div className={`${styles.stackBlock} ${styles.stackParking}`}>
-                <span className={styles.programLabel}>PARKING</span>
-                <strong>04</strong>
-              </div>
-            </div>
-
-            <div className={styles.programNotes}>
-              <ProgramNote
-                title="TEACHER HOUSING"
-                detail="Two upper levels dedicated to apartments and shared living spaces for academy teachers."
-                color="var(--dma-housing)"
-              />
-              <ProgramNote
-                title="ACADEMY"
-                detail="Nine detailed education levels containing the arts, athletics, academic, and shared programs that define the project."
-                color="var(--dma-academy)"
-              />
-              <ProgramNote
-                title="PARKING"
-                detail="Four structured parking levels form the base of the project and connect the vertical campus to the downtown site."
-                color="var(--dma-parking)"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.explorerSection} id="explore">
-          <div className={styles.explorerHeader}>
-            <div>
-              <div className={styles.sectionKicker}>BUILDING EXPLORER</div>
-              <h2>EXPLORE THE BUILDING</h2>
-            </div>
-            <p>
-              Select a floor from the building or floor index to explore its plan, spaces, and views. The interactive model, hover states, floor plans, and render galleries will be added as the Revit and D5 assets are produced.
-            </p>
-          </div>
-
-          <div className={styles.explorerShell}>
-            <div className={styles.buildingStage}>
-              <div className={styles.buildingGhost} aria-label="Temporary fifteen floor building placeholder">
-                {allFloors.map((floor) => (
-                  <div
-                    key={floor.number}
-                    className={`${styles.ghostFloor} ${
-                      floor.program === "housing"
-                        ? styles.ghostHousing
-                        : floor.program === "academy"
-                          ? styles.ghostAcademy
-                          : styles.ghostParking
-                    }`}
-                    title={`Level ${floor.number}`}
-                  />
-                ))}
-              </div>
-              <span className={`${styles.placeholderLabel} ${styles.stageNote}`}>MASTER BUILDING AXON PLACEHOLDER</span>
-            </div>
-
-            <aside className={styles.floorIndex} aria-label="Des Moines Academy floor index">
-              <div className={styles.floorIndexTop}>
-                <strong>FLOOR INDEX</strong>
-                <strong>15 FLOORS</strong>
-              </div>
-
-              {floorGroups.map((group) => (
-                <div className={styles.floorGroup} key={group.title}>
-                  <div className={styles.floorGroupHeading}>
-                    <span className={styles.floorGroupTitle}>{group.title}</span>
-                    <span className={styles.floorGroupCount}>{group.count}</span>
-                  </div>
-
-                  {group.floors.map((floor) => (
-                    <div className={styles.floorRow} key={floor.number}>
-                      <span className={styles.floorNumber}>{floor.number}</span>
-                      <span className={styles.floorName}>{floor.name}</span>
-                      <span className={styles.floorArea}>{floor.area}</span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </aside>
-          </div>
-
-          <div className={styles.explorerFutureNote}>
-            <span>NEXT PHASE · SYNCHRONIZED BUILDING HOVER + FLOOR SELECTION</span>
-            <span>FINAL FLOOR NAMES + AREAS PENDING REVIT REVIEW</span>
-          </div>
-        </section>
-
-        <section className={`${styles.section} ${styles.container}`}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionKicker}>PROJECT DEVELOPMENT</div>
-              <h2>THE REBUILD</h2>
-            </div>
-            <p>
-              The rebuild will compare the original Spring 2025 model with the current Revit model and show how the project changed as the modeling workflow, building systems, families, envelope, interiors, and visualization developed.
-            </p>
-          </div>
-
-          <div className={styles.rebuildGrid}>
-            <div>
-              <Placeholder label="ORIGINAL 2025 MODEL" className={styles.mediaPlaceholder} />
-              <div className={styles.rebuildLabels}>
-                <span>SPRING 2025</span>
-                <span>RHINO + REVIT</span>
-              </div>
-            </div>
-            <div>
-              <Placeholder label="CURRENT REVIT MODEL" className={styles.mediaPlaceholder} />
-              <div className={styles.rebuildLabels}>
-                <span>CURRENT MODEL</span>
-                <span>REVIT + D5</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.rebuildCopy}>
-            <div className={styles.rebuildPath}>
-              <div><span>2025</span><span>ORIGINAL MODEL</span></div>
-              <div><span>2026</span><span>REVIT REBUILD</span></div>
-              <div><span>NEXT</span><span>VISUALIZATION</span></div>
-            </div>
-            <p>
-              This section will document the project as a continuing design process rather than a frozen semester submission. It will show where the original workflow started, what was rebuilt, and how the project became a much more complete architectural model after graduation.
-            </p>
-          </div>
-        </section>
-
-        <section className={`${styles.section} ${styles.container}`}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionKicker}>MODEL DEPTH</div>
-              <h2>BUILDING DETAILS</h2>
-            </div>
-            <p>
-              This section will zoom into the pieces that are easy to miss at the scale of the full tower, including facade systems, custom Revit families, interior components, structure, circulation, and major shared spaces.
-            </p>
-          </div>
-
-          <div className={styles.detailsGrid}>
-            <Placeholder label="DETAIL 01" className={styles.detailCard} />
-            <Placeholder label="DETAIL 02" className={`${styles.detailCard} ${styles.detailCardTall}`} />
-            <Placeholder label="DETAIL 03" className={styles.detailCard} />
-          </div>
-        </section>
-
-        <section className={`${styles.section} ${styles.container}`}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionKicker}>BUILDING SECTION</div>
-              <h2>A VERTICAL CAMPUS</h2>
-            </div>
-            <p>
-              A major building section will connect the individual floor plans back to the full fifteen floor project and show how parking, academy spaces, shared circulation, and teacher housing work together vertically.
-            </p>
-          </div>
-
-          <Placeholder label="MAJOR BUILDING SECTION" className={styles.sectionDrawing} />
-        </section>
-
-        <section className={`${styles.section} ${styles.container}`}>
-          <div>
-            <div className={styles.sectionKicker}>FINAL PROJECT IMAGERY</div>
-            <h2 className={styles.sectionTitle}>DES MOINES ACADEMY</h2>
-          </div>
-
-          <div className={styles.finalGallery}>
-            <Placeholder label="FINAL RENDER 01" className={styles.finalHeroPlaceholder} />
-            <div className={styles.finalGallerySplit}>
-              <Placeholder label="FINAL RENDER 02" className={styles.finalSmallPlaceholder} />
-              <Placeholder label="FINAL RENDER 03" className={styles.finalSmallPlaceholder} />
-            </div>
-            <Placeholder label="FINAL RENDER 04" className={styles.finalHeroPlaceholder} />
-          </div>
-        </section>
-
-        <div className={styles.footerNote}>
-          PAGE SHELL · PLACEHOLDER CONTENT WILL BE REPLACED AS REVIT AND D5 ASSETS ARE PRODUCED
         </div>
-      </main>
+        <div style={{ flex: "0 0 auto", width: 66, minWidth: 66 }} />
+      </div>
+
+      <div className={styles.page}>
+        {activeView === "building" ? (
+          <BuildingExplorer onOpenStory={() => changeView("story")} />
+        ) : (
+          <ProjectStory onOpenBuilding={() => changeView("building")} />
+        )}
+      </div>
     </>
   );
 }
+
+DMA25ProjectPage.hasFixedSubnav = true;
