@@ -19,20 +19,34 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
     };
   }, [open]);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+
+    document.documentElement.style.setProperty("--secondary-nav-offset", open ? "44px" : "0px");
+
+    return () => {
+      document.documentElement.style.removeProperty("--secondary-nav-offset");
+    };
+  }, [open]);
+
   return (
-    <div className={`collapsible-subnav${open ? " is-open" : ""}`} aria-label={ariaLabel}>
-      <div className="collapsible-subnav-panel">
-        <div className="collapsible-subnav-content">{children}</div>
-        <button
-          type="button"
-          className={`collapsible-subnav-handle${attention ? " is-attention" : ""}`}
-          aria-label={open ? "Close secondary navigation" : "Open secondary navigation"}
-          aria-expanded={open}
-          onClick={() => setOpen((current) => !current)}
-        >
-          <span aria-hidden="true" />
-        </button>
+    <>
+      <div className={`collapsible-subnav${open ? " is-open" : ""}`} aria-label={ariaLabel}>
+        <div className="collapsible-subnav-panel">
+          <div className="collapsible-subnav-content">{children}</div>
+          <button
+            type="button"
+            className={`collapsible-subnav-handle${attention ? " is-attention" : ""}`}
+            aria-label={open ? "Close secondary navigation" : "Open secondary navigation"}
+            aria-expanded={open}
+            onClick={() => setOpen((current) => !current)}
+          >
+            <span aria-hidden="true" />
+          </button>
+        </div>
       </div>
+
+      <div className={`collapsible-subnav-spacer${open ? " is-open" : ""}`} aria-hidden="true" />
 
       <style jsx global>{`
         .collapsible-subnav {
@@ -58,6 +72,17 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
 
         .collapsible-subnav.is-open .collapsible-subnav-panel {
           transform: translateY(0);
+        }
+
+        .collapsible-subnav-spacer {
+          width: 100%;
+          height: 0;
+          transition: height .26s cubic-bezier(.22,.61,.36,1);
+          pointer-events: none;
+        }
+
+        .collapsible-subnav-spacer.is-open {
+          height: 44px;
         }
 
         .collapsible-subnav-content {
@@ -143,6 +168,7 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
 
         @media (prefers-reduced-motion: reduce) {
           .collapsible-subnav-panel,
+          .collapsible-subnav-spacer,
           .collapsible-subnav-handle span {
             transition: none;
           }
@@ -152,6 +178,6 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }
