@@ -74,7 +74,7 @@ export default function DMA25ProjectPage() {
   return (
     <>
       <Head>
-        <title>DMA 25 | Studio Stewart</title>
+        <title>Des Moines Academy of Arts and Athletics | Studio Stewart</title>
         <meta
           name="description"
           content="Des Moines Academy of Arts and Athletics, a fifteen floor mixed use academy, parking, and teacher housing project."
@@ -86,9 +86,14 @@ export default function DMA25ProjectPage() {
           <div className={styles.heroTop}>
             <div>
               <div className={styles.eyebrow}>ACADEMIC PROJECT · 2025 →</div>
-              <h1>
-                DMA 25
-                <br />
+              <h1
+                style={{
+                  fontSize: "clamp(40px, 4.7vw, 76px)",
+                  lineHeight: 0.94,
+                  letterSpacing: "-.025em",
+                  maxWidth: 1020,
+                }}
+              >
                 DES MOINES ACADEMY OF ARTS AND ATHLETICS
               </h1>
             </div>
@@ -119,7 +124,7 @@ export default function DMA25ProjectPage() {
               <h2>DES MOINES ACADEMY</h2>
             </div>
             <p>
-              DMA 25 began during Spring 2025 as my most detailed academic building project. The original model combined Rhino and Revit while I was still learning the Revit workflow. After graduation, I returned to the project and rebuilt nearly every Rhino asset in Revit, using the building as a way to continue developing the design and expand what I could do with the model.
+              The Des Moines Academy began during Spring 2025 as my most detailed academic building project. The original model combined Rhino and Revit while I was still learning the Revit workflow. After graduation, I returned to the project and rebuilt nearly every Rhino asset in Revit, using the building as a way to continue developing the design and expand what I could do with the model.
             </p>
           </div>
 
@@ -145,7 +150,7 @@ export default function DMA25ProjectPage() {
           </div>
 
           <div className={styles.programLayout}>
-            <div className={styles.programStack} aria-label="DMA 25 program stack">
+            <div className={styles.programStack} aria-label="Des Moines Academy program stack">
               <div className={`${styles.stackBlock} ${styles.stackHousing}`}>
                 <span className={styles.programLabel}>TEACHER HOUSING</span>
                 <strong>02</strong>
@@ -211,7 +216,7 @@ export default function DMA25ProjectPage() {
               <span className={`${styles.placeholderLabel} ${styles.stageNote}`}>MASTER BUILDING AXON PLACEHOLDER</span>
             </div>
 
-            <aside className={styles.floorIndex} aria-label="DMA 25 floor index">
+            <aside className={styles.floorIndex} aria-label="Des Moines Academy floor index">
               <div className={styles.floorIndexTop}>
                 <strong>FLOOR INDEX</strong>
                 <strong>15 FLOORS</strong>
@@ -317,7 +322,7 @@ export default function DMA25ProjectPage() {
         <section className={`${styles.section} ${styles.container}`}>
           <div>
             <div className={styles.sectionKicker}>FINAL PROJECT IMAGERY</div>
-            <h2 className={styles.sectionTitle}>DMA 25</h2>
+            <h2 className={styles.sectionTitle}>DES MOINES ACADEMY</h2>
           </div>
 
           <div className={styles.finalGallery}>
@@ -331,7 +336,7 @@ export default function DMA25ProjectPage() {
         </section>
 
         <div className={styles.footerNote}>
-          DMA 25 PAGE SHELL · PLACEHOLDER CONTENT WILL BE REPLACED AS REVIT AND D5 ASSETS ARE PRODUCED
+          PAGE SHELL · PLACEHOLDER CONTENT WILL BE REPLACED AS REVIT AND D5 ASSETS ARE PRODUCED
         </div>
       </main>
     </>
