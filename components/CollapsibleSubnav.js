@@ -86,13 +86,29 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
         }
 
         .collapsible-subnav-content {
-          width: min(1600px, 95vw);
+          width: 100vw;
           height: 44px;
-          margin: 0 auto;
+          margin: 0;
           display: flex;
           align-items: center;
           justify-content: center;
           box-sizing: border-box;
+        }
+
+        /* Keep the tab group itself centered on the viewport. Equal button widths
+           also keep the center gap aligned with the chevron even when labels differ. */
+        .collapsible-subnav-content .isp-section-tabs {
+          width: auto;
+          justify-content: center;
+        }
+
+        .collapsible-subnav-content .isp-tab-btn {
+          width: 112px;
+          margin: 0;
+          padding-left: 12px;
+          padding-right: 12px;
+          justify-content: center;
+          text-align: center;
         }
 
         .collapsible-subnav-handle {
@@ -157,7 +173,11 @@ export default function CollapsibleSubnav({ children, ariaLabel = "Secondary nav
 
         @media (max-width: 700px) {
           .collapsible-subnav-content {
-            width: calc(100% - 24px);
+            width: 100vw;
+          }
+
+          .collapsible-subnav-content .isp-tab-btn {
+            width: 96px;
           }
 
           .collapsible-subnav-handle {
