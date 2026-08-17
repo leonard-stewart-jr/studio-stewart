@@ -8,9 +8,6 @@ function parsePx(value) {
 function measureDocument(doc) {
   if (!doc?.body) return { width: 1224, height: 792 };
 
-  // ai2html pages (cover / back cover) expose their true artboard size here.
-  // Prefer that over the retina PNG's natural dimensions, which are typically 2x
-  // and were the reason the mobile cover was rendering at half size.
   const artboard = doc.querySelector(".g-artboard");
   if (artboard instanceof HTMLElement) {
     const styleAttr = artboard.getAttribute("style") || "";
@@ -24,7 +21,6 @@ function measureDocument(doc) {
     }
   }
 
-  // InDesign spread exports declare the complete 11x17 spread on BODY.
   const bodyStyle = doc.body.getAttribute("style") || "";
   const widthMatch = bodyStyle.match(/width:\s*([0-9.]+)px/i);
   const heightMatch = bodyStyle.match(/height:\s*([0-9.]+)px/i);
@@ -32,7 +28,6 @@ function measureDocument(doc) {
   let width = widthMatch ? parseFloat(widthMatch[1]) : (doc.body.offsetWidth || 1224);
   let height = heightMatch ? parseFloat(heightMatch[1]) : (doc.body.offsetHeight || 792);
 
-  // Only fall back to the first child when BODY does not already define the page.
   if (!widthMatch || !heightMatch) {
     const first = doc.body.firstElementChild;
     if (first instanceof HTMLElement) {
@@ -83,9 +78,6 @@ export default function MobilePortfolioViewer({
   const [pageSize, setPageSize] = useState({ width: 1224, height: 792 });
   const [viewport, setViewport] = useState({ width: 390, height: 700 });
   const [isLandscape, setIsLandscape] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isFocusMode, setIsFocusMode] = useState(false);
-  const [fullscreenSupported, setFullscreenSupported] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -138,35 +130,13 @@ export default function MobilePortfolioViewer({
   }, []);
 
   useEffect(() => {
-    const immersive = isLandscape || isFocusMode;
-    document.body.classList.toggle("portfolio-mobile-immersive", immersive);
-    return () => document.body.classList.remove("portfolio-mobile-immersive");
-  }, [isLandscape, isFocusMode]);
-
-  useEffect(() => {
-    const element = viewerRef.current;
-    setFullscreenSupported(Boolean(element && (element.requestFullscreen || element.webkitRequestFullscreen)));
-  }, [manifest]);
-
-  useEffect(() => {
-    function onFullscreenChange() {
-      const active = document.fullscreenElement || document.webkitFullscreenElement;
-      setIsFullscreen(active === viewerRef.current);
-      if (active === viewerRef.current) setIsFocusMode(false);
-    }
-
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", onFullscreenChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", onFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", onFullscreenChange);
-    };
-  }, []);
+    document.body.classList.toggle("portfolio-mobile-landscape", isLandscape);
+    return () => document.body.classList.remove("portfolio-mobile-landscape");
+  }, [isLandscape]);
 
   const total = manifest?.pages?.length || 0;
   const page = manifest?.pages?.[index] || null;
   const isCover = page?.id === "cover" || page?.id === "backcover";
-  const isImmersive = isLandscape || isFullscreen || isFocusMode;
 
   useEffect(() => {
     if (!page?.id) return;
@@ -178,7 +148,7 @@ export default function MobilePortfolioViewer({
     }
   }, [page?.id]);
 
-  const viewerHeight = isImmersive ? viewport.height : Math.max(1, viewport.height - 60);
+  const viewerHeight = isLandscape ? viewport.height : Math.max(1, viewport.height - 60);
 
   const scale = useMemo(() => {
     const naturalWidth = pageSize.width || 1224;
@@ -187,16 +157,17 @@ export default function MobilePortfolioViewer({
     const availableHeight = Math.max(1, viewerHeight);
 
     if (isLandscape) {
-      // Landscape mobile: fit the complete 11x17 spread, or complete 8.5x11 cover.
       return Math.min(availableWidth / naturalWidth, availableHeight / naturalHeight);
     }
 
     if (isCover) {
-      // Portrait cover: make the complete 8.5x11 page as large as the viewer permits.
+      // Cover/back cover are true 8.5x11 pages. In portrait, fill the viewer
+      // as much as possible while keeping the entire page visible.
       return Math.min(availableWidth / naturalWidth, availableHeight / naturalHeight);
     }
 
-    // Portrait spread: one 8.5x11 half fills the phone width.
+    // A normal 11x17 spread is two 8.5x11 pages side by side.
+    // Portrait shows one page-width at a time and pans horizontally to page two.
     return availableWidth / (naturalWidth / 2);
   }, [pageSize.width, pageSize.height, viewport.width, viewerHeight, isLandscape, isCover]);
 
@@ -210,16 +181,24 @@ export default function MobilePortfolioViewer({
     try {
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       hideInnerScrollbars(doc);
-      setPageSize(measureDocument(doc));
+
+      // Covers are exported at a 612 x 792 artboard but use a 2x raster image.
+      // Force the actual artboard size here so mobile never interprets the retina
+      // image as a 1224 x 1584 page and shrinks it to half size.
+      if (isCover) {
+        setPageSize({ width: 612, height: 792 });
+      } else {
+        setPageSize(measureDocument(doc));
+      }
     } catch {
-      setPageSize((current) => current);
+      if (isCover) setPageSize({ width: 612, height: 792 });
     }
 
     if (viewerRef.current) {
       viewerRef.current.scrollLeft = 0;
       viewerRef.current.scrollTop = 0;
     }
-  }, []);
+  }, [isCover]);
 
   const goTo = useCallback((nextIndex) => {
     setIndex(Math.max(0, Math.min(total - 1, nextIndex)));
@@ -231,49 +210,6 @@ export default function MobilePortfolioViewer({
     });
   }, [total]);
 
-  const toggleFullscreen = useCallback(async () => {
-    const element = viewerRef.current;
-    if (!element) return;
-
-    const active = document.fullscreenElement || document.webkitFullscreenElement;
-
-    if (active) {
-      try {
-        if (document.exitFullscreen) await document.exitFullscreen();
-        else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-      } catch {
-        // ignore
-      }
-      return;
-    }
-
-    if (isFocusMode) {
-      setIsFocusMode(false);
-      return;
-    }
-
-    // Try true browser fullscreen first where Safari exposes it.
-    if (fullscreenSupported) {
-      try {
-        if (element.requestFullscreen) {
-          await element.requestFullscreen();
-          return;
-        }
-        if (element.webkitRequestFullscreen) {
-          await element.webkitRequestFullscreen();
-          return;
-        }
-      } catch {
-        // iPhone Safari may expose an API that still rejects element fullscreen.
-      }
-    }
-
-    // Reliable iPhone fallback: cover the complete web viewport, hide the site
-    // header, and lock body scrolling. Safari's own browser chrome is controlled
-    // by Safari and cannot be removed by webpage JavaScript.
-    setIsFocusMode(true);
-  }, [fullscreenSupported, isFocusMode]);
-
   if (error) {
     return <div style={{ padding: 20 }}>Portfolio viewer error: {error}</div>;
   }
@@ -282,7 +218,7 @@ export default function MobilePortfolioViewer({
     return <div style={{ padding: 20 }}>Loading portfolio…</div>;
   }
 
-  const controlsTop = isImmersive
+  const controlsTop = isLandscape
     ? "calc(10px + env(safe-area-inset-top, 0px))"
     : "calc(70px + env(safe-area-inset-top, 0px))";
 
@@ -309,29 +245,29 @@ export default function MobilePortfolioViewer({
       ref={viewerRef}
       className="mobile-portfolio-viewer"
       style={{
-        position: isImmersive ? "fixed" : "relative",
-        inset: isImmersive ? 0 : undefined,
+        position: isLandscape ? "fixed" : "relative",
+        inset: isLandscape ? 0 : undefined,
         width: "100vw",
-        height: isImmersive ? "100dvh" : viewerHeight,
+        height: isLandscape ? "100dvh" : viewerHeight,
         overflowX: isLandscape || isCover ? "hidden" : "auto",
         overflowY: "hidden",
         background: "#fff",
         WebkitOverflowScrolling: "touch",
         touchAction: isLandscape || isCover ? "pan-y" : "pan-x",
         scrollSnapType: !isLandscape && !isCover ? "x proximity" : "none",
-        zIndex: isImmersive ? 5000 : 1,
+        zIndex: isLandscape ? 5000 : 1,
       }}
     >
       <style jsx global>{`
-        body.portfolio-mobile-immersive .nav-card-top {
+        body.portfolio-mobile-landscape .nav-card-top {
           display: none !important;
         }
 
-        body.portfolio-mobile-immersive main {
+        body.portfolio-mobile-landscape main {
           padding-top: 0 !important;
         }
 
-        body.portfolio-mobile-immersive {
+        body.portfolio-mobile-landscape {
           overflow: hidden !important;
         }
 
@@ -393,15 +329,6 @@ export default function MobilePortfolioViewer({
           zIndex: 5200,
         }}
       >
-        <button
-          type="button"
-          onClick={toggleFullscreen}
-          aria-label={isFullscreen || isFocusMode ? "Exit fullscreen view" : "Enter fullscreen view"}
-          style={buttonStyle(false)}
-        >
-          {isFullscreen || isFocusMode ? "×" : "⛶"}
-        </button>
-
         <button type="button" onClick={() => goTo(0)} disabled={index === 0} style={buttonStyle(index === 0)} aria-label="First page">⏮</button>
         <button type="button" onClick={() => goTo(index - 1)} disabled={index === 0} style={buttonStyle(index === 0)} aria-label="Previous page">←</button>
         <button type="button" onClick={() => goTo(index + 1)} disabled={index >= total - 1} style={buttonStyle(index >= total - 1)} aria-label="Next page">→</button>
