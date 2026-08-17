@@ -1,10 +1,9 @@
 /* Responsive cleanup for the 3D Works / 3D Printing page */
 
-/* Layout reserves 44px for this page's fixed subnav. Because the subnav still
-   participates in the page flow, pull this page back up by that same amount so
-   the category bar sits directly beneath the 60px main header. */
+/* Layout reserves 60px for the fixed main header. Pull this page back by the
+   same amount so its category bar begins immediately beneath the header. */
 .three-d-printing-page {
-  margin-top: -44px;
+  margin-top: -60px;
 }
 
 /* Keep the category subnav locked to the true viewport center. */
@@ -47,16 +46,16 @@
   padding-right: 8px !important;
 }
 
-/* Conference logos should shrink with the viewport instead of colliding with filters. */
+/* Conference logos scale with the viewport and stay fully below the category bar. */
 .three-d-printing-page .nav-card-mid + div {
   padding-left: clamp(24px, 4vw, 80px) !important;
   padding-right: clamp(24px, 4vw, 80px) !important;
 }
 
 .three-d-printing-page .nav-card-mid + div > div {
-  min-height: clamp(104px, 10vw, 150px) !important;
-  margin-top: clamp(6px, 1vw, 14px) !important;
-  margin-bottom: -14px !important;
+  min-height: 0 !important;
+  margin-top: clamp(14px, 1.4vw, 22px) !important;
+  margin-bottom: clamp(8px, 1vw, 14px) !important;
 }
 
 .three-d-printing-page .nav-card-mid + div img {
@@ -89,11 +88,6 @@
 
 /* Medium desktop / laptop sizes: reduce the logo zone further. */
 @media (max-width: 1450px) {
-  .three-d-printing-page .nav-card-mid + div > div {
-    min-height: 108px !important;
-    margin-bottom: -8px !important;
-  }
-
   .three-d-printing-page .nav-card-mid + div img {
     height: clamp(100px, 10vw, 145px) !important;
   }
@@ -114,8 +108,8 @@
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
-    min-height: 98px !important;
-    margin-bottom: 0 !important;
+    margin-top: 12px !important;
+    margin-bottom: 8px !important;
   }
 
   .three-d-printing-page .isp-subnav-row {
@@ -150,7 +144,8 @@
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
-    min-height: 84px !important;
+    margin-top: 10px !important;
+    margin-bottom: 6px !important;
   }
 
   .three-d-printing-page .isp-subnav-row {
