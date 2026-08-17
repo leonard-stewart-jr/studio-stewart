@@ -1,0 +1,159 @@
+/* Responsive cleanup for the 3D Works / 3D Printing page */
+
+/* Keep the category subnav locked to the true viewport center. */
+.three-d-printing-page .nav-card-mid {
+  position: relative;
+}
+
+.three-d-printing-page .nav-card-mid > div:nth-child(2) {
+  position: absolute !important;
+  left: 50% !important;
+  top: 0 !important;
+  width: min(560px, calc(100vw - 180px)) !important;
+  height: 44px !important;
+  margin: 0 !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.three-d-printing-page .nav-card-mid > div:first-child,
+.three-d-printing-page .nav-card-mid > div:last-child {
+  flex-basis: 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+.three-d-printing-page .isp-section-tabs {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+}
+
+.three-d-printing-page .isp-tab-btn {
+  width: 100% !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* Conference logos should shrink with the viewport instead of colliding with filters. */
+.three-d-printing-page .nav-card-mid + div {
+  padding-left: clamp(24px, 4vw, 80px) !important;
+  padding-right: clamp(24px, 4vw, 80px) !important;
+}
+
+.three-d-printing-page .nav-card-mid + div > div {
+  min-height: clamp(104px, 10vw, 150px) !important;
+  margin-top: clamp(6px, 1vw, 14px) !important;
+  margin-bottom: -14px !important;
+}
+
+.three-d-printing-page .nav-card-mid + div img {
+  height: clamp(105px, 11vw, 180px) !important;
+  max-width: min(30vw, 300px) !important;
+  object-fit: contain !important;
+}
+
+/* Let league filters breathe and wrap cleanly instead of running underneath logos. */
+.three-d-printing-page .isp-subnav-row {
+  width: min(900px, calc(100vw - 48px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  column-gap: clamp(4px, 1vw, 14px) !important;
+  row-gap: 2px !important;
+  box-sizing: border-box !important;
+}
+
+.three-d-printing-page .isp-subnav-btn {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: clamp(6px, 0.8vw, 12px) !important;
+  padding-right: clamp(6px, 0.8vw, 12px) !important;
+  white-space: nowrap !important;
+}
+
+/* Medium desktop / laptop sizes: reduce the logo zone further. */
+@media (max-width: 1450px) {
+  .three-d-printing-page .nav-card-mid + div > div {
+    min-height: 108px !important;
+    margin-bottom: -8px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img {
+    height: clamp(100px, 10vw, 145px) !important;
+  }
+
+  .three-d-printing-page .isp-subnav-row {
+    width: min(820px, calc(100vw - 40px)) !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .three-d-printing-page .nav-card-mid > div:nth-child(2) {
+    width: min(500px, calc(100vw - 100px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img {
+    height: clamp(92px, 12vw, 125px) !important;
+    max-width: 34vw !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div {
+    min-height: 98px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .three-d-printing-page .isp-subnav-row {
+    width: calc(100vw - 28px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .three-d-printing-page .nav-card-mid > div:nth-child(2) {
+    width: calc(100vw - 24px) !important;
+  }
+
+  .three-d-printing-page .isp-tab-btn {
+    font-size: 11px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+  .three-d-printing-page .isp-tab-btn.active,
+  .three-d-printing-page .isp-tab-btn[aria-current="page"] {
+    font-size: 12px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img {
+    height: 92px !important;
+    max-width: 38vw !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div {
+    min-height: 84px !important;
+  }
+
+  .three-d-printing-page .isp-subnav-row {
+    width: calc(100vw - 16px) !important;
+    column-gap: 2px !important;
+  }
+
+  .three-d-printing-page .isp-subnav-btn {
+    font-size: 10px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+}
