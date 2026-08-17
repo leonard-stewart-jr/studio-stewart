@@ -46,7 +46,8 @@
   padding-right: 8px !important;
 }
 
-/* Conference logos scale with the viewport and stay fully below the category bar. */
+/* Conference logos: intentionally compact so they identify the conference
+   without dominating the gallery or creating a large dead zone. */
 .three-d-printing-page .nav-card-mid + div {
   padding-left: clamp(24px, 4vw, 80px) !important;
   padding-right: clamp(24px, 4vw, 80px) !important;
@@ -54,13 +55,13 @@
 
 .three-d-printing-page .nav-card-mid + div > div {
   min-height: 0 !important;
-  margin-top: clamp(14px, 1.4vw, 22px) !important;
-  margin-bottom: clamp(8px, 1vw, 14px) !important;
+  margin-top: clamp(8px, 0.8vw, 12px) !important;
+  margin-bottom: clamp(2px, 0.4vw, 6px) !important;
 }
 
 .three-d-printing-page .nav-card-mid + div img {
-  height: clamp(105px, 11vw, 180px) !important;
-  max-width: min(30vw, 300px) !important;
+  height: clamp(82px, 7.5vw, 122px) !important;
+  max-width: min(24vw, 220px) !important;
   object-fit: contain !important;
 }
 
@@ -86,10 +87,15 @@
   white-space: nowrap !important;
 }
 
-/* Medium desktop / laptop sizes: reduce the logo zone further. */
+/* Medium desktop / laptop sizes: keep the conference identity compact. */
 @media (max-width: 1450px) {
   .three-d-printing-page .nav-card-mid + div img {
-    height: clamp(100px, 10vw, 145px) !important;
+    height: clamp(78px, 7.2vw, 108px) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div {
+    margin-top: 8px !important;
+    margin-bottom: 2px !important;
   }
 
   .three-d-printing-page .isp-subnav-row {
@@ -103,13 +109,13 @@
   }
 
   .three-d-printing-page .nav-card-mid + div img {
-    height: clamp(92px, 12vw, 125px) !important;
-    max-width: 34vw !important;
+    height: clamp(72px, 9vw, 92px) !important;
+    max-width: 28vw !important;
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
-    margin-top: 12px !important;
-    margin-bottom: 8px !important;
+    margin-top: 7px !important;
+    margin-bottom: 2px !important;
   }
 
   .three-d-printing-page .isp-subnav-row {
@@ -139,13 +145,13 @@
   }
 
   .three-d-printing-page .nav-card-mid + div img {
-    height: 92px !important;
-    max-width: 38vw !important;
+    height: 70px !important;
+    max-width: 32vw !important;
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
-    margin-top: 10px !important;
-    margin-bottom: 6px !important;
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
   }
 
   .three-d-printing-page .isp-subnav-row {
