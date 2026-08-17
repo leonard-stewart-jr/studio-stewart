@@ -1,0 +1,16 @@
+/* Portfolio spreads with black page backgrounds should keep the surrounding viewer black too.
+   This is most visible in Fit Height mode, where the spread does not fill the viewport width. */
+.portfolio-viewer-shell:has(iframe[title="spring2021"]),
+.portfolio-viewer-shell:has(iframe[title="fall2021"]),
+.portfolio-viewer-shell:has(iframe[title="spring2024-2"]) {
+  background: #000 !important;
+}
+
+.portfolio-viewer-shell:fullscreen:has(iframe[title="spring2021"]),
+.portfolio-viewer-shell:fullscreen:has(iframe[title="fall2021"]),
+.portfolio-viewer-shell:fullscreen:has(iframe[title="spring2024-2"]),
+.portfolio-viewer-shell:-webkit-full-screen:has(iframe[title="spring2021"]),
+.portfolio-viewer-shell:-webkit-full-screen:has(iframe[title="fall2021"]),
+.portfolio-viewer-shell:-webkit-full-screen:has(iframe[title="spring2024-2"]) {
+  background: #000 !important;
+}
