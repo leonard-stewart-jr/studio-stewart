@@ -102,6 +102,10 @@ export default function PortfolioViewer({
   // Fullscreen
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fullscreenHover, setFullscreenHover] = useState(false);
+  const [fullscreenSupported, setFullscreenSupported] = useState(false);
+
+  // Compact controls for narrow screens
+  const [isCompactControls, setIsCompactControls] = useState(false);
 
   // Bump this to force iframe reloads
   const [reloadCounter, setReloadCounter] = useState(0);
@@ -127,6 +131,19 @@ export default function PortfolioViewer({
     return undefined;
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const updateCompactControls = () => {
+      setIsCompactControls(window.innerWidth <= 700);
+    };
+
+    updateCompactControls();
+    window.addEventListener("resize", updateCompactControls);
+
+    return () => window.removeEventListener("resize", updateCompactControls);
+  }, []);
+
   // iOS detection
   const [isIOS, setIsIOS] = useState(false);
   useEffect(() => {
@@ -137,6 +154,11 @@ export default function PortfolioViewer({
 
     setIsIOS(Boolean(isiOSUA));
   }, []);
+
+  useEffect(() => {
+    const el = viewerRef.current;
+    setFullscreenSupported(Boolean(el && (el.requestFullscreen || el.webkitRequestFullscreen)));
+  }, [manifest]);
 
   const getHashId = () => {
     if (typeof window === "undefined") return "";
@@ -515,7 +537,9 @@ export default function PortfolioViewer({
 
     window.addEventListener("resize", onResize);
 
-    return () => window.removeEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
   }, [measureIframePage, recomputeScale]);
 
   useEffect(() => {
@@ -833,12 +857,12 @@ export default function PortfolioViewer({
     color: pageThemeColor,
     border: `1px solid ${pageThemeColor}`,
     borderRadius: 5,
-    padding: "7px 10px",
+    padding: isCompactControls ? "6px 8px" : "7px 10px",
     cursor: disabled ? "not-allowed" : "pointer",
     fontFamily: "coolvetica, sans-serif",
-    fontSize: 12,
+    fontSize: isCompactControls ? 11 : 12,
     lineHeight: 1,
-    minHeight: 32,
+    minHeight: isCompactControls ? 30 : 32,
     opacity: disabled ? 0.4 : 1,
     transition: "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease",
     boxSizing: "border-box"
@@ -846,10 +870,10 @@ export default function PortfolioViewer({
 
   const fullscreenBtnStyle = {
     ...controlBtnStyle(false),
-    width: 36,
-    minWidth: 36,
-    height: 32,
-    minHeight: 32,
+    width: isCompactControls ? 32 : 36,
+    minWidth: isCompactControls ? 32 : 36,
+    height: isCompactControls ? 30 : 32,
+    minHeight: isCompactControls ? 30 : 32,
     padding: 0,
     display: "inline-flex",
     alignItems: "center",
@@ -860,18 +884,6 @@ export default function PortfolioViewer({
       : colorToRgba(pageThemeColor, 0.16),
     transition:
       "background 0.18s ease, opacity 0.18s ease, border-color 0.18s ease"
-  };
-
-  const fullscreenControlWrapStyle = {
-    position: "fixed",
-    top: controlsTop,
-    left: "50%",
-    transform: "translateX(-50%)",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 2100,
-    pointerEvents: "auto"
   };
 
   const fullscreenTooltipStyle = {
@@ -892,11 +904,24 @@ export default function PortfolioViewer({
     textTransform: "uppercase",
     lineHeight: 1,
     whiteSpace: "nowrap",
-    opacity: fullscreenHover ? 1 : 0,
+    opacity: isCompactControls ? 0 : (fullscreenHover ? 1 : 0),
     pointerEvents: "none",
     transition: "opacity 0.16s ease, transform 0.16s ease",
     zIndex: 2200,
     boxShadow: "0 3px 10px rgba(0,0,0,0.12)"
+  };
+
+  const controlsWrapStyle = {
+    position: "fixed",
+    right: isCompactControls
+      ? "calc(12px + env(safe-area-inset-right, 0px))"
+      : 36,
+    top: controlsTop,
+    display: "flex",
+    alignItems: "center",
+    gap: isCompactControls ? 4 : 6,
+    zIndex: 2100,
+    pointerEvents: "auto"
   };
 
   return (
@@ -1044,38 +1069,8 @@ export default function PortfolioViewer({
         }}
       />
 
-      <div style={fullscreenControlWrapStyle}>
-        <button
-          type="button"
-          onClick={toggleFullscreen}
-          onMouseEnter={() => setFullscreenHover(true)}
-          onMouseLeave={() => setFullscreenHover(false)}
-          onFocus={() => setFullscreenHover(true)}
-          onBlur={() => setFullscreenHover(false)}
-          style={fullscreenBtnStyle}
-          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        >
-          {isFullscreen ? "×" : "⛶"}
-        </button>
-
-        <div style={fullscreenTooltipStyle}>
-          {isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: "fixed",
-          right: 36,
-          top: controlsTop,
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          zIndex: 2000,
-          pointerEvents: "auto"
-        }}
-      >
-        {showProjectTag && (
+      <div style={controlsWrapStyle}>
+        {showProjectTag && !isCompactControls && (
           <div
             style={projectTagStyle}
             aria-label={`${semesterLabel}${spreadLabel ? `, ${spreadLabel}` : ""}`}
@@ -1104,6 +1099,27 @@ export default function PortfolioViewer({
           >
             {getEffectiveFitMode() === "height" ? "Fit: Height" : "Fit: Width"}
           </button>
+        )}
+
+        {(fullscreenSupported || isFullscreen) && (
+          <div style={{ position: "relative", display: "inline-flex" }}>
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              onMouseEnter={() => setFullscreenHover(true)}
+              onMouseLeave={() => setFullscreenHover(false)}
+              onFocus={() => setFullscreenHover(true)}
+              onBlur={() => setFullscreenHover(false)}
+              style={fullscreenBtnStyle}
+              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              {isFullscreen ? "×" : "⛶"}
+            </button>
+
+            <div style={fullscreenTooltipStyle}>
+              {isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            </div>
+          </div>
         )}
 
         <button
