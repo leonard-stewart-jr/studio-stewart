@@ -70,6 +70,15 @@
   top: 52px !important;
 }
 
+/* The NBA conference source images have a tighter crop than the NFL artwork,
+   so the same CSS height makes them look noticeably larger. Normalize their
+   visible scale separately while leaving the shared layout box untouched. */
+.three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+.three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+  height: clamp(68px, 6.15vw, 100px) !important;
+  top: 52px !important;
+}
+
 /* Let league filters breathe and wrap cleanly instead of running underneath logos. */
 .three-d-printing-page .isp-subnav-row {
   width: min(900px, calc(100vw - 48px)) !important;
@@ -99,6 +108,12 @@
     top: 44px !important;
   }
 
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+    height: clamp(66px, 5.9vw, 90px) !important;
+    top: 44px !important;
+  }
+
   .three-d-printing-page .nav-card-mid + div > div {
     margin-top: 8px !important;
     margin-bottom: 2px !important;
@@ -117,6 +132,12 @@
   .three-d-printing-page .nav-card-mid + div img {
     height: clamp(72px, 9vw, 92px) !important;
     max-width: 28vw !important;
+    top: 35px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+    height: clamp(60px, 7.4vw, 76px) !important;
     top: 35px !important;
   }
 
@@ -154,6 +175,12 @@
   .three-d-printing-page .nav-card-mid + div img {
     height: 70px !important;
     max-width: 32vw !important;
+    top: 22px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+    height: 58px !important;
     top: 22px !important;
   }
 
