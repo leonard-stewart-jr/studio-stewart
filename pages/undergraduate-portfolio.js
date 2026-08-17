@@ -51,47 +51,11 @@ export default function UndergraduatePortfolioPage() {
     html.style.overflow = "hidden";
     html.style.height = "100dvh";
 
-    // iPhone Safari can ignore user-scalable=no during pinch gestures. Prevent
-    // the browser-level gesture here so only MobilePortfolioViewer handles the
-    // two-finger zoom. Do not stop propagation: the viewer still receives the
-    // same touches and scales only the portfolio artwork.
-    const preventNativeGesture = (event) => {
-      if (event.cancelable) event.preventDefault();
-    };
-
-    const preventNativePinch = (event) => {
-      if (event.touches && event.touches.length > 1 && event.cancelable) {
-        event.preventDefault();
-      }
-    };
-
-    document.addEventListener("gesturestart", preventNativeGesture, {
-      passive: false,
-      capture: true,
-    });
-    document.addEventListener("gesturechange", preventNativeGesture, {
-      passive: false,
-      capture: true,
-    });
-    document.addEventListener("gestureend", preventNativeGesture, {
-      passive: false,
-      capture: true,
-    });
-    document.addEventListener("touchmove", preventNativePinch, {
-      passive: false,
-      capture: true,
-    });
-
     return () => {
       body.style.overflow = previousBodyOverflow;
       body.style.height = previousBodyHeight;
       html.style.overflow = previousHtmlOverflow;
       html.style.height = previousHtmlHeight;
-
-      document.removeEventListener("gesturestart", preventNativeGesture, true);
-      document.removeEventListener("gesturechange", preventNativeGesture, true);
-      document.removeEventListener("gestureend", preventNativeGesture, true);
-      document.removeEventListener("touchmove", preventNativePinch, true);
     };
   }, [useMobileViewer]);
 
