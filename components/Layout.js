@@ -11,14 +11,13 @@ export default function Layout({ children, disableStickyHeader = false, hasFixed
 
   // Header height (must match HeaderBar height)
   const HEADER_HEIGHT = 60;
-  // Mid/nav (subnav) height used by 3D Printing page when pinned
-  const MID_NAV_HEIGHT = 44;
 
   // Keep the prop for compatibility, but header is now fixed site-wide.
   const sticky = !disableStickyHeader;
 
-  // Compute top padding for main: header + (fixed mid-nav if requested)
-  const mainPaddingTop = HEADER_HEIGHT + (hasFixedSubnav ? MID_NAV_HEIGHT : 0);
+  // Fixed subnavs position themselves below the header, so main only needs
+  // the header offset. Adding the subnav height here creates a duplicate gap.
+  const mainPaddingTop = HEADER_HEIGHT;
 
   return (
     <>
@@ -35,7 +34,6 @@ export default function Layout({ children, disableStickyHeader = false, hasFixed
         sidebarPaddingLeft={sidebarPaddingLeft}
         headerHeight={HEADER_HEIGHT}
       />
-      {/* Ensure main content is pushed below the fixed header (and fixed mid-nav if present) so it is not covered */}
       <main style={{ paddingTop: mainPaddingTop }}>
         {children}
       </main>
