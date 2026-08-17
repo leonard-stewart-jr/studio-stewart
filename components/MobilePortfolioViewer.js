@@ -5,6 +5,23 @@ function parsePx(value) {
   return Number.isFinite(n) ? n : null;
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function touchDistance(a, b) {
+  const dx = b.clientX - a.clientX;
+  const dy = b.clientY - a.clientY;
+  return Math.hypot(dx, dy);
+}
+
+function touchMidpoint(a, b) {
+  return {
+    x: (a.clientX + b.clientX) / 2,
+    y: (a.clientY + b.clientY) / 2,
+  };
+}
+
 function measureDocument(doc) {
   if (!doc?.body) return { width: 1224, height: 792 };
 
@@ -72,12 +89,14 @@ export default function MobilePortfolioViewer({
 }) {
   const viewerRef = useRef(null);
   const iframeRef = useRef(null);
+  const pinchRef = useRef(null);
 
   const [manifest, setManifest] = useState(null);
   const [index, setIndex] = useState(0);
   const [pageSize, setPageSize] = useState({ width: 1224, height: 792 });
   const [viewport, setViewport] = useState({ width: 390, height: 700 });
   const [isLandscape, setIsLandscape] = useState(false);
+  const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -150,7 +169,7 @@ export default function MobilePortfolioViewer({
 
   const viewerHeight = isLandscape ? viewport.height : Math.max(1, viewport.height - 60);
 
-  const scale = useMemo(() => {
+  const baseScale = useMemo(() => {
     const naturalWidth = pageSize.width || 1224;
     const naturalHeight = pageSize.height || 792;
     const availableWidth = Math.max(1, viewport.width);
@@ -161,18 +180,88 @@ export default function MobilePortfolioViewer({
     }
 
     if (isCover) {
-      // Cover/back cover are true 8.5x11 pages. In portrait, fill the viewer
-      // as much as possible while keeping the entire page visible.
       return Math.min(availableWidth / naturalWidth, availableHeight / naturalHeight);
     }
 
-    // A normal 11x17 spread is two 8.5x11 pages side by side.
-    // Portrait shows one page-width at a time and pans horizontally to page two.
     return availableWidth / (naturalWidth / 2);
   }, [pageSize.width, pageSize.height, viewport.width, viewerHeight, isLandscape, isCover]);
 
-  const scaledWidth = Math.max(1, pageSize.width * scale);
-  const scaledHeight = Math.max(1, pageSize.height * scale);
+  const displayScale = baseScale * zoom;
+  const scaledWidth = Math.max(1, pageSize.width * displayScale);
+  const scaledHeight = Math.max(1, pageSize.height * displayScale);
+  const zoomed = zoom > 1.001;
+
+  useEffect(() => {
+    setZoom(1);
+    pinchRef.current = null;
+    requestAnimationFrame(() => {
+      if (viewerRef.current) {
+        viewerRef.current.scrollLeft = 0;
+        viewerRef.current.scrollTop = 0;
+      }
+    });
+  }, [index, isLandscape]);
+
+  useEffect(() => {
+    const viewer = viewerRef.current;
+    if (!viewer) return undefined;
+
+    function onTouchStart(event) {
+      if (event.touches.length !== 2) return;
+
+      event.preventDefault();
+      const distance = touchDistance(event.touches[0], event.touches[1]);
+      const midpoint = touchMidpoint(event.touches[0], event.touches[1]);
+      const rect = viewer.getBoundingClientRect();
+      const localX = midpoint.x - rect.left;
+      const localY = midpoint.y - rect.top;
+
+      pinchRef.current = {
+        distance,
+        zoom,
+        contentX: (viewer.scrollLeft + localX) / zoom,
+        contentY: (viewer.scrollTop + localY) / zoom,
+        localX,
+        localY,
+      };
+    }
+
+    function onTouchMove(event) {
+      if (event.touches.length !== 2 || !pinchRef.current) return;
+
+      event.preventDefault();
+      const start = pinchRef.current;
+      const distance = touchDistance(event.touches[0], event.touches[1]);
+      if (!start.distance || !distance) return;
+
+      const nextZoom = clamp(start.zoom * (distance / start.distance), 1, 4);
+      setZoom(nextZoom);
+
+      requestAnimationFrame(() => {
+        if (!viewerRef.current) return;
+        viewerRef.current.scrollLeft = Math.max(0, start.contentX * nextZoom - start.localX);
+        viewerRef.current.scrollTop = Math.max(0, start.contentY * nextZoom - start.localY);
+      });
+    }
+
+    function onTouchEnd(event) {
+      if (event.touches.length < 2) {
+        pinchRef.current = null;
+      }
+    }
+
+    viewer.addEventListener("touchstart", onTouchStart, { passive: false });
+    viewer.addEventListener("touchmove", onTouchMove, { passive: false });
+    viewer.addEventListener("touchend", onTouchEnd, { passive: false });
+    viewer.addEventListener("touchcancel", onTouchEnd, { passive: false });
+
+    return () => {
+      viewer.removeEventListener("touchstart", onTouchStart);
+      viewer.removeEventListener("touchmove", onTouchMove);
+      viewer.removeEventListener("touchend", onTouchEnd);
+      viewer.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [zoom]);
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current;
@@ -182,9 +271,6 @@ export default function MobilePortfolioViewer({
       const doc = iframe.contentDocument || iframe.contentWindow?.document;
       hideInnerScrollbars(doc);
 
-      // Covers are exported at a 612 x 792 artboard but use a 2x raster image.
-      // Force the actual artboard size here so mobile never interprets the retina
-      // image as a 1224 x 1584 page and shrinks it to half size.
       if (isCover) {
         setPageSize({ width: 612, height: 792 });
       } else {
@@ -202,12 +288,6 @@ export default function MobilePortfolioViewer({
 
   const goTo = useCallback((nextIndex) => {
     setIndex(Math.max(0, Math.min(total - 1, nextIndex)));
-    requestAnimationFrame(() => {
-      if (viewerRef.current) {
-        viewerRef.current.scrollLeft = 0;
-        viewerRef.current.scrollTop = 0;
-      }
-    });
   }, [total]);
 
   if (error) {
@@ -240,6 +320,8 @@ export default function MobilePortfolioViewer({
     backdropFilter: "blur(8px)",
   });
 
+  const centerContent = !zoomed && (isLandscape || isCover);
+
   return (
     <div
       ref={viewerRef}
@@ -249,13 +331,14 @@ export default function MobilePortfolioViewer({
         inset: isLandscape ? 0 : undefined,
         width: "100vw",
         height: isLandscape ? "100dvh" : viewerHeight,
-        overflowX: isLandscape || isCover ? "hidden" : "auto",
-        overflowY: "hidden",
+        overflowX: isLandscape && !zoomed ? "hidden" : "auto",
+        overflowY: zoomed ? "auto" : "hidden",
         background: "#fff",
         WebkitOverflowScrolling: "touch",
-        touchAction: isLandscape || isCover ? "pan-y" : "pan-x",
-        scrollSnapType: !isLandscape && !isCover ? "x proximity" : "none",
+        touchAction: "pan-x pan-y",
+        scrollSnapType: !zoomed && !isLandscape && !isCover ? "x proximity" : "none",
         zIndex: isLandscape ? 5000 : 1,
+        overscrollBehavior: "contain",
       }}
     >
       <style jsx global>{`
@@ -279,6 +362,8 @@ export default function MobilePortfolioViewer({
 
         .mobile-portfolio-viewer {
           scrollbar-width: none;
+          -webkit-user-select: none;
+          user-select: none;
         }
       `}</style>
 
@@ -287,8 +372,8 @@ export default function MobilePortfolioViewer({
           position: "relative",
           width: scaledWidth,
           height: scaledHeight,
-          marginLeft: isLandscape || isCover ? Math.max(0, (viewport.width - scaledWidth) / 2) : 0,
-          marginTop: isLandscape || isCover ? Math.max(0, (viewerHeight - scaledHeight) / 2) : 0,
+          marginLeft: centerContent ? Math.max(0, (viewport.width - scaledWidth) / 2) : 0,
+          marginTop: centerContent ? Math.max(0, (viewerHeight - scaledHeight) / 2) : 0,
           scrollSnapAlign: "start",
         }}
       >
@@ -296,7 +381,7 @@ export default function MobilePortfolioViewer({
           style={{
             width: pageSize.width,
             height: pageSize.height,
-            transform: `scale(${scale})`,
+            transform: `scale(${displayScale})`,
             transformOrigin: "top left",
             background: "#fff",
           }}
