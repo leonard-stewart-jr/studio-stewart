@@ -1,5 +1,12 @@
 /* Responsive cleanup for the 3D Works / 3D Printing page */
 
+/* Layout reserves 44px for this page's fixed subnav. Because the subnav still
+   participates in the page flow, pull this page back up by that same amount so
+   the category bar sits directly beneath the 60px main header. */
+.three-d-printing-page {
+  margin-top: -44px;
+}
+
 /* Keep the category subnav locked to the true viewport center. */
 .three-d-printing-page .nav-card-mid {
   position: relative;
