@@ -59,14 +59,15 @@
   margin-bottom: clamp(2px, 0.4vw, 6px) !important;
 }
 
-/* Move only the logo artwork, not its layout box. This keeps the filters and
-   print grid fixed while balancing the whitespace above and below the logos. */
+/* Position only the logo artwork inside its existing layout box. The offset is
+   tuned so the visible whitespace above the logo and below it to the first
+   card row is visually even, without moving the filters or print grid. */
 .three-d-printing-page .nav-card-mid + div img {
   height: clamp(82px, 7.5vw, 122px) !important;
   max-width: min(24vw, 220px) !important;
   object-fit: contain !important;
   position: relative !important;
-  top: 58px !important;
+  top: 52px !important;
 }
 
 /* Let league filters breathe and wrap cleanly instead of running underneath logos. */
@@ -95,7 +96,7 @@
 @media (max-width: 1450px) {
   .three-d-printing-page .nav-card-mid + div img {
     height: clamp(78px, 7.2vw, 108px) !important;
-    top: 50px !important;
+    top: 44px !important;
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
@@ -116,7 +117,7 @@
   .three-d-printing-page .nav-card-mid + div img {
     height: clamp(72px, 9vw, 92px) !important;
     max-width: 28vw !important;
-    top: 40px !important;
+    top: 35px !important;
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
@@ -153,7 +154,7 @@
   .three-d-printing-page .nav-card-mid + div img {
     height: 70px !important;
     max-width: 32vw !important;
-    top: 26px !important;
+    top: 22px !important;
   }
 
   .three-d-printing-page .nav-card-mid + div > div {
