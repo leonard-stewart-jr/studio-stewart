@@ -1,58 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PortfolioViewer from "../components/PortfolioViewer";
+import MobilePortfolioViewer from "../components/MobilePortfolioViewer";
 
 export default function UndergraduatePortfolioPage() {
+  const [useMobileViewer, setUseMobileViewer] = useState(false);
+
   useEffect(() => {
-    let frame = null;
+    if (typeof window === "undefined") return undefined;
 
-    const alignFullscreenControl = () => {
-      if (frame) cancelAnimationFrame(frame);
+    const coarsePointer = window.matchMedia
+      ? window.matchMedia("(pointer: coarse)")
+      : null;
 
-      frame = requestAnimationFrame(() => {
-        const shell = document.querySelector(".portfolio-viewer-shell");
-        if (!shell) return;
+    const updateViewer = () => {
+      const touchCapable = coarsePointer
+        ? coarsePointer.matches
+        : ("ontouchstart" in window || navigator.maxTouchPoints > 0);
 
-        const fullscreenButton = shell.querySelector(
-          'button[aria-label="Enter fullscreen"], button[aria-label="Exit fullscreen"]'
-        );
-        if (!fullscreenButton) return;
-
-        const fullscreenWrap = fullscreenButton.parentElement;
-        if (!fullscreenWrap) return;
-
-        const toolbarButton =
-          shell.querySelector('button[aria-label="Toggle fit mode"]') ||
-          shell.querySelector('button[aria-label="First page"]');
-        const toolbar = toolbarButton?.parentElement;
-        if (!toolbar) return;
-
-        const toolbarRect = toolbar.getBoundingClientRect();
-        const gap = 6;
-
-        fullscreenWrap.style.left = "auto";
-        fullscreenWrap.style.transform = "none";
-        fullscreenWrap.style.right = `${Math.max(0, window.innerWidth - toolbarRect.left + gap)}px`;
-      });
+      setUseMobileViewer(Boolean(touchCapable && window.innerWidth <= 1024));
     };
 
-    alignFullscreenControl();
+    updateViewer();
+    window.addEventListener("resize", updateViewer);
 
-    const observer = new MutationObserver(alignFullscreenControl);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["aria-label"]
-    });
-
-    window.addEventListener("resize", alignFullscreenControl);
+    if (coarsePointer && typeof coarsePointer.addEventListener === "function") {
+      coarsePointer.addEventListener("change", updateViewer);
+    }
 
     return () => {
-      if (frame) cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("resize", alignFullscreenControl);
+      window.removeEventListener("resize", updateViewer);
+      if (coarsePointer && typeof coarsePointer.removeEventListener === "function") {
+        coarsePointer.removeEventListener("change", updateViewer);
+      }
     };
   }, []);
+
+  if (useMobileViewer) {
+    return <MobilePortfolioViewer manifestUrl="/portfolio/undergraduate/manifest.json" />;
+  }
 
   return <PortfolioViewer manifestUrl="/portfolio/undergraduate/manifest.json" />;
 }
