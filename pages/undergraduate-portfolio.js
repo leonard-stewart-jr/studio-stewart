@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import PortfolioViewer from "../components/PortfolioViewer";
 import MobilePortfolioViewer from "../components/MobilePortfolioViewer";
@@ -35,9 +36,22 @@ export default function UndergraduatePortfolioPage() {
     };
   }, []);
 
-  if (useMobileViewer) {
-    return <MobilePortfolioViewer manifestUrl="/portfolio/undergraduate/manifest.json" />;
-  }
+  return (
+    <>
+      {useMobileViewer && (
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+          />
+        </Head>
+      )}
 
-  return <PortfolioViewer manifestUrl="/portfolio/undergraduate/manifest.json" />;
+      {useMobileViewer ? (
+        <MobilePortfolioViewer manifestUrl="/portfolio/undergraduate/manifest.json" />
+      ) : (
+        <PortfolioViewer manifestUrl="/portfolio/undergraduate/manifest.json" />
+      )}
+    </>
+  );
 }
