@@ -36,6 +36,29 @@ export default function UndergraduatePortfolioPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!useMobileViewer || typeof document === "undefined") return undefined;
+
+    const body = document.body;
+    const html = document.documentElement;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyHeight = body.style.height;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousHtmlHeight = html.style.height;
+
+    body.style.overflow = "hidden";
+    body.style.height = "100dvh";
+    html.style.overflow = "hidden";
+    html.style.height = "100dvh";
+
+    return () => {
+      body.style.overflow = previousBodyOverflow;
+      body.style.height = previousBodyHeight;
+      html.style.overflow = previousHtmlOverflow;
+      html.style.height = previousHtmlHeight;
+    };
+  }, [useMobileViewer]);
+
   return (
     <>
       {useMobileViewer && (
