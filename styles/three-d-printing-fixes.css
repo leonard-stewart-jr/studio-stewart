@@ -100,6 +100,23 @@
   white-space: nowrap !important;
 }
 
+/* When one conference is selected, its logo intentionally overlaps the filter
+   row. Reserve a real blank zone in the middle so the controls sit to either
+   side of the logo instead of underneath it. This leaves the grid position
+   unchanged and avoids pushing the logo upward toward the category nav. */
+.three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+  width: min(1040px, calc(100vw - 48px)) !important;
+  flex-wrap: nowrap !important;
+}
+
+.three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3) {
+  margin-left: clamp(150px, 11vw, 190px) !important;
+}
+
+.three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+  margin-left: clamp(150px, 11vw, 190px) !important;
+}
+
 /* Medium desktop / laptop sizes: keep the conference identity compact. */
 @media (max-width: 1450px) {
   .three-d-printing-page .nav-card-mid + div img {
@@ -120,6 +137,15 @@
 
   .three-d-printing-page .isp-subnav-row {
     width: min(820px, calc(100vw - 40px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+    width: min(900px, calc(100vw - 40px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3),
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+    margin-left: clamp(130px, 10vw, 165px) !important;
   }
 }
 
@@ -147,6 +173,11 @@
 
   .three-d-printing-page .isp-subnav-row {
     width: calc(100vw - 28px) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3),
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+    margin-left: clamp(105px, 12vw, 135px) !important;
   }
 }
 
@@ -191,6 +222,17 @@
   .three-d-printing-page .isp-subnav-row {
     width: calc(100vw - 16px) !important;
     column-gap: 2px !important;
+  }
+
+  /* On phones there is not enough width for a permanent center hole, so allow
+     the controls to wrap naturally rather than compressing the labels. */
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+    flex-wrap: wrap !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3),
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+    margin-left: 0 !important;
   }
 
   .three-d-printing-page .isp-subnav-btn {
