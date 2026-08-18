@@ -287,4 +287,38 @@
     grid-column: 5 !important;
     grid-row: 1 !important;
   }
+
+  /* Selected NBA conference: there are only three divisions, so keep all four
+     controls on one line and split them evenly around the centered conference
+     logo. ALL and ATLANTIC sit on the left; CENTRAL and SOUTHEAST sit on the
+     right. */
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 {
+    display: grid !important;
+    grid-template-columns: minmax(88px, 1fr) minmax(88px, 1fr) clamp(190px, 14vw, 220px) minmax(88px, 1fr) minmax(88px, 1fr) !important;
+    align-items: center !important;
+    justify-items: center !important;
+    column-gap: clamp(10px, 1.1vw, 18px) !important;
+    width: min(980px, calc(100vw - 48px)) !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn {
+    margin: 0 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(1) {
+    grid-column: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(2) {
+    grid-column: 2 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(3) {
+    grid-column: 4 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(4) {
+    grid-column: 5 !important;
+  }
 }
