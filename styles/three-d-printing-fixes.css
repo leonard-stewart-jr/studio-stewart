@@ -275,6 +275,7 @@
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3) {
     grid-column: 2 !important;
     grid-row: 1 !important;
+    margin-left: 0 !important;
   }
 
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(4) {
