@@ -70,11 +70,11 @@
   top: 52px !important;
 }
 
-/* NBA source artwork is cropped differently than NFL, so give it a very small
-   visual correction while keeping it essentially the same apparent size. */
+/* NBA conference artwork has more empty canvas around the visible logo than
+   the NFL source files. Render it slightly larger so the visible marks match. */
 .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
 .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-  height: clamp(80px, 7.25vw, 118px) !important;
+  height: clamp(90px, 8.15vw, 132px) !important;
   top: 52px !important;
 }
 
@@ -109,7 +109,7 @@
 
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-    height: clamp(76px, 7vw, 104px) !important;
+    height: clamp(86px, 7.8vw, 118px) !important;
     top: 44px !important;
   }
 
@@ -136,7 +136,7 @@
 
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-    height: clamp(70px, 8.7vw, 89px) !important;
+    height: clamp(80px, 9.8vw, 100px) !important;
     top: 35px !important;
   }
 
@@ -179,7 +179,7 @@
 
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-    height: 68px !important;
+    height: 76px !important;
     top: 22px !important;
   }
 
