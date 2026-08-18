@@ -14,6 +14,7 @@ const projects = [
     type: "EDUCATION, SPORTS, RESIDENTIAL",
     slug: "DMA-25",
     modalWidth: 4000,
+    hidden: true,
     bannerSrc: "/images/portfolio/dma25.png",
     action: "route",
     linkHref: "/projects/dma-25"
