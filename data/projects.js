@@ -42,7 +42,7 @@ const projects = [
     title: "MATTER MATTERS",
     type: "MATERIAL RESEARCH",
     slug: "MATTER-MATTERS",
-    bannerSrc: "/images/placeholders/blank.svg",
+    bannerSrc: "/images/portfolio/mattermatters.png",
     action: "route",
     linkHref: "/matter-matters"
   }
