@@ -70,12 +70,11 @@
   top: 52px !important;
 }
 
-/* The NBA conference source images have a tighter crop than the NFL artwork,
-   so the same CSS height makes them look noticeably larger. Normalize their
-   visible scale separately while leaving the shared layout box untouched. */
+/* NBA source artwork is cropped differently than NFL, so give it a very small
+   visual correction while keeping it essentially the same apparent size. */
 .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
 .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-  height: clamp(68px, 6.15vw, 100px) !important;
+  height: clamp(80px, 7.25vw, 118px) !important;
   top: 52px !important;
 }
 
@@ -110,7 +109,7 @@
 
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-    height: clamp(66px, 5.9vw, 90px) !important;
+    height: clamp(76px, 7vw, 104px) !important;
     top: 44px !important;
   }
 
@@ -137,7 +136,7 @@
 
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-    height: clamp(60px, 7.4vw, 76px) !important;
+    height: clamp(70px, 8.7vw, 89px) !important;
     top: 35px !important;
   }
 
@@ -180,7 +179,7 @@
 
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
   .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
-    height: 58px !important;
+    height: 68px !important;
     top: 22px !important;
   }
 
