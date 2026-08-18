@@ -12,15 +12,12 @@ export default function Document() {
           rel="stylesheet"
         />
 
-        {/* Keep the 3D sports conference logos locked to the gaps in the 4-column print grid. */}
+        {/* Keep the 3D sports conference logos locked to the exact same grid as the print cards. */}
         <style>{`
           @media (min-width: 1100px) {
-            .three-d-printing-page > div > div[style*="width: 100vw"]:has(
-              img[src="/images/prints/nfl/afc.png"],
-              img[src="/images/prints/nfl/nfc.png"],
-              img[src="/images/prints/nba/eastern.png"],
-              img[src="/images/prints/nba/western.png"]
-            ) {
+            /* The logo container is the sibling immediately after the fixed mid-nav.
+               Force it to use the page container instead of the full viewport. */
+            .three-d-printing-page > div > .nav-card-mid + div {
               width: 100% !important;
               margin-left: 0 !important;
               margin-right: 0 !important;
@@ -28,19 +25,14 @@ export default function Document() {
               padding-right: 0 !important;
             }
 
-            .three-d-printing-page > div > div[style*="width: 100vw"]:has(
-              img[src="/images/prints/nfl/afc.png"],
-              img[src="/images/prints/nfl/nfc.png"],
-              img[src="/images/prints/nba/eastern.png"],
-              img[src="/images/prints/nba/western.png"]
-            ) > div {
+            /* Match the exact four-column geometry used by the print grid. */
+            .three-d-printing-page > div > .nav-card-mid + div > div {
+              grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
               column-gap: 24px !important;
             }
 
-            .three-d-printing-page img[src="/images/prints/nfl/afc.png"],
-            .three-d-printing-page img[src="/images/prints/nfl/nfc.png"],
-            .three-d-printing-page img[src="/images/prints/nba/eastern.png"],
-            .three-d-printing-page img[src="/images/prints/nba/western.png"] {
+            /* Remove the old fixed inward nudges. */
+            .three-d-printing-page > div > .nav-card-mid + div img {
               transform: none !important;
             }
           }
