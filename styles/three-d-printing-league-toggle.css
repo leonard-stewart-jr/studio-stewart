@@ -1,6 +1,5 @@
 /* Small dropdown handle beneath the SPORTS category on the 3D Works page.
-   The handle is part of the existing SPORTS button, so clicking it uses the
-   page's current league dropdown logic without changing the tab component. */
+   It only appears while SPORTS is the active category. */
 .three-d-printing-page .nav-card-mid {
   overflow: visible !important;
 }
@@ -10,7 +9,8 @@
   overflow: visible !important;
 }
 
-.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child::after {
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active::after,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -30,7 +30,8 @@
   transition: background .18s ease, box-shadow .18s ease;
 }
 
-.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child::before {
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active::before,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]::before {
   content: "";
   position: absolute;
   left: 50%;
@@ -45,25 +46,31 @@
   pointer-events: none;
 }
 
-.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child:hover::after,
-.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child:focus-visible::after {
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active:hover::after,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active:focus-visible::after,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]:hover::after,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]:focus-visible::after {
   background: rgba(255,255,255,.82);
   box-shadow: 0 3px 10px rgba(229,193,159,.22);
 }
 
-.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child:hover::before,
-.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child:focus-visible::before {
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active:hover::before,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active:focus-visible::before,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]:hover::before,
+.three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]:focus-visible::before {
   border-color: #e5c19f;
 }
 
 @media (max-width: 700px) {
-  .three-d-printing-page .nav-card-mid .isp-tab-btn:first-child::after {
+  .three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active::after,
+  .three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]::after {
     width: 34px;
     height: 16px;
     top: calc(100% + 5px);
   }
 
-  .three-d-printing-page .nav-card-mid .isp-tab-btn:first-child::before {
+  .three-d-printing-page .nav-card-mid .isp-tab-btn:first-child.active::before,
+  .three-d-printing-page .nav-card-mid .isp-tab-btn:first-child[aria-current="page"]::before {
     top: calc(100% + 8px);
   }
 }
