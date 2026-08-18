@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import "../styles/portfolio-page-backgrounds.css";
 import "../styles/three-d-printing-fixes.css";
+import "../styles/three-d-printing-league-toggle.css";
 import { useEffect, useState } from "react";
 import SplashScreen from "../components/SplashScreen";
 import Layout from "../components/Layout";
