@@ -13,7 +13,6 @@ const projects = [
     title: "DES MOINES ACADAMY OF ARTS AND ATHLETICS",
     type: "EDUCATION, SPORTS, RESIDENTIAL",
     slug: "DMA-25",
-    hidden: true,
     modalWidth: 4000,
     bannerSrc: "/images/portfolio/dma25.png",
     action: "route",
@@ -43,8 +42,7 @@ const projects = [
     title: "MATTER MATTERS",
     type: "MATERIAL RESEARCH",
     slug: "MATTER-MATTERS",
-    hidden: true,
-    bannerSrc: "/images/placeholders/blank.svg",
+    bannerSrc: "/images/portfolio/mattermatters.png",
     action: "route",
     linkHref: "/matter-matters"
   }

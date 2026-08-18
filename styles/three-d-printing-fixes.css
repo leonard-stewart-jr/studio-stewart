@@ -1,0 +1,324 @@
+/* Responsive cleanup for the 3D Works / 3D Printing page */
+
+/* Layout reserves 60px for the fixed main header. Pull this page back by the
+   same amount so its category bar begins immediately beneath the header. */
+.three-d-printing-page {
+  margin-top: -60px;
+}
+
+/* Keep the category subnav locked to the true viewport center. */
+.three-d-printing-page .nav-card-mid {
+  position: relative;
+}
+
+.three-d-printing-page .nav-card-mid > div:nth-child(2) {
+  position: absolute !important;
+  left: 50% !important;
+  top: 0 !important;
+  width: min(560px, calc(100vw - 180px)) !important;
+  height: 44px !important;
+  margin: 0 !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.three-d-printing-page .nav-card-mid > div:first-child,
+.three-d-printing-page .nav-card-mid > div:last-child {
+  flex-basis: 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+.three-d-printing-page .isp-section-tabs {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+}
+
+.three-d-printing-page .isp-tab-btn {
+  width: 100% !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* Conference logos: intentionally compact so they identify the conference
+   without dominating the gallery or creating a large dead zone. */
+.three-d-printing-page .nav-card-mid + div {
+  padding-left: clamp(24px, 4vw, 80px) !important;
+  padding-right: clamp(24px, 4vw, 80px) !important;
+}
+
+.three-d-printing-page .nav-card-mid + div > div {
+  min-height: 0 !important;
+  margin-top: clamp(8px, 0.8vw, 12px) !important;
+  margin-bottom: clamp(2px, 0.4vw, 6px) !important;
+}
+
+/* Position only the logo artwork inside its existing layout box. The offset is
+   tuned so the visible whitespace above the logo and below it to the first
+   card row is visually even, without moving the filters or print grid. */
+.three-d-printing-page .nav-card-mid + div img {
+  height: clamp(82px, 7.5vw, 122px) !important;
+  max-width: min(24vw, 220px) !important;
+  object-fit: contain !important;
+  position: relative !important;
+  top: 52px !important;
+}
+
+/* NBA conference artwork has more empty canvas around the visible logo than
+   the NFL source files. Render it slightly larger so the visible marks match. */
+.three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+.three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+  height: clamp(90px, 8.15vw, 132px) !important;
+  top: 52px !important;
+}
+
+/* Let league filters breathe and wrap cleanly instead of running underneath logos. */
+.three-d-printing-page .isp-subnav-row {
+  width: min(900px, calc(100vw - 48px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  column-gap: clamp(4px, 1vw, 14px) !important;
+  row-gap: 2px !important;
+  box-sizing: border-box !important;
+}
+
+.three-d-printing-page .isp-subnav-btn {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: clamp(6px, 0.8vw, 12px) !important;
+  padding-right: clamp(6px, 0.8vw, 12px) !important;
+  white-space: nowrap !important;
+}
+
+/* When one conference is selected, its logo intentionally overlaps the filter
+   row. Reserve a real blank zone in the middle so the controls sit to either
+   side of the logo instead of underneath it. This leaves the grid position
+   unchanged and avoids pushing the logo upward toward the category nav. */
+.three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+  width: min(1040px, calc(100vw - 48px)) !important;
+  flex-wrap: nowrap !important;
+}
+
+.three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3) {
+  margin-left: clamp(150px, 11vw, 190px) !important;
+}
+
+.three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+  margin-left: clamp(150px, 11vw, 190px) !important;
+}
+
+/* Medium desktop / laptop sizes: keep the conference identity compact. */
+@media (max-width: 1450px) {
+  .three-d-printing-page .nav-card-mid + div img {
+    height: clamp(78px, 7.2vw, 108px) !important;
+    top: 44px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+    height: clamp(86px, 7.8vw, 118px) !important;
+    top: 44px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div {
+    margin-top: 8px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .three-d-printing-page .isp-subnav-row {
+    width: min(820px, calc(100vw - 40px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+    width: min(900px, calc(100vw - 40px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3),
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+    margin-left: clamp(130px, 10vw, 165px) !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .three-d-printing-page .nav-card-mid > div:nth-child(2) {
+    width: min(500px, calc(100vw - 100px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img {
+    height: clamp(72px, 9vw, 92px) !important;
+    max-width: 28vw !important;
+    top: 35px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+    height: clamp(80px, 9.8vw, 100px) !important;
+    top: 35px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div {
+    margin-top: 7px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .three-d-printing-page .isp-subnav-row {
+    width: calc(100vw - 28px) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3),
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+    margin-left: clamp(105px, 12vw, 135px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .three-d-printing-page .nav-card-mid > div:nth-child(2) {
+    width: calc(100vw - 24px) !important;
+  }
+
+  .three-d-printing-page .isp-tab-btn {
+    font-size: 11px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+  .three-d-printing-page .isp-tab-btn.active,
+  .three-d-printing-page .isp-tab-btn[aria-current="page"] {
+    font-size: 12px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img {
+    height: 70px !important;
+    max-width: 32vw !important;
+    top: 22px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src*="/images/prints/nba/western.png"] {
+    height: 76px !important;
+    top: 22px !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div {
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .three-d-printing-page .isp-subnav-row {
+    width: calc(100vw - 16px) !important;
+    column-gap: 2px !important;
+  }
+
+  /* On phones there is not enough width for a permanent center hole, so allow
+     the controls to wrap naturally rather than compressing the labels. */
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+    flex-wrap: wrap !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3),
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-6 > .isp-subnav-btn:nth-child(4) {
+    margin-left: 0 !important;
+  }
+
+  .three-d-printing-page .isp-subnav-btn {
+    font-size: 10px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+}
+
+/* Selected NFL conference: arrange the four direction filters around the
+   centered conference logo, with ALL directly below the logo. */
+@media (min-width: 701px) {
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 {
+    display: grid !important;
+    grid-template-columns: minmax(78px, 1fr) minmax(78px, 1fr) clamp(190px, 14vw, 220px) minmax(78px, 1fr) minmax(78px, 1fr) !important;
+    grid-template-rows: auto 20px !important;
+    align-items: center !important;
+    justify-items: center !important;
+    column-gap: clamp(10px, 1.1vw, 18px) !important;
+    row-gap: 0 !important;
+    width: min(980px, calc(100vw - 48px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn {
+    margin: 0 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(1) {
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+    align-self: end !important;
+    transform: translateY(20px) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(2) {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3) {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    margin-left: 0 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(4) {
+    grid-column: 4 !important;
+    grid-row: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(5) {
+    grid-column: 5 !important;
+    grid-row: 1 !important;
+  }
+
+  /* Selected NBA conference: there are only three divisions, so keep all four
+     controls on one line and split them evenly around the centered conference
+     logo. ALL and ATLANTIC sit on the left; CENTRAL and SOUTHEAST sit on the
+     right. */
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 {
+    display: grid !important;
+    grid-template-columns: minmax(88px, 1fr) minmax(88px, 1fr) clamp(190px, 14vw, 220px) minmax(88px, 1fr) minmax(88px, 1fr) !important;
+    align-items: center !important;
+    justify-items: center !important;
+    column-gap: clamp(10px, 1.1vw, 18px) !important;
+    width: min(980px, calc(100vw - 48px)) !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn {
+    margin: 0 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(1) {
+    grid-column: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(2) {
+    grid-column: 2 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(3) {
+    grid-column: 4 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img[src*="/images/prints/nba/"]) + div .isp-subnav-row.tab-count-4 > .isp-subnav-btn:nth-child(4) {
+    grid-column: 5 !important;
+  }
+}
