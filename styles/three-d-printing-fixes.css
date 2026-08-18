@@ -264,7 +264,7 @@
     grid-column: 3 !important;
     grid-row: 2 !important;
     align-self: end !important;
-    transform: translateY(10px) !important;
+    transform: translateY(20px) !important;
   }
 
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(2) {
