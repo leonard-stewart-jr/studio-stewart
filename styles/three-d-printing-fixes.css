@@ -241,3 +241,47 @@
     padding-right: 5px !important;
   }
 }
+
+/* Selected NFL conference: arrange the four direction filters around the
+   centered conference logo, with ALL directly below the logo. */
+@media (min-width: 701px) {
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 {
+    display: grid !important;
+    grid-template-columns: minmax(70px, 1fr) minmax(70px, 1fr) clamp(130px, 11vw, 170px) minmax(70px, 1fr) minmax(70px, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    align-items: center !important;
+    justify-items: center !important;
+    column-gap: clamp(4px, 0.8vw, 12px) !important;
+    row-gap: 2px !important;
+    width: min(820px, calc(100vw - 48px)) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn {
+    margin: 0 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(1) {
+    grid-column: 3 !important;
+    grid-row: 2 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(2) {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(3) {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(4) {
+    grid-column: 4 !important;
+    grid-row: 1 !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row.tab-count-5 > .isp-subnav-btn:nth-child(5) {
+    grid-column: 5 !important;
+    grid-row: 1 !important;
+  }
+}
