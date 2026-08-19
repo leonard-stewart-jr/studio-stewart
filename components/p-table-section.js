@@ -145,7 +145,7 @@ export default function PTableSection() {
         background: "#fff",
         borderRadius: 16,
         boxShadow: "0 1.5px 24px rgba(32,32,32,0.08)",
-        padding: "24px 0 28px 0",
+        padding: "14px 0 28px 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -194,26 +194,33 @@ export default function PTableSection() {
 
           {/*
             Legend block lives in the table's intentional empty center area.
-            The grid-column ratios match each source SVG's native width, so all
-            three keys render at essentially the same scale and their title/text
-            sizes remain consistent with one another.
+            Element Risk gets a little more visual weight than the other two,
+            while tighter gaps make the three SVGs read as one legend system.
           */}
           <div
             style={{
               position: "absolute",
-              left: "13.2%",
-              top: "1.6%",
+              left: "13.7%",
+              top: "0.2%",
               width: "52%",
               display: "grid",
-              gridTemplateColumns: "283.23fr 146.87fr 179.04fr",
-              gap: 24,
+              gridTemplateColumns: "283.23fr 161.56fr 179.04fr",
+              gap: 14,
               alignItems: "start",
               zIndex: 2,
               pointerEvents: "none",
             }}
           >
             <TableKey style={{ width: "100%", height: "auto", display: "block" }} />
-            <RiskKey style={{ width: "100%", height: "auto", display: "block" }} />
+            <RiskKey
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                transform: "translateY(-1.2%)",
+                transformOrigin: "top center",
+              }}
+            />
             <TypeKey style={{ width: "100%", height: "auto", display: "block" }} />
           </div>
 
