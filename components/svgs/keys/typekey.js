@@ -10,7 +10,7 @@ const SvgTypeKey = (props) => (
     <defs>
       <style>
         {
-          '.type-key_svg__cls-12{font-family:OpenSans-Light,"Open Sans";font-size:7.5px;font-weight:300}'
+          '.type-key_svg__cls-12{font-family:OpenSans-Light,"Open Sans";font-size:8.25px;font-weight:300}'
         }
       </style>
     </defs>
@@ -46,12 +46,8 @@ const SvgTypeKey = (props) => (
         }}
       />
       <text className="type-key_svg__cls-12" transform="translate(30.05 28.11)">
-        <tspan x={0} y={0}>
-          {"ALKALI"}
-        </tspan>
-        <tspan x={0.06} y={9}>
-          {"METAL"}
-        </tspan>
+        <tspan x={0} y={0}>{"ALKALI"}</tspan>
+        <tspan x={0.06} y={9}>{"METAL"}</tspan>
       </text>
       <path
         id="type-key_svg__rect2010-2"
@@ -65,28 +61,16 @@ const SvgTypeKey = (props) => (
         }}
       />
       <text className="type-key_svg__cls-12" transform="translate(18.59 50.6)">
-        <tspan x={0} y={0}>
-          {"ALKALINE"}
-        </tspan>
-        <tspan x={10.07} y={9}>
-          {"EARTH"}
-        </tspan>
+        <tspan x={0} y={0}>{"ALKALINE"}</tspan>
+        <tspan x={10.07} y={9}>{"EARTH"}</tspan>
       </text>
       <text className="type-key_svg__cls-12" transform="translate(12.1 72.35)">
-        <tspan x={0} y={0}>
-          {"TRANSITION "}
-        </tspan>
-        <tspan x={18.34} y={9}>
-          {"METAL"}
-        </tspan>
+        <tspan x={0} y={0}>{"TRANSITION "}</tspan>
+        <tspan x={18.34} y={9}>{"METAL"}</tspan>
       </text>
       <text className="type-key_svg__cls-12" transform="translate(33.5 94.1)">
-        <tspan x={0} y={0}>
-          {"BASIC"}
-        </tspan>
-        <tspan x={-3.05} y={9}>
-          {"METAL"}
-        </tspan>
+        <tspan x={0} y={0}>{"BASIC"}</tspan>
+        <tspan x={-3.05} y={9}>{"METAL"}</tspan>
       </text>
       <path
         id="type-key_svg__rect2006-2"
@@ -121,14 +105,7 @@ const SvgTypeKey = (props) => (
           stroke: "#e5018c",
         }}
       />
-      <text
-        className="type-key_svg__cls-12"
-        transform="translate(102.85 33.94)"
-      >
-        <tspan x={0} y={0}>
-          {"SEMIMETAL"}
-        </tspan>
-      </text>
+      <text className="type-key_svg__cls-12" transform="translate(102.85 33.94)"><tspan x={0} y={0}>{"SEMIMETAL"}</tspan></text>
       <path
         id="type-key_svg__rect2010-4"
         d="M150.49 91.96h27.87v11h-27.87z"
@@ -140,30 +117,9 @@ const SvgTypeKey = (props) => (
           fill: "rgba(213,216,220,.5)",
         }}
       />
-      <text
-        className="type-key_svg__cls-12"
-        transform="translate(100.97 56.43)"
-      >
-        <tspan x={0} y={0}>
-          {"NONMETAL"}
-        </tspan>
-      </text>
-      <text
-        className="type-key_svg__cls-12"
-        transform="translate(108.21 78.18)"
-      >
-        <tspan x={0} y={0}>
-          {"HALOGEN"}
-        </tspan>
-      </text>
-      <text
-        className="type-key_svg__cls-12"
-        transform="translate(102.87 99.93)"
-      >
-        <tspan x={0} y={0}>
-          {"NOBLE GAS"}
-        </tspan>
-      </text>
+      <text className="type-key_svg__cls-12" transform="translate(100.97 56.43)"><tspan x={0} y={0}>{"NONMETAL"}</tspan></text>
+      <text className="type-key_svg__cls-12" transform="translate(108.21 78.18)"><tspan x={0} y={0}>{"HALOGEN"}</tspan></text>
+      <text className="type-key_svg__cls-12" transform="translate(102.87 99.93)"><tspan x={0} y={0}>{"NOBLE GAS"}</tspan></text>
       <path
         id="type-key_svg__rect2006-3"
         d="M150.49 113.25h27.87v11h-27.87z"
@@ -186,30 +142,18 @@ const SvgTypeKey = (props) => (
           stroke: "#c69c6d",
         }}
       />
-      <text className="type-key_svg__cls-12" transform="translate(98 121.4)">
-        <tspan x={0} y={0}>
-          {"LANTHANIDE"}
-        </tspan>
-      </text>
-      <text
-        className="type-key_svg__cls-12"
-        transform="translate(19.45 121.39)"
-      >
-        <tspan x={0} y={0}>
-          {"ACTINIDE"}
-        </tspan>
-      </text>
+      <text className="type-key_svg__cls-12" transform="translate(98 121.4)"><tspan x={0} y={0}>{"LANTHANIDE"}</tspan></text>
+      <text className="type-key_svg__cls-12" transform="translate(19.45 121.39)"><tspan x={0} y={0}>{"ACTINIDE"}</tspan></text>
       <text
         style={{
           fontFamily: "OpenSans-Bold,&quot",
           fontSize: "15.75px",
           fontWeight: 700,
         }}
-        transform="translate(33.43 15.82)"
+        textAnchor="middle"
+        transform="translate(89.52 15.82)"
       >
-        <tspan x={0} y={0}>
-          {"ELEMENT TYPES"}
-        </tspan>
+        <tspan x={0} y={0}>{"TYPES"}</tspan>
       </text>
     </g>
   </svg>
