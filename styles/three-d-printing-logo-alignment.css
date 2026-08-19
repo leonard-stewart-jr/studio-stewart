@@ -1,0 +1,31 @@
+/* Final conference-logo alignment for the 3D Works sports grid.
+   The conference marks must use the exact same width and column geometry as
+   the print-card grid so they stay centered over the card gaps at any desktop
+   viewport size. */
+
+@media (min-width: 1100px) {
+  /* Undo the full-viewport bleed and responsive side padding used by the
+     general 3D-printing fixes. This container is already inside pageStyle,
+     whose width is the same width used by the card grid. */
+  .three-d-printing-page .nav-card-mid + div {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Mirror gridWrapStyle exactly: four equal tracks and a 24px gap. */
+  .three-d-printing-page .nav-card-mid + div > div {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    column-gap: 24px !important;
+  }
+
+  /* Remove the old fixed +/-34px inward nudges from LogoRow. */
+  .three-d-printing-page .nav-card-mid + div img[src="/images/prints/nfl/afc.png"],
+  .three-d-printing-page .nav-card-mid + div img[src="/images/prints/nfl/nfc.png"],
+  .three-d-printing-page .nav-card-mid + div img[src="/images/prints/nba/eastern.png"],
+  .three-d-printing-page .nav-card-mid + div img[src="/images/prints/nba/western.png"] {
+    transform: translateX(0) !important;
+  }
+}
