@@ -46,9 +46,7 @@ const SvgRiskKey = (props) => (
         }}
       />
       <text className="risk-key_svg__cls-6" transform="translate(48.03 33.92)">
-        <tspan x={0} y={0}>
-          {"SEVERE"}
-        </tspan>
+        <tspan x={0} y={0}>{"SEVERE"}</tspan>
       </text>
       <path
         id="risk-key_svg__rect2010-2"
@@ -70,19 +68,13 @@ const SvgRiskKey = (props) => (
         }}
         transform="translate(43.66 53.76)"
       >
-        <tspan x={0} y={0}>
-          {"MEDIUM"}
-        </tspan>
+        <tspan x={0} y={0}>{"MEDIUM"}</tspan>
       </text>
       <text className="risk-key_svg__cls-6" transform="translate(57.05 74.01)">
-        <tspan x={0} y={0}>
-          {"LOW"}
-        </tspan>
+        <tspan x={0} y={0}>{"LOW"}</tspan>
       </text>
       <text className="risk-key_svg__cls-6" transform="translate(60.85 94.26)">
-        <tspan x={0} y={0}>
-          {"N/A"}
-        </tspan>
+        <tspan x={0} y={0}>{"N/A"}</tspan>
       </text>
       <text
         style={{
@@ -91,11 +83,9 @@ const SvgRiskKey = (props) => (
           fontWeight: 700,
         }}
         textAnchor="middle"
-        transform="translate(73.435 15.82)"
+        transform="translate(76.5 15.82)"
       >
-        <tspan x={0} y={0}>
-          {"RISK"}
-        </tspan>
+        <tspan x={0} y={0}>{"RISK"}</tspan>
       </text>
     </g>
   </svg>
