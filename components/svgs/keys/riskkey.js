@@ -10,7 +10,7 @@ const SvgRiskKey = (props) => (
     <defs>
       <style>
         {
-          '.risk-key_svg__cls-6{font-family:OpenSans-Light,"Open Sans";font-size:7.5px;font-weight:300}'
+          '.risk-key_svg__cls-6{font-family:OpenSans-Light,"Open Sans";font-size:8.25px;font-weight:300}'
         }
       </style>
     </defs>
@@ -64,7 +64,7 @@ const SvgRiskKey = (props) => (
       <text
         style={{
           fontFamily: "OpenSans-Light,&quot",
-          fontSize: "7.5px",
+          fontSize: "8.25px",
           fontWeight: 300,
           letterSpacing: 0,
         }}
@@ -90,10 +90,11 @@ const SvgRiskKey = (props) => (
           fontSize: "15.75px",
           fontWeight: 700,
         }}
-        transform="translate(17.95 15.82)"
+        textAnchor="middle"
+        transform="translate(73.435 15.82)"
       >
         <tspan x={0} y={0}>
-          {"ELEMENT RISK"}
+          {"RISK"}
         </tspan>
       </text>
     </g>
