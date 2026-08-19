@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import PTableSection from "../components/p-table-section";
 
-const IFRAME_WIDTH = 1366 + 16; // 16px fudge for scrollbar
+const IFRAME_WIDTH = 1366; // matches the exported HTML width exactly
 const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 
 export default function MatterMatters() {
@@ -49,7 +49,7 @@ export default function MatterMatters() {
               margin: 0,
               padding: 0,
               boxShadow: "none",
-              overflow: "visible",
+              overflow: "hidden",
               border: "none",
             }}
           >
@@ -65,12 +65,12 @@ export default function MatterMatters() {
                 border: "none",
                 background: "#fff",
                 display: "block",
-                boxSizing: "content-box",
+                boxSizing: "border-box",
                 boxShadow: "none",
                 outline: "none",
-                overflow: "visible",
+                overflow: "hidden",
               }}
-              scrolling="yes"
+              scrolling="no"
               allowFullScreen
             />
           </div>

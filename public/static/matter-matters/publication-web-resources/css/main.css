@@ -3,6 +3,7 @@ html, body {
   margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
+  overflow: hidden !important;
   font-family: "coolvetica", sans-serif;
 }
 
@@ -13,7 +14,7 @@ html, body {
   top: 0;
   left: 0;
   border: none;
-
+  overflow: hidden;
 }
 
 .dummyIFrameClass {
