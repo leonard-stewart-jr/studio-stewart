@@ -151,7 +151,7 @@ const SvgTypeKey = (props) => (
           fontWeight: 700,
         }}
         textAnchor="middle"
-        transform="translate(89.52 15.82)"
+        transform="translate(95.2 15.82)"
       >
         <tspan x={0} y={0}>{"TYPES"}</tspan>
       </text>
