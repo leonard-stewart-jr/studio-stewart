@@ -167,7 +167,7 @@ const SvgTableKey = (props) => (
           fontWeight: 700,
         }}
         textAnchor="middle"
-        transform="translate(141.615 15.82)"
+        transform="translate(150.715 15.82)"
       >
         <tspan x={0} y={0}>{"KEY"}</tspan>
       </text>
