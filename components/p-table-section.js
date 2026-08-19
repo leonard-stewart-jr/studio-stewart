@@ -196,11 +196,13 @@ export default function PTableSection() {
             Legend block lives in the table's intentional empty center area.
             Element Risk gets a little more visual weight than the other two,
             while tighter gaps make the three SVGs read as one legend system.
+            The whole band is centered between the left and right element blocks
+            so the visual margins on each side stay balanced.
           */}
           <div
             style={{
               position: "absolute",
-              left: "13.7%",
+              left: "12.65%",
               top: "0.2%",
               width: "52%",
               display: "grid",
