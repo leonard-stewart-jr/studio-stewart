@@ -145,31 +145,13 @@ export default function PTableSection() {
         background: "#fff",
         borderRadius: 16,
         boxShadow: "0 1.5px 24px rgba(32,32,32,0.08)",
-        padding: "32px 0 28px 0",
+        padding: "24px 0 28px 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         overflow: "visible",
       }}
     >
-      {/* KEYS ROW */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 68,
-          width: "100%",
-          minHeight: 70,
-          marginBottom: 22,
-        }}
-      >
-        <TableKey style={{ height: 64, width: "auto" }} />
-        <RiskKey style={{ height: 64, width: "auto" }} />
-        <TypeKey style={{ height: 64, width: "auto" }} />
-      </div>
-
       {/* --- SCROLL WRAPPER --- */}
       <div
         style={{
@@ -210,12 +192,37 @@ export default function PTableSection() {
             }}
           />
 
+          {/*
+            Legend block lives in the table's intentional empty center area.
+            The grid-column ratios match each source SVG's native width, so all
+            three keys render at essentially the same scale and their title/text
+            sizes remain consistent with one another.
+          */}
+          <div
+            style={{
+              position: "absolute",
+              left: "13.2%",
+              top: "1.6%",
+              width: "52%",
+              display: "grid",
+              gridTemplateColumns: "283.23fr 146.87fr 179.04fr",
+              gap: 24,
+              alignItems: "start",
+              zIndex: 2,
+              pointerEvents: "none",
+            }}
+          >
+            <TableKey style={{ width: "100%", height: "auto", display: "block" }} />
+            <RiskKey style={{ width: "100%", height: "auto", display: "block" }} />
+            <TypeKey style={{ width: "100%", height: "auto", display: "block" }} />
+          </div>
+
           {/* Interactive cells use the original Illustrator cell geometry. */}
           <TungstenTSingle
             style={{
               position: "absolute",
               ...svgToContainer(tungstenBox.x, tungstenBox.y, tungstenBox.w, tungstenBox.h),
-              zIndex: 2,
+              zIndex: 3,
               pointerEvents: "auto",
               cursor: "pointer",
             }}
@@ -226,7 +233,7 @@ export default function PTableSection() {
             style={{
               position: "absolute",
               ...svgToContainer(snBox.x, snBox.y, snBox.w, snBox.h),
-              zIndex: 2,
+              zIndex: 3,
               pointerEvents: "auto",
               cursor: "pointer",
             }}
