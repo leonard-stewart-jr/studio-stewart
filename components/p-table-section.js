@@ -70,16 +70,25 @@ const materialIcons = [
 const SVG_WIDTH = 1344;
 const SVG_HEIGHT = 512;
 
-// --- USE EXACT SVG COORDINATES FOR OVERLAYS ---
-// Ta (element 73): x=488.72, y=349.29, width=61, height=61 (from SVG path)
-// W (element 74, right of Ta): x=549.72, y=349.29, width=61, height=61 (Ta.x + Ta.width)
+// The master table's cell paths are 61px square with a centered 3px stroke.
+// The original solo-cell exports therefore use a 63.59px viewBox, starting
+// 1.5px outside the path coordinate so the visible stroke aligns perfectly.
+const SOLO_CELL_SIZE = 63.59;
+const STROKE_OFFSET = 1.5;
 
-const taBox = { x: 488.72, y: 349.29, w: 61, h: 61 };
-const tungstenBox = { x: 419.13, y: 349.32, w: 61, h: 61 };
+const tungstenBox = {
+  x: 419.13 - STROKE_OFFSET,
+  y: 349.29 - STROKE_OFFSET,
+  w: SOLO_CELL_SIZE,
+  h: SOLO_CELL_SIZE,
+};
 
-// TODO: For Sn, find its SVG box in the same way and update snBox below
-// Correct Sn box
-const snBox = { x: 976.14, y: 279.82, w: 61, h: 61 };
+const snBox = {
+  x: 976.14 - STROKE_OFFSET,
+  y: 279.82 - STROKE_OFFSET,
+  w: SOLO_CELL_SIZE,
+  h: SOLO_CELL_SIZE,
+};
 
 export default function PTableSection() {
   const [activeIcons, setActiveIcons] = useState({
@@ -124,7 +133,7 @@ export default function PTableSection() {
   }
 
   // Responsive scroll wrapper min width
-  const minTableWidth = 700; // Optional, tweak as you like
+  const minTableWidth = 700;
 
   return (
     <section
@@ -197,10 +206,11 @@ export default function PTableSection() {
               left: 0,
               top: 0,
               zIndex: 1,
-              pointerEvents: "none"
+              pointerEvents: "none",
             }}
           />
-          {/* Tungsten overlay - uses exact SVG position! */}
+
+          {/* Interactive cells use the original Illustrator cell geometry. */}
           <TungstenTSingle
             style={{
               position: "absolute",
@@ -211,7 +221,7 @@ export default function PTableSection() {
             }}
             title="Tungsten (W)"
           />
-          {/* Tin overlay - update snBox with the real SVG coordinates for Sn! */}
+
           <TinSnSingle
             style={{
               position: "absolute",
