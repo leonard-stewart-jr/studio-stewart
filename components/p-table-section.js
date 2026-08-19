@@ -104,7 +104,6 @@ export default function PTableSection() {
     setActiveIcons((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  // Responsive: measure rendered width/height for overlays
   const tableRef = useRef();
   const [containerDims, setContainerDims] = useState({ width: SVG_WIDTH, height: SVG_HEIGHT });
 
@@ -122,7 +121,6 @@ export default function PTableSection() {
     return () => window.removeEventListener("resize", updateDims);
   }, []);
 
-  // Utility for scaling SVG coords to container
   function svgToContainer(x, y, w, h) {
     return {
       left: (x / SVG_WIDTH) * containerDims.width,
@@ -132,7 +130,6 @@ export default function PTableSection() {
     };
   }
 
-  // Responsive scroll wrapper min width
   const minTableWidth = 700;
 
   return (
@@ -152,7 +149,6 @@ export default function PTableSection() {
         overflow: "visible",
       }}
     >
-      {/* --- SCROLL WRAPPER --- */}
       <div
         style={{
           width: "100vw",
@@ -161,7 +157,6 @@ export default function PTableSection() {
           paddingBottom: 18,
         }}
       >
-        {/* --- TABLE CONTAINER (responsive, aspect-ratio) --- */}
         <div
           ref={tableRef}
           style={{
@@ -178,7 +173,6 @@ export default function PTableSection() {
             display: "block",
           }}
         >
-          {/* Full Periodic Table SVG */}
           <FullTable
             style={{
               width: "100%",
@@ -192,22 +186,17 @@ export default function PTableSection() {
             }}
           />
 
-          {/*
-            Legend block lives in the table's intentional empty center area.
-            Element Risk gets a little more visual weight than the other two,
-            while tighter gaps make the three SVGs read as one legend system.
-            The whole band is centered between the left and right element blocks
-            so the visual margins on each side stay balanced.
-          */}
+          {/* Keep the title baseline unchanged while tightening the legend band.
+              Types gets roughly 10% more width without shrinking Key or Risk. */}
           <div
             style={{
               position: "absolute",
-              left: "12.65%",
+              left: "12.15%",
               top: "0.2%",
-              width: "52%",
+              width: "53.5%",
               display: "grid",
-              gridTemplateColumns: "283.23fr 161.56fr 179.04fr",
-              gap: 14,
+              gridTemplateColumns: "283.23fr 161.56fr 196.944fr",
+              gap: 10,
               alignItems: "start",
               zIndex: 2,
               pointerEvents: "none",
@@ -226,7 +215,6 @@ export default function PTableSection() {
             <TypeKey style={{ width: "100%", height: "auto", display: "block" }} />
           </div>
 
-          {/* Interactive cells use the original Illustrator cell geometry. */}
           <TungstenTSingle
             style={{
               position: "absolute",
@@ -251,7 +239,6 @@ export default function PTableSection() {
         </div>
       </div>
 
-      {/* MATERIAL ICONS ROW */}
       <div
         style={{
           marginTop: 24,
@@ -279,9 +266,7 @@ export default function PTableSection() {
               style={{
                 background: "none",
                 border: "none",
-                outline: isActive
-                  ? "2.5px solid #e6dbb9"
-                  : "2px solid transparent",
+                outline: isActive ? "2.5px solid #e6dbb9" : "2px solid transparent",
                 borderRadius: 13,
                 padding: "4px 12px 0 12px",
                 margin: "0 6px",
@@ -291,9 +276,7 @@ export default function PTableSection() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: isActive
-                  ? "0 1px 12px #e6dbb9aa"
-                  : "0 1.5px 10px rgba(32,32,32,0.09)",
+                boxShadow: isActive ? "0 1px 12px #e6dbb9aa" : "0 1.5px 10px rgba(32,32,32,0.09)",
                 cursor: "pointer",
                 opacity: isActive ? 1 : 0.58,
                 transition: "box-shadow 0.14s, border 0.13s, opacity 0.13s",
