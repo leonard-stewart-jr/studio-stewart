@@ -37,9 +37,7 @@ const SvgTableKey = (props) => (
             }}
             transform="translate(135.26 119.25)"
           >
-            <tspan x={0} y={0}>
-              {"12.011"}
-            </tspan>
+            <tspan x={0} y={0}>{"12.011"}</tspan>
           </text>
         </g>
         <text
@@ -52,9 +50,7 @@ const SvgTableKey = (props) => (
           }}
           transform="translate(134.01 105.05)"
         >
-          <tspan x={0} y={0}>
-            {"Carbon"}
-          </tspan>
+          <tspan x={0} y={0}>{"Carbon"}</tspan>
         </text>
         <g id="table_key_svg__g214">
           <text
@@ -67,9 +63,7 @@ const SvgTableKey = (props) => (
             }}
             transform="translate(146.39 62.77)"
           >
-            <tspan x={0} y={0}>
-              {"6"}
-            </tspan>
+            <tspan x={0} y={0}>{"6"}</tspan>
           </text>
         </g>
         <g id="table_key_svg__g218">
@@ -83,9 +77,7 @@ const SvgTableKey = (props) => (
             }}
             transform="translate(141.2 92.32)"
           >
-            <tspan x={0} y={0}>
-              {"C"}
-            </tspan>
+            <tspan x={0} y={0}>{"C"}</tspan>
           </text>
         </g>
         <g id="table_key_svg__g690">
@@ -94,9 +86,7 @@ const SvgTableKey = (props) => (
             className="table_key_svg__cls-3"
             transform="translate(28.1 60.5)"
           >
-            <tspan x={0} y={0}>
-              {"ATOMIC NUMBER"}
-            </tspan>
+            <tspan x={0} y={0}>{"ATOMIC NUMBER"}</tspan>
           </text>
         </g>
         <g id="table_key_svg__g694">
@@ -105,9 +95,7 @@ const SvgTableKey = (props) => (
             className="table_key_svg__cls-3"
             transform="translate(67.55 84.59)"
           >
-            <tspan x={0} y={0}>
-              {"SYMBOL"}
-            </tspan>
+            <tspan x={0} y={0}>{"SYMBOL"}</tspan>
           </text>
         </g>
         <g id="table_key_svg__g698">
@@ -116,9 +104,7 @@ const SvgTableKey = (props) => (
             className="table_key_svg__cls-3"
             transform="translate(78.12 104.3)"
           >
-            <tspan x={0} y={0}>
-              {"NAME"}
-            </tspan>
+            <tspan x={0} y={0}>{"NAME"}</tspan>
           </text>
         </g>
         <g id="table_key_svg__g704">
@@ -128,32 +114,14 @@ const SvgTableKey = (props) => (
               className="table_key_svg__cls-3"
               transform="translate(0 117.73)"
             >
-              <tspan x={0} y={0}>
-                {"AVERAGE ATOMIC MASS"}
-              </tspan>
+              <tspan x={0} y={0}>{"AVERAGE ATOMIC MASS"}</tspan>
             </text>
           </g>
         </g>
-        <path
-          id="table_key_svg__line706"
-          d="m137.04 81.59-28.65.06"
-          className="table_key_svg__cls-8"
-        />
-        <path
-          id="table_key_svg__line708"
-          d="M141.16 58.5h-32.78"
-          className="table_key_svg__cls-8"
-        />
-        <path
-          id="table_key_svg__line710"
-          d="M133.29 101.72h-24.75"
-          className="table_key_svg__cls-8"
-        />
-        <path
-          id="table_key_svg__line712"
-          d="M129.16 115.08h-20.62"
-          className="table_key_svg__cls-8"
-        />
+        <path id="table_key_svg__line706" d="m137.04 81.59-28.65.06" className="table_key_svg__cls-8" />
+        <path id="table_key_svg__line708" d="M141.16 58.5h-32.78" className="table_key_svg__cls-8" />
+        <path id="table_key_svg__line710" d="M133.29 101.72h-24.75" className="table_key_svg__cls-8" />
+        <path id="table_key_svg__line712" d="M129.16 115.08h-20.62" className="table_key_svg__cls-8" />
         <path
           id="table_key_svg__line712-2"
           d="M208.29 86.83h-21.02"
@@ -168,9 +136,7 @@ const SvgTableKey = (props) => (
               data-name="text700"
               transform="translate(210.44 89.7)"
             >
-              <tspan x={0} y={0}>
-                {"ELEMENT TYPE"}
-              </tspan>
+              <tspan x={0} y={0}>{"ELEMENT TYPE"}</tspan>
             </text>
           </g>
         </g>
@@ -188,12 +154,8 @@ const SvgTableKey = (props) => (
               data-name="text700"
               transform="translate(210.67 61.7)"
             >
-              <tspan x={0} y={0}>
-                {"HUMAN CAPITAL"}
-              </tspan>
-              <tspan x={0} y={7.5}>
-                {"RISK LEVEL"}
-              </tspan>
+              <tspan x={0} y={0}>{"HUMAN CAPITAL"}</tspan>
+              <tspan x={0} y={7.5}>{"RISK LEVEL"}</tspan>
             </text>
           </g>
         </g>
@@ -204,11 +166,10 @@ const SvgTableKey = (props) => (
           fontSize: "15.75px",
           fontWeight: 700,
         }}
-        transform="translate(90.41 15.82)"
+        textAnchor="middle"
+        transform="translate(141.615 15.82)"
       >
-        <tspan x={0} y={0}>
-          {"ELEMENT KEY"}
-        </tspan>
+        <tspan x={0} y={0}>{"KEY"}</tspan>
       </text>
     </g>
   </svg>
