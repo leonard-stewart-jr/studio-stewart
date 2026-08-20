@@ -79,11 +79,11 @@ const SvgRiskKey = (props) => (
       <text
         style={{
           fontFamily: "OpenSans-Bold,&quot",
-          fontSize: "15.75px",
+          fontSize: "13.02px",
           fontWeight: 700,
         }}
         textAnchor="middle"
-        transform="translate(95.425 15.82)"
+        transform="translate(95.425 14.48)"
       >
         <tspan x={0} y={0}>{"RISK"}</tspan>
       </text>
