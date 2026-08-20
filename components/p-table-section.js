@@ -186,40 +186,46 @@ export default function PTableSection() {
             }}
           />
 
-          {/* Keep the current Types size, match Risk to it, and balance the gaps. */}
+          {/* Four equal spacer columns keep the gaps consistent:
+              left elements to Key, Key to Risk, Risk to Types, and Types to right elements.
+              Key body is 10% larger, while each title is compensated inside its own SVG. */}
           <div
             style={{
               position: "absolute",
-              left: "12%",
+              left: "12.4%",
               top: "0.2%",
-              width: "55.1%",
+              width: "57.1%",
               display: "grid",
-              gridTemplateColumns: "283.23fr 161.56fr 216.6384fr",
-              gap: 10,
+              gridTemplateColumns: "2.004fr 40.599fr 2.004fr 23.157fr 2.004fr 28.227fr 2.004fr",
+              gap: 0,
               alignItems: "start",
               zIndex: 2,
               pointerEvents: "none",
             }}
           >
+            <div />
             <TableKey style={{ width: "100%", height: "auto", display: "block" }} />
+            <div />
             <RiskKey
               style={{
                 width: "100%",
                 height: "auto",
                 display: "block",
-                transform: "translate(2.5%, -2.8%) scale(1.1)",
+                transform: "translateY(-0.8%)",
                 transformOrigin: "top center",
               }}
             />
+            <div />
             <TypeKey
               style={{
                 width: "100%",
                 height: "auto",
                 display: "block",
-                transform: "translateY(-1.1%)",
+                transform: "translateY(-0.6%)",
                 transformOrigin: "top center",
               }}
             />
+            <div />
           </div>
 
           <TungstenTSingle
