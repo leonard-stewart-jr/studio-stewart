@@ -186,17 +186,17 @@ export default function PTableSection() {
             }}
           />
 
-          {/* Keep the title baseline unchanged while tightening the legend band.
-              Types gets roughly 10% more width without shrinking Key or Risk. */}
+          {/* Preserve the Key and Risk sizing while tightening the legend spacing.
+              Types gets another 10% of visual width and stays on the same title line. */}
           <div
             style={{
               position: "absolute",
               left: "12.15%",
               top: "0.2%",
-              width: "53.5%",
+              width: "54.8%",
               display: "grid",
-              gridTemplateColumns: "283.23fr 161.56fr 196.944fr",
-              gap: 10,
+              gridTemplateColumns: "283.23fr 161.56fr 216.6384fr",
+              gap: 8,
               alignItems: "start",
               zIndex: 2,
               pointerEvents: "none",
@@ -212,7 +212,15 @@ export default function PTableSection() {
                 transformOrigin: "top center",
               }}
             />
-            <TypeKey style={{ width: "100%", height: "auto", display: "block" }} />
+            <TypeKey
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                transform: "translateY(-1.1%)",
+                transformOrigin: "top center",
+              }}
+            />
           </div>
 
           <TungstenTSingle
