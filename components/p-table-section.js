@@ -186,17 +186,16 @@ export default function PTableSection() {
             }}
           />
 
-          {/* Preserve the Key and Risk sizing while tightening the legend spacing.
-              Types gets another 10% of visual width and stays on the same title line. */}
+          {/* Keep the current Types size, match Risk to it, and balance the gaps. */}
           <div
             style={{
               position: "absolute",
-              left: "12.15%",
+              left: "12%",
               top: "0.2%",
-              width: "54.8%",
+              width: "55.1%",
               display: "grid",
               gridTemplateColumns: "283.23fr 161.56fr 216.6384fr",
-              gap: 8,
+              gap: 10,
               alignItems: "start",
               zIndex: 2,
               pointerEvents: "none",
@@ -208,7 +207,7 @@ export default function PTableSection() {
                 width: "100%",
                 height: "auto",
                 display: "block",
-                transform: "translateY(-1.2%)",
+                transform: "translate(2.5%, -2.8%) scale(1.1)",
                 transformOrigin: "top center",
               }}
             />
