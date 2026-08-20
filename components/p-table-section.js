@@ -186,17 +186,16 @@ export default function PTableSection() {
             }}
           />
 
-          {/* Four equal spacer columns keep the gaps consistent:
-              left elements to Key, Key to Risk, Risk to Types, and Types to right elements.
-              Key body is 10% larger, while each title is compensated inside its own SVG. */}
+          {/* Span the actual open table range, from the left block to B/Al.
+              This keeps white space on both sides of each key and prevents Types from touching the element cells. */}
           <div
             style={{
               position: "absolute",
-              left: "12.4%",
+              left: "9.87%",
               top: "0.2%",
-              width: "57.1%",
+              width: "57.58%",
               display: "grid",
-              gridTemplateColumns: "2.004fr 40.599fr 2.004fr 23.157fr 2.004fr 28.227fr 2.004fr",
+              gridTemplateColumns: "16.997fr 311.553fr 16.997fr 177.716fr 16.997fr 216.638fr 16.997fr",
               gap: 0,
               alignItems: "start",
               zIndex: 2,
