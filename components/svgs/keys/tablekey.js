@@ -163,11 +163,11 @@ const SvgTableKey = (props) => (
       <text
         style={{
           fontFamily: "OpenSans-Bold,&quot",
-          fontSize: "15.75px",
+          fontSize: "14.3181818px",
           fontWeight: 700,
         }}
         textAnchor="middle"
-        transform="translate(150.715 15.82)"
+        transform="translate(150.715 14.3818182)"
       >
         <tspan x={0} y={0}>{"KEY"}</tspan>
       </text>
