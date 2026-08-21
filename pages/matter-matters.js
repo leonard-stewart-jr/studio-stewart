@@ -4,6 +4,7 @@ import PTableSection from "../components/p-table-section";
 const IFRAME_WIDTH = 1366; // matches the exported HTML width exactly
 const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 const MOBILE_BREAKPOINT = 768;
+const MOBILE_LAST_SLICE_VISIBLE_HEIGHT = 130;
 
 const mobilePublicationSlices = [
   "/static/matter-matters/mobile/matter-matters-mobile_01.gif",
@@ -89,24 +90,40 @@ export default function MatterMatters() {
                 overflow: "hidden",
               }}
             >
-              {mobilePublicationSlices.map((src, index) => (
-                <img
-                  key={src}
-                  src={src}
-                  alt={`Matter Matters mobile publication section ${index + 1}`}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    display: "block",
-                    margin: 0,
-                    padding: 0,
-                    border: "none",
-                    boxShadow: "none",
-                  }}
-                />
-              ))}
+              {mobilePublicationSlices.map((src, index) => {
+                const isLastSlice = index === mobilePublicationSlices.length - 1;
+
+                return (
+                  <div
+                    key={src}
+                    style={{
+                      width: "100%",
+                      height: isLastSlice ? MOBILE_LAST_SLICE_VISIBLE_HEIGHT : "auto",
+                      margin: 0,
+                      padding: 0,
+                      lineHeight: 0,
+                      fontSize: 0,
+                      overflow: isLastSlice ? "hidden" : "visible",
+                    }}
+                  >
+                    <img
+                      src={src}
+                      alt={`Matter Matters mobile publication section ${index + 1}`}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        display: "block",
+                        margin: 0,
+                        padding: 0,
+                        border: "none",
+                        boxShadow: "none",
+                      }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         ) : (
