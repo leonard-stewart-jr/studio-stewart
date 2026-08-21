@@ -4,13 +4,12 @@ import PTableSection from "../components/p-table-section";
 const IFRAME_WIDTH = 1366; // matches the exported HTML width exactly
 const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 const MOBILE_BREAKPOINT = 768;
-const MOBILE_SLICE_OVERLAP = 20;
 
 const mobilePublicationSlices = [
-  "/static/matter-matters/mobile/matter-matters-mobile-01.webp",
-  "/static/matter-matters/mobile/matter-matters-mobile-02.webp",
-  "/static/matter-matters/mobile/matter-matters-mobile-03.webp",
-  "/static/matter-matters/mobile/matter-matters-mobile-04.webp",
+  "/static/matter-matters/mobile/matter-matters-mobile-01.jpg",
+  "/static/matter-matters/mobile/matter-matters-mobile-02.jpg",
+  "/static/matter-matters/mobile/matter-matters-mobile-03.jpg",
+  "/static/matter-matters/mobile/matter-matters-mobile-04.jpg",
 ];
 
 function getViewportWidth() {
@@ -102,7 +101,6 @@ export default function MatterMatters() {
                     height: "auto",
                     display: "block",
                     margin: 0,
-                    marginTop: index === 0 ? 0 : -MOBILE_SLICE_OVERLAP,
                     padding: 0,
                     border: "none",
                     boxShadow: "none",
