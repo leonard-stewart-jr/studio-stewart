@@ -46,7 +46,7 @@ export default function MatterMatters() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          paddingTop: 76, // Prevents content from hiding under the fixed nav.
+          paddingTop: "clamp(34px, 5vw, 76px)", // Desktop stays 76px, phone gets less top whitespace.
         }}
       >
         {/* ======================= */}
