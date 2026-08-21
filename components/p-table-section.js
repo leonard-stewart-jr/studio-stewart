@@ -130,38 +130,37 @@ export default function PTableSection() {
     };
   }
 
-  const minTableWidth = 700;
-
   return (
     <section
       className="matter-matters-section"
       style={{
         width: "100%",
         maxWidth: 1400,
-        margin: "54px auto 0 auto",
+        margin: "clamp(22px, 7vw, 54px) auto 0 auto",
         background: "#f9f9f7",
-        borderRadius: 16,
+        borderRadius: "clamp(0px, 3vw, 16px)",
         boxShadow: "0 1.5px 24px rgba(32,32,32,0.08)",
-        padding: "8px 0 28px 0",
+        padding: "clamp(8px, 2.8vw, 18px) 0 clamp(22px, 6vw, 28px) 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        overflow: "visible",
+        overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
       <div
         style={{
-          width: "100vw",
-          overflowX: "auto",
+          width: "100%",
+          overflowX: "hidden",
           WebkitOverflowScrolling: "touch",
-          paddingBottom: 18,
+          padding: "0 clamp(4px, 1.8vw, 16px) clamp(10px, 3vw, 18px) clamp(4px, 1.8vw, 16px)",
+          boxSizing: "border-box",
         }}
       >
         <div
           ref={tableRef}
           style={{
             width: "100%",
-            minWidth: minTableWidth,
             maxWidth: 1344,
             aspectRatio: `${SVG_WIDTH}/${SVG_HEIGHT}`,
             position: "relative",
@@ -253,17 +252,19 @@ export default function PTableSection() {
 
       <div
         style={{
-          marginTop: 24,
+          marginTop: "clamp(12px, 4vw, 24px)",
           width: "100%",
           maxWidth: 1160,
-          height: 120,
+          height: "auto",
           display: "flex",
           flexDirection: "row",
+          flexWrap: "wrap",
           alignItems: "flex-end",
-          justifyContent: "space-between",
-          gap: 24,
-          padding: "0 14px",
+          justifyContent: "center",
+          gap: "clamp(8px, 3vw, 24px)",
+          padding: "0 clamp(8px, 4vw, 14px)",
           userSelect: "none",
+          boxSizing: "border-box",
         }}
       >
         {materialIcons.map(({ key, label, ColorIcon, BwIcon }) => {
@@ -280,10 +281,11 @@ export default function PTableSection() {
                 border: "none",
                 outline: isActive ? "2.5px solid #e6dbb9" : "2px solid transparent",
                 borderRadius: 13,
-                padding: "4px 12px 0 12px",
-                margin: "0 6px",
-                minWidth: 100,
-                minHeight: 80,
+                padding: "4px clamp(7px, 2.6vw, 12px) 0 clamp(7px, 2.6vw, 12px)",
+                margin: 0,
+                flex: "0 1 clamp(86px, 27vw, 124px)",
+                minWidth: 0,
+                minHeight: "clamp(72px, 22vw, 96px)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -296,18 +298,28 @@ export default function PTableSection() {
                 zIndex: 3,
                 fontSize: 17,
                 fontWeight: 700,
+                boxSizing: "border-box",
               }}
             >
-              <IconComponent style={{ height: 65, width: "auto", display: "block" }} />
+              <IconComponent
+                style={{
+                  height: "clamp(42px, 14vw, 65px)",
+                  width: "auto",
+                  maxWidth: "100%",
+                  display: "block",
+                }}
+              />
               <div
                 style={{
-                  marginTop: 7,
-                  fontSize: 15,
+                  marginTop: "clamp(4px, 1.6vw, 7px)",
+                  fontSize: "clamp(11px, 3.8vw, 15px)",
                   fontWeight: 500,
                   color: "#181818",
                   opacity: isActive ? 1 : 0.42,
                   letterSpacing: ".03em",
                   textShadow: isActive ? "0 1px 4px #fff9" : "none",
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {label}
