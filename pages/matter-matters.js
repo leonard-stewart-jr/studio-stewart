@@ -3,32 +3,43 @@ import PTableSection from "../components/p-table-section";
 
 const IFRAME_WIDTH = 1366; // matches the exported HTML width exactly
 const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
+const MOBILE_BREAKPOINT = 768;
+const MOBILE_SLICE_OVERLAP = 20;
 
-function getMatterMattersScale() {
-  if (typeof window === "undefined") return 1;
-  return Math.min(1, window.innerWidth / IFRAME_WIDTH);
+const mobilePublicationSlices = [
+  "/static/matter-matters/mobile/matter-matters-mobile-01.webp",
+  "/static/matter-matters/mobile/matter-matters-mobile-02.webp",
+  "/static/matter-matters/mobile/matter-matters-mobile-03.webp",
+  "/static/matter-matters/mobile/matter-matters-mobile-04.webp",
+];
+
+function getViewportWidth() {
+  if (typeof window === "undefined") return IFRAME_WIDTH;
+  return window.innerWidth;
 }
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
-  const [scale, setScale] = useState(getMatterMattersScale);
+  const [viewportWidth, setViewportWidth] = useState(getViewportWidth);
 
   useEffect(() => {
-    function updateScale() {
-      setScale(getMatterMattersScale());
+    function updateViewportWidth() {
+      setViewportWidth(getViewportWidth());
     }
 
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    window.addEventListener("orientationchange", updateScale);
+    updateViewportWidth();
+    window.addEventListener("resize", updateViewportWidth);
+    window.addEventListener("orientationchange", updateViewportWidth);
     return () => {
-      window.removeEventListener("resize", updateScale);
-      window.removeEventListener("orientationchange", updateScale);
+      window.removeEventListener("resize", updateViewportWidth);
+      window.removeEventListener("orientationchange", updateViewportWidth);
     };
   }, []);
 
+  const scale = Math.min(1, viewportWidth / IFRAME_WIDTH);
   const scaledWidth = IFRAME_WIDTH * scale;
   const scaledHeight = IFRAME_HEIGHT * scale;
+  const useMobileImageFallback = viewportWidth < MOBILE_BREAKPOINT;
 
   return (
     <>
@@ -46,63 +57,113 @@ export default function MatterMatters() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          paddingTop: "clamp(34px, 5vw, 76px)", // Desktop stays 76px, phone gets less top whitespace.
+          paddingTop: useMobileImageFallback ? "22px" : "76px",
         }}
       >
         {/* ======================= */}
-        {/* 1. Main Tall iFrame     */}
+        {/* 1. Main Publication     */}
         {/* ======================= */}
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            background: "#fff",
-            margin: 0,
-            padding: 0,
-            boxShadow: "none",
-            overflow: "hidden",
-          }}
-        >
+        {useMobileImageFallback ? (
           <div
+            aria-label="Matter Matters publication mobile image version"
             style={{
-              width: scaledWidth,
-              height: scaledHeight,
-              position: "relative",
+              width: "100%",
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "center",
               background: "#fff",
               margin: 0,
               padding: 0,
               boxShadow: "none",
               overflow: "hidden",
-              border: "none",
-              flex: "0 0 auto",
             }}
           >
-            <iframe
-              ref={iframeRef}
-              src="/static/matter-matters/index.html"
-              title="Matter Matters — Studio Stewart"
-              width={IFRAME_WIDTH}
-              height={IFRAME_HEIGHT}
+            <div
               style={{
-                width: IFRAME_WIDTH,
-                height: IFRAME_HEIGHT,
-                border: "none",
+                width: "100%",
+                maxWidth: "430px",
                 background: "#fff",
-                display: "block",
-                boxSizing: "border-box",
-                boxShadow: "none",
-                outline: "none",
+                margin: 0,
+                padding: 0,
+                lineHeight: 0,
+                fontSize: 0,
                 overflow: "hidden",
-                transform: `scale(${scale})`,
-                transformOrigin: "top left",
               }}
-              scrolling="no"
-              allowFullScreen
-            />
+            >
+              {mobilePublicationSlices.map((src, index) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`Matter Matters mobile publication section ${index + 1}`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    display: "block",
+                    margin: 0,
+                    marginTop: index === 0 ? 0 : -MOBILE_SLICE_OVERLAP,
+                    padding: 0,
+                    border: "none",
+                    boxShadow: "none",
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              background: "#fff",
+              margin: 0,
+              padding: 0,
+              boxShadow: "none",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: scaledWidth,
+                height: scaledHeight,
+                position: "relative",
+                background: "#fff",
+                margin: 0,
+                padding: 0,
+                boxShadow: "none",
+                overflow: "hidden",
+                border: "none",
+                flex: "0 0 auto",
+              }}
+            >
+              <iframe
+                ref={iframeRef}
+                src="/static/matter-matters/index.html"
+                title="Matter Matters — Studio Stewart"
+                width={IFRAME_WIDTH}
+                height={IFRAME_HEIGHT}
+                style={{
+                  width: IFRAME_WIDTH,
+                  height: IFRAME_HEIGHT,
+                  border: "none",
+                  background: "#fff",
+                  display: "block",
+                  boxSizing: "border-box",
+                  boxShadow: "none",
+                  outline: "none",
+                  overflow: "hidden",
+                  transform: `scale(${scale})`,
+                  transformOrigin: "top left",
+                }}
+                scrolling="no"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        )}
 
         {/* ======================= */}
         {/* 2. Periodic Table Section (React) */}
