@@ -1,12 +1,34 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PTableSection from "../components/p-table-section";
 
 const IFRAME_WIDTH = 1366; // matches the exported HTML width exactly
 const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
-const IFRAME_RATIO = IFRAME_HEIGHT / IFRAME_WIDTH;
+
+function getMatterMattersScale() {
+  if (typeof window === "undefined") return 1;
+  return Math.min(1, window.innerWidth / IFRAME_WIDTH);
+}
 
 export default function MatterMatters() {
   const iframeRef = useRef(null);
+  const [scale, setScale] = useState(getMatterMattersScale);
+
+  useEffect(() => {
+    function updateScale() {
+      setScale(getMatterMattersScale());
+    }
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    window.addEventListener("orientationchange", updateScale);
+    return () => {
+      window.removeEventListener("resize", updateScale);
+      window.removeEventListener("orientationchange", updateScale);
+    };
+  }, []);
+
+  const scaledWidth = IFRAME_WIDTH * scale;
+  const scaledHeight = IFRAME_HEIGHT * scale;
 
   return (
     <>
@@ -45,8 +67,8 @@ export default function MatterMatters() {
         >
           <div
             style={{
-              width: `min(100vw, ${IFRAME_WIDTH}px)`,
-              height: `calc(min(100vw, ${IFRAME_WIDTH}px) * ${IFRAME_RATIO})`,
+              width: scaledWidth,
+              height: scaledHeight,
               position: "relative",
               background: "#fff",
               margin: 0,
@@ -73,7 +95,7 @@ export default function MatterMatters() {
                 boxShadow: "none",
                 outline: "none",
                 overflow: "hidden",
-                transform: `scale(calc(min(100vw, ${IFRAME_WIDTH}px) / ${IFRAME_WIDTH}))`,
+                transform: `scale(${scale})`,
                 transformOrigin: "top left",
               }}
               scrolling="no"
