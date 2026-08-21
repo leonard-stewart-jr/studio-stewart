@@ -4,7 +4,7 @@ import PTableSection from "../components/p-table-section";
 const IFRAME_WIDTH = 1366; // matches the exported HTML width exactly
 const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 const MOBILE_BREAKPOINT = 768;
-const MOBILE_LAST_SLICE_VISIBLE_HEIGHT = 130;
+const MOBILE_LAST_SLICE_VISIBLE_HEIGHT = 360;
 
 const mobilePublicationSlices = [
   "/static/matter-matters/mobile/matter-matters-mobile_01.gif",
