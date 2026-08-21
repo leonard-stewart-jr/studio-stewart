@@ -7,15 +7,35 @@ function applyMatterMattersSafariFixes() {
 
 	try {
 		var doc = frame.contentDocument || frame.contentWindow.document;
-		if (!doc || !doc.head || doc.getElementById("matter-matters-safari-font-fix")) return;
+		if (!doc || !doc.head) return;
 
-		var style = doc.createElement("style");
-		style.id = "matter-matters-safari-font-fix";
-		style.textContent = "@font-face { font-family: 'coolvetica'; src: url('/fonts/coolvetica/Coolvetica%20Rg.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: block; }\n" +
-			"@font-face { font-family: 'coolvetica'; src: url('/fonts/coolvetica/Coolvetica%20Hv%20Comp.otf') format('opentype'); font-style: normal; font-weight: 700; font-display: block; }\n" +
-			"html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }\n" +
-			"body, body * { font-family: 'coolvetica', Arial, sans-serif; font-synthesis: none; -webkit-font-smoothing: antialiased; }";
-		doc.head.appendChild(style);
+		if (!doc.getElementById("matter-matters-safari-font-fix")) {
+			var style = doc.createElement("style");
+			style.id = "matter-matters-safari-font-fix";
+			style.textContent =
+				"@font-face { font-family: 'coolvetica'; src: url('/fonts/coolvetica/Coolvetica%20Rg.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: block; }\n" +
+				"@font-face { font-family: 'coolvetica'; src: url('/fonts/coolvetica/Coolvetica%20Bk.otf') format('opentype'); font-style: normal; font-weight: 500; font-display: block; }\n" +
+				"@font-face { font-family: 'coolvetica'; src: url('/fonts/coolvetica/Coolvetica%20Hv%20Comp.otf') format('opentype'); font-style: normal; font-weight: 700 900; font-display: block; }\n" +
+				"html, body { -webkit-text-size-adjust: none !important; text-size-adjust: none !important; }\n" +
+				"body, p, span, div { max-height: 999999px; -webkit-text-size-adjust: none !important; text-size-adjust: none !important; font-synthesis: none !important; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }\n" +
+				"span[class^='CharOverride-'] { font-family: 'coolvetica', Arial, sans-serif !important; font-kerning: none !important; font-feature-settings: 'kern' 0 !important; }\n" +
+				"span.CharOverride-17, span.CharOverride-18 { font-family: 'Bungee Shade', 'coolvetica', Arial, sans-serif !important; }";
+			doc.head.appendChild(style);
+		}
+
+		if (doc.fonts && doc.fonts.load) {
+			doc.documentElement.classList.add("matter-font-loading");
+			Promise.all([
+				doc.fonts.load("506px coolvetica"),
+				doc.fonts.load("798px coolvetica"),
+				doc.fonts.ready
+			]).then(function () {
+				doc.documentElement.classList.remove("matter-font-loading");
+				doc.body.offsetHeight;
+			}).catch(function () {
+				doc.documentElement.classList.remove("matter-font-loading");
+			});
+		}
 	} catch (error) {
 		// Same-origin iframe access can fail in unusual browser states. The page still loads normally.
 	}
