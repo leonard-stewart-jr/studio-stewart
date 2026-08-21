@@ -10,7 +10,7 @@ const SvgRiskKey = (props) => (
     <defs>
       <style>
         {
-          '.risk-key_svg__cls-6{font-family:OpenSans-Light,"Open Sans";font-size:7.5px;font-weight:300}'
+          '.risk-key_svg__cls-6{font-family:OpenSans-Light,"Open Sans";font-size:8.25px;font-weight:300}'
         }
       </style>
     </defs>
@@ -46,9 +46,7 @@ const SvgRiskKey = (props) => (
         }}
       />
       <text className="risk-key_svg__cls-6" transform="translate(48.03 33.92)">
-        <tspan x={0} y={0}>
-          {"SEVERE"}
-        </tspan>
+        <tspan x={0} y={0}>{"SEVERE"}</tspan>
       </text>
       <path
         id="risk-key_svg__rect2010-2"
@@ -64,37 +62,30 @@ const SvgRiskKey = (props) => (
       <text
         style={{
           fontFamily: "OpenSans-Light,&quot",
-          fontSize: "7.5px",
+          fontSize: "8.25px",
           fontWeight: 300,
           letterSpacing: 0,
         }}
         transform="translate(43.66 53.76)"
       >
-        <tspan x={0} y={0}>
-          {"MEDIUM"}
-        </tspan>
+        <tspan x={0} y={0}>{"MEDIUM"}</tspan>
       </text>
       <text className="risk-key_svg__cls-6" transform="translate(57.05 74.01)">
-        <tspan x={0} y={0}>
-          {"LOW"}
-        </tspan>
+        <tspan x={0} y={0}>{"LOW"}</tspan>
       </text>
       <text className="risk-key_svg__cls-6" transform="translate(60.85 94.26)">
-        <tspan x={0} y={0}>
-          {"N/A"}
-        </tspan>
+        <tspan x={0} y={0}>{"N/A"}</tspan>
       </text>
       <text
         style={{
           fontFamily: "OpenSans-Bold,&quot",
-          fontSize: "15.75px",
+          fontSize: "13.02px",
           fontWeight: 700,
         }}
-        transform="translate(17.95 15.82)"
+        textAnchor="middle"
+        transform="translate(95.425 14.48)"
       >
-        <tspan x={0} y={0}>
-          {"ELEMENT RISK"}
-        </tspan>
+        <tspan x={0} y={0}>{"RISK"}</tspan>
       </text>
     </g>
   </svg>

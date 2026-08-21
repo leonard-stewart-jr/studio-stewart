@@ -70,16 +70,25 @@ const materialIcons = [
 const SVG_WIDTH = 1344;
 const SVG_HEIGHT = 512;
 
-// --- USE EXACT SVG COORDINATES FOR OVERLAYS ---
-// Ta (element 73): x=488.72, y=349.29, width=61, height=61 (from SVG path)
-// W (element 74, right of Ta): x=549.72, y=349.29, width=61, height=61 (Ta.x + Ta.width)
+// The master table's cell paths are 61px square with a centered 3px stroke.
+// The original solo-cell exports therefore use a 63.59px viewBox, starting
+// 1.5px outside the path coordinate so the visible stroke aligns perfectly.
+const SOLO_CELL_SIZE = 63.59;
+const STROKE_OFFSET = 1.5;
 
-const taBox = { x: 488.72, y: 349.29, w: 61, h: 61 };
-const tungstenBox = { x: 419.13, y: 349.32, w: 61, h: 61 };
+const tungstenBox = {
+  x: 419.13 - STROKE_OFFSET,
+  y: 349.29 - STROKE_OFFSET,
+  w: SOLO_CELL_SIZE,
+  h: SOLO_CELL_SIZE,
+};
 
-// TODO: For Sn, find its SVG box in the same way and update snBox below
-// Correct Sn box
-const snBox = { x: 976.14, y: 279.82, w: 61, h: 61 };
+const snBox = {
+  x: 976.14 - STROKE_OFFSET,
+  y: 279.82 - STROKE_OFFSET,
+  w: SOLO_CELL_SIZE,
+  h: SOLO_CELL_SIZE,
+};
 
 export default function PTableSection() {
   const [activeIcons, setActiveIcons] = useState({
@@ -95,7 +104,6 @@ export default function PTableSection() {
     setActiveIcons((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  // Responsive: measure rendered width/height for overlays
   const tableRef = useRef();
   const [containerDims, setContainerDims] = useState({ width: SVG_WIDTH, height: SVG_HEIGHT });
 
@@ -113,7 +121,6 @@ export default function PTableSection() {
     return () => window.removeEventListener("resize", updateDims);
   }, []);
 
-  // Utility for scaling SVG coords to container
   function svgToContainer(x, y, w, h) {
     return {
       left: (x / SVG_WIDTH) * containerDims.width,
@@ -123,8 +130,7 @@ export default function PTableSection() {
     };
   }
 
-  // Responsive scroll wrapper min width
-  const minTableWidth = 700; // Optional, tweak as you like
+  const minTableWidth = 700;
 
   return (
     <section
@@ -133,35 +139,16 @@ export default function PTableSection() {
         width: "100%",
         maxWidth: 1400,
         margin: "54px auto 0 auto",
-        background: "#fff",
+        background: "#f9f9f7",
         borderRadius: 16,
         boxShadow: "0 1.5px 24px rgba(32,32,32,0.08)",
-        padding: "32px 0 28px 0",
+        padding: "8px 0 28px 0",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         overflow: "visible",
       }}
     >
-      {/* KEYS ROW */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 68,
-          width: "100%",
-          minHeight: 70,
-          marginBottom: 22,
-        }}
-      >
-        <TableKey style={{ height: 64, width: "auto" }} />
-        <RiskKey style={{ height: 64, width: "auto" }} />
-        <TypeKey style={{ height: 64, width: "auto" }} />
-      </div>
-
-      {/* --- SCROLL WRAPPER --- */}
       <div
         style={{
           width: "100vw",
@@ -170,7 +157,6 @@ export default function PTableSection() {
           paddingBottom: 18,
         }}
       >
-        {/* --- TABLE CONTAINER (responsive, aspect-ratio) --- */}
         <div
           ref={tableRef}
           style={{
@@ -187,7 +173,6 @@ export default function PTableSection() {
             display: "block",
           }}
         >
-          {/* Full Periodic Table SVG */}
           <FullTable
             style={{
               width: "100%",
@@ -197,26 +182,67 @@ export default function PTableSection() {
               left: 0,
               top: 0,
               zIndex: 1,
-              pointerEvents: "none"
+              pointerEvents: "none",
             }}
           />
-          {/* Tungsten overlay - uses exact SVG position! */}
+
+          {/* Keep the legend in the actual open table range, but weight the outer gaps wider
+              and the inner gaps tighter so the visible white space feels even. */}
+          <div
+            style={{
+              position: "absolute",
+              left: "9.87%",
+              top: "0.2%",
+              width: "57.58%",
+              display: "grid",
+              gridTemplateColumns: "25fr 311.553fr 8fr 177.716fr 8fr 216.638fr 25fr",
+              gap: 0,
+              alignItems: "start",
+              zIndex: 2,
+              pointerEvents: "none",
+            }}
+          >
+            <div />
+            <TableKey style={{ width: "100%", height: "auto", display: "block" }} />
+            <div />
+            <RiskKey
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                transform: "translateY(-0.8%)",
+                transformOrigin: "top center",
+              }}
+            />
+            <div />
+            <TypeKey
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                transform: "translateY(-0.6%)",
+                transformOrigin: "top center",
+              }}
+            />
+            <div />
+          </div>
+
           <TungstenTSingle
             style={{
               position: "absolute",
               ...svgToContainer(tungstenBox.x, tungstenBox.y, tungstenBox.w, tungstenBox.h),
-              zIndex: 2,
+              zIndex: 3,
               pointerEvents: "auto",
               cursor: "pointer",
             }}
             title="Tungsten (W)"
           />
-          {/* Tin overlay - update snBox with the real SVG coordinates for Sn! */}
+
           <TinSnSingle
             style={{
               position: "absolute",
               ...svgToContainer(snBox.x, snBox.y, snBox.w, snBox.h),
-              zIndex: 2,
+              zIndex: 3,
               pointerEvents: "auto",
               cursor: "pointer",
             }}
@@ -225,7 +251,6 @@ export default function PTableSection() {
         </div>
       </div>
 
-      {/* MATERIAL ICONS ROW */}
       <div
         style={{
           marginTop: 24,
@@ -253,9 +278,7 @@ export default function PTableSection() {
               style={{
                 background: "none",
                 border: "none",
-                outline: isActive
-                  ? "2.5px solid #e6dbb9"
-                  : "2px solid transparent",
+                outline: isActive ? "2.5px solid #e6dbb9" : "2px solid transparent",
                 borderRadius: 13,
                 padding: "4px 12px 0 12px",
                 margin: "0 6px",
@@ -265,9 +288,7 @@ export default function PTableSection() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: isActive
-                  ? "0 1px 12px #e6dbb9aa"
-                  : "0 1.5px 10px rgba(32,32,32,0.09)",
+                boxShadow: isActive ? "0 1px 12px #e6dbb9aa" : "0 1.5px 10px rgba(32,32,32,0.09)",
                 cursor: "pointer",
                 opacity: isActive ? 1 : 0.58,
                 transition: "box-shadow 0.14s, border 0.13s, opacity 0.13s",
