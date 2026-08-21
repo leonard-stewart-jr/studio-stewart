@@ -6,10 +6,10 @@ const IFRAME_HEIGHT = 7452; // matches your HTML height exactly
 const MOBILE_BREAKPOINT = 768;
 
 const mobilePublicationSlices = [
-  "/static/matter-matters/mobile/matter-matters-mobile-01.jpg",
-  "/static/matter-matters/mobile/matter-matters-mobile-02.jpg",
-  "/static/matter-matters/mobile/matter-matters-mobile-03.jpg",
-  "/static/matter-matters/mobile/matter-matters-mobile-04.jpg",
+  "/static/matter-matters/mobile/matter-matters-mobile_01.gif",
+  "/static/matter-matters/mobile/matter-matters-mobile_02.gif",
+  "/static/matter-matters/mobile/matter-matters-mobile_03.gif",
+  "/static/matter-matters/mobile/matter-matters-mobile_04.gif",
 ];
 
 function getViewportWidth() {
