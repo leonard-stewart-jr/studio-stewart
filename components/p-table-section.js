@@ -186,8 +186,8 @@ export default function PTableSection() {
             }}
           />
 
-          {/* Span the actual open table range, from the left block to B/Al.
-              This keeps white space on both sides of each key and prevents Types from touching the element cells. */}
+          {/* Keep the legend in the actual open table range, but weight the outer gaps wider
+              and the inner gaps tighter so the visible white space feels even. */}
           <div
             style={{
               position: "absolute",
@@ -195,7 +195,7 @@ export default function PTableSection() {
               top: "0.2%",
               width: "57.58%",
               display: "grid",
-              gridTemplateColumns: "16.997fr 311.553fr 16.997fr 177.716fr 16.997fr 216.638fr 16.997fr",
+              gridTemplateColumns: "25fr 311.553fr 8fr 177.716fr 8fr 216.638fr 25fr",
               gap: 0,
               alignItems: "start",
               zIndex: 2,
