@@ -46,13 +46,13 @@
   }
 
   /* Use a compact two-column filter block centered between the conference
-     logos. ALL spans both columns. The whole block is shifted down so its
-     vertical center aligns with the visible center of the AFC/NFC artwork. */
+     logos. ALL spans both columns. The whole block sits inside the same
+     vertical band as the visible AFC/NFC artwork. */
   .three-d-printing-page .isp-subnav-row,
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
     position: absolute !important;
     left: 50% !important;
-    top: -34px !important;
+    top: -68px !important;
     transform: translateX(-50%) !important;
     width: 132px !important;
     max-width: 132px !important;
