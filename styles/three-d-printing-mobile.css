@@ -32,29 +32,28 @@
     transform: translateX(28px) !important;
   }
 
-  /* Keep only a small real spacer between the logo row and the team grid.
-     The stacked filter itself is absolutely positioned, so it does not create
-     the large blank area from the previous version. This restores the more
-     comfortable logo-to-card spacing without letting the cards overlap logos. */
+  /* Keep only a very small real spacer beneath the conference-logo row. The
+     filter stack is overlaid, so this space is only for visual breathing room
+     before the first pair of team cards. */
   .three-d-printing-page .nav-card-mid + div + div {
     position: relative !important;
-    height: 48px !important;
-    min-height: 48px !important;
+    height: 18px !important;
+    min-height: 18px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     overflow: visible !important;
     z-index: 20 !important;
   }
 
-  /* Mobile league filters form one compact vertical selector. Place the whole
-     stack in the same vertical zone as the conference logos, but low enough
-     that ALL and EAST remain below the fixed header. The final item may dip
-     slightly into the space above the first card row. */
+  /* Start ALL at approximately the same height as the visible top of the
+     conference logos. The rest of the vertical selector then runs downward
+     between the logos and can finish close to the first card row without
+     adding height to the page. */
   .three-d-printing-page .isp-subnav-row,
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
     position: absolute !important;
     left: 50% !important;
-    top: -30px !important;
+    top: -68px !important;
     transform: translateX(-50%) !important;
     width: 112px !important;
     max-width: 112px !important;
