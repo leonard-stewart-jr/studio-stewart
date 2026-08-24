@@ -32,21 +32,32 @@
     transform: translateX(28px) !important;
   }
 
-  /* The logo artwork is shifted down slightly by the base mobile rules. Reserve
-     a little real space beneath that row so the filter column never collides
-     with the visible logos. */
-  .three-d-printing-page .nav-card-mid + div > div {
-    padding-bottom: 18px !important;
+  /* Keep the stacked filters visually between the conference logos without
+     letting them add height to the document. The filter container becomes a
+     zero-height anchor, so the team grid keeps the same vertical position it
+     had before the filters were stacked. */
+  .three-d-printing-page .nav-card-mid + div + div {
+    position: relative !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    overflow: visible !important;
+    z-index: 20 !important;
   }
 
-  /* Mobile league filters work better as a compact vertical selector. This
-     removes the crowded ALL / EAST / WEST / SOUTH / NORTH horizontal line and
-     gives each label a clear tap target without changing the desktop subnav. */
+  /* Mobile league filters form one compact vertical selector. Pull the stack
+     upward so it occupies the same vertical plane as AFC/NFC or East/West and
+     finishes right around the beginning of the first card row. */
   .three-d-printing-page .isp-subnav-row,
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+    position: absolute !important;
+    left: 50% !important;
+    top: -118px !important;
+    transform: translateX(-50%) !important;
     width: 112px !important;
     max-width: 112px !important;
-    margin: 4px auto 12px !important;
+    margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     flex-wrap: nowrap !important;
@@ -54,6 +65,7 @@
     justify-content: flex-start !important;
     column-gap: 0 !important;
     row-gap: 0 !important;
+    z-index: 25 !important;
   }
 
   .three-d-printing-page .isp-subnav-btn {
@@ -72,7 +84,6 @@
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row > .isp-subnav-btn {
     grid-column: auto !important;
     grid-row: auto !important;
-    transform: none !important;
     margin-left: 0 !important;
   }
 
