@@ -21,9 +21,9 @@
     touch-action: pan-y pinch-zoom;
   }
 
-  /* The desktop logo row nudges both conference marks inward. On mobile, move
-     them outward into the unused left/right space instead. This selector only
-     matches the two-logo row, not the centered single-conference state. */
+  /* Keep the conference-logo spacing from the earlier mobile version: move
+     each mark outward into its own white space. These values are intentionally
+     unchanged while the filter positioning below is adjusted independently. */
   .three-d-printing-page .nav-card-mid + div > div:has(> div + div) > div:first-child img {
     transform: translateX(-28px) !important;
   }
@@ -32,28 +32,29 @@
     transform: translateX(28px) !important;
   }
 
-  /* Keep the stacked filters visually between the conference logos without
-     letting them add height to the document. The filter container becomes a
-     zero-height anchor, so the team grid keeps the same vertical position it
-     had before the filters were stacked. */
+  /* Keep only a small real spacer between the logo row and the team grid.
+     The stacked filter itself is absolutely positioned, so it does not create
+     the large blank area from the previous version. This restores the more
+     comfortable logo-to-card spacing without letting the cards overlap logos. */
   .three-d-printing-page .nav-card-mid + div + div {
     position: relative !important;
-    height: 0 !important;
-    min-height: 0 !important;
+    height: 48px !important;
+    min-height: 48px !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     overflow: visible !important;
     z-index: 20 !important;
   }
 
-  /* Mobile league filters form one compact vertical selector. Pull the stack
-     upward so it occupies the same vertical plane as AFC/NFC or East/West and
-     finishes right around the beginning of the first card row. */
+  /* Mobile league filters form one compact vertical selector. Place the whole
+     stack in the same vertical zone as the conference logos, but low enough
+     that ALL and EAST remain below the fixed header. The final item may dip
+     slightly into the space above the first card row. */
   .three-d-printing-page .isp-subnav-row,
   .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
     position: absolute !important;
     left: 50% !important;
-    top: -118px !important;
+    top: -30px !important;
     transform: translateX(-50%) !important;
     width: 112px !important;
     max-width: 112px !important;
