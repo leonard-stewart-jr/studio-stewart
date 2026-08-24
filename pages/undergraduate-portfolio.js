@@ -52,9 +52,10 @@ export default function UndergraduatePortfolioPage() {
     const previousHtmlWidth = html.style.width;
     const previousHtmlOverscroll = html.style.overscrollBehavior;
 
-    // Keep the portfolio page pinned to the layout viewport. Safari can pan the
-    // document itself during a native pinch even when overflow is hidden, which
-    // is what creates the large blank area below/right of the viewer.
+    // Pin the webpage to the phone viewport so Safari cannot drag the document
+    // into the large blank area seen below/right of the portfolio. Pinch itself
+    // is intentionally left to MobilePortfolioViewer, whose gesture handlers
+    // prevent native page zoom and scale only the portfolio artwork.
     body.style.overflow = "hidden";
     body.style.height = "100dvh";
     body.style.width = "100vw";
@@ -66,42 +67,7 @@ export default function UndergraduatePortfolioPage() {
     html.style.width = "100%";
     html.style.overscrollBehavior = "none";
 
-    // The mobile viewer owns pinch zoom. Prevent Safari from applying the same
-    // gesture to the whole webpage, but do not stop propagation so the viewer's
-    // non-passive gesture/touch handlers can still scale the portfolio itself.
-    const preventNativeGesture = (event) => {
-      if (event.cancelable) event.preventDefault();
-    };
-
-    const preventNativePinch = (event) => {
-      if (event.touches?.length > 1 && event.cancelable) {
-        event.preventDefault();
-      }
-    };
-
-    document.addEventListener("gesturestart", preventNativeGesture, {
-      passive: false,
-      capture: true,
-    });
-    document.addEventListener("gesturechange", preventNativeGesture, {
-      passive: false,
-      capture: true,
-    });
-    document.addEventListener("gestureend", preventNativeGesture, {
-      passive: false,
-      capture: true,
-    });
-    document.addEventListener("touchmove", preventNativePinch, {
-      passive: false,
-      capture: true,
-    });
-
     return () => {
-      document.removeEventListener("gesturestart", preventNativeGesture, true);
-      document.removeEventListener("gesturechange", preventNativeGesture, true);
-      document.removeEventListener("gestureend", preventNativeGesture, true);
-      document.removeEventListener("touchmove", preventNativePinch, true);
-
       body.style.overflow = previousBodyOverflow;
       body.style.height = previousBodyHeight;
       body.style.width = previousBodyWidth;
