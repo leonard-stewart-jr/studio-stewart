@@ -1,0 +1,56 @@
+/* Mobile-only layout refinements for the 3D Printing page.
+   Desktop behavior is intentionally untouched. */
+
+@media (max-width: 700px) {
+  /* Keep this page vertical-only on phones. The full-bleed logo/filter rows use
+     100vw, so explicitly clip their horizontal overflow at the document and
+     page levels to prevent the sideways drift seen in iOS Safari. */
+  html:has(.three-d-printing-page),
+  body:has(.three-d-printing-page) {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none !important;
+  }
+
+  .three-d-printing-page {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: clip !important;
+    overscroll-behavior-x: none !important;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* The desktop logo row nudges both conference marks inward. On mobile, move
+     them outward into the unused left/right space instead. This selector only
+     matches the two-logo row, not the centered single-conference state. */
+  .three-d-printing-page .nav-card-mid + div > div:has(> div + div) > div:first-child img {
+    transform: translateX(-28px) !important;
+  }
+
+  .three-d-printing-page .nav-card-mid + div > div:has(> div + div) > div:last-child img {
+    transform: translateX(28px) !important;
+  }
+
+  /* With ALL conferences visible, the React markup groups AFC/East and
+     NFC/West cards into two-card flex rows. Put one of those groups on each
+     grid row so the phone displays two cards across instead of four. */
+  .three-d-printing-page > div > div:last-child:has(> div > [tabindex="0"] + [tabindex="0"]) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: center !important;
+  }
+
+  .three-d-printing-page > div > div:last-child > div:has(> [tabindex="0"] + [tabindex="0"]) {
+    width: 100% !important;
+    justify-content: center !important;
+    gap: clamp(20px, 7vw, 30px) !important;
+  }
+
+  /* Give NFL/NBA cards enough presence once the grid is only two across.
+     This is scoped to sports-print image paths so lithophanes are unaffected. */
+  .three-d-printing-page > div > div:last-child [tabindex="0"]:has(> img[src*="/images/prints/nfl/"]),
+  .three-d-printing-page > div > div:last-child [tabindex="0"]:has(> img[src*="/images/prints/nba/"]) {
+    width: min(40vw, 156px) !important;
+    height: min(40vw, 156px) !important;
+  }
+}
