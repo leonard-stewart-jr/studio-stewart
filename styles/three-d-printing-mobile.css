@@ -32,6 +32,50 @@
     transform: translateX(28px) !important;
   }
 
+  /* The logo artwork is shifted down slightly by the base mobile rules. Reserve
+     a little real space beneath that row so the filter column never collides
+     with the visible logos. */
+  .three-d-printing-page .nav-card-mid + div > div {
+    padding-bottom: 18px !important;
+  }
+
+  /* Mobile league filters work better as a compact vertical selector. This
+     removes the crowded ALL / EAST / WEST / SOUTH / NORTH horizontal line and
+     gives each label a clear tap target without changing the desktop subnav. */
+  .three-d-printing-page .isp-subnav-row,
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row {
+    width: 112px !important;
+    max-width: 112px !important;
+    margin: 4px auto 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    column-gap: 0 !important;
+    row-gap: 0 !important;
+  }
+
+  .three-d-printing-page .isp-subnav-btn {
+    width: 100% !important;
+    min-height: 24px !important;
+    margin: 0 !important;
+    padding: 4px 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1.05 !important;
+  }
+
+  /* Clear desktop-only center-gap offsets if a selected conference is active. */
+  .three-d-printing-page .nav-card-mid + div:has(> div > img) + div .isp-subnav-row > .isp-subnav-btn {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    transform: none !important;
+    margin-left: 0 !important;
+  }
+
   /* With ALL conferences visible, the React markup groups AFC/East and
      NFC/West cards into two-card flex rows. Put one of those groups on each
      grid row so the phone displays two cards across instead of four. */
